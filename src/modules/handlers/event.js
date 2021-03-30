@@ -10,7 +10,7 @@ const { readdirSync } = require("fs");
 exports.init = bot => {
     return new Promise((resolve) => {
         // Get all the event files
-        const files = readdirSync("../../events").filter(file => file.endsWith(".js"));
+        const files = readdirSync("./events").filter(file => file.endsWith(".js"));
 
         // Loop through the files
         for (const data of files) {
