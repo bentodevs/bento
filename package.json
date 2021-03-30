@@ -32,7 +32,6 @@
     "discord.js": "^12.5.1",
     "fs": "^0.0.1-security",
     "mongoose": "^5.12.2",
-    "node-cron": "^3.0.0",
     "node-fetch": "^2.6.1",
     "ora": "^5.4.0",
     "os-utils": "^0.0.14"
