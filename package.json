@@ -1,0 +1,43 @@
+{
+  "name": "r2-d2-public",
+  "version": "1.0.0",
+  "description": "Public version of R2-D2",
+  "main": "src/bot.js",
+  "scripts": {
+    "dev": "node .",
+    "lint": "eslint.",
+    "start": "NODE_ENV=production node ."
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AmirionStudios/R2-D2-Public.git"
+  },
+  "author": "Amirion Studios LLC (https://amirion.org)",
+  "contributors": [
+    "JarnoPwr <jarno@amirion.org> (https://github.com/JarnoPwr)",
+    "WaitroseDev <waitrose@amirion.org> (https://waitrose.wtf)"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AmirionStudios/R2-D2-Public/issues"
+  },
+  "homepage": "https://github.com/AmirionStudios/R2-D2-Public#readme",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "common-tags": "^1.8.0",
+    "date-fns": "^2.19.0",
+    "discord.js": "^12.5.1",
+    "fs": "^0.0.1-security",
+    "mongoose": "^5.12.2",
+    "node-cron": "^3.0.0",
+    "node-fetch": "^2.6.1",
+    "ora": "^5.4.0",
+    "os-utils": "^0.0.14"
+  },
+  "devDependencies": {
+    "eslint": "^7.23.0"
+  }
+}
