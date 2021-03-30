@@ -5,8 +5,8 @@
   "main": "src/bot.js",
   "scripts": {
     "dev": "node .",
-    "lint": "eslint.",
-    "start": "NODE_ENV=production node ."
+    "lint": "eslint .",
+    "start": "cd src && node bot.js"
   },
   "engines": {
     "node": ">=14.0.0"
