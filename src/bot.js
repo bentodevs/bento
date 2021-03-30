@@ -1,14 +1,14 @@
 // TODO: Add proper commenting to file
 
 // Import dependencies
-const { Client } = require('discord.js'),
-    { connect } = require('mongoose'),
-    {stripIndents} = require('common-tags'),
-    ora = require('ora');
+const { Client } = require("discord.js"),
+{ connect } = require("mongoose"),
+{ getMongooseURL } = require("./database/mongo"),
+ora = require("ora");
 
 // Import handlers
-const commands = require('./modules/handlers/command'),
-    events = require('./modules/handlers/event');
+const commands = require("./modules/handlers/command"),
+events = require("./modules/handlers/event");
 
 // Create the bot client
 const bot = new Client({
@@ -26,21 +26,40 @@ const bot = new Client({
     ]
 });
 
+// Import the config
+bot.config = require("./config");
+
 // TODO: Add all function imports
 
-async function initialise() {
-    
+const init = async () => {
     // Log R2-D2 ascii art
-    console.log(stripIndents`  ____  ____       ____ ____  
+    console.log(`     ____  ____       ____ ____  
     |  _ \\|___ \\     |  _ \\___ \\
     | |_) | __) |____| | | |__) |
     |  _ < / __/_____| |_| / __/
     |_| \\_\\_____|    |____/_____|`);
     console.log(" ");
     console.log(" ");
+
+    const commandMessage = ora("Loading commands...").start(),
+    cmds = await commands.init(bot);
     
-    // TODO: Create MongoDB connection factory
-    bot.mongo = await connect(bot.getMongooseURL(bot.config.db.mongo), {
+    commandMessage.stopAndPersist({
+        symbol: "✔️",
+        text: ` Loaded ${cmds} commands.`,
+    });
+
+    const eventMessage = ora("Loading events...").start(),
+    evts = await events.init(bot);
+
+    eventMessage.stopAndPersist({
+        symbol: "✔️",
+        text: ` Loaded ${evts} events.`,
+    });
+
+    const mongoMsg = ora("Connecting to the Mongo database...").start();
+
+    bot.mongo = await connect(getMongooseURL(bot.config.mongo), {
         useFindAndModify: true,
         useNewUrlParser: true,
         useUnifiedTopology: true
@@ -48,20 +67,9 @@ async function initialise() {
         throw new Error(err);
     });
 
-    const commandMessage = ora("Loading commands...").start(),
-        cmds = await commands.init(bot);
-    
-    commandMessage.stopAndPersist({
-        symbol: '✔️',
-        text: ` Loaded ${cmds} commands.`,
-    });
-
-    const eventMessage = ora("Loading events...").start(),
-        evts = await events.init(bot);
-
-    eventMessage.stopAndPersist({
-        symbol: '✔️',
-        text: ` Loaded ${evts} events.`,
+    mongoMsg.stopAndPersist({
+        symbol: "✔️",
+        text: " Successfully connected to the Mongo database!"
     });
 
     const loginMessage = ora("Logging into the Discord API...").start();
@@ -69,23 +77,23 @@ async function initialise() {
     bot.login(bot.config.general.token)
         .then(() => {
             loginMessage.stopAndPersist({
-                symbol: '✔️',
-                text: ` Successfully logged into the Discord API!`,
+                symbol: "✔️",
+                text: " Successfully logged into the Discord API!",
             });
         }).catch(err => {
             loginMessage.stopAndPersist({
-                symbol: '❌',
+                symbol: "❌",
                 text: `Error while logging into discord: ${err}`,
             });
         });
-}
+};
 
-initialise();
+init();
 
-process.on('SIGINT', function () {
+process.on("SIGINT", () => {
     if (bot.mongo.connection) {
         bot.logger.log("Received SIGINT - Terminating MongoDB connection");
-        bot.mongo.connection.close(function (err) {
+        bot.mongo.connection.close((err) => {
             bot.logger.error(err);
         });
     }
