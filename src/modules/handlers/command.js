@@ -31,11 +31,11 @@ exports.init = (bot) => {
                     // Set the command path
                     props.path = `../../commands/${category}/${file}`;
                     // Add the command to the collection
-                    bot.commands.set(props.information.name, props);
+                    bot.commands.set(props.info.name, props);
                 
                     // Loop through the aliases and add them to the alias collection
-                    if (props.information.aliases) props.information.aliases.forEach(alias => {
-                        bot.aliases.set(alias, props.information.name);
+                    if (props.info.aliases) props.info.aliases.forEach(alias => {
+                        bot.aliases.set(alias, props.info.name);
                     });
                 } catch (err) {
                     // Log the error in case loading a command fails
@@ -67,7 +67,7 @@ exports.reload = (bot, command) => {
             // Delete the command from cache
             delete require.cache[require.resolve(path)];
             // Delete the command from the enmap
-            bot.commands.delete(command.information.name);
+            bot.commands.delete(command.info.name);
 
             // Grab the file
             const file = require(path);
@@ -75,7 +75,7 @@ exports.reload = (bot, command) => {
             // Set the file path
             file.path = path;
             // Se the enmap data
-            bot.commands.set(command.information.name, file);
+            bot.commands.set(command.info.name, file);
 
             // Resolve
             return resolve(true);
