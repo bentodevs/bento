@@ -28,6 +28,8 @@ const bot = new Client({
 
 // Import the config
 bot.config = require("./config");
+// Import the logger
+bot.logger = require("./modules/functions/logger");
 
 // TODO: Add all function imports
 
