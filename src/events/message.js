@@ -33,7 +33,7 @@ module.exports = async (bot, message) => {
     cmd = bot.commands.get(command) || bot.commands.get(bot.aliases.get(command));
 
     // Import message functions
-    require("../modules/functions/messages");
+    require("../modules/functions/messages")(message);
 
     // Return if the user didn't specify a valid command
     if (!cmd)
@@ -66,7 +66,7 @@ module.exports = async (bot, message) => {
             .setDescription(stripIndents`**Guild ID:** ${message.guild?.id ?? "<dms>"}
             **Message Author:** ${message.author.tag} (${message.author.id})
             **Message ID:** [${message.id}](${message.url})
-            **Command:** ${cmd.information.name}
+            **Command:** ${cmd.info.name}
             **Message:** ${message.content}
             
             **Error:**\`\`\`${err.stack}\`\`\``)
