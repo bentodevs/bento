@@ -18,6 +18,7 @@ module.exports = {
     opts: {
         guildOnly: false,
         devOnly: true,
+        premium: false,
         noArgsHelp: true,
         disabled: false
     },
