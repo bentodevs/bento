@@ -81,7 +81,7 @@ exports.reload = (bot, command) => {
             return resolve(true);
         } catch (err) {
             // Log the error
-            bot.logger.error(err);
+            bot.logger.error(err.stack);
             // Reject with the error
             return reject(err);
         }
