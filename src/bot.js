@@ -62,7 +62,7 @@ const init = async () => {
     const mongoMsg = ora("Connecting to the Mongo database...").start();
 
     bot.mongo = await connect(getMongooseURL(bot.config.mongo), {
-        useFindAndModify: true,
+        useFindAndModify: false,
         useNewUrlParser: true,
         useUnifiedTopology: true
     }).catch(err => {
