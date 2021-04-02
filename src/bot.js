@@ -92,11 +92,11 @@ const init = async () => {
 
 init();
 
-process.on("SIGINT", () => {
-    if (bot.mongo.connection) {
+process.on("SIGINT", async () => {
+    if (bot.mongo?.connection) {
         bot.logger.log("Received SIGINT - Terminating MongoDB connection");
-        bot.mongo.connection.close((err) => {
-            bot.logger.error(err);
+        await bot.mongo.connection.close().catch(err => {
+            bot.logger.error(err.stack);
         });
     }
 
