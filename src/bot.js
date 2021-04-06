@@ -30,8 +30,8 @@ const bot = new Client({
 bot.config = require("./config");
 // Import the logger
 bot.logger = require("./modules/functions/logger");
-
-// TODO: Add all function imports
+// Import prototypes
+require("./modules/functions/prototypes")();
 
 const init = async () => {
     // Log R2-D2 ascii art
