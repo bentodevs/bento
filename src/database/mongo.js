@@ -9,8 +9,14 @@ const settings = require("./models/settings");
  * @returns {Promise<Object>} Guild Data
  */
 exports.getSettings = async guild => {
+    // If the command is run in dms return default settings
+    if (!guild)
+        return new settings();
+
+    // Get the guild data
     const data = await settings.findOne({ _id: guild });
 
+    // If guild data was found return it, otherwise create it
     if (data) {
         return data;
     } else {
