@@ -18,7 +18,7 @@ module.exports = {
         self: []
     },
     opts: {
-        guildOnly: false,
+        guildOnly: true,
         devOnly: false,
         noArgsHelp: false,
         disabled: false
