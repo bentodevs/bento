@@ -82,7 +82,7 @@ module.exports = {
                 });
         } else {
             // Get the command
-            const command = bot.commands.get(args[0].toLowerCase()) || bot.commands.get(args[0].toLowerCase());
+            const command = bot.commands.get(args[0].toLowerCase()) || bot.commands.get(bot.aliases.get(args[0].toLowerCase()));
 
             // If the command wasn't found return an error
             if (!command)
