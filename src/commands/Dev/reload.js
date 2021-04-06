@@ -27,7 +27,7 @@ module.exports = {
 
         // Get the command
         const cmdName = args[0].toLowerCase(),
-        cmd = bot.commands.get(cmdName) || bot.commaands.get(bot.aliases.get(cmdName));
+        cmd = bot.commands.get(cmdName) || bot.commands.get(bot.aliases.get(cmdName));
 
         // Return an error if a invalid command was specified
         if (!cmd)
