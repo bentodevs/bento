@@ -21,7 +21,10 @@ const config = {
         waitrose: "",
         error: "",
         loading: "",
-        confirmation: ""
+        confirmation: "",
+        url: "",
+        djs: "",
+        nodejs: ""
     },
 
     // Mongo Info
