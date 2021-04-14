@@ -3,7 +3,9 @@ module.exports = {
         name: "eval",
         aliases: ["e"],
         usage: "eval <code>",
-        examples: ["eval 1+1"],
+        examples: [
+            "eval 1+1"
+        ],
         description: "Runs code.",
         category: "Dev",
         info: null,

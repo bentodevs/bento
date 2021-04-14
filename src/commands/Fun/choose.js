@@ -3,7 +3,10 @@ module.exports = {
         name: "choose",
         aliases: ["pick", "decide"],
         usage: "choose <options>",
-        examples: ["choose 1 | 2 | 3", "choose heads | tails"],
+        examples: [
+            "choose 1 | 2 | 3",
+            "choose heads | tails"
+        ],
         description: "Randomly chooses an option for you.",
         category: "Fun",
         info: null,

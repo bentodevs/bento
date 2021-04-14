@@ -6,7 +6,9 @@ module.exports = {
         name: "help",
         aliases: ["?", "commands"],
         usage: "help [command]",
-        examples: ["help ping"],
+        examples: [
+            "help ping"
+        ],
         description: "Shows a list of commands or information about a specific command.",
         category: "Information",
         info: null,

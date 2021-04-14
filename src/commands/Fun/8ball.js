@@ -3,7 +3,9 @@ module.exports = {
         name: "8ball",
         aliases: ["8"],
         usage: "8ball <question>",
-        examples: ["8ball is today a good day?"],
+        examples: [
+            "8ball is today a good day?"
+        ],
         description: "Ask the 8ball questions.",
         category: "Fun",
         info: "A list of possible answers can be found [here](https://en.wikipedia.org/wiki/Magic_8-Ball#Possible_answers).",

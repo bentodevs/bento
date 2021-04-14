@@ -6,7 +6,9 @@ module.exports = {
         name: "avatar",
         aliases: ["av", "a"],
         usage: "avatar [user]",
-        examples: ["avatar Jarno"],
+        examples: [
+            "avatar Jarno"
+        ],
         description: "Display the avatar of a user or yourself.",
         category: "Information",
         info: null,

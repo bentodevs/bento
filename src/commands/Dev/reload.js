@@ -5,7 +5,9 @@ module.exports = {
         name: "reload",
         aliases: [],
         usage: "reload <command>",
-        examples: ["reload ping"],
+        examples: [
+            "reload ping"
+        ],
         description: "Reload commands.",
         category: "Dev",
         info: null,

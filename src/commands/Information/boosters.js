@@ -6,7 +6,9 @@ module.exports = {
         name: "boosters",
         aliases: [],
         usage: "boosters [page]",
-        examples: ["boosters 2"],
+        examples: [
+            "boosters 2"
+        ],
         description: "List the users that are boosting the guild.",
         category: "Information",
         info: null,

@@ -5,7 +5,10 @@ module.exports = {
         name: "git",
         aliases: [],
         usage: "git <command>",
-        examples: ["git pull", "git status"],
+        examples: [
+            "git pull",
+            "git status"
+        ],
         description: "Run a git command.",
         category: "Dev",
         info: null,
