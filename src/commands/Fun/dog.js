@@ -33,7 +33,7 @@ module.exports = {
         // Build the embed
         const embed = new MessageEmbed()
             .setImage(res.message)
-            .setColor(message.member.displayColor ? message.member.displayHexColor : "#ABCDEF");
+            .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
 
         // Send the embed
         message.channel.send(embed);
