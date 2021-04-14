@@ -25,7 +25,9 @@ const config = {
         confirmation: "",
         url: "",
         djs: "",
-        nodejs: ""
+        nodejs: "",
+        online: "",
+        dnd: ""
     },
 
     // Mongo Info
