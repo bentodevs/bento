@@ -54,7 +54,7 @@ module.exports = {
 
             // Create the emoji
             message.guild.emojis.create(buffer, name, {
-                reason: `Issues by ${message.author.tag} using the createemote command.`
+                reason: `Issued by ${message.author.tag} using the createemote command.`
             }).then(emote => {
                 message.confirmation(`Successfully created the emote: \`:${emote.name}:\` ${emote}`);
             }).catch(err => {
@@ -81,7 +81,7 @@ module.exports = {
 
             // Create the emoji
             message.guild.emojis.create(buffer, name, {
-                reason: `Issues by ${message.author.tag} using the createemote command.`
+                reason: `Issued by ${message.author.tag} using the createemote command.`
             }).then(emote => {
                 message.confirmation(`Successfully created the emote: \`:${emote.name}:\` ${emote}`);
             }).catch(err => {
