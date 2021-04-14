@@ -35,7 +35,7 @@ module.exports = {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setColor(message.member?.displayColor ? message.member.displayHexColor : "#ABCDEF")
+            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
             .setAuthor(`Avatar for ${target.tag}`, target.displayAvatarURL({ format: "png", dynamic: true }))
             .setImage(target.displayAvatarURL({ format: "png", dynamic: true, size: 1024}));
 

@@ -5,6 +5,7 @@ const config = {
         token: "", // Token to login to the Discord API
         prefix: ".", // Default Bot Prefix
         version: "1.0.0", // Current Version
+        embedColor: "#ABCDEF", // Default Embed Color
         errors: {
             guild: "", // Guild to log errors in
             channel: "" // Channel to log errors in

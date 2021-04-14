@@ -102,7 +102,7 @@ module.exports = {
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setColor("#ABCDEF")
+                .setColor(bot.config.general.embedColor)
                 .setTitle(`Command: ${prefix}${command.info.name}${command.opts.guildOnly ? " [Guild-only command]" : ""}`)
                 .setThumbnail(bot.user.displayAvatarURL({ format: "png", dynamic: true, size: 256 }))
                 .setDescription(desc)
