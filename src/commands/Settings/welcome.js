@@ -1,0 +1,149 @@
+const { stripIndents } = require("common-tags");
+const settings = require("../../database/models/settings");
+const { getChannel } = require("../../modules/functions/getters");
+
+module.exports = {
+    info: {
+        name: "welcome",
+        aliases: [],
+        usage: "welcome <option> [value]",
+        examples: [
+            "welcome channel #welcome",
+            "welcome join-msg Welcome, {member}! Make sure you read our #rules",
+            "welcome leave-msg Cya later {member} :wave:",
+            "welcome dm Hey there, {member}! Welcome to our server :)",
+            "welcome join-msg off"
+        ],
+        description: "Configure the messages that are sent when Users join/leave the server",
+        category: "Settings",
+        info: `Adding \`off\` after any option will clear it's data
+        
+        **__Values usable in the join, leave & DM messages__**
+        \`{id}\` - The member's ID
+        \`{tag}\` - The member's Tag (E.g. Waitrose#0001)
+        \`{member}\` - Mentions the member who has just joined
+        \`{server}\` - The Server's name
+        \`{count}\` - The member's guild member number (E.g. The number in which they joined at)`,
+        options: [
+            "`channel` - Sets the channel the join/leave message should be sent to",
+            "`join-msg` - The message to send when a user joins the server",
+            "`leave-msg` - The message to send when a user leaves the server",
+            "`dm` - The message to DM the user when they join the guild"
+        ]
+    },
+    perms: {
+        permission: "ADMINISTRATOR",
+        type: "discord",
+        self: []
+    },
+    opts: {
+        guildOnly: true,
+        devOnly: false,
+        premium: false,
+        noArgsHelp: false,
+        disabled: false
+    },
+
+    run: async (bot, message, args) => {
+
+        // TODO: Add proper commenting to welcome file
+
+        if (!args[0]) {
+            
+            // If the welcome channel is no longer in the guild cache, then remove it
+            if (message.settings.welcome.channel && !message.guild.channels.cache.get(message.settings.welcome.channel)) {
+                await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.channel": null });
+            }
+
+            // Build the message content
+            const msg = stripIndents`**__Welcome Settings__**
+            
+            :books: The Welcome channel is ${message.settings.welcome.channel ? `currently set to ${message.guild.channels.cache.get(message.settings.welcome.channel)}` : "not currently set"}
+            :wave: The welcome message is ${message.settings.welcome.joinMessage ? `currently set to: ${message.settings.welcome.joinMessage}` : "not currently set"}
+            :door: The leave message is ${message.settings.welcome.leaveMessage ? `currently set to: ${message.settings.welcome.leaveMessage}` : "not currently set"}
+            :speech_balloon: The welcome DM is ${message.settings.welcome.userMessage ? `currently set to: ${message.settings.welcome.userMessage}` : "not currently set"}`;
+
+            // Send the welcome settings message
+            message.channel.send(msg);
+        } else if (args[0].toLowerCase() === "channel") {
+            // If no channel is provided...
+            if (!args[1]) {
+                if (!message.settings.welcome.channel) {
+                    // If there is no channel set, return such
+                    return message.channel.send(`:books: The welcome channel is not currently set`);
+                } else if (!message.guild.channels.cache.get(message.settings.welcome.channel)) {
+                    // If the guild doesn't have the channel in settings, set settings to null & return there is no channel set
+                    await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.channel": null });
+                    return message.channel.send(":books: The welcome channel is not currently set");
+                } else {
+                    // Return the channel which is currently the welcome channel
+                    return message.channel.send(`:books: The welcome channel is currently set to ${message.guild.channels.cache.get(message.settings.welcome.channel)}`);
+                }
+            } else {
+                // Grab the Channel the user specifies from Discord
+                const chan = await getChannel(message, args.splice(1).join(""), true);
+                // Set the channel in the guild's settings
+                await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.channel": chan.id });
+                // Send a confirmation message
+                message.confirmation(`The welcome channel was set to ${chan}`);
+            }
+        } else if (args[0].toLowerCase() === "join-msg") {
+            // If no message is specified...
+            if (!args[1]) {
+                if (!message.settings.welcome.joinMessage) {
+                    // If there is no welcome message, return such
+                    return message.channel.send(":wave: The welcome message is not currently set");
+                } else {
+                    // Return the welcome message
+                    return message.channel.send(`:wave: The welcome message is currently set to ${message.settings.welcome.joinMessage}`);
+                }
+            } else {
+                // Ignore args[0] & join any text after the fact - Assign as "msg"
+                const msg = args.splice(1).join(" ");
+                // Set the new welcome message in the DB
+                await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.joinMessage": msg });
+                // Send a confirmation message
+                message.confirmation(`The join message was set to ${msg}`);
+            }
+        } else if (args[0].toLowerCase() === "leave-msg") {
+            // If no message is specified...
+            if (!args[1]) {
+                if (!message.settings.welcome.leaveMessage) {
+                    // If there is no leave message, return such
+                    return message.channel.send(":wave: The leave message is not currently set");
+                } else {
+                    // Return the leave message
+                    return message.channel.send(`:wave: The leave message is currently set to ${message.settings.welcome.leaveMessage}`);
+                }
+            } else {
+                // Ignore args[0] & join any text after the fact - Assign as "msg"
+                const msg = args.splice(1).join(" ");
+                // Set the new welcome message in the DB
+                await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.leaveMessage": msg });
+                // Send a confirmation message
+                message.confirmation(`The leave message was set to ${msg}`);
+            }
+        } else if (args[0].toLowerCase() === "dm") {
+            // If no dm is specified...
+            if (!args[1]) {
+                if (!message.settings.welcome.joinMessage) {
+                    // If there is no welcome dm, return such
+                    return message.channel.send(":wave: The join DM is not currently set");
+                } else {
+                    // Return the welcome dm
+                    return message.channel.send(`:wave: The join DM is currently set to ${message.settings.welcome.userMessage}`);
+                }
+            } else {
+                // Ignore args[0] & join any text after the fact - Assign as "msg"
+                const msg = args.splice(1).join(" ");
+                // Set the new welcome message in the DB
+                await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.userMessage": msg });
+                // Send a confirmation message
+                message.confirmation(`The join DM was set to ${msg}`);
+            }
+        } else {
+            return message.error("Valid options are: `channel`, `join-msg`, `leave-msg` and `dm`. To view all settings, run the command with no options.");
+        }
+
+    }
+};
