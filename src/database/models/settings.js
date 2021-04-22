@@ -21,15 +21,15 @@ module.exports = model("settings", new Schema({
     roles: {
         type: Object,
         default: {
-            auto: [],
-            mute: null
+            auto: [], // The array of role IDs that should be applied by autorole
+            mute: null // The mute role ID
         }
     },
     moderation: {
         type: Object,
         default: {
-            minimumAge: null,
-            bots: false
+            minimumAge: null, // The minimum age length to check against for new accounts
+            bots: false // Whether bots can join the guild
         }
     }
 }));
