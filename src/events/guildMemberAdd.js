@@ -31,7 +31,7 @@ module.exports = async (bot, member) => {
     
     // If there is a DM message set in the DB, then send it to the user. Silently catch any issues.
     if (settings.welcome.userMessage)
-        member.send(`**Message from ${member.guild.name} »** ${settings.welcome.userMessage}`).catch(() => { });
+        member.send(settings.welcome.userMessage).catch(() => { });
     
     // Check if there are any roles to auto-assign
     if (settings.roles.auto?.length) {
