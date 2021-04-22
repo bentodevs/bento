@@ -118,7 +118,7 @@ module.exports = {
             } else {
                 // Ignore args[0] & join any text after the fact - Assign as "msg"
                 const msg = args.splice(1).join(" ");
-                // Set the new welcome message in the DB
+                // Set the new leave message in the DB
                 await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.leaveMessage": msg });
                 // Send a confirmation message
                 message.confirmation(`The leave message was set to ${msg}`);
@@ -136,7 +136,7 @@ module.exports = {
             } else {
                 // Ignore args[0] & join any text after the fact - Assign as "msg"
                 const msg = args.splice(1).join(" ");
-                // Set the new welcome message in the DB
+                // Set the new welcome dm in the DB
                 await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.userMessage": msg });
                 // Send a confirmation message
                 message.confirmation(`The join DM was set to ${msg}`);

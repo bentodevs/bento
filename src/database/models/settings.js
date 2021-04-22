@@ -17,5 +17,19 @@ module.exports = model("settings", new Schema({
             leaveMessage: null, // The message to send when a user leaves the guild
             userMessage: null // The message to send to the user when they join the guild
         }
+    },
+    roles: {
+        type: Object,
+        default: {
+            auto: [],
+            mute: null
+        }
+    },
+    moderation: {
+        type: Object,
+        default: {
+            minimumAge: null,
+            bots: false
+        }
     }
 }));
