@@ -31,4 +31,16 @@ module.exports = () => {
         }
         return s;
     };
+
+    String.prototype.removeHTML = function () {
+        // Replace HTML tags
+        return this.replace(/<[^>]+>/g, "");
+    };
+
+    String.prototype.convertMarkdown = function() {
+        // Replace anilist markdown with discord markdown
+        return this.replace(/__/g, "**")
+            .replace(/~!/g, "||")
+            .replace(/!~/g, "||");
+    };
 };
