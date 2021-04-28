@@ -39,7 +39,7 @@ module.exports = {
                 return message.error("I couldn't find a user with that ID!");
 
             // Fetch all punishments from this guild for this user
-            const entries = punishments.find({ guild: message.guild.id, user: member.id });
+            const entries = await punishments.find({ guild: message.guild.id, user: member.id });
 
             // If the returned array is empty, then send an error
             if (entries.length === 0)
@@ -49,10 +49,8 @@ module.exports = {
             const pages = [];
             let page = 0;
 
-            // 1. Reverse sort the entries (Newest first)
-            // 2. Format each case & add it to a map
-            let casesSorted = entries.sort((a, b) => b.actionTime - a.actionTime);
-            casesSorted = casesSorted.map(p => `**#${p.id}** | **${p.type.toTitleCase()}** | **Reason:** ${p.reason} | ${format(p.actionTime, "PPp")}`);
+            // Reverse sort the entries (Newest first)
+            const casesSorted = entries.sort((a, b) => b.actionTime - a.actionTime);
 
             // Set cases in page array
             for (let i = 0; i < casesSorted.length; i += 10) {
@@ -66,11 +64,14 @@ module.exports = {
             if (!pages[page])
                 return message.error("You didn't specify a valid page!");
             
+            // Format the cases
+            const formatted = pages[page].map(p => `**#${p.id}** | **${p.type.toTitleCase()}** | **Reason:** ${p.reason} | ${format(p.actionTime, "PPp")}`);
+            
             // Build the history embed
             const embed = new MessageEmbed()
                 .setAuthor(`Punishment History for ${member.user.tag}`, member.user.displayAvatarURL({ format: 'png', dynamic: true }))
-                .setColor(message.member.displayHexColor ? message.member.displayHexColor : bot.config.general.embedColor)
-                .setDescription(pages[page])
+                .setColor(message.member?.displayHexColor ?? bot.config.general.embedColor)
+                .setDescription(formatted.join("\n"))
                 .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
             
             message.channel.send(embed);
@@ -111,7 +112,7 @@ module.exports = {
                 return message.error("You did not specify a valid member!");
             
             // Fetch all punishments from this guild for this user
-            const entries = punishments.find({ guild: message.guild.id, user: member.id });
+            const entries = await punishments.find({ guild: message.guild.id, user: member.id });
 
             // If the returned array is empty, then send an error
             if (entries.length === 0)
@@ -121,10 +122,8 @@ module.exports = {
             const pages = [];
             let page = 0;
 
-            // 1. Reverse sort the entries (Newest first)
-            // 2. Format each case & add it to a map
-            let casesSorted = entries.sort((a, b) => b.actionTime - a.actionTime);
-            casesSorted = casesSorted.map(p => `**#${p.id}** | **${p.type.toTitleCase()}** | **Reason:** ${p.reason} | ${format(p.actionTime, "PPp")}`);
+            // Reverse sort the entries (Newest first)
+            const casesSorted = entries.sort((a, b) => b.actionTime - a.actionTime);
 
             // Set cases in page array
             for (let i = 0; i < casesSorted.length; i += 10) {
@@ -138,11 +137,14 @@ module.exports = {
             if (!pages[page])
                 return message.error("You didn't specify a valid page!");
             
+            // Format the cases
+            const formatted = pages[page].map(p => `**#${p.id}** | **${p.type.toTitleCase()}** | **Reason:** ${p.reason} | ${format(p.actionTime, "PPp")}`);
+            
             // Build the history embed
             const embed = new MessageEmbed()
                 .setAuthor(`Punishment History for ${member.user.tag}`, member.user.displayAvatarURL({ format: 'png', dynamic: true }))
                 .setColor(message.member.displayHexColor ? message.member.displayHexColor : bot.config.general.embedColor)
-                .setDescription(pages[page])
+                .setDescription(formatted.join('\n'))
                 .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
             
             // Send the history embed
