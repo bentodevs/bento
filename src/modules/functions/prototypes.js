@@ -43,4 +43,10 @@ module.exports = () => {
             .replace(/~!/g, "||")
             .replace(/!~/g, "||");
     };
+
+    String.prototype.removeUrbanFormatting = function() {
+        // Remove urban dictionary formatting
+        return this.replace(/\[/g, "")
+            .replace(/]/g, "");
+    };
 };
