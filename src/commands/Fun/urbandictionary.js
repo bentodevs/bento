@@ -21,7 +21,7 @@ module.exports = {
     perms: {
         permission: ["@everyone"],
         type: "role",
-        self: []
+        self: ["EMBED_LINKS"]
     },
     opts: {
         guildOnly: false,
