@@ -30,7 +30,7 @@ module.exports = {
         disabled: false
     },
 
-    run: async (bot, message, args) => {
+    run: async (bot, message) => {
 
         // Send a status message & get a random meme
         const msg = await message.loading("Requesting meme..."),
