@@ -34,6 +34,7 @@ module.exports = {
 
     run: async (bot, message, args) => {
 
+        // Get all the tags for this guild
         const guildTags = await tags.find({ guild: message.guild.id });
 
         if (args[0].toLowerCase() == "list") {
