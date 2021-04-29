@@ -30,7 +30,7 @@ module.exports = {
         disabled: false
     },
 
-    run: async (bot, message, args) => {
+    run: async (bot, message) => {
 
         // Create a shortcut to the guild data
         const guild = message.guild;
