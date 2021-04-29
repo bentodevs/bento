@@ -6,6 +6,7 @@ const config = {
         prefix: ".", // Default Bot Prefix
         version: "1.0.0", // Current Version
         embedColor: "#ABCDEF", // Default Embed Color
+        weatherApiKey: "", // Weather API key
         errors: {
             guild: "", // Guild to log errors in
             channel: "" // Channel to log errors in
@@ -27,7 +28,15 @@ const config = {
         djs: "",
         nodejs: "",
         online: "",
-        dnd: ""
+        offline: "",
+        idle: "",
+        dnd: "",
+        spotify: "",
+        discord: "",
+        twitch: "",
+        player: "",
+        game: "",
+        trophy: ""
     },
 
     // Mongo Info

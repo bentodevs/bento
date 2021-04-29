@@ -29,12 +29,15 @@ module.exports = {
 
     run: async (bot, message, args) => {
 
+        // If no args were specified & no attachment was added return the help embed
         if (!message.attachments.size && !args[0])
             return bot.commands.get("help").run(bot, message, ["createemote"]);
 
+        // Regex variables
         const emote = /<a?:(\w+):(\d+)>/gi.exec(message.cleanContent),
         url = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/gi.exec(message.cleanContent);
 
+        // If no emote, url or attachments were found return an error
         if (!emote && !url && !message.attachments.size)
             return message.error("You didn't specify a valid URL, attachment or emote!");
 
