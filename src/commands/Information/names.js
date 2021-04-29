@@ -42,6 +42,8 @@ module.exports = {
         // Grab the data
         const data = await users.findOne({ _id: user.id });
 
+        // TODO: [BOT-7] Give users an option to stop the bot from tracking their usernames
+
         // If no data was found return an error
         if (!data)
             return message.error("I don't have any data on the user you specified!");
