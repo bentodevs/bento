@@ -4,19 +4,19 @@ const { getMember, getUser } = require("../../modules/functions/getters");
 
 module.exports = {
     info: {
-        name: "",
-        aliases: [],
-        usage: "",
-        examples: [],
-        description: "",
-        category: "",
+        name: "caseby",
+        aliases: ["modactions"],
+        usage: "caseby <Moderator>",
+        examples: ["caseby Waitrose"],
+        description: "Lists actions taken by a Moderator",
+        category: "Moderation",
         info: null,
-        options: []
+        options: null
     },
     perms: {
-        permission: "",
+        permission: "KICK_MEMBERS",
         type: "discord",
-        self: []
+        self: ["EMBED_LINKS"],
     },
     opts: {
         guildOnly: true,
