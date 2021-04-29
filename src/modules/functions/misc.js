@@ -1,4 +1,5 @@
 const { default: fetch } = require("node-fetch");
+const config = require("../../config");
 
 /**
  * Get a definition from the urbandictionary api
@@ -26,7 +27,10 @@ exports.urban = (query) => {
 
         // Fetch the urbandictionary api
         fetch(`${endpoint}define?term=${query}`, {
-            headers: { "content-type": "application/json" }
+            headers: { 
+                "content-type": "application/json",
+                "accept": "application/json"
+            }
         }).then(res => res.json()).then(json => {
             // If something went wrong return null
             if (json.error)
@@ -84,7 +88,10 @@ exports.getMeme = () => {
 
         // Fetch the reddit api
         fetch(`${endpoint}r/${sub}.json?sort=top&t=week&limit=100`, {
-            headers: { "content-type": "application/json" }
+            headers: { 
+                "content-type": "application/json",
+                "accept": "application/json"
+            }
         }).then(res => res.json()).then(json => {
             // Filter out all the bad posts
             const filtered = json.data.children.filter(p => !p.data.over_18 && p.data.post_hint !== "hosted:video" && p.data.post_hint !== "link" && p.data.post_hint !== "self" && p.data.post_hint);
@@ -104,4 +111,45 @@ exports.getMeme = () => {
             reject(err);
         });
     });
+};
+
+/**
+ * Get weather data for a certain location
+ * 
+ * @param {String} query
+ *  
+ * @returns {Promise<Object>} weather data
+ * 
+ * @example
+ * 
+ * getWeather("Amsterdam").then(data => {
+ *      console.log(data);
+ * }).catch(err => {
+ *      console.error(err);
+ * })
+ */
+exports.getWeather = (query) => {
+    return new Promise((resolve, reject) => {
+        const url = `https://api.weatherapi.com/v1/current.json?key=${config.general.weatherApiKey}&q=${query}`;
+
+        fetch(url, {
+            headers: { 
+                "content-type": "application/json",
+                "accept": "application/json"
+            }
+        }).then(res => res.json()).then(json => {
+            if (json.error) {
+                if (json.error.code == 1006) {
+                    return resolve(undefined);
+                } else {
+                    return reject(new Error(json.error.message));
+                }
+            } else {
+                resolve(json);
+            }
+        }).catch(err => {
+            console.error(err);
+            reject(err);
+        });
+    });  
 };
