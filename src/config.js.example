@@ -27,7 +27,15 @@ const config = {
         djs: "",
         nodejs: "",
         online: "",
-        dnd: ""
+        offline: "",
+        idle: "",
+        dnd: "",
+        spotify: "",
+        discord: "",
+        twitch: "",
+        player: "",
+        game: "",
+        trophy: ""
     },
 
     // Mongo Info
