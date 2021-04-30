@@ -27,12 +27,12 @@ module.exports = {
     run: async (bot, message) => {
 
         // Fetch a random dog image and convert the response into json
-        const req = await fetch("https://dog.ceo/api/breeds/image/random"),
+        const req = await fetch("https://random.dog/woof.json"),
         res = await req.json();
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setImage(res.message)
+            .setImage(res.url)
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
 
         // Send the embed
