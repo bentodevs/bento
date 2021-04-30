@@ -18,15 +18,15 @@ const config = require("../../config");
  */
 exports.urban = (query) => {
     return new Promise((resolve, reject) => {
-        // Define the endpoint
-        const endpoint = "https://api.urbandictionary.com/v0/";
-
         // If no query was specified return an error
         if (!query)
             return new Error("Missing Args!");
 
-        // Fetch the urbandictionary api
-        fetch(`${endpoint}define?term=${query}`, {
+        // Define the API URL
+        const URL = `https://api.urbandictionary.com/v0/define?term=${query}`;
+
+        // Fetch the urbandictionary API
+        fetch(URL, {
             headers: { 
                 "content-type": "application/json",
                 "accept": "application/json"
@@ -71,9 +71,6 @@ exports.urban = (query) => {
  */
 exports.getMeme = () => {
     return new Promise((resolve, reject) => {
-        // Define the endpoint
-        const endpoint = "https://www.reddit.com/";
-        
         // Define all the subreddits
         const subs = [
             "memes",
@@ -86,8 +83,11 @@ exports.getMeme = () => {
         // Get a random subreddit
         const sub = subs[Math.floor(Math.random() * subs.length)];
 
-        // Fetch the reddit api
-        fetch(`${endpoint}r/${sub}.json?sort=top&t=week&limit=100`, {
+        // Define the API URL
+        const URL = `https://www.reddit.com/r/${sub}.json?sort=top&t=week&limit=100`;
+
+        // Fetch the reddit API
+        fetch(URL, {
             headers: { 
                 "content-type": "application/json",
                 "accept": "application/json"
@@ -130,9 +130,11 @@ exports.getMeme = () => {
  */
 exports.getWeather = (query) => {
     return new Promise((resolve, reject) => {
-        const url = `https://api.weatherapi.com/v1/current.json?key=${config.general.weatherApiKey}&q=${query}`;
+        // Define the API URL
+        const URL = `https://api.weatherapi.com/v1/current.json?key=${config.general.weatherApiKey}&q=${query}`;
 
-        fetch(url, {
+        // Fetch the weather API
+        fetch(URL, {
             headers: { 
                 "content-type": "application/json",
                 "accept": "application/json"
@@ -140,16 +142,55 @@ exports.getWeather = (query) => {
         }).then(res => res.json()).then(json => {
             if (json.error) {
                 if (json.error.code == 1006) {
+                    // If the error is 1006 return undefined
                     return resolve(undefined);
                 } else {
+                    // If its any other error return a new error
                     return reject(new Error(json.error.message));
                 }
             } else {
+                // Resolve the weather data
                 resolve(json);
             }
         }).catch(err => {
+            // Log and reject the error
             console.error(err);
             reject(err);
         });
     });  
+};
+
+/**
+ * Fetches a random dad joke from the icanhazdadjoke.com api
+ * 
+ * @returns {Promise<Object>} dad joke data
+ * 
+ * @example
+ * 
+ * getDadjoke().then(data => {
+ *      console.log(data);
+ * }).catch(err => {
+ *      console.error(data);
+ * })
+ */
+exports.getDadjoke = () => {
+    return new Promise((resolve, reject) => {
+        // Define the API URL
+        const URL = "https://icanhazdadjoke.com/";
+
+        // Fetch the dadjoke API
+        fetch(URL, {
+            headers: {
+                "content-type": "application/json",
+                "accept": "application/json"
+            }
+        }).then(res => res.json()).then(json => {
+            // Return the joke
+            resolve(json);
+        }).catch(err => {
+            // Log and reject the error
+            console.error(err);
+            reject(err);
+        });
+    });
 };
