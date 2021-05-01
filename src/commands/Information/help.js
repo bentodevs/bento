@@ -40,11 +40,11 @@ module.exports = {
             if (!bot.config.general.devs.includes(message.author.id))
                 commands = commands.filter(c => !c.opts.devOnly || !c.opts.disabled);
             // If the command was run in dms remove all the guild only commands
-            if (!message.guild && !args[0]?.toLowerCase() == "all")
+            if (!message.guild && args[0]?.toLowerCase() !== "all")
                 commands = commands.filter(c => !c.opts.guildOnly);
 
             // Sort the commands
-            const sorted = commands.sort((a, b) => a.info.category > b.info.category ? 1 : a.info.name > b.info.name && a.info.category === b.info.category ? 1 : -1);
+            const sorted = commands.sort((a, b) => a.info.category > b.info.category ? 1 : a.info.name > b.info.name && a.info.category === b.info.category ? 1 : 0);
 
             // Loop through the commands
             for (const x of sorted) {

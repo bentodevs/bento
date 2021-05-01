@@ -30,6 +30,7 @@ module.exports = {
     run: async (bot, message, args) => {
 
         getProfile(args.join(" ")).then(data => {
+            // Build the embed
             const embed = new MessageEmbed()
                 .setAuthor(data.name, "https://i.imgur.com/3Crs2k9.png", data.siteUrl)
                 .setDescription(stripIndents`Name: **${data.name}**
@@ -46,6 +47,7 @@ module.exports = {
                 .setThumbnail(data.avatar.large)
                 .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
 
+            // Send the embed
             message.channel.send(embed);
         }).catch(err => {
             // Send the error message

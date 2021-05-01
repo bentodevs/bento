@@ -60,6 +60,11 @@ module.exports = {
             await hook.send(args.slice(1).join(" "));
             // Delete the webhook
             hook.delete();
+        }).catch(err => {
+            // Log the error
+            console.error(err);
+            // Send an error message
+            message.error(`Something went wrong: \`${err.message}\`!`);
         });
 
     }

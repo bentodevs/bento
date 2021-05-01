@@ -33,10 +33,10 @@ module.exports = {
     run: async function (bot, message, args) {
 
         // Get the specified role (if any)
-        let role = await getRole(message, !isNaN(args[args.length - 1]) && !/^[0-9]{16,}$/.test(args[args.length - 1]) ? args.slice(0, args.length -1).join(" ") : args.join(" "));
+        let role = await getRole(message, !Number.isNaN(args[args.length - 1]) && !/^[0-9]{16,}$/.test(args[args.length - 1]) ? args.slice(0, args.length -1).join(" ") : args.join(" "));
 
         // If args[0] is a number set role to undefined
-        if (!isNaN(args[0]) && role?.id !== args[0]) 
+        if (!Number.isNaN(args[0]) && role?.id !== args[0]) 
             role = undefined;
 
         // If the user specified a invalid role return an error
@@ -57,7 +57,7 @@ module.exports = {
             }
 
             // If args[0] is a number set it as the page
-            if (!isNaN(args[0])) 
+            if (!Number.isNaN(args[0])) 
                 page = args[0] -= 1;
             // Return if the page wasn't found
             if (!pages[page]) 
@@ -93,7 +93,7 @@ module.exports = {
             }
 
             // Check if a page was specified and set it as that page
-            if (!isNaN(args[args.length - 1]) && !/^[0-9]{16,}$/.test(args[args.length - 1])) 
+            if (!Number.isNaN(args[args.length - 1]) && !/^[0-9]{16,}$/.test(args[args.length - 1])) 
                 page = args[args.length - 1] -= 1;
 
             // If the page specified doesn't exists return

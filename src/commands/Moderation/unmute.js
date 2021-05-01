@@ -8,7 +8,7 @@ module.exports = {
         usage: "unmute <user>",
         examples: [],
         description: "Unmute a user",
-        category: "",
+        category: "Moderation",
         info: null,
         options: []
     },

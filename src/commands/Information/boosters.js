@@ -48,7 +48,7 @@ module.exports = {
         }
 
         // If args[0] is a number set it as the page
-        if (!isNaN(args[0])) 
+        if (!Number.isNaN(args[0])) 
             page = args[0] - 1;
         // If the page doesn't exist retrun an error
         if (!pages[page])
