@@ -7,6 +7,7 @@ const config = {
         version: "1.0.0", // Current Version
         embedColor: "#ABCDEF", // Default Embed Color
         weatherApiKey: "", // Weather API key
+        riotAPIKey: "", // Riot Games API key
         errors: {
             guild: "", // Guild to log errors in
             channel: "" // Channel to log errors in
