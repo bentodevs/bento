@@ -10,7 +10,8 @@ const config = {
         riotAPIKey: "", // Riot Games API key
         errors: {
             guild: "", // Guild to log errors in
-            channel: "" // Channel to log errors in
+            channel: "", // Channel to log errors in
+            url: "" // Support Discord URL
         },
         devs: [
             "420325176379703298", // Jarno
