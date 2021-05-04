@@ -33,6 +33,9 @@ bot.logger = require("./modules/functions/logger");
 // Import prototypes
 require("./modules/functions/prototypes")();
 
+// Create the mojang object
+bot.mojang = {};
+
 const init = async () => {
     // Log R2-D2 ascii art
     console.log(`     ____  ____       ____ ____  

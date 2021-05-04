@@ -1,7 +1,18 @@
 // Import Dependencies
 const ora = require("ora");
+const { init } = require("../modules/handlers/task");
 
 module.exports = async bot => {
+    // Send task message and load the tasks
+    const taskMsg = ora("Loading Tasks...").start(),
+    loadedTasks = await init(bot);
+
+    // Stop and update the task message
+    taskMsg.stopAndPersist({
+        symbol: "✔️",
+        text: ` Loaded ${loadedTasks} tasks.`
+    });
+
     // Send a spacer
     console.log(" ");
 
