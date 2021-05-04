@@ -6,7 +6,9 @@ module.exports = model("settings", new Schema({
     general: {
         type: Object,
         default: {
-            prefix: config.general.prefix // Bot Prefix
+            prefix: config.general.prefix, // Bot Prefix
+            disabled_categories: [], // List of disabled command categories
+            disabled_commands: [] // List of disabled commands
         }
     },
     welcome: {
