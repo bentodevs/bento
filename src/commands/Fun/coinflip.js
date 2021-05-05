@@ -17,7 +17,7 @@ module.exports = {
     },
     perms: {
         permission: ["@everyone"],
-        type: "discord",
+        type: "role",
         self: []
     },
     opts: {
