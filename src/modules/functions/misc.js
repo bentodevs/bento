@@ -27,7 +27,7 @@ exports.urban = (query) => {
 
         // Fetch the urbandictionary API
         fetch(URL, {
-            headers: { 
+            headers: {
                 "content-type": "application/json",
                 "accept": "application/json"
             }
@@ -41,7 +41,7 @@ exports.urban = (query) => {
 
             // Sort the data by thumps_up and return the result with the most thumps up
             const result = json.list.sort((a, b) => b.thumps_up - a.thumps_up)[0];
-            
+
             // Remove urban dictionary formatting
             result.definition = result.definition.removeUrbanFormatting();
             result.example = result.example.removeUrbanFormatting();
@@ -79,7 +79,7 @@ exports.getMeme = () => {
             "BikiniBottomTwitter",
             "funny"
         ];
-    
+
         // Get a random subreddit
         const sub = subs[Math.floor(Math.random() * subs.length)];
 
@@ -88,7 +88,7 @@ exports.getMeme = () => {
 
         // Fetch the reddit API
         fetch(URL, {
-            headers: { 
+            headers: {
                 "content-type": "application/json",
                 "accept": "application/json"
             }
@@ -135,7 +135,7 @@ exports.getWeather = (query) => {
 
         // Fetch the weather API
         fetch(URL, {
-            headers: { 
+            headers: {
                 "content-type": "application/json",
                 "accept": "application/json"
             }
@@ -157,7 +157,7 @@ exports.getWeather = (query) => {
             console.error(err);
             reject(err);
         });
-    });  
+    });
 };
 
 /**
@@ -193,4 +193,96 @@ exports.getDadjoke = () => {
             reject(err);
         });
     });
+};
+
+/**
+ * Parse a timestring
+ *
+ * @param {string} string
+ * @param {string} returnUnit
+ * @param {Object} opts
+ * 
+ * @returns {number}
+ */
+exports.parseTime = (string, returnUnit, opts) => {
+    const DEFAULT_OPTS = {
+        hoursPerDay: 24,
+        daysPerWeek: 7,
+        weeksPerMonth: 4,
+        monthsPerYear: 12,
+        daysPerYear: 365.25
+    };
+
+    const UNIT_MAP = {
+        ms: ['ms', 'milli', 'millisecond', 'milliseconds'],
+        s: ['s', 'sec', 'secs', 'second', 'seconds'],
+        m: ['m', 'min', 'mins', 'minute', 'minutes'],
+        h: ['h', 'hr', 'hrs', 'hour', 'hours'],
+        d: ['d', 'day', 'days'],
+        w: ['w', 'week', 'weeks'],
+        mth: ['mon', 'mth', 'mths', 'month', 'months'],
+        y: ['y', 'yr', 'yrs', 'year', 'years']
+    };
+
+    opts = Object.assign({}, DEFAULT_OPTS, opts || {});
+
+    let totalSeconds = 0;
+
+    const unitValues = getUnitValues(opts),
+        groups = string
+            .toLowerCase()
+            .replace(/[^.\w+-]+/g, '')
+            .match(/[-+]?[0-9.]+[a-z]+/g);
+
+    if (groups === null) {
+        return null;
+    }
+
+    groups.forEach(group => {
+        const value = group.match(/[0-9.]+/g)[0],
+            unit = group.match(/[a-z]+/g)[0];
+
+        totalSeconds += getSeconds(value, unit, unitValues);
+    });
+
+    if (returnUnit) {
+        return convert(totalSeconds, returnUnit, unitValues);
+    }
+
+    return totalSeconds;
+
+
+    function getUnitValues(opts) {
+        const unitValues = {
+            ms: 0.001,
+            s: 1,
+            m: 60,
+            h: 3600
+        };
+
+        unitValues.d = opts.hoursPerDay * unitValues.h;
+        unitValues.w = opts.daysPerWeek * unitValues.d;
+        unitValues.mth = (opts.daysPerYear / opts.monthsPerYear) * unitValues.d;
+        unitValues.y = opts.daysPerYear * unitValues.d;
+
+        return unitValues;
+    }
+
+    function getUnitKey(unit) {
+        for (const key of Object.keys(UNIT_MAP)) {
+            if (UNIT_MAP[key].indexOf(unit) > -1) {
+                return key;
+            }
+        }
+
+        throw new Error(`The unit [${unit}] is not supported by timestring`);
+    }
+
+    function getSeconds(value, unit, unitValues) {
+        return value * unitValues[getUnitKey(unit)];
+    }
+
+    function convert(value, unit, unitValues) {
+        return value / unitValues[getUnitKey(unit)];
+    }
 };
