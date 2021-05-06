@@ -8,7 +8,8 @@ module.exports = model("settings", new Schema({
         default: {
             prefix: config.general.prefix, // Bot Prefix
             disabled_categories: [], // List of disabled command categories
-            disabled_commands: [] // List of disabled commands
+            disabled_commands: [], // List of disabled commands
+            command_channel: null // Auto-clearing command channel
         }
     },
     welcome: {
