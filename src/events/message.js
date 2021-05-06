@@ -2,6 +2,7 @@
 const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
 const { getSettings } = require("../database/mongo");
+const { checkSelf } = require("../modules/functions/permissions");
 
 module.exports = async (bot, message) => {
     // If a message is partial try to fetch it.
@@ -50,6 +51,9 @@ module.exports = async (bot, message) => {
     // Return an error if a guild only command gets used in dms
     if (cmd.opts.guildOnly && !message.guild)
         return message.error("This command is unavailable via private messages. Please run this command in a guild.");
+    // If the bot doesn't have permissions to run the command return
+    if (await checkSelf(message, cmd))
+        return;
 
     try {
         // Run the command
