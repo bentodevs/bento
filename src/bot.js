@@ -1,7 +1,7 @@
 // TODO: Add proper commenting to file
 
 // Import dependencies
-const { Client } = require("discord.js"),
+const { Client, Collection } = require("discord.js"),
 { connect } = require("mongoose"),
 { getMongooseURL } = require("./database/mongo"),
 ora = require("ora");
@@ -35,6 +35,8 @@ require("./modules/functions/prototypes")();
 
 // Create the mojang object
 bot.mojang = {};
+// Create the deletedMsgs collection
+bot.deletedMsgs = new Collection();
 
 const init = async () => {
     // Log R2-D2 ascii art
