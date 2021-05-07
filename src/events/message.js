@@ -14,13 +14,18 @@ module.exports = async (bot, message) => {
         }
     }
 
-    // Return if the user is a bot
-    if (message.author.bot)
-        return;
-
     const prefixMention = new RegExp(`^<@!?${bot.user.id}>`),
     settings = message.settings = await getSettings(message.guild?.id),
     prefix = message.content.match(prefixMention) ? message.content.match(prefixMention)[0] : settings.general.prefix;
+
+    if (message.settings.general.command_channel) {
+        if (message.channel.id === message.settings.general.command_channel)
+            message.delete({ timeout: 15000 }).catch(() => { });
+    }
+
+    // Return if the user is a bot
+    if (message.author.bot)
+        return;
 
     // Return if the message doesn't start with the prefix
     if (message.content.indexOf(prefix) !== 0)
