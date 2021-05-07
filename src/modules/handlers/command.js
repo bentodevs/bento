@@ -66,7 +66,7 @@ exports.reload = (bot, command) => {
         try {
             // Delete the command from cache
             delete require.cache[require.resolve(path)];
-            // Delete the command from the enmap
+            // Delete the command from the collection
             bot.commands.delete(command.info.name);
 
             // Grab the file
@@ -74,11 +74,96 @@ exports.reload = (bot, command) => {
 
             // Set the file path
             file.path = path;
-            // Se the enmap data
+            // Se the collection data
             bot.commands.set(command.info.name, file);
 
             // Resolve
             return resolve(true);
+        } catch (err) {
+            // Log the error
+            bot.logger.error(err.stack);
+            // Reject with the error
+            return reject(err);
+        }
+    });
+};
+
+/**
+ * Load a command
+ * 
+ * @param {Object} bot The client which is used to transact between this app & Discord
+ * @param {String} command The command name to load
+ * @param {String} category The category the command is in
+ * 
+ * @returns {Promise<Object>} Returns command data if the command loaded correctly
+ */
+exports.load = (bot, category, command) => {
+    return new Promise((resolve, reject) => {
+        // If no args were specified return an error
+        if (!bot || !category || !command)
+            return reject(new Error("Missing Args"));
+
+        try {
+            // get the commands in the category
+            const commands = readdirSync(`./commands/${category}`);
+
+            // If the command isn't in the category return an error
+            if (!commands.includes(`${command.toLowerCase()}.js`))
+                throw new Error("Command not found");
+
+            // Import the command and set the command path
+            const props = require(`../../commands/${category}/${command.toLowerCase()}`);
+            props.path = `../../commands/${category}/${command.toLowerCase()}.js`;
+
+            // If the command is already loaded return an error
+            if (bot.commands.has(props.info.name))
+                throw new Error("Command is already loaded");
+
+            // Add the command to the collection
+            bot.commands.set(props.info.name, props);
+
+            // If there are any aliases add them to the collection
+            if (props.info.aliases) props.info.aliases.forEach(alias => {
+                bot.aliases.set(alias, props.info.name);
+            });
+
+            // Resolve the command data
+            resolve(props);
+        } catch (err) {
+            // Log the error
+            bot.logger.error(err.stack);
+            // Reject with the error
+            return reject(err);
+        }
+    });
+};
+
+/**
+ * Unload a command
+ * 
+ * @param {Object} bot The client which is used to transact between this app & Discord
+ * @param {String} command An object with all the command data
+ * 
+ * @returns {Promise<Boolean>} Returns true if the command unloaded correctly
+ */
+exports.unload = (bot, command) => {
+    return new Promise((resolve, reject) => {
+        // Get the command path
+        const path = command.path;
+
+        try {
+            // Delete the command from cache
+            delete require.cache[require.resolve(path)];
+            // Delete the command from the collection
+            bot.commands.delete(command.info.name);
+
+            // If there are any aliases delete them from the collection
+            if (command.info.aliases) command.info.aliases.forEach(alias => {
+                bot.aliases.delete(alias, command.info.name);
+            });
+
+            // Resolve true
+            resolve(true);
         } catch (err) {
             // Log the error
             bot.logger.error(err.stack);
