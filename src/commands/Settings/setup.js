@@ -88,7 +88,7 @@ module.exports = {
                     }
                 } else {
                     // Fetch the role from the guild
-                    const role = await getRole(message, args.slice(2).join(""));
+                    const role = await getRole(message, args.slice(1).join(" "));
 
                     if (role) {
                         // If the role is higher than, or equal to, the bot's highest role then send an error
