@@ -32,8 +32,7 @@
     "discord.js": "^12.5.3",
     "mongoose": "^5.12.2",
     "node-fetch": "^2.6.1",
-    "ora": "^5.4.0",
-    "os-utils": "^0.0.14"
+    "ora": "^5.4.0"
   },
   "devDependencies": {
     "eslint": "^7.25.0"
