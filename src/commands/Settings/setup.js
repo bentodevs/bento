@@ -132,7 +132,7 @@ module.exports = {
                         return message.confirmation(`Successfully reset the command channel!`);
                     }
                 } else {
-                    const channel = getChannel(message, args.slice(1).join(" "), true);
+                    const channel = await getChannel(message, args.slice(1).join(" "), true);
 
                     if (!channel)
                         return message.error("I could not find a channel with those details!");
