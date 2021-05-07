@@ -46,7 +46,7 @@ module.exports = {
             return message.error("Please enter a number below **1,000,000,000,000**!");
 
         // Get the random number
-        const result = Math.floor(Math.random() * number);
+        const result = Math.floor(Math.random() * number + 1);
 
         // Send the random number
         message.confirmation(`The random number I picked is **${result.toLocaleString()}**!`);
