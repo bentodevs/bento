@@ -38,6 +38,9 @@ module.exports = {
         // If no number was specified default to 100
         if (!args[0])
             number = 100;
+        // If the number is 0 or lower return an error
+        if (number <= 0)
+            return message.error("Please enter a number above 0!");
         // If the number is above 1 trillion return an error
         if (number > 1000000000000)
             return message.error("Please enter a number below **1,000,000,000,000**!");
