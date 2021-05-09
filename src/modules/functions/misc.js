@@ -1,4 +1,5 @@
 const { default: fetch } = require("node-fetch");
+const { xml2json } = require("xml-js");
 const config = require("../../config");
 
 /**
@@ -285,4 +286,47 @@ exports.parseTime = (string, returnUnit, opts) => {
     function convert(value, unit, unitValues) {
         return value / unitValues[getUnitKey(unit)];
     }
+};
+
+/**
+ * Fetch a steam user from the profile URL
+ * 
+ * @param {String} username
+ * 
+ * @returns {Promise<Object>} Steam user data
+ * 
+ * @example
+ * 
+ * fetchSteamUser("Waitrose").then(data => {
+ *      console.log(data);
+ * }).catch(err => {
+ *      console.error(err);
+ * })
+ */
+exports.fetchSteamUser = (user) => {
+    return new Promise((resolve, reject) => {
+        // Define the baseURL for fetching a user's profile
+        const baseURL = `https://steamcommunity.com/id/${user}?xml=1`;
+
+        fetch(baseURL)
+            .then(res => res.text())
+            .then(res => JSON.parse(xml2json(res)))
+            // deepcode ignore PromiseNotCaughtNode: No cause for concern, deepcode ignore ObjectConstructor: No cause for concern
+            .then(json => new Object({
+                steamID: json.elements[0].elements[0].elements[0].text,
+                avatar: {
+                    full: json.elements[0].elements[8].elements[0].cdata,
+                    icon: json.elements[0].elements[6].elements[0].cdata
+                },
+                profileInfo: {
+                    name: json.elements[0].elements[1].elements[0].cdata
+                }
+            }))
+            .then(obj => resolve(obj))
+            .catch(err => {
+                // Log and reject the error
+                console.error(err);
+                reject(err);
+            });
+    });
 };
