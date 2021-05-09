@@ -8,6 +8,7 @@ const config = {
         embedColor: "#ABCDEF", // Default Embed Color
         weatherApiKey: "", // Weather API key
         riotAPIKey: "", // Riot Games API key
+        steamAPI: "", // Steam API key
         errors: {
             guild: "", // Guild to log errors in
             channel: "", // Channel to log errors in
