@@ -18,7 +18,7 @@ module.exports = {
     perms: {
         permission: ["@everyone"],
         type: "role",
-        self: []
+        self: ["EMBED_LINKS"]
     },
     opts: {
         guildOnly: false,
@@ -55,7 +55,7 @@ module.exports = {
                         
                         message.channel.send(embed);
                     })
-                    .catch(e => message.error(e.message));
+                    .catch(e => message.error(`I encountered an error whilst getting the requested stats: ${e.message}`));
             })
             .catch(() => message.error("I couldn't find a user with that username!"));
 

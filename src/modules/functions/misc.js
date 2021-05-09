@@ -324,8 +324,7 @@ exports.fetchSteamUser = (user) => {
             }))
             .then(obj => resolve(obj))
             .catch(err => {
-                // Log and reject the error
-                console.error(err);
+                // Reject the error
                 reject(err);
             });
     });
