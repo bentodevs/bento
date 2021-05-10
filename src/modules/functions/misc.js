@@ -297,13 +297,54 @@ exports.parseTime = (string, returnUnit, opts) => {
  * 
  * @example
  * 
- * fetchSteamUser("Waitrose").then(data => {
+ * fetchSteamUserByName("Waitrose").then(data => {
  *      console.log(data);
  * }).catch(err => {
  *      console.error(err);
  * })
  */
-exports.fetchSteamUser = (user) => {
+exports.fetchSteamUserByID = (user) => {
+    return new Promise((resolve, reject) => {
+        // Define the baseURL for fetching a user's profile
+        const baseURL = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${config.general.steamAPI}&steamids=${user}`;
+
+        fetch(baseURL)
+            .then(res => res.json())
+            // deepcode ignore PromiseNotCaughtNode: No cause for concern, deepcode ignore ObjectConstructor: No cause for concern
+            .then(json => new Object({
+                steamID: json.response.players[0].steamid,
+                avatar: {
+                    full: json.response.players[0].avatarfull,
+                    icon: json.response.players[0].avatar
+                },
+                profileInfo: {
+                    name: json.response.players[0].personaname
+                }
+            }))
+            .then(obj => resolve(obj))
+            .catch(err => {
+                // Reject the error
+                reject(err);
+            });
+    });
+};
+
+/**
+ * Fetch a steam user from the profile URL
+ * 
+ * @param {String} username
+ * 
+ * @returns {Promise<Object>} Steam user data
+ * 
+ * @example
+ * 
+ * fetchSteamUserByName("Waitrose").then(data => {
+ *      console.log(data);
+ * }).catch(err => {
+ *      console.error(err);
+ * })
+ */
+ exports.fetchSteamUserByName = (user) => {
     return new Promise((resolve, reject) => {
         // Define the baseURL for fetching a user's profile
         const baseURL = `https://steamcommunity.com/id/${user}?xml=1`;
