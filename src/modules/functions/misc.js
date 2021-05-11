@@ -230,7 +230,7 @@ exports.parseTime = (string, returnUnit, opts) => {
     let totalSeconds = 0;
 
     const unitValues = getUnitValues(opts),
-        groups = string
+    groups = string
             .toLowerCase()
             .replace(/[^.\w+-]+/g, '')
             .match(/[-+]?[0-9.]+[a-z]+/g);
@@ -241,7 +241,7 @@ exports.parseTime = (string, returnUnit, opts) => {
 
     groups.forEach(group => {
         const value = group.match(/[0-9.]+/g)[0],
-            unit = group.match(/[a-z]+/g)[0];
+        unit = group.match(/[a-z]+/g)[0];
 
         totalSeconds += getSeconds(value, unit, unitValues);
     });
@@ -327,5 +327,72 @@ exports.fetchSteamUser = (user) => {
                 // Reject the error
                 reject(err);
             });
+    });
+};
+
+/**
+ * Fetch an image from the waifu.pics API
+ * 
+ * @param {String} type 
+ * 
+ * @returns {Promise<String>} URL to the image 
+ */
+exports.fetchWaifuApi = (type) => {
+    return new Promise((resolve, reject) => {
+        // Define all the different available types
+        const types = [
+            "waifu",
+            "neko",
+            "shinobu",
+            "megumin",
+            "bully",
+            "cuddle",
+            "cry",
+            "hug",
+            "awoo",
+            "kiss",
+            "lick",
+            "pat",
+            "smug",
+            "bonk",
+            "yeet",
+            "blush",
+            "smile",
+            "wave",
+            "highfive",
+            "handhold",
+            "nom",
+            "bite",
+            "glomp",
+            "slap",
+            "kill",
+            "happy",
+            "wink",
+            "poke",
+            "dance",
+            "cringe"
+        ];
+
+        // If an invalid type was specified return an error
+        if (!types.includes(type.toLowerCase()))
+            return reject(new Error("Invalid type"));
+
+        // Define the URL
+        const URL = `https://api.waifu.pics/sfw/${type}`;
+
+        // Fetch the URL
+        fetch(URL, {
+            headers: {
+                "content-type": "application/json",
+                "accept": "application/json"
+            }
+        }).then(res => res.json()).then(json => {
+            // Resolve the URL
+            resolve(json.url);
+        }).catch(err => {
+            // Log and reject the error
+            console.error(err);
+            reject(err);
+        });
     });
 };
