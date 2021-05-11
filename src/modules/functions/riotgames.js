@@ -41,7 +41,7 @@ exports.getLeagueSummoner = async (region, summoner) => {
     }
 
     // Fetch the base player data (This is used in future requests as some IDs are encrypted/encoded)
-    const req1 = await fetch(`https://${reg}.api.riotgames.com/lol/summoner/v4/summoners/by-name/${encodeURI(summoner.split(",").join(" "))}?api_key=${config.general.riotAPIKey}`),
+    const req1 = await fetch(`https://${reg}.api.riotgames.com/lol/summoner/v4/summoners/by-name/${encodeURI(summoner.split(",").join(" "))}?api_key=${config.apiKeys.riot}`),
         res1 = await req1.json();
     
     // If the request doesn't return a response "200" (OK), then return an error
@@ -49,7 +49,7 @@ exports.getLeagueSummoner = async (region, summoner) => {
         return "NO_USER_FOUND";
     
     // Fetch the player's match list
-    const req2 = await fetch(`https://${reg}.api.riotgames.com/lol/match/v4/matchlists/by-account/${res1.accountId}?api_key=${config.general.riotAPIKey}`),
+    const req2 = await fetch(`https://${reg}.api.riotgames.com/lol/match/v4/matchlists/by-account/${res1.accountId}?api_key=${config.apiKeys.riot}`),
         res2 = await req2.json();
     
     // Create a returnable object which can be used in commands

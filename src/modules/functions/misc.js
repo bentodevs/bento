@@ -132,7 +132,7 @@ exports.getMeme = () => {
 exports.getWeather = (query) => {
     return new Promise((resolve, reject) => {
         // Define the API URL
-        const URL = `https://api.weatherapi.com/v1/current.json?key=${config.general.weatherApiKey}&q=${query}`;
+        const URL = `https://api.weatherapi.com/v1/current.json?key=${config.apiKeys.weather}&q=${query}`;
 
         // Fetch the weather API
         fetch(URL, {
@@ -306,7 +306,7 @@ exports.parseTime = (string, returnUnit, opts) => {
 exports.fetchSteamUserByID = (user) => {
     return new Promise((resolve, reject) => {
         // Define the baseURL for fetching a user's profile
-        const baseURL = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${config.general.steamAPI}&steamids=${user}`;
+        const baseURL = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${config.apiKeys.steam}&steamids=${user}`;
 
         fetch(baseURL)
             .then(res => res.json())

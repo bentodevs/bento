@@ -6,9 +6,6 @@ const config = {
         prefix: ".", // Default Bot Prefix
         version: "1.0.0", // Current Version
         embedColor: "#ABCDEF", // Default Embed Color
-        weatherApiKey: "", // Weather API key
-        riotAPIKey: "", // Riot Games API key
-        steamAPI: "", // Steam API key
         errors: {
             guild: "", // Guild to log errors in
             channel: "", // Channel to log errors in
@@ -18,6 +15,13 @@ const config = {
             "420325176379703298", // Jarno
             "648882989471891499" // Waitrose
         ]
+    },
+
+    // API Keys
+    apiKeys: {
+        weather: "", // WeatherAPI.com API Key
+        steam: "", // Steam API Key
+        riot: "" // Riot Games API Key
     },
 
     // Global Emojis
