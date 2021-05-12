@@ -30,6 +30,7 @@ module.exports = {
 
     run: async (bot, message, args) => {
 
+        // Get the option
         const option = args[0].toLowerCase();
 
         if (option == "event") {
