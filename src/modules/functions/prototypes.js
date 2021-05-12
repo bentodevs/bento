@@ -41,7 +41,8 @@ module.exports = () => {
         // Replace anilist markdown with discord markdown
         return this.replace(/__/g, "**")
             .replace(/~!/g, "||")
-            .replace(/!~/g, "||");
+            .replace(/!~/g, "||")
+            .replace(/##/g, "");
     };
 
     String.prototype.removeUrbanFormatting = function() {
