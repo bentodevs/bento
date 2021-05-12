@@ -27,7 +27,7 @@ module.exports = message => {
     };
 
     /**
-     * Send a message starting with a 👌 emote
+     * Send a message starting with a confirmation emote
      * @param {string} string 
      */
     message.confirmation = string => {

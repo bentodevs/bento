@@ -55,7 +55,10 @@ exports.init = async bot => {
     await getMutes(bot);
 
     // Run the getMutes function every minute
-    setInterval(async () => {
+    const interval = setInterval(async () => {
         await getMutes(bot);
     }, 60000);
+
+    // Return the interval info
+    return interval;
 };

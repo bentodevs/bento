@@ -35,7 +35,10 @@ exports.init = async bot => {
     await getStatus(bot);
 
     // Run the getStatus function every minute
-    setInterval(async () => {
+    const interval = setInterval(async () => {
         await getStatus(bot);
     }, 60000);
+
+    // Return the interval info
+    return interval;
 };
