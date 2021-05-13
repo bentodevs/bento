@@ -21,7 +21,9 @@ const config = {
     apiKeys: {
         weather: "", // WeatherAPI.com API Key
         steam: "", // Steam API Key
-        riot: "" // Riot Games API Key
+        riot: "", // Riot Games API Key
+        trackerNetwork: "", // TrackerNetwork API Key
+        omdb: "" // omdb API Key
     },
 
     // Global Emojis
