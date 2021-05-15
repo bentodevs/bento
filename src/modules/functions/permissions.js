@@ -13,7 +13,7 @@ const { getRole } = require("./getters");
  */
 exports.checkPerms = async (bot, message, permissions, cmd) => {
     // If the user is a bot owner return false
-    if (bot.config.general.owners.includes(message.author.id))
+    if (bot.config.general.devs.includes(message.author.id))
         return false;
 
     // Get the permissions
