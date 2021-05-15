@@ -30,7 +30,22 @@ module.exports = {
 
     run: async (bot, message, args) => {
 
+        // Get the bot prefix
         const prefix = message.settings.general.prefix;
+
+        // Get all the command categories
+        const getCategories = bot.commands.map(c => c.info.category.toLowerCase()),
+        categories = getCategories.filter((item, index) => {
+            return getCategories.indexOf(item) >= index;
+        });
+
+        // Get the command or category
+        const command = bot.commands.get(args[0]?.toLowerCase()) || bot.commands.get(bot.aliases.get(args[0]?.toLowerCase())),
+        category = categories[categories.indexOf(args[0]?.toLowerCase())];
+
+        // If the command or category is dev only return an error
+        if ((command?.info.category.toLowerCase() == "dev" || category == "dev") && !bot.config.general.devs.includes(message.author.id))
+            return message.error("You didn't specify a valid command or category!");
 
         if (!args[0] || args[0]?.toLowerCase() == "all") {
             // Grab all the commands
@@ -84,14 +99,7 @@ module.exports = {
                     // If something went wrong return an error specifying the user most likely has their DM's disabled
                     message.error("Something went wrong, you most likely have your DM's disabled!");
                 });
-        } else {
-            // Get the command
-            const command = bot.commands.get(args[0].toLowerCase()) || bot.commands.get(bot.aliases.get(args[0].toLowerCase()));
-
-            // If the command wasn't found return an error
-            if (!command)
-                return message.error("I couldn't find the command you specified!");
-
+        } else if (command) {
             // Define the description var
             let desc = "";
 
@@ -174,6 +182,65 @@ module.exports = {
 
             // Send the embed
             message.channel.send(embed);
+        } else if (category) {
+            // Get all the commands for the specified category
+            const commands = bot.commands.filter(c => c.info.category.toLowerCase() == category).map(c => `\`${prefix}${c.info.name}\``);
+
+            // Get the category or command permission
+            const permission = message.permissions.categories[category];
+
+            // Define the perm var
+            let perm = "";
+
+            if (!permission?.type) {
+                // If no permission is set set the perm to "No permission set."
+                perm = "No permission set.";
+            } else if (permission.type == "role" && permission.hierarchic) {
+                // Try to get the role
+                const role = await getRole(message, permission.permission);
+
+                // Add the data to the perm message
+                perm = role?.id == message.guild.id ? "open to everyone" : `the ${role ?? "<deleted role>"} role and up`;
+            } else if (permission.type == "role" && !permission.hierarchic) {
+                // Define the roles array
+                const roles = [];
+
+                if (permission.permission.length == 1 && (permission.permission.includes("@everyone") || permission.permission.includes(message.guild.id))) {
+                    // If the only permission in the array is the everyone role set the perm message to "open to everyone"
+                    perm = `open to everyone`;
+                } else {
+                    // Loop through the permissions and add them to the roles array
+                    for (const i of permission.permission) {
+                        if (i == "@everyone" || i == message.guild.id) {
+                            roles.push("@everyone");
+                        } else {
+                            const role = await getRole(message, i);
+                            roles.push(role?.toString() ?? "<deleted role>");
+                        }
+                    }
+
+                    // Add the data to the perm message
+                    perm = `the ${roles.join(", ")} role${roles.length > 1 ? "s" : ""}`;
+                }
+            } else if (permission.type == "discord") {
+                // Add the data to the perm message
+                perm = `the Discord permission \`${permission.permission}\``;
+            } 
+
+            // Build the Embed
+            const embed = new MessageEmbed()
+                .setColor(bot.config.general.embedColor)
+                .setTitle(`Category: ${category}`)
+                .setDescription(stripIndents`**Name:** \`${category.toTitleCase()}\`
+                **Permissions:** ${perm}`)
+                .addField(`**Commands**`, commands.join(", "))
+                .setFooter(`For more detailed information about a command use ${prefix}help <command>`);
+
+            // Send the embed
+            message.channel.send(embed);
+        } else {
+            // Send an error
+            message.error("You didn't specify a valid command or category!");
         }
 
     }
