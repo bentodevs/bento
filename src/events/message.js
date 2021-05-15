@@ -1,8 +1,8 @@
 // Import Dependencies
 const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
-const { getSettings } = require("../database/mongo");
-const { checkSelf } = require("../modules/functions/permissions");
+const { getSettings, getPerms } = require("../database/mongo");
+const { checkSelf, checkPerms } = require("../modules/functions/permissions");
 
 module.exports = async (bot, message) => {
     // If a message is partial try to fetch it.
@@ -56,9 +56,20 @@ module.exports = async (bot, message) => {
     // Return an error if a guild only command gets used in dms
     if (cmd.opts.guildOnly && !message.guild)
         return message.error("This command is unavailable via private messages. Please run this command in a guild.");
+    // Return if the command or category is disabled
+    if (message.guild && (message.settings.general.disabled_commands.includes(cmd.info.name) || message.settings.general.disabled_categories.includes(cmd.info.category)) && !message.member.hasPermission("ADMINISTRATOR") && !bot.config.general.devs.includes(message.author.id))
+        return;
     // If the bot doesn't have permissions to run the command return
     if (await checkSelf(message, cmd))
         return;
+
+    // Get permissions
+    const permissions = message.permissions = await getPerms(bot, message.guild?.id);
+    
+    // If the user doesn't have permissions to run the command return
+    // TODO: [BOT-75] Add an option to disable the permission message
+    if (await checkPerms(bot, message, permissions, cmd))
+        return message.error("You don't have permissions to run that command!");
 
     try {
         // Run the command
