@@ -4,14 +4,14 @@ const { fetchWaifuApi } = require("../../modules/functions/misc");
 
 module.exports = {
     info: {
-        name: "kiss",
+        name: "pat",
         aliases: [],
-        usage: "kiss <member>",
+        usage: "pat [member]",
         examples: [
-            "kiss @Jarno"
+            "pat @Jarno"
         ],
-        description: "Sends a GIF of anime characters kissing.",
-        category: "Anime",
+        description: "Sends a GIF of an anime character getting patted.",
+        category: "Weebs",
         options: []
     },
     perms: {
@@ -22,14 +22,14 @@ module.exports = {
     opts: {
         guildOnly: false,
         devOnly: false,
-        noArgsHelp: true,
+        noArgsHelp: false,
         disabled: false
     },
 
     run: async (bot, message, args) => {
 
         // Fetch the image
-        const URL = await fetchWaifuApi("kiss"),
+        const URL = await fetchWaifuApi("pat"),
         member = await getMember(message, args.join(" "), true);
 
         // Build the embed
@@ -38,7 +38,7 @@ module.exports = {
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
         
         // Send the embed
-        message.channel.send(`${message.member} kissed ${member}`, embed);
+        message.channel.send(`${member} got patted`, embed);
 
     }
 };

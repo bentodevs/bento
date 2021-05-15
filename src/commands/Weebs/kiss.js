@@ -1,15 +1,17 @@
 const { MessageEmbed } = require("discord.js");
+const { getMember } = require("../../modules/functions/getters");
 const { fetchWaifuApi } = require("../../modules/functions/misc");
 
 module.exports = {
     info: {
-        name: "waifu",
+        name: "kiss",
         aliases: [],
-        usage: "",
-        examples: [],
-        description: "Fetches a random waifu image from the waifu.pics API.",
-        category: "Anime",
-        info: null,
+        usage: "kiss <member>",
+        examples: [
+            "kiss @Jarno"
+        ],
+        description: "Sends a GIF of anime characters kissing.",
+        category: "Weebs",
         options: []
     },
     perms: {
@@ -20,22 +22,23 @@ module.exports = {
     opts: {
         guildOnly: false,
         devOnly: false,
-        noArgsHelp: false,
+        noArgsHelp: true,
         disabled: false
     },
 
-    run: async (bot, message) => {
+    run: async (bot, message, args) => {
 
         // Fetch the image
-        const URL = await fetchWaifuApi("waifu");
+        const URL = await fetchWaifuApi("kiss"),
+        member = await getMember(message, args.join(" "), true);
 
         // Build the embed
         const embed = new MessageEmbed()
             .setImage(URL)
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
-
+        
         // Send the embed
-        message.channel.send(embed);
+        message.channel.send(`${message.member} kissed ${member}`, embed);
 
     }
 };

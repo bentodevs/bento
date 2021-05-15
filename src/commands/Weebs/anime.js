@@ -4,14 +4,14 @@ const { getMedia } = require("../../modules/functions/anilist");
 
 module.exports = {
     info: {
-        name: "manga",
+        name: "anime",
         aliases: [],
-        usage: "manga [manga title]",
+        usage: "anime [anime title]",
         examples: [
-            "manga Chainsaw Man"
+            "anime Attack on Titan"
         ],
-        description: "Search for manga on anilist.co",
-        category: "Anime",
+        description: "Search for anime on anilist.co",
+        category: "Weebs",
         info: null,
         options: []
     },
@@ -30,7 +30,7 @@ module.exports = {
     run: async (bot, message, args) => {
 
         // Get the data
-        getMedia(args.join(" "), "MANGA").then(data => {
+        getMedia(args.join(" "), "ANIME").then(data => {
             // Get the description and remove html tags and markdown
             let description = data.description.removeHTML().convertMarkdown();
 
@@ -63,7 +63,7 @@ module.exports = {
             message.channel.send(embed);
         }).catch((err) => {
             // Send the error message
-            message.error(`Something went wrong while fetching the manga: \`${err.message}\``);
+            message.error(`Something went wrong while fetching the anime: \`${err.message}\``);
         });
 
     }

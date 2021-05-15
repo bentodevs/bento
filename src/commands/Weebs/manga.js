@@ -1,17 +1,17 @@
 const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
-const { getCharacter } = require("../../modules/functions/anilist");
+const { getMedia } = require("../../modules/functions/anilist");
 
 module.exports = {
     info: {
-        name: "character",
+        name: "manga",
         aliases: [],
-        usage: "character [name]",
+        usage: "manga [manga title]",
         examples: [
-            "character Elaina"
+            "manga Chainsaw Man"
         ],
-        description: "Search for an anime character on anilist.co",
-        category: "Anime",
+        description: "Search for manga on anilist.co",
+        category: "Weebs",
         info: null,
         options: []
     },
@@ -29,7 +29,8 @@ module.exports = {
 
     run: async (bot, message, args) => {
 
-        getCharacter(args.join(" ")).then(data => {
+        // Get the data
+        getMedia(args.join(" "), "MANGA").then(data => {
             // Get the description and remove html tags and markdown
             let description = data.description.removeHTML().convertMarkdown();
 
@@ -51,18 +52,18 @@ module.exports = {
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor(`${data.name.first ?? ""} ${data.name.last ?? ""}`, "https://i.imgur.com/3Crs2k9.png", data.siteUrl)
+                .setAuthor(data.title.romaji, "https://i.imgur.com/3Crs2k9.png", data.siteUrl)
                 .setDescription(stripIndents`${description}
                 
                 [More Info](${data.siteUrl})`)
-                .setThumbnail(data.image?.large)
+                .setImage(`https://img.anili.st/media/${data.id}`)
                 .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
 
             // Send the embed
             message.channel.send(embed);
-        }).catch(err => {
+        }).catch((err) => {
             // Send the error message
-            message.error(`Something went wrong while fetching the character: \`${err.message}\``);
+            message.error(`Something went wrong while fetching the manga: \`${err.message}\``);
         });
 
     }

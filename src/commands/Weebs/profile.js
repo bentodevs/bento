@@ -11,7 +11,7 @@ module.exports = {
             "profile Jarnoo"
         ],
         description: "Get a users anilist profile.",
-        category: "Anime",
+        category: "Weebs",
         info: null,
         options: []
     },

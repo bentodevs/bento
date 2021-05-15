@@ -4,14 +4,14 @@ const { fetchWaifuApi } = require("../../modules/functions/misc");
 
 module.exports = {
     info: {
-        name: "hug",
+        name: "bonk",
         aliases: [],
-        usage: "hug [member]",
+        usage: "bonk [member]",
         examples: [
-            "hug @Jarno"
+            "bonk @Jarno"
         ],
-        description: "Sends a GIF of an anime character getting hugged.",
-        category: "Anime",
+        description: "Sends a GIF of an anime character getting bonked.",
+        category: "Weebs",
         options: []
     },
     perms: {
@@ -29,7 +29,7 @@ module.exports = {
     run: async (bot, message, args) => {
 
         // Fetch the image
-        const URL = await fetchWaifuApi("hug"),
+        const URL = await fetchWaifuApi("bonk"),
         member = await getMember(message, args.join(" "), true);
 
         // Build the embed
@@ -38,7 +38,7 @@ module.exports = {
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
         
         // Send the embed
-        message.channel.send(`${member} got hugged`, embed);
+        message.channel.send(`${member} got bonked`, embed);
 
     }
 };
