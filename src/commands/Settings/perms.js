@@ -1,33 +1,41 @@
+const { Permissions } = require("discord.js");
 const permissions = require("../../database/models/permissions");
 const { getRole } = require("../../modules/functions/getters");
+const { filterSelfPerms } = require("../../modules/functions/permissions");
 
 module.exports = {
     info: {
         name: "perms",
-        aliases: [],
-        usage: "",
-        examples: [],
-        description: "",
+        aliases: [
+            "p",
+            "permissions",
+            "perm"
+        ],
+        usage: "perms <command | category> [role | discord permission | \"default\"]",
+        examples: [
+            "perms moderation mod",
+            "perms ban mod+",
+            "perms kick KICK_MEMBERS",
+            "perms userinfo default"
+        ],
+        description: "Set or view the permissions for bot commands and categories.",
         category: "Settings",
-        info: null,
+        info: "A list of \"discord permissions\" can be found [here](https://discord.js.org/#/docs/main/stable/class/Permissions?scrollTo=s-FLAGS).\n\nUse `everyone` or `@everyone` to make a command/category available to all users.",
         options: []
     },
     perms: {
-        permission: "",
+        permission: "ADMINISTRATOR",
         type: "discord",
         self: []
     },
     opts: {
-        guildOnly: false,
+        guildOnly: true,
         devOnly: false,
-        noArgsHelp: false,
+        noArgsHelp: true,
         disabled: false
     },
 
     run: async (bot, message, args) => {
-
-        // Define the discord permissions
-        const dPerms = bot.config.discordPermissions;
 
         // Get all the command categories
         const getCategories = bot.commands.map(c => c.info.category.toLowerCase()),
@@ -43,173 +51,162 @@ module.exports = {
         if ((!command && !category) || (command?.info.category.toLowerCase() == "dev" || category == "dev"))
             return message.error("You didn't specify a valid category or command!");
 
-        // If its a command delete the self perms
-        if (command)
-            delete command.perms.self;
-
         // Get the perm info
-        let perm = message.permissions.categories[category] || message.permissions.commands[command?.info.name] || undefined;
+        const perm = message.permissions.categories[category] || message.permissions.commands[command?.info.name] || undefined;
+
+        // Some useful variables to make this command 3x shorter xd
+        const type = command ? "command" : "category",
+        location = command ? `permissions.commands.${command.info.name}` : `permissions.categories.${category}`,
+        target = command ? message.settings.general.prefix + command.info.name : category;
 
         if (!args[1]) {
-            if (JSON.stringify(perm) === JSON.stringify(command?.perms) && message.permissions.categories[command?.info.category.toLowerCase()]?.permission)
-                perm = message.permissions.categories[command.info.category.toLowerCase()];
-            
-            // Define the perm message
-            let msg = `🔒 The current permission for ${command ? `\`${message.settings.general.prefix}${command.info.name}\`` : `the \`${category}\` category`} is set to `;
+            // Get the category or command permission
+            const checkCat = message.permissions.categories[command.info.category.toLowerCase()]?.permission && JSON.stringify(message.permissions.commands[command.info.name]) == JSON.stringify(filterSelfPerms(command?.perms)),
+            permission = checkCat ? message.permissions.categories[command.info.category.toLowerCase()] : message.permissions.commands[command.info.name];
+
+            // Define the perm var
+            let perm = `🔒 The current permission for the \`${target}\` ${type} is set to `;
 
             if (!perm?.type && category) {
-                msg = "🔒 There is no permission set for that category";
-            } else if (perm.type === "role" && perm.hierarchic) {
-                // Grab the role
-                const role = await getRole(message, perm.permission);
+                perm = "🔒 There is no permission set for that category";
+            } else if (permission.type == "role" && permission.hierarchic) {
+                // Try to get the role
+                const role = await getRole(message, permission.permission);
 
-                // Add the role to the message
-                msg += role.id === message.guild.id ? "be open to everyone." : `the ${role} role and up`;
-            } else if (perm.type === "role" && !perm.hierarchic) {
-                // Create the roles array
+                // Add the data to the perm message
+                perm += role?.id == message.guild.id ? "open to everyone" : `the ${role ?? "<deleted role>"} role and up`;
+            } else if (permission.type == "role" && !permission.hierarchic) {
+                // Define the roles array
                 const roles = [];
 
-                // Loop through the roles
-                for (const i of perm.permission) {
-                    // Get the role
-                    const role = await getRole(message, i);
-                    // Push the role into the array
-                    roles.push(role.toString());
-                }
+                if (permission.permission.length == 1 && (permission.permission.includes("@everyone") || permission.permission.includes(message.guild.id))) {
+                    // If the only permission in the array is the everyone role set the perm message to "open to everyone"
+                    perm += `open to everyone`;
+                } else {
+                    // Loop through the permissions and add them to the roles array
+                    for (const i of permission.permission) {
+                        if (i == "@everyone" || i == message.guild.id) {
+                            roles.push("@everyone");
+                        } else {
+                            const role = await getRole(message, i);
+                            roles.push(role?.toString() ?? "<deleted role>");
+                        }
+                    }
 
-                // Add the roles to the message
-                msg += `the ${roles.join(", ")} role${roles.length > 1 ? "s" : ""}`;
-            } else if (perm.type === "discord") {
-                // Add the permission to the message
-                msg += `the Discord permission \`${perm.permission}\``;
-            } else {
-                msg = "🔒 There is no permission set for that category";
+                    // Add the data to the perm message
+                    perm += `the ${roles.join(", ")} role${roles.length > 1 ? "s" : ""}`;
+                }
+            } else if (permission.type == "discord") {
+                // Add the data to the perm message
+                perm += `the Discord permission \`${permission.permission}\``;
+            } else if (command.info.category.toLowerCase() == "dev") {
+                // Add the data to the perm message
+                perm += `bot devs only`;
             }
 
-            // Compare the objects and if they are the same add (default) to the perm message
-            if (JSON.stringify(perm) === JSON.stringify(command?.perms) && message.permissions.categories[command?.info.category.toLowerCase()]?.permission)
-                msg += ` (set for the \`${command.info.category}\` category)`;
-            else if (command & JSON.stringify(perm) === JSON.stringify(command?.perms)) 
-                msg += " (default)";
-            // Otherwise add a dot
-            else msg += ".";
+            if (checkCat) {
+                // If the perm is set for a category add it to the perm message
+                perm += ` (set for the \`${command.info.category}\` category)`;
+            } else if (JSON.stringify(permission) == JSON.stringify(filterSelfPerms(command?.perms))) {
+                // If the perm is the default perm add it to the perm message
+                perm += " (default)";
+            } else {
+                // Add a dot
+                perm += ".";
+            }
 
             // Send the message
-            message.channel.send(msg);
-        } else if (dPerms.includes(args[1].toUpperCase())) {
-            if (category) {
-                if (args[1].toUpperCase() == perm?.permission)
-                    return message.error(`The permission for that category is already set to \`${args[1].toUpperCase()}\`!`);
+            message.channel.send(perm);
+        } else if (Permissions.FLAGS[args[1].toUpperCase()]) {
+            // If the permission is already set to the specified permission return an error
+            if (args[1].toUpperCase() == perm?.permission)
+                return message.error(`The permission for the \`${target}\` ${type} is already set to \`${args[1].toUpperCase()}\`!`);
 
-                await permissions.findOneAndUpdate({ _id: message.guild.id }, {
-                    [`permissions.categories.${category}`]: {
-                        permission: args[1].toUpperCase(),
-                        type: "discord"
-                    }
-                });
+            // Update the permission in the database
+            await permissions.findOneAndUpdate({ _id: message.guild.id }, {
+                [location]: {
+                    permission: args[1].toUpperCase(),
+                    type: "discord"
+                }
+            });
 
-                message.confirmation(`The permission for the \`${category}\` category has successfully been set to \`${args[1].toUpperCase()}\`!`);
-            } else {
-                if (args[1].toUpperCase() == perm.permission)
-                    return message.error(`The permission for that command is already set to \`${args[1].toUpperCase()}\`!`);
-
-                await permissions.findOneAndUpdate({ _id: message.guild.id }, {
-                    [`permissions.commands.${command.info.name}`]: {
-                        permission: args[1].toUpperCase(),
-                        type: "discord"
-                    }
-                });
-
-                message.confirmation(`The permission for the \`${command.info.name}\` command has successfully been set to \`${args[1].toUpperCase()}\`!`);
-            }
+            // Send a confirmation message
+            message.confirmation(`The permission for the \`${target}\` ${type} has been set to \`${args[1].toUpperCase()}\`!`);
         } else if (args[1].toLowerCase() == "default") {
-            if (category) {
-                if (!perm?.permission)
-                    return message.error("The category is already set to the default permission!");
+            // If the permission is already set to default return an error
+            if (!perm?.permission || JSON.stringify(perm) == JSON.stringify(command ? filterSelfPerms(command.perms) : null))
+                return message.error(`The ${type} is already set to the default permission!`);
 
-                await permissions.findOneAndUpdate({ _id: message.guild.id }, {
-                    [`permissions.categories.${category}`]: {}
-                });
+            // Update the permission in the database
+            await permissions.findOneAndUpdate({ _id: message.guild.id }, {
+                [location]: command ? filterSelfPerms(command.perms) : {}
+            });
 
-                message.confirmation(`The permission for the \`${category}\` category has been set to the default permission!`);
-            } else {
-                if (JSON.stringify(perm) == JSON.stringify(command.perms))
-                    return message.error("The command is already set to the default permission!");
-
-                await permissions.findOneAndUpdate({ _id: message.guild.id }, {
-                    [`permissions.commands.${command.info.name}`]: command.perms
-                });
-
-                message.confirmation(`The permission for the \`${command.info.name}\` command has been set to the default permission!`);
-            }
+            // Send a confirmation message
+            message.confirmation(`The permission for the \`${target}\` ${type} has been set to the default permission!`);
         } else {
-            const role = await getRole(message, args.slice(1).join(" ")) || await getRole(message, args.slice(1).join(" ").replace("+", "")),
-            location = command ? `permissions.commands.${command.info.name}` : `permissions.categories.${category}`,
-            target = command ? message.settings.general.prefix + command.info.name : category,
-            type = command ? "command" : "category";
+            // Get the role
+            const role = await getRole(message, args.slice(1).join(" ")) || await getRole(message, args.slice(1).join(" ").replace("+", ""));
 
+            // If no role was specified return an error
             if (!role)
-                return message.error("You didn't specify a valid role!");
+                return message.error("You didn't specify a valid role or permission!");
 
             if (args.slice(1).join(" ").toLowerCase().includes("+") && (role.name.match(/\+/g) || []).length < (args.slice(1).join(" ").match(/\+/g) || []).length) {
+                // If the permission is already set to the role specified return an error
                 if (role.id == perm?.permission && perm?.hierarchic)
-                    return message.error(`The ${command ? "command" : "category"} is already set to the permission you specified!`);
+                    return message.error(`The ${type} is already set to the permission you specified!`);
 
-                if (role.id == message.guild.id) {
-                    await permissions.findOneAndUpdate({ _id: message.guild.id }, {
-                        [location]: {
-                            permission: ["@everyone"],
-                            type: "role"
-                        }
-                    });
+                // Update the permission in the database
+                await permissions.findOneAndUpdate({ _id: message.guild.id }, {
+                    [location]: role.id == message.guild.id ? { permission: ["@everyone"], type: "role" } : { permission: role.id, type: "role", hierarchic: true }
+                });
 
-                    message.confirmation(`The permission for the \`${target}\` ${type} has been set to be open to everyone!`);
-                } else {
-                    await permissions.findOneAndUpdate({ _id: message.guild.id }, {
-                        [location]: {
-                            permission: role.id,
-                            type: "role",
-                            hierarchic: true
-                        }
-                    });
-
-                    message.confirmation(`The permission for the \`${target}\` ${type} has been set to the ${role} role and up!`);
-                }
+                // Send a confirmation message
+                message.confirmation(`The permission for the \`${target}\` ${type} has been set to ${role.id == message.guild.id ? "be open to everyone" : `the ${role} role and up`}!`);
             } else {
                 if (Array.isArray(perm?.permission)) {
                     if (perm.permission.includes(role.id) || perm.permission.includes(role.name)) {
                         if (perm.permission.length == 1) {
+                            // Update the permission in the database
                             await permissions.findOneAndUpdate({ _id: message.guild.id }, {
-                                [location]: command ? command.perms : {}
+                                [location]: command ? filterSelfPerms(command.perms) : {}
                             });
-    
+
+                            // Send a confirmation message
                             message.confirmation(`The permission for the \`${target}\` ${type} has been set to the default permission!`);
                         } else {
+                            // Pull the role from the permission in the database
                             await permissions.findOneAndUpdate({ _id: message.guild.id }, {
                                 $pull: {
-                                    [`${location}.permission`]: role.name == "@everyone" ? role.name : role.id
+                                    [`${location}.permission`]: role.id == message.guild.id ? role.name : role.id
                                 }
                             });
 
+                            // Send a confirmation message
                             message.confirmation(`Successfully removed the ${role} role from the permissions for the \`${target}\` ${type}!`);
                         }
                     } else {
+                        // Push the role to the permission in the database
                         await permissions.findOneAndUpdate({ _id: message.guild.id }, {
-                            $push: {
-                                [`${location}.permission`]: role.id
+                            $addToSet: {
+                                [`${location}.permission`]: role.id == message.guild.id ? role.name : role.id
                             }
                         });
 
+                        // Send a confirmation message
                         message.confirmation(`Successfully added the ${role} role to the permissions for the \`${target}\` ${type}!`);
                     }
                 } else {
+                    // Update the permission in the database
                     await permissions.findOneAndUpdate({ _id: message.guild.id }, {
                         [location]: {
-                            permission: [ role.id ],
+                            permission: [role.id == message.guild.id ? role.name : role.id],
                             type: "role"
                         }
                     });
 
+                    // Send a confirmation message
                     message.confirmation(`Successfully added the ${role} role to the permissions for the \`${target}\` ${type}!`);
                 }
             }
