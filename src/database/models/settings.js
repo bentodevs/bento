@@ -32,7 +32,24 @@ module.exports = model("settings", new Schema({
         type: Object,
         default: {
             minimumAge: null, // The minimum age length to check against for new accounts
-            bots: false // Whether bots can join the guild
+            bots: false, // Whether bots can join the guild
+            filter: {
+                state: false,
+                zalgo: false,
+                entries: []
+            },
+            no_invite: false,
+            no_link: false,
+            mentions_mute: null,
+            mentions_ban: null
+        }
+    },
+    ignore: {
+        type: Object,
+        default: {
+            hierarchicRoleId: null,
+            roles: [],
+            channels: []
         }
     }
 }));
