@@ -1,17 +1,15 @@
 const { MessageEmbed } = require("discord.js");
-const { getMember } = require("../../modules/functions/getters");
 const { fetchWaifuApi } = require("../../modules/functions/misc");
 
 module.exports = {
     info: {
-        name: "bonk",
+        name: "waifu",
         aliases: [],
-        usage: "bonk [member]",
-        examples: [
-            "bonk @Jarno"
-        ],
-        description: "Sends a GIF of an anime character getting bonked.",
-        category: "Anime",
+        usage: "",
+        examples: [],
+        description: "Fetches a random waifu image from the waifu.pics API.",
+        category: "Weebs",
+        info: null,
         options: []
     },
     perms: {
@@ -26,19 +24,18 @@ module.exports = {
         disabled: false
     },
 
-    run: async (bot, message, args) => {
+    run: async (bot, message) => {
 
         // Fetch the image
-        const URL = await fetchWaifuApi("bonk"),
-        member = await getMember(message, args.join(" "), true);
+        const URL = await fetchWaifuApi("waifu");
 
         // Build the embed
         const embed = new MessageEmbed()
             .setImage(URL)
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
-        
+
         // Send the embed
-        message.channel.send(`${member} got bonked`, embed);
+        message.channel.send(embed);
 
     }
 };

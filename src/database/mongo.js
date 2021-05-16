@@ -1,4 +1,5 @@
 // Import Models
+const permissions = require("./models/permissions");
 const settings = require("./models/settings");
 
 /**
@@ -24,6 +25,53 @@ exports.getSettings = async guild => {
             _id: guild
         }).save();
     }
+};
+
+/**
+ * Get the permissions for the specified Guild
+ * 
+ * @param {Object} bot The client which is used to transact between this app & Discord
+ * @param {String} guild The Guild ID to get the permissions for
+ * 
+ * @returns {Promise<Object>} Permission Data
+ */
+exports.getPerms = async (bot, guild) => {
+    // Define the defaults and return objects
+    const defaults = {},
+    commandPerms = {};
+
+    // Loop through the commands and set the defaults
+    for (const command of bot.commands.array()) {
+        defaults[command.info.name] = {
+            permission: command.perms.permission,
+            type: command.perms.type
+        };
+    }
+
+    // If the command was in DMs return the defaults
+    if (!guild)
+        return defaults;
+
+    // Get the guild data
+    let guildData = await permissions.findOne({ _id: guild });
+
+    // If there is no guild data create the database object
+    if (!guildData) {
+        guildData = await new permissions({
+            _id: guild
+        }).save();
+    }
+
+    // Create the return object
+    Object.keys(defaults).forEach(key => {
+       commandPerms[key] = guildData.permissions?.commands?.[key] ?? defaults[key]; 
+    });
+
+    // Return the return object
+    return {
+        commands: commandPerms,
+        categories: guildData.permissions?.categories ?? {}
+    };
 };
 
 /**

@@ -1,17 +1,17 @@
 const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
-const { getMedia } = require("../../modules/functions/anilist");
+const { getCharacter } = require("../../modules/functions/anilist");
 
 module.exports = {
     info: {
-        name: "anime",
+        name: "character",
         aliases: [],
-        usage: "anime [anime title]",
+        usage: "character [name]",
         examples: [
-            "anime Attack on Titan"
+            "character Elaina"
         ],
-        description: "Search for anime on anilist.co",
-        category: "Anime",
+        description: "Search for an anime character on anilist.co",
+        category: "Weebs",
         info: null,
         options: []
     },
@@ -29,8 +29,7 @@ module.exports = {
 
     run: async (bot, message, args) => {
 
-        // Get the data
-        getMedia(args.join(" "), "ANIME").then(data => {
+        getCharacter(args.join(" ")).then(data => {
             // Get the description and remove html tags and markdown
             let description = data.description.removeHTML().convertMarkdown();
 
@@ -52,18 +51,18 @@ module.exports = {
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor(data.title.romaji, "https://i.imgur.com/3Crs2k9.png", data.siteUrl)
+                .setAuthor(`${data.name.first ?? ""} ${data.name.last ?? ""}`, "https://i.imgur.com/3Crs2k9.png", data.siteUrl)
                 .setDescription(stripIndents`${description}
                 
                 [More Info](${data.siteUrl})`)
-                .setImage(`https://img.anili.st/media/${data.id}`)
+                .setThumbnail(data.image?.large)
                 .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
 
             // Send the embed
             message.channel.send(embed);
-        }).catch((err) => {
+        }).catch(err => {
             // Send the error message
-            message.error(`Something went wrong while fetching the anime: \`${err.message}\``);
+            message.error(`Something went wrong while fetching the character: \`${err.message}\``);
         });
 
     }
