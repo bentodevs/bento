@@ -17,7 +17,15 @@ module.exports = {
         ],
         description: "Manage tags for this guild.",
         category: "Miscellaneous",
-        info: null,
+        info: `Placeholders *(these get replaced with actual values by the bot)*
+        
+        \`{author}\` - Tags the person who sends the tag.
+        \`{mention}\` - Tags the person mentioned.
+        \`{prefix}\` - The bots prefix for this guild.
+        \`{guild}\` - The name of this guild.
+        
+        Add \`-e\` to the message to make the output an embed.
+        You can set up to 50 tags per guild.`,
         options: []
     },
     perms: {
