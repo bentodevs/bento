@@ -211,7 +211,7 @@ exports.parseTime = (string, returnUnit, opts) => {
         daysPerWeek: 7,
         weeksPerMonth: 4,
         monthsPerYear: 12,
-        daysPerYear: 365.25
+        daysPerYear: 365
     };
 
     const UNIT_MAP = {
