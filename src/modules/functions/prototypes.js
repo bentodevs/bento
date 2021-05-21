@@ -50,4 +50,9 @@ module.exports = () => {
         return this.replace(/\[/g, "")
             .replace(/]/g, "");
     };
+
+    String.prototype.removeMinecraftCodes = function() {
+        // Remove minecraft colour codes
+        return this.replace(/\u00A7[0-9A-FK-OR]/ig, "");
+    };
 };
