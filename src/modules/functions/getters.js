@@ -1,3 +1,6 @@
+const { MessageEmbed } = require("discord.js");
+const config = require("../../config");
+
 /**
  * Gets a guild member from the cache/fetches it from the Discord API
  * 
@@ -173,4 +176,37 @@ exports.getRole = async (message, args) => {
     // If no role was found return false
     else if (!role)
         return false;
+};
+
+/**
+ * Formats and executes the tag
+ * 
+ * @param {Object} tag The tag data
+ * @param {Object} message The message object from which to get certain data (Such as guild ID, etc.)
+ * @param {Array} args An array of arguments taken from the message content
+ * 
+ * @returns {Boolean} true 
+ */
+exports.getTag = async (tag, message, args) => {
+    // Replace all the placeholders
+    let content = tag.content
+        .replace(/{author}/gi, message.author)
+        .replace(/{prefix}/gi, message.settings.general.prefix)
+        .replace(/{guild}/gi, message.guild.name)
+        .replace(/{mention}/gi, await this.getMember(message, args[0] ? args.join(" ") : false, true).then(member => { return member; }) ?? message.author );
+
+    // If the tag includes "-e" convert it to an embed
+    if (content.includes("-e")) {
+        const embed = new MessageEmbed()
+            .setDescription(content.replace("-e", ""))
+            .setColor(message.member?.displayColor ?? config.general.embedColor);
+
+        content = embed;
+    }
+
+    // Send the tag
+    await message.channel.send(content);
+
+    // Return true
+    return true;
 };

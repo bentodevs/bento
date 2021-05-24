@@ -1,8 +1,10 @@
 // Import Dependencies
 const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
+const tags = require("../database/models/tags");
 const { getSettings, getPerms } = require("../database/mongo");
 const { checkMesage } = require("../modules/functions/moderation");
+const { getTag } = require("../modules/functions/getters");
 const { checkSelf, checkPerms } = require("../modules/functions/permissions");
 
 module.exports = async (bot, message) => {
@@ -42,14 +44,20 @@ module.exports = async (bot, message) => {
 
     const args = message.content.slice(prefix.length).trim().split(/ +/g),
     command = args.shift().toLowerCase(),
-    cmd = bot.commands.get(command) || bot.commands.get(bot.aliases.get(command));
+    cmd = bot.commands.get(command) || bot.commands.get(bot.aliases.get(command)),
+    tag = message.guild ? await tags.findOne({ guild: message.guild.id, name: command }) : false;
 
     // Import message functions
     require("../modules/functions/messages")(message);
 
     // Return if the user didn't specify a valid command
-    if (!cmd)
+    if (!cmd && !tag)
         return;
+
+    // If its a tag return the getTag function
+    if (tag)
+        return getTag(tag, message, args);
+
     // Return an error if the command is disabled and the user isn't a bot owner
     if (cmd.opts.disabled && !bot.config.general.devs.includes(message.author.id))
         return message.error("This command is currently disabled!");

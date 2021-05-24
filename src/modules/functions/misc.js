@@ -211,7 +211,7 @@ exports.parseTime = (string, returnUnit, opts) => {
         daysPerWeek: 7,
         weeksPerMonth: 4,
         monthsPerYear: 12,
-        daysPerYear: 365.25
+        daysPerYear: 365
     };
 
     const UNIT_MAP = {
@@ -430,6 +430,46 @@ exports.fetchWaifuApi = (type) => {
         }).then(res => res.json()).then(json => {
             // Resolve the URL
             resolve(json.url);
+        }).catch(err => {
+            // Log and reject the error
+            console.error(err);
+            reject(err);
+        });
+    });
+};
+
+/**
+ * Fetches the status of a minecraft server from the R2-D2 API
+ * 
+ * @returns {Promise<Object>} server status
+ * 
+ * @example
+ * 
+ * getMinecraftStatus().then(data => {
+ *      console.log(data);
+ * }).catch(err => {
+ *      console.error(data);
+ * })
+ */
+ exports.getMinecraftStatus = (ip, port) => {
+    return new Promise((resolve, reject) => {
+        // If no IP was specified return an error
+        if (!ip)
+            return reject(new Error("Missing Arguments"));
+
+        // Define the API URL
+        // TODO: [BOT-76] Update the URL with the actual API URL
+        const URL = `http://localhost:2021/utils/status?ip=${ip}&port=${port ?? 25565}`;
+
+        // Fetch the server status
+        fetch(URL, {
+            headers: {
+                "content-type": "application/json",
+                "authorization": config.apiKeys.r2d2
+            }
+        }).then(res => res.json()).then(json => {
+            // Return the status
+            resolve(json);
         }).catch(err => {
             // Log and reject the error
             console.error(err);
