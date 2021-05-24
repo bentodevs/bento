@@ -2,6 +2,7 @@
 const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
 const { getSettings, getPerms } = require("../database/mongo");
+const { checkMesage } = require("../modules/functions/moderation");
 const { checkSelf, checkPerms } = require("../modules/functions/permissions");
 
 module.exports = async (bot, message) => {
@@ -26,6 +27,11 @@ module.exports = async (bot, message) => {
     // Return if the user is a bot
     if (message.author.bot)
         return;
+    
+    // If the message was sent in a guild, then check it against the automod
+    if (message.guild) {
+        await checkMesage(message, settings);
+    }
 
     // Return if the message doesn't start with the prefix
     if (message.content.indexOf(prefix) !== 0)
@@ -57,7 +63,7 @@ module.exports = async (bot, message) => {
     if (cmd.opts.guildOnly && !message.guild)
         return message.error("This command is unavailable via private messages. Please run this command in a guild.");
     // Return if the command or category is disabled
-    if (message.guild && (message.settings.general.disabled_commands.includes(cmd.info.name) || message.settings.general.disabled_categories.includes(cmd.info.category)) && !message.member.hasPermission("ADMINISTRATOR") && !bot.config.general.devs.includes(message.author.id))
+    if (message.guild && (settings.general.disabled_commands?.includes(cmd.info.name) || settings.general.disabled_categories?.includes(cmd.info.category)) && !message.member.hasPermission("ADMINISTRATOR") && !bot.config.general.devs.includes(message.author.id))
         return;
     // If the bot doesn't have permissions to run the command return
     if (await checkSelf(message, cmd))
