@@ -39,12 +39,12 @@ module.exports = {
         const member = await getMember(message, args[0], true);
         
         if (!member)
-            return message.error();
+            return message.error("That member doesn't seem to exist in this guild!");
         
         const cases = await punishments.find({ guild: message.guild.id, moderator: member.user.id });
 
         if (cases.length === 0)
-            return message.error();
+            return message.error("That user has not created any punishments!");
         
         // Page variables
         const pages = [];
