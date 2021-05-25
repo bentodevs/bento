@@ -45,7 +45,11 @@ const config = {
         twitch: "",
         player: "",
         game: "",
-        trophy: ""
+        trophy: "",
+        poll: "",
+        users: "",
+        chatting: "",
+        group: ""
     },
 
     // Mongo Info
