@@ -34,22 +34,34 @@ module.exports = model("settings", new Schema({
             minimumAge: null, // The minimum age length to check against for new accounts
             bots: false, // Whether bots can join the guild
             filter: {
-                state: false,
-                zalgo: false,
-                entries: []
+                state: false, // If the filter is enabled or not
+                zalgo: false, // If zalgo text needs to be filtered
+                entries: [] // Array of filter entries
             },
-            no_invite: false,
-            no_link: false,
-            mentions_mute: null,
-            mentions_ban: null
+            no_invite: false, // If users are allowed to send invites or not
+            no_link: false, // If users are allowed to send links or not
+            mentions_mute: null, // Amount of mentions needed for a mute
+            mentions_ban: null // Amount of mentions needed for a ban
         }
     },
     ignore: {
         type: Object,
         default: {
-            hierarchicRoleId: null,
-            roles: [],
-            channels: []
+            hierarchicRoleId: null, // Lowest role in list where all roles above can bypass the automod
+            roles: [], // Array of roles that can bypass the automod
+            channels: [] // Array of channels that can bypass the automod
+        }
+    },
+    blacklist: {
+        type: Object,
+        default: {
+            users: [], // Array of blacklisted users
+            roles: [], // Array of blacklisted roles
+            channels: [], // Array of blacklisted channels
+            bypass: {
+                roles: [], // Array of roles that bypass the blacklist
+                hierarchicRoleId: null // Lowest role in list where all roles above can bypass blacklist
+            }
         }
     }
 }));
