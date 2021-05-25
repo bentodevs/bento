@@ -3,7 +3,7 @@ const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
 const tags = require("../database/models/tags");
 const { getSettings, getPerms } = require("../database/mongo");
-const { checkMesage } = require("../modules/functions/moderation");
+const { checkMesage, checkBlacklist } = require("../modules/functions/moderation");
 const { getTag } = require("../modules/functions/getters");
 const { checkSelf, checkPerms } = require("../modules/functions/permissions");
 
@@ -52,6 +52,10 @@ module.exports = async (bot, message) => {
 
     // Return if the user didn't specify a valid command
     if (!cmd && !tag)
+        return;
+
+    // Return if the user is blacklisted
+    if (await checkBlacklist(message))
         return;
 
     // If its a tag return the getTag function

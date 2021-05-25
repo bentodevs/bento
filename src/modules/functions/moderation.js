@@ -1,5 +1,7 @@
 const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
+const config = require("../../config");
+const settings = require("../../database/models/settings");
 const { log } = require("./logger");
 
 exports.punishmentLog = async (message, member, pID, reason, type, length) => {
@@ -87,7 +89,6 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
 };
 
 exports.checkMesage = async (message, settings) => {
-    
     if (settings.ignore.hierarchicRoleId && message.guild.roles.cache.get(settings.ignore.hierarchicRoleId).position <= message.member.roles.highest.position)
         return;
     if (settings.ignore.channels.includes(message.channel.id) || settings.ignore.roles.includes(message.member.roles.cache) || message.member.permissions.has("ADMINISTRATOR"))
@@ -126,5 +127,51 @@ exports.checkMesage = async (message, settings) => {
             message.delete().catch(() => { });
             await message.reply(`you are unable to send URLs here!`).then(m => m.delete({ timeout: 5000 })).catch(() => { });
         }
+    }
+};
+
+/**
+ * Check if the user running the command is blacklisted
+ * 
+ * @param {Object} message The message object from which to get certain data (Such as guild ID, etc.)
+ * 
+ * @returns {Promise<Boolean>} True if blacklisted, false if not blacklisted.
+ */
+exports.checkBlacklist = async (message) => {
+    if (message.settings.blacklist.users.includes(message.author.id) || message.settings.blacklist.channels.includes(message.author.id) || message.settings.blacklist.roles.filter(a => message.member.roles.cache.has(a)).length) {
+        // Define the blacklisted var
+        let blacklisted = true;
+
+        // Get the hierarchic role
+        const hierarchicRole = message.guild.roles.cache.get(message.settings.blacklist.bypass.hierarchicRoleId);
+
+        // If the hierarchic role doesn't exist anymore remove it from the settings db
+        if (!hierarchicRole && message.settings.blacklist.bypass.hierarchicRoleId) {
+            await settings.findOneAndUpdate({ _id: message.guild.id }, { "blacklist.bypass.hierarchicRoleId": null });
+
+            blacklisted = false;
+        }
+
+        // If the users role is higher or equal to the hierarchic role set blacklisted to false
+        if (hierarchicRole && message.member.roles.highest.position >= hierarchicRole.position)
+            blacklisted = false;
+
+        // If the user has a bypass role set blacklisted to false
+        if (message.settings.blacklist.bypass.roles.length) {
+            for (const data of message.settings.bypass.roles) {
+                if (message.member.roles.cache.has(data))
+                    blacklisted = false;
+            }
+        }
+
+        // If the user has ADMINISTRATOR permissions or is a bot dev set blacklisted to false
+        if (message.member.hasPermission("ADMINISTRATOR") || config.general.devs.includes(message.author.id))
+            blacklisted = false;
+
+        // Return the blacklisted variable
+        return blacklisted;
+    } else {
+        // Return false
+        return false;
     }
 };
