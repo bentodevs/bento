@@ -2,7 +2,16 @@ const { intervalToDuration, formatDuration } = require("date-fns");
 const { getSettings } = require("../database/mongo");
 
 module.exports = async (bot, member) => {
+    // If the member is a partial fetch it
+    if (member.partial) {
+        try {
+            await member.fetch();
+        } catch (err) {
+            return bot.logger.error(err);
+        }
+    }
 
+    // Grab the settings
     const settings = await getSettings(member.guild.id);
 
     // Check the member meets the minimum account age requirements
@@ -58,5 +67,4 @@ module.exports = async (bot, member) => {
         // Add the roles to the user
         member.roles.add(roles, "Auto Role");
     }
-
 };
