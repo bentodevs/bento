@@ -49,6 +49,8 @@ exports.init = async bot => {
                 }
             }
         }
+
+        return true;
     };
 
     // Run the getMutes function
