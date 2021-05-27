@@ -477,3 +477,15 @@ exports.fetchWaifuApi = (type) => {
         });
     });
 };
+
+/**
+ * Get giveaway winners
+ * 
+ * @param {Array} entries Array with giveaway entries
+ * @param {Number} winners Amount of giveaway winners
+ * 
+ * @returns {Array} Array with giveaway winners
+ */
+exports.drawGiveawayWinners = (entries, winners) => {
+    return entries.sort(() => 0.5 - Math.random()).slice(0, winners);
+};
