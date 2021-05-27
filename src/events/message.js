@@ -13,7 +13,7 @@ module.exports = async (bot, message) => {
         try {
             await message.fetch();
         } catch (err) {
-            return bot.logger.err(err);
+            return bot.logger.error(err);
         }
     }
 
