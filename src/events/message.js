@@ -62,6 +62,9 @@ module.exports = async (bot, message) => {
     if (tag)
         return getTag(tag, message, args);
 
+    // Get permissions
+    const permissions = message.permissions = await getPerms(bot, message.guild?.id);
+
     // Return an error if the command is disabled and the user isn't a bot owner
     if (cmd.opts.disabled && !bot.config.general.devs.includes(message.author.id))
         return message.error("This command is currently disabled!");
@@ -80,9 +83,6 @@ module.exports = async (bot, message) => {
     // If the bot doesn't have permissions to run the command return
     if (await checkSelf(message, cmd))
         return;
-
-    // Get permissions
-    const permissions = message.permissions = await getPerms(bot, message.guild?.id);
     
     // If the user doesn't have permissions to run the command return
     // TODO: [BOT-75] Add an option to disable the permission message
