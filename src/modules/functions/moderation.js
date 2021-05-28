@@ -158,7 +158,7 @@ exports.checkBlacklist = async (message) => {
 
         // If the user has a bypass role set blacklisted to false
         if (message.settings.blacklist.bypass.roles.length) {
-            for (const data of message.settings.bypass.roles) {
+            for (const data of message.settings.blacklist.bypass.roles) {
                 if (message.member.roles.cache.has(data))
                     blacklisted = false;
             }

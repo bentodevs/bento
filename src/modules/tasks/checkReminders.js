@@ -4,7 +4,7 @@ const config = require("../../config");
 const reminders = require("../../database/models/reminders");
 
 /**
- * Initialize the remind task
+ * Initialize the checkReminders task
  * 
  * @param {Object} bot 
  */

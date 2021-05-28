@@ -1,6 +1,14 @@
 const users = require("../database/models/users");
 
 module.exports = async (bot, oldUser, newUser) => {
+    // Check if the user is a partial and try to fetch it
+    if (newUser.partial) {
+        try {
+            await newUser.fetch();
+        } catch (err) {
+            return bot.logger.error(err);
+        }
+    }
 
     // Check if the user changed their name
     if (oldUser.username !== newUser.username) {
@@ -29,5 +37,4 @@ module.exports = async (bot, oldUser, newUser) => {
             });
         }
     }
-
 };
