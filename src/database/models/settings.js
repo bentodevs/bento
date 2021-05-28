@@ -63,5 +63,14 @@ module.exports = model("settings", new Schema({
                 hierarchicRoleId: null // Lowest role in list where all roles above can bypass blacklist
             }
         }
+    },
+    logs: {
+        type: Object,
+        default: {
+            default: null,
+            commands: null,
+            edited: null,
+            deleted: null
+        }
     }
 }));

@@ -1,4 +1,5 @@
 const punishments = require("../../database/models/punishments");
+const { punishmentLog } = require("../../modules/functions/moderation");
 
 module.exports = {
     info: {
@@ -65,7 +66,7 @@ module.exports = {
             });
 
             // Log the unban
-            bot.punishmentLog(message, user, null, reason, "unban");
+            punishmentLog(message, user, null, reason, "unban");
         } catch (e) {
             message.error(`There was an issue unbanning \`${user.tag}\`: \`${e.message}\``);
         }

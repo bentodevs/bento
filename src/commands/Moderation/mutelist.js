@@ -41,8 +41,8 @@ module.exports = {
             // 1. Get the muted user
             // 2. Get the executor
             // 3. Add the time muted for to the mute time
-            const mUser = await getUser(message, data.mutedUser),
-                mBy = await getUser(message, data.mutedBy),
+            const mUser = await getUser(bot, message, data.mutedUser),
+                mBy = await getUser(bot, message, data.mutedBy),
                 time = data.timeMuted + parseInt(data.muteTime);
 
             muteList += `${data.caseID ? `**ID:** ${data.caseID} | ` : ""}**User:** \`${mUser.tag}\` (${mUser.id}) | **Muted By:** \`${mBy.tag}\` | **Expires:** ${data.muteTime == "forever" ? "never" : time <= Date.now() ? `<Pending Unmute>` : `in ${formatDistance(Date.now(), time)}`} | **Reason:** ${data.reason}\n`;

@@ -1,5 +1,6 @@
 const mutes = require("../../database/models/mutes");
 const { punishmentLog } = require("../../modules/functions/moderation");
+const { getMember } = require("../../modules/functions/getters");
 
 module.exports = {
     info: {
@@ -30,7 +31,7 @@ module.exports = {
         // 2. get unmute reason
         // 3. Assign mute role to a const, cause easy
         // 4. Get mute data for the member
-        const member = await bot.getMember(message, args[0]),
+        const member = await getMember(message, args[0]),
             reason = args.splice(1, args.length).join(' ') || "No reason provided",
             muterole = message.settings.roles.mute,
             mute = await mutes.findOne({

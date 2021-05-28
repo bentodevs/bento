@@ -4,6 +4,7 @@ const punishments = require("../../database/models/punishments");
 const { getMember } = require("../../modules/functions/getters");
 const { formatDistanceToNowStrict } = require("date-fns");
 const { punishmentLog } = require("../../modules/functions/moderation");
+const { parseTime } = require("../../modules/functions/misc");
 
 module.exports = {
     info: {
@@ -74,7 +75,7 @@ module.exports = {
             reason = args.slice(2).join(" ");
         } else {
             // Try and convert the time to a ms value with timesting library
-            if (args[1]) time = bot.parseTime(args[1], 'ms');
+            if (args[1]) time = parseTime(args[1], 'ms');
             // If there is no time, but there are arguments, then set the reason as args1 onwards
             if (!time && args[1]) reason = args.slice(1).join(" ");
             // If time is valid & there are more args, assign the reason as args2 onwards

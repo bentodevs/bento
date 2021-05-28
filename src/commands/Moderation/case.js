@@ -85,8 +85,10 @@ module.exports = {
             if (!punishment)
                 return message.error("A punishment with that ID was not found!");
             
-            const usr = await getUser(message, punishment.user),
-                mod = await getUser(message, punishment.moderator);
+            console.log(punishment)
+            
+            const usr = await getUser(bot, message, punishment.user),
+                mod = await getUser(bot, message, punishment.moderator);
             
             // Build the embed
             // "mute" is only added when the punishment type is a mute (Semi-obvious tbh...)

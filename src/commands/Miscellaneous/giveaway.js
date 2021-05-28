@@ -284,7 +284,7 @@ module.exports = {
             // Loop through the winners
             for (const data of (winners)) {
                 // Get the user
-                const user = await bot.getUser(message, data);
+                const user = await getUser(bot, message, data);
 
                 // If the user exists add it to the array otherwise add <deleted user>
                 if (user) {
@@ -346,7 +346,7 @@ module.exports = {
             // Loop through the winners
             for (const data of (winners)) {
                 // Get the user
-                const user = await bot.getUser(message, data);
+                const user = await getUser(bot, message, data);
 
                 // If the user exists add it to the array otherwise add <deleted user>
                 if (user) {

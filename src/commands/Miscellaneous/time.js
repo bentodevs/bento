@@ -26,7 +26,7 @@ module.exports = {
         guildOnly: false,
         devOnly: false,
         premium: false,
-        noArgsHelp: false,
+        noArgsHelp: true,
         disabled: false
     },
 
