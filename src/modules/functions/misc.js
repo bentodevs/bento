@@ -162,48 +162,6 @@ exports.getWeather = (query) => {
 };
 
 /**
- * Get weather data for a certain location
- * 
- * @param {String} query
- *  
- * @returns {Promise<Object>} weather data
- * 
- * @example
- * 
- * getWeather("Amsterdam").then(data => {
- *      console.log(data);
- * }).catch(err => {
- *      console.error(err);
- * })
- */
-exports.getTime = (lat, long) => {
-    return new Promise((resolve, reject) => {
-        // Define the API URL
-        const URL = `http://api.timezonedb.com/v2.1/get-time-zone?key=${config.apiKeys.time}&format=json&by=position&lat=${lat}&lng=${long}`;
-
-        // Fetch the weather API
-        fetch(URL).then(res => res.json()).then(json => {
-            if (json.error) {
-                if (json.error.code == 1006) {
-                    // If the error is 1006 return undefined
-                    return resolve(undefined);
-                } else {
-                    // If its any other error return a new error
-                    return reject(new Error(json.error.message));
-                }
-            } else {
-                // Resolve the weather data
-                resolve(json);
-            }
-        }).catch(err => {
-            // Log and reject the error
-            console.error(err);
-            reject(err);
-        });
-    });
-};
-
-/**
  * Fetches a random dad joke from the icanhazdadjoke.com api
  * 
  * @returns {Promise<Object>} dad joke data
