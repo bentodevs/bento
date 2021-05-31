@@ -30,7 +30,7 @@ module.exports = {
         const bans = await message.guild.fetchBans(),
             reason = args.slice(1).join(" ") || "No reason provided",
             match = /<@!?(\d{17,19})>/g.exec(args[0]),
-            action = punishments.countDocuments({ guild: message.guild.id }) + 1 || 1;
+            action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1;
 
         // If the regex matches replace args[0]
         if (match)
@@ -52,7 +52,7 @@ module.exports = {
             // Unban the user
             message.guild.members.unban(ban.user.id, `[Issued by ${message.author.tag}] ${reason}`);
             // Send a confirmation message
-            message.confirmation(`Successfully unbanned **${ban.user.username}#${ban.user.discriminator}**! *(Case #${action})`);
+            message.confirmation(`Successfully unbanned **${ban.user.username}#${ban.user.discriminator}**! *(Case #${action})*`);
 
             // Create the punishment record in the DB
             await punishments.create({
