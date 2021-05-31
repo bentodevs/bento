@@ -5,6 +5,7 @@ const settings = require("../../database/models/settings");
 const { log } = require("./logger");
 
 exports.punishmentLog = async (message, member, pID, reason, type, length) => {
+
     // Fetch the default logger channel
     const modlog = message.guild.channels.cache.get(message.settings.logs.default);
 
@@ -43,22 +44,22 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
     } else if (type.toLowerCase() === "ban") {
         // Built the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Case #${pID} | User Banned`, member.user.displayAvatarURL({ dynamic: true, format: 'png' }))
-            .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: 'png' }))
-            .setDescription(stripIndents`**User:** ${member} (\`${member.user.tag}\`)
+            .setAuthor(`Case #${pID} | User Banned`, member.displayAvatarURL({ dynamic: true, format: 'png' }))
+            .setThumbnail(member.displayAvatarURL({ dynamic: true, format: 'png' }))
+            .setDescription(stripIndents`**User:** ${member} (\`${member.tag}\`)
             **Moderator:** ${message.author} (\`${message.author.tag}\`)
             **Time:** Forever
             **Reason:** ${reason}`)
             .setColor(message.member.displayHexColor)
             .setTimestamp()
-            .setFooter(`User ID: ${member.user.id}`);
+            .setFooter(`User ID: ${member.id}`);
         
         // Send the completed embed
         modlog.send(embed);
     } else if (type.toLowerCase() === "unban") {
         // Built the embed
         const embed = new MessageEmbed()
-            .setAuthor(`User Unbanned`, member.displayAvatarURL({ dynamic: true, format: 'png' }))
+            .setAuthor(`Case #${pID} | User Unbanned`, member.displayAvatarURL({ dynamic: true, format: 'png' }))
             .setThumbnail(member.displayAvatarURL({ dynamic: true, format: 'png' }))
             .setDescription(stripIndents`**User:** ${member} (\`${member.tag}\`)
             **Moderator:** ${message.author} (\`${message.author.tag}\`)
