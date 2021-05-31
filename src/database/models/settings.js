@@ -70,7 +70,18 @@ module.exports = model("settings", new Schema({
             default: null,
             commands: null,
             edited: null,
-            deleted: null
+            deleted: null,
+            events: null
+        }
+    },
+    manual_events: {
+        type: Object,
+        default: {
+            moderation: false,
+            guild: false,
+            channels: false,
+            roles: false,
+            members: false
         }
     }
 }));
