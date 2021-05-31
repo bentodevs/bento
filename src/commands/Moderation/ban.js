@@ -74,7 +74,7 @@ module.exports = {
             });
 
             // Send the punishment to the log channel
-            punishmentLog(message, member, action, reason, "ban");
+            punishmentLog(message, member.user, action, reason, "ban");
         } catch (e) {
             // Catch any errors during the ban process & send error message
             message.error(`There was an issue banning \`${member.user.tag}\` - \`${e.message}\``);
