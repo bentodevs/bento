@@ -4,22 +4,29 @@ const { punishmentLog } = require("../modules/functions/moderation");
 
 module.exports = async (bot, guild, user) => {
     
+    // Fetch the guild settings
     const sets = await settings.findOne({ _id: guild.id });
 
     if (sets.manual_events.moderation) {
+        // Fetch latest Audit Log entry
         const entry = await guild.fetchAuditLogs({ type: "MEMBER_BAN_REMOVE" }).then(a => a.entries.first());
 
+        // If the executor is us, then return
         if (entry.executor.id === bot.user.id)
             return;
-        
+
+        // 1. Get the punishment ID
+        // 2. Get the member who executed the punishment
+        // 3. Build a message object so we can use it in the punishmentLog function
         const action = await punishments.countDocuments({ guild: guild.id }) + 1 || 1,
-        member = guild.members.cache.get(entry.executor.id),
-        message = {
-            author: entry.executor,
-            member: member,
-            guild: guild,
-            settings: sets
-        };
+            member = guild.members.cache.get(entry.executor.id),
+            message = {
+                author: entry.executor,
+                member: member,
+                guild: guild,
+                settings: sets
+            },
+            reason = entry.reason || "No reason provided";
     
         // Create the punishment record in the DB
         await punishments.create({
@@ -29,10 +36,10 @@ module.exports = async (bot, guild, user) => {
             user: entry.target.id,
             moderator: entry.executor.id,
             actionTime: Date.now(),
-            reason: "Manual Ban"
+            reason: reason
         })
     
         // Log the unban
-        punishmentLog(message, entry.target, action, "Manual ban", "ban");
+        punishmentLog(message, entry.target, action, reason, "ban");
     }
 }

@@ -4,14 +4,21 @@ const { punishmentLog } = require("../modules/functions/moderation");
 
 module.exports = async (bot, guild, user) => {
     
+    // Fetch the guild settings
     const sets = await settings.findOne({ _id: guild.id });
 
+    // Event logging
     if (sets.manual_events.moderation) {
+        // Fetch latest Audit Log entry
         const entry = await guild.fetchAuditLogs({ type: "MEMBER_BAN_REMOVE" }).then(a => a.entries.first());
 
+        // If the executor is us, then return
         if (entry.executor.id === bot.user.id)
             return;
 
+        // 1. Get the punishment ID
+        // 2. Get the member who executed the punishment
+        // 3. Build a message object so we can use it in the punishmentLog function
         const action = await punishments.countDocuments({ guild: guild.id }) + 1 || 1,
         member = guild.members.cache.get(entry.executor.id),
         message = {
