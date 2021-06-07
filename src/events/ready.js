@@ -20,8 +20,7 @@ module.exports = async bot => {
     const rdyMsg = ora("Getting bot ready...").start();
 
     // Set the bots status
-    await bot.user.setActivity(`${bot.config.general.prefix}help | r2-d2.dev`, { type: "WATCHING" });
-    await bot.user.setStatus("online");
+    await bot.user.setPresence({ activity: { name: `${bot.config.general.prefix}help | r2-d2.dev`, type: "WATCHING" }, status: "online"});
 
     // Stop and update the ready message
     rdyMsg.stopAndPersist({

@@ -1,7 +1,7 @@
 // TODO: Add proper commenting to file
 
 // Import dependencies
-const { Client, Collection } = require("discord.js"),
+const { Client, Collection, Intents } = require("discord.js"),
 { connect } = require("mongoose"),
 { getMongooseURL } = require("./database/mongo"),
 ora = require("ora");
@@ -9,6 +9,9 @@ ora = require("ora");
 // Import handlers
 const commands = require("./modules/handlers/command"),
 events = require("./modules/handlers/event");
+
+// Define Gateway Intents
+const intents = new Intents(Intents.ALL).remove(["DIRECT_MESSAGE_TYPING", "GUILD_MESSAGE_TYPING", "GUILD_INTEGRATIONS", "GUILD_INVITES"]);
 
 // Create the bot client
 const bot = new Client({
@@ -23,7 +26,8 @@ const bot = new Client({
         "MESSAGE",
         "REACTION",
         "USER"
-    ]
+    ],
+    intents: intents
 });
 
 // Import the config

@@ -31,7 +31,7 @@
     "common-tags": "^1.8.0",
     "date-fns": "^2.19.0",
     "date-fns-tz": "^1.1.4",
-    "discord.js": "^12.5.3",
+    "discord.js": "^13.0.0-dev.e980948de55e91e59c9e3293ac76bc645a058a53",
     "iso-639-1": "^2.1.9",
     "mongoose": "^5.12.2",
     "node-fetch": "^2.6.1",
