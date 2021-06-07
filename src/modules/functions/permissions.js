@@ -72,7 +72,7 @@ exports.checkPerms = async (bot, message, permissions, cmd) => {
             }
         } else if (permission.type == "discord") {
             // If the user is lacking the permission return true
-            if (!message.member.hasPermission(permission.permission))
+            if (!message.channel.permissionsFor(message.member).has(permission.permission))
                 return true;
         } else {
             // If all the checks passed return false

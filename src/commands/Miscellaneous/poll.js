@@ -43,7 +43,7 @@ module.exports = {
         if (channel.type !== "text" && channel.type !== "news")
             return message.error("The channel you mentioned isn't a text or news channel!");
         // If the user doesn't have MANAGE_MESSAGES permission but specified a different channel return an error
-        if (channel.id !== message.channel.id && !message.member.hasPermission("MANAGE_CHANNELS"))
+        if (channel.id !== message.channel.id && !message.channel.permissionsFor(message.member).has("MANAGE_CHANNELS"))
             return message.error("To send polls to different channels you need the `MANAGE_CHANNELS` permission!");
         // If the user can't send messages in the specified channel return an error
         if (!channel.permissionsFor(message.member).has("SEND_MESSAGES"))

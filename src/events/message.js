@@ -78,7 +78,7 @@ module.exports = async (bot, message) => {
     if (cmd.opts.guildOnly && !message.guild)
         return message.error("This command is unavailable via private messages. Please run this command in a guild.");
     // Return if the command or category is disabled
-    if (message.guild && (settings.general.disabled_commands?.includes(cmd.info.name) || settings.general.disabled_categories?.includes(cmd.info.category)) && !message.member.hasPermission("ADMINISTRATOR") && !bot.config.general.devs.includes(message.author.id))
+    if (message.guild && (settings.general.disabled_commands?.includes(cmd.info.name) || settings.general.disabled_categories?.includes(cmd.info.category)) && !message.channel.permissionsFor(message.member).has("ADMINISTRATOR") && !bot.config.general.devs.includes(message.author.id))
         return;
     // If the bot doesn't have permissions to run the command return
     if (await checkSelf(message, cmd))

@@ -166,7 +166,7 @@ exports.checkBlacklist = async (message) => {
         }
 
         // If the user has ADMINISTRATOR permissions or is a bot dev set blacklisted to false
-        if (message.member.hasPermission("ADMINISTRATOR") || config.general.devs.includes(message.author.id))
+        if (message.channel.permissionsFor(message.member).has("ADMINISTRATOR") || config.general.devs.includes(message.author.id))
             blacklisted = false;
 
         // Return the blacklisted variable
