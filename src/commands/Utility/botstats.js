@@ -2,7 +2,7 @@ const { stripIndents } = require("common-tags");
 const { formatDistance } = require("date-fns");
 const { MessageEmbed, version } = require("discord.js");
 const { connection } = require("mongoose");
-const os = require("os")
+const os = require("os");
 
 module.exports = {
     info: {
@@ -28,7 +28,7 @@ module.exports = {
         disabled: false
     },
 
-    run: async (bot, message, args) => {
+    run: async (bot, message) => {
 
         // Fetch the bot uptime
         const botUptime = formatDistance(0, bot.uptime),
@@ -49,6 +49,6 @@ module.exports = {
             **Dependencies**
             <:djs:773324175979839559> Discord.js: **v${version}** | <:nodejs:773324163867082773> Node.js: **${process.version}**`);
         
-        message.channel.send(embed)
+        message.channel.send(embed);
     }
 };
