@@ -15,7 +15,6 @@ const config = require("../../config");
  * console.log(summoner)
  */
 exports.getLeagueSummoner = async (region, summoner) => {
-
     // Define the list of allowed regions
     const regions = ["br", "jp", "kr", "na", "oc", "tr", "ru", "eun", "euw", "lan", "las"];
     // Set the region to lowercase - is let to allow re-assignment later
@@ -42,7 +41,7 @@ exports.getLeagueSummoner = async (region, summoner) => {
 
     // Fetch the base player data (This is used in future requests as some IDs are encrypted/encoded)
     const req1 = await fetch(`https://${reg}.api.riotgames.com/lol/summoner/v4/summoners/by-name/${encodeURI(summoner.split(",").join(" "))}?api_key=${config.apiKeys.riot}`),
-        res1 = await req1.json();
+    res1 = await req1.json();
     
     // If the request doesn't return a response "200" (OK), then return an error
     if (!req1.ok)
@@ -50,7 +49,7 @@ exports.getLeagueSummoner = async (region, summoner) => {
     
     // Fetch the player's match list
     const req2 = await fetch(`https://${reg}.api.riotgames.com/lol/match/v4/matchlists/by-account/${res1.accountId}?api_key=${config.apiKeys.riot}`),
-        res2 = await req2.json();
+    res2 = await req2.json();
     
     // Create a returnable object which can be used in commands
     const returnable = {
@@ -79,13 +78,12 @@ exports.getLeagueSummoner = async (region, summoner) => {
  * })
  */
 exports.getLeagueChampByID = async (champID) => {
-
     // Set the champion data url
     const championData = `https://ddragon.leagueoflegends.com/cdn/11.9.1/data/en_US/champion.json`;
 
     // Fetch the data & convert to json
     const req = await fetch(championData),
-        res = await req.json();
+    res = await req.json();
     
     // Convert the json data to an array of objects & kv's
     const obj = Object.values(res.data);
@@ -116,13 +114,12 @@ exports.getLeagueChampByID = async (champID) => {
  * })
  */
  exports.getLeagueChampByName = async (champName) => {
-
     // Set the champion data url
     const championData = `https://ddragon.leagueoflegends.com/cdn/11.9.1/data/en_US/champion.json`;
 
     // Fetch the data & convert to json
     const req = await fetch(championData),
-        res = await req.json();
+    res = await req.json();
     
     // Convert the json data to an array of objects & kv's
     const obj = Object.values(res.data);

@@ -61,7 +61,7 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setTitle("Logging")
                 .setThumbnail("https://i.imgur.com/iML7LKF.png")
-                .setColor(message.member.displayHexColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
                 .setDescription(msg);
 
             // Send the embed

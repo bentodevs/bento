@@ -55,10 +55,17 @@ const init = async () => {
     const commandMessage = ora("Loading commands...").start(),
     cmds = await commands.init(bot);
     
-    commandMessage.stopAndPersist({
-        symbol: "✔️",
-        text: ` Loaded ${cmds} commands.`,
-    });
+    if (bot.commands.filter(a => a.slash?.enabled).size > 100) {
+        commandMessage.stopAndPersist({
+            symbol: "❌",
+            text: `Error while loading commands: There are over 100 commands with slash commands enabled!`,
+        });
+    } else {
+        commandMessage.stopAndPersist({
+            symbol: "✔️",
+            text: ` Loaded ${cmds} commands.`,
+        });
+    }
 
     const eventMessage = ora("Loading events...").start(),
     evts = await events.init(bot);

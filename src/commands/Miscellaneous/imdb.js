@@ -46,7 +46,7 @@ module.exports = {
             
             const embed = new MessageEmbed()
                 .setAuthor(res.Title, (res.Poster ?? "https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png"))
-                .setColor((message.member.displayHexColor ?? bot.config.general.embedColor))
+                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
                 .setThumbnail((res.Poster ?? "https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png"))
                 .setDescription(msg)
                 .setTimestamp()
@@ -71,7 +71,7 @@ module.exports = {
             
             const embed = new MessageEmbed()
                 .setAuthor(res.Title, (res.Poster ?? "https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png"))
-                .setColor((message.member.displayHexColor ?? bot.config.general.embedColor))
+                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
                 .setThumbnail((res.Poster ?? "https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png"))
                 .setDescription(msg)
                 .setTimestamp()
