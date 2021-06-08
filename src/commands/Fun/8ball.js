@@ -23,6 +23,15 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "question",
+            type: "STRING",
+            description: "A question to ask the 8ball.",
+            required: true
+        }]
+    },
 
     run: async (bot, message) => {
 
@@ -54,7 +63,7 @@ module.exports = {
         const result = Math.floor((Math.random() * answers.length));
 
         // Send the answer
-        message.channel.send(`🎱 ${answers[result]}`);
+        message.reply(`🎱 ${answers[result]}`);
 
     }
 };

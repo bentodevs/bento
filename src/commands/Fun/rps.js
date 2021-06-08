@@ -23,6 +23,20 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "option",
+            type: "STRING",
+            description: "Rock, paper or scissors.",
+            required: true,
+            choices: [
+                { name: "Rock", value: "rock" },
+                { name: "Paper", value: "paper" },
+                { name: "Scissors", value: "scissors" }
+            ]
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -55,5 +69,34 @@ module.exports = {
             message.channel.send(`I chose **${formatted[botPick]}**, you win!`);
         }
                
+    },
+
+    run_interaction: async (bot, interaction) => {
+
+        // Define the different options & formatted versions of them
+        const options = [
+            "scissors",
+            "rock",
+            "paper"
+        ],
+        formatted = [
+            "scissors ✌️",
+            "rock ✊",
+            "paper ✋"
+        ];
+
+        // Get the userPick and the botPick
+        const userPick = options.indexOf(interaction.options.get("option").value),
+        botPick = Math.floor(Math.random() * 3);
+
+        // Check who won
+        if (userPick == botPick) {
+            return interaction.reply(`I chose **${formatted[botPick]}**, its a draw!`);
+        } else if (botPick > userPick || botPick == 0 && userPick == 2) {
+            interaction.reply(`I chose **${formatted[botPick]}**, I win!`);
+        } else {
+            interaction.reply(`I chose **${formatted[botPick]}**, you win!`);
+        }
+
     }
 };

@@ -23,6 +23,10 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: []
+    },
 
     run: async (bot, message) => {
 
@@ -30,7 +34,7 @@ module.exports = {
         const data = await getDadjoke();
 
         // Send the joke
-        message.channel.send(data.joke);
+        message.reply(data.joke);
 
     }
 };

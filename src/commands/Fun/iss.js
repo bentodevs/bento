@@ -36,7 +36,6 @@ module.exports = {
         issPeople = await (await fetch("http://api.open-notify.org/astros.json")).json();
         
         const humans = issPeople.people.reduce((a, b) => {
-            // deepcode ignore PrototypePollution: Won't be fixed
             a[b.craft] = a[b.craft] || [];
             a[b.craft].push(b.name);
             return a;
@@ -58,7 +57,7 @@ module.exports = {
             embed.addField(`${craft}`, ppl.join('\n'));
         }
 
-        message.channel.send(embed);
+        message.reply(embed);
 
     }
 };

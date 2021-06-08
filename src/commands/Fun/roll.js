@@ -27,6 +27,15 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "sides",
+            type: "INTEGER",
+            description: "A number between 1 and 1,000,000,000,000.",
+            required: false
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -53,6 +62,26 @@ module.exports = {
 
         // Send the result
         message.confirmation(`You rolled a **${result}**!`);
+
+    },
+
+    run_interaction: async (bot, interaction) => {
+
+        // Get the number
+        const number = interaction.options.get("sides")?.value ?? 6;
+        
+        // If the number is 0 or lower return an error
+        if (number <= 0)
+            return interaction.error("Please enter a number above 0!");
+        // If the number is above 1 trillion return an error
+        if (number > 1000000000000)
+            return interaction.error("Please enter a number below **1,000,000,000,000**!");
+    
+        // Get the result
+        const result = Math.floor(Math.random() * number + 1);
+    
+        // Send the result
+        interaction.confirmation(`You rolled a **${result}**!`);
 
     }
 };

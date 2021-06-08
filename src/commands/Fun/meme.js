@@ -30,6 +30,10 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: []
+    },
 
     run: async (bot, message) => {
 
@@ -47,6 +51,26 @@ module.exports = {
         // Delete the status message & send the embed
         msg.delete().catch(() => {});
         message.channel.send(embed);
+
+    },
+
+    run_interaction: async (bot, interaction) => {
+
+        // Defer the interaction
+        await interaction.defer();
+
+        // Get a random meme
+        const meme = await getMeme();
+
+        // Build the embed
+        const embed = new MessageEmbed()
+            .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
+            .setImage(meme.data.url)
+            .setDescription(`[${meme.data.title}](https://www.reddit.com/${meme.data.permalink})`)
+            .setFooter(meme.data.subreddit_name_prefixed, bot.user.displayAvatarURL({ format: "png", dynamic: true }));
+
+        // Send the embed
+        interaction.editReply(embed);
 
     }
 };
