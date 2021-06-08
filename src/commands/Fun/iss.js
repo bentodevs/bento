@@ -25,16 +25,20 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: []
+    },
 
-    run: async (bot, message, args) => {
+    run: async (bot, message) => {
 
         const iss = await (await fetch("http://api.open-notify.org/iss-now.json")).json(),
-            issPeople = await (await fetch("http://api.open-notify.org/astros.json")).json();
+        issPeople = await (await fetch("http://api.open-notify.org/astros.json")).json();
         
         const humans = issPeople.people.reduce((a, b) => {
             // deepcode ignore PrototypePollution: Won't be fixed
             a[b.craft] = a[b.craft] || [];
-            a[b.craft].push(b.name)
+            a[b.craft].push(b.name);
             return a;
         }, {});
 
@@ -45,15 +49,16 @@ module.exports = {
             .setDescription(stripIndents`**Current Location:** ${iss.iss_position.latitude}, ${iss.iss_position.longitude},
             **Current Astronauts:** ${issPeople.number}`)
             .setFooter("Last updated")
-            .setTimestamp()
+            .setTimestamp();
         
-        for (let [craft, ppl] of Object.entries(humans)) {
+        for (const [craft, ppl] of Object.entries(humans)) {
             for (let i = 0; i < ppl.length; i++) {
                 ppl[i] = `${i + 1}. ${ppl[i]}`;
             }
-            embed.addField(`${craft}`, ppl.join('\n'))
+            embed.addField(`${craft}`, ppl.join('\n'));
         }
 
-        message.channel.send(embed)
+        message.channel.send(embed);
+
     }
 };
