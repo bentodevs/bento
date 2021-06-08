@@ -42,7 +42,7 @@ module.exports = {
         if (!isNaN(args[0]) && /^[0-9]{7,}$/.test(args[0])) {
             await fetchSteamUserByID(args[0])
                 .then(async data => {
-                    await fetch(`https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=${bot.config.general.steamAPI}&steamid=${data.steamID}`)
+                    await fetch(`https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=${bot.config.apiKeys.steam}&steamid=${data.steamID}`)
                         .then(async csUser => {
                             const user = await csUser.json();
 
@@ -71,7 +71,7 @@ module.exports = {
         } else {
             await fetchSteamUserByName(args[0])
                 .then(async data => {
-                    await fetch(`https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=${bot.config.general.steamAPI}&steamid=${data.steamID}`)
+                    await fetch(`https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=${bot.config.apiKeys.steam}&steamid=${data.steamID}`)
                         .then(async csUser => {
                             const user = await csUser.json();
 
@@ -112,7 +112,7 @@ module.exports = {
         if (!isNaN(option) && /^[0-9]{7,}$/.test(option)) {
             await fetchSteamUserByID(option)
                 .then(async data => {
-                    await fetch(`https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=${bot.config.general.steamAPI}&steamid=${data.steamID}`)
+                    await fetch(`https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=${bot.config.apiKeys.steam}&steamid=${data.steamID}`)
                         .then(async csUser => {
                             const user = await csUser.json();
 
@@ -141,7 +141,7 @@ module.exports = {
         } else {
             await fetchSteamUserByName(option)
                 .then(async data => {
-                    await fetch(`https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=${bot.config.general.steamAPI}&steamid=${data.steamID}`)
+                    await fetch(`https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=${bot.config.apiKeys.steam}&steamid=${data.steamID}`)
                         .then(async csUser => {
                             const user = await csUser.json();
 

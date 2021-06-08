@@ -23,7 +23,8 @@ const config = {
         steam: "", // Steam API Key
         riot: "", // Riot Games API Key
         trackerNetwork: "", // TrackerNetwork API Key
-        omdb: "" // omdb API Key
+        omdb: "", // omdb API Key
+        r2d2: "" // R2-D2 API Key
     },
 
     // Global Emojis
