@@ -6,7 +6,7 @@ module.exports = {
     info: {
         name: "championinfo",
         aliases: ["champinfo"],
-        usage: "championinfo <Champion name>",
+        usage: "championinfo <champion name>",
         examples: ["championinfo Rakan"],
         description: "Search for information about a League of Legends champion!",
         category: "Games",
@@ -25,10 +25,19 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "champion_name",
+            type: "STRING",
+            description: "The name of a League of Legends champion.",
+            required: true
+        }]
+    },
 
     run: async (bot, message, args) => {
 
-        // Fetch the champ
+        // Fetch the champion
         const champ = await getLeagueChampByName(args.join(""));
 
         // Catch any errors
@@ -39,7 +48,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setTitle(`${champ.name}, ${champ.title}`)
             .setThumbnail(`https://ddragon.leagueoflegends.com/cdn/11.9.1/img/champion/${champ.id}.png`)
-            .setColor((message.member.displayHexColor ?? bot.config.general.embedColor))
+            .setColor((message.member?.displayHexColor ?? bot.config.general.embedColor))
             .setDescription(stripIndents`${champ.blurb}
             
             **Tags:** \`${champ.tags.join("`, `")}\`
@@ -53,7 +62,38 @@ module.exports = {
             .setTimestamp();
         
         // Send the embed
-        message.channel.send(embed);
+        message.reply(embed);
 
-    }
+    },
+
+    run_interaction: async (bot, interaction) => {
+
+        // Fetch the champion
+        const champ = await getLeagueChampByName(interaction.options.get("champion_name").value);
+
+        // Catch any errors
+        if (champ === "NO_CHAMP_FOUND")
+            return interaction.error("It looks like you didn't provide a valid champion!");
+
+        // Build the embed
+        const embed = new MessageEmbed()
+            .setTitle(`${champ.name}, ${champ.title}`)
+            .setThumbnail(`https://ddragon.leagueoflegends.com/cdn/11.9.1/img/champion/${champ.id}.png`)
+            .setColor((interaction.member?.displayHexColor ?? bot.config.general.embedColor))
+            .setDescription(stripIndents`${champ.blurb}
+            
+            **Tags:** \`${champ.tags.join("`, `")}\`
+
+            **__Base Stats:__**
+            **Health:** ${champ.stats.hp} (+${champ.stats.hpperlevel} per level)
+            **Mana:** ${champ.stats.mp} (+${champ.stats.mpperlevel} per level)
+            **Armor:** ${champ.stats.armor} (+${champ.stats.armorperlevel} per level)
+            **Attack Damage:** ${champ.stats.attackdamage} (+${champ.stats.attackdamage} per level)`)
+            .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ dynamic: true, format: "png" }))
+            .setTimestamp();
+        
+        // Send the embed
+        interaction.reply(embed);
+
+    }  
 };

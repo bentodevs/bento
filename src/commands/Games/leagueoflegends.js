@@ -26,6 +26,33 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "region",
+            type: "STRING",
+            description: "Select the region your League of Legends account is registered in.",
+            required: true,
+            choices: [
+                { name: "Brazil", value: "BR" },
+                { name: "Europe Nordic & East", value: "EUN" },
+                { name: "Europe West", value: "EUW" },
+                { name: "Latin America North", value: "LAN" },
+                { name: "Latin America South", value: "LAS" },
+                { name: "North America", value: "NA" },
+                { name: "Oceania", value: "OC" },
+                { name: "Russia", value: "RU" },
+                { name: "Turkey", value: "TR" },
+                { name: "Japan", value: "JP" },
+                { name: "Republic of Korea", value: "KR" }
+            ]
+        }, {
+            name: "summoner",
+            type: "STRING",
+            description: "Your League of Legends summoner name.",
+            required: true
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -63,7 +90,7 @@ module.exports = {
         // Build the embed
         const embed = new MessageEmbed()
             .setAuthor(`League of Legends data for ${data.user}`, `https://ddragon.leagueoflegends.com/cdn/11.9.1/img/profileicon/${data.profileIconId}.png`)
-            .setColor((message.member.displayHexColor ?? bot.config.general.embedColor))
+            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
             .setDescription(stripIndents`**Summoner Name:** ${data.user}
             **Summoner Level:** ${data.summonerLevel}
             **Games Played:** ${data.matchData.totalGames}
@@ -76,5 +103,52 @@ module.exports = {
         msg.delete().catch(() => { });
         // Send the embed
         message.channel.send(embed);
+
+    },
+
+    run_interaction: async (bot, interaction) => {
+        
+        // Defer the interaction
+        await interaction.defer();
+        
+        // Fetch the league summoner data
+        const data = await getLeagueSummoner(interaction.options.get("region").value, interaction.options.get("summoner").value);
+
+        // Catch any errors
+        if (data === "NO_REGION")
+            return interaction.editReply(`${bot.config.emojis.error} It looks like you entered an incorrect region!`);
+        
+        if (data === "NO_USER_FOUND")
+            return interaction.editReply(`${bot.config.emojis.error} It looks like there isn't a Summoner with that name!`);
+
+        // Sort the matches by time
+        const matchList = data.matchData.matches.sort((a, b) => b.timestamp - a.timestamp);
+
+        // Set the recent matches string
+        let matches = "**Recent Matches**\n";
+       
+        // For the 5 most recent matches in a player's history, fetch the data and add
+        // to the recent matches string
+        for await (const m of matchList.slice(0, 5)) {
+            const champ = await getLeagueChampByID(m.champion);
+
+            matches += `**Played:** ${format(m.timestamp, "Pp")} | **Lane:** ${m.lane.toTitleCase()} | **Champ:** ${champ.name}\n`;
+        }
+
+        // Build the embed
+        const embed = new MessageEmbed()
+            .setAuthor(`League of Legends data for ${data.user}`, `https://ddragon.leagueoflegends.com/cdn/11.9.1/img/profileicon/${data.profileIconId}.png`)
+            .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
+            .setDescription(stripIndents`**Summoner Name:** ${data.user}
+            **Summoner Level:** ${data.summonerLevel}
+            **Games Played:** ${data.matchData.totalGames}
+            
+            ${matches}`)
+            .setTimestamp()
+            .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ dynamic: true, format: "png" }));
+        
+        // Send the embed
+        interaction.editReply(embed);
+
     }
 };
