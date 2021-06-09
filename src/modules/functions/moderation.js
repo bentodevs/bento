@@ -44,9 +44,9 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
     } else if (type.toLowerCase() === "ban") {
         // Built the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Case #${pID} | User Banned`, member.displayAvatarURL({ dynamic: true, format: 'png' }))
-            .setThumbnail(member.displayAvatarURL({ dynamic: true, format: 'png' }))
-            .setDescription(stripIndents`**User:** ${member} (\`${member.tag}\`)
+            .setAuthor(`Case #${pID} | User Banned`, member.user?.displayAvatarURL({ dynamic: true, format: 'png' }) ?? member.displayAvatarURL({ dynamic: true, format: 'png' }))
+            .setThumbnail(member.user?.displayAvatarURL({ dynamic: true, format: 'png' }) ?? member.displayAvatarURL({ dynamic: true, format: 'png' }))
+            .setDescription(stripIndents`**User:** ${member} (\`${member.user?.tag ?? member.tag}\`)
             **Moderator:** ${message.author} (\`${message.author.tag}\`)
             **Time:** Forever
             **Reason:** ${reason}`)
@@ -122,7 +122,7 @@ exports.checkMesage = async (message, settings) => {
     }
 
     if (settings.moderation.no_link) {
-        const link = new RegExp(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi);
+        const link = new RegExp(/[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)?/gi);
 
         if (link.test(message.content)) {
             message.delete().catch(() => { });

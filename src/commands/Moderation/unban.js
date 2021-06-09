@@ -1,4 +1,6 @@
+const preban = require("../../database/models/preban");
 const punishments = require("../../database/models/punishments");
+const { getUser } = require("../../modules/functions/getters");
 const { punishmentLog } = require("../../modules/functions/moderation");
 
 module.exports = {
@@ -41,14 +43,9 @@ module.exports = {
         || bans.find(u => u.user.username.toLowerCase() == args[0].toLowerCase()) 
         || bans.find(u => u.user.id.includes(args[0]));
 
-        // If the ban wasn't found return an error
-        if (!ban)
-            return message.error("You didn't specify a banned user!");
-
-        // Grab the user
-        const user = bot.users.cache.get(ban.user.id);
-
-        try {
+        if (ban) {
+            // Grab the user
+            const user = bot.users.cache.get(ban.user.id);
             // Unban the user
             message.guild.members.unban(ban.user.id, `[Issued by ${message.author.tag}] ${reason}`);
             // Send a confirmation message
@@ -67,8 +64,28 @@ module.exports = {
 
             // Log the unban
             punishmentLog(message, user, null, reason, "unban");
-        } catch (e) {
-            message.error(`There was an issue unbanning \`${user.tag}\`: \`${e.message}\``);
+        } else {
+            // Attempt to get the user
+            const user = await getUser(bot, message, args[0], false);
+
+            // If the user doesn't exist/isn't valid then return an error
+            if (!user)
+                message.errorReply("You did not specify a valid user");
+            
+            // Find the ban in the preban database
+            const pban = await preban.findOne({ user: user.id });
+
+            // If the preban database doesn't have the user, and the user doesn't exist in the guild's bans
+            // then return an error
+            if (!pban && !ban)
+                return message.errorReply("You didn't specify a banned user!");
+            
+            // Find the ban in the preban database
+            await preban.findOneAndDelete({ user: user.id });
+            // Send a confirmation message
+            message.confirmation(`Successfully unbanned **${user.tag}**! *(Case #${action})*`);
+            // Log the unban
+            punishmentLog(message, user, null, reason, "unban");
         }
     }
 };
