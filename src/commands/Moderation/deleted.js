@@ -11,7 +11,7 @@ module.exports = {
         ],
         description: "Shows the latest deleted message in a channel.",
         category: "Moderation",
-        info: "R2-D2 only stores this information untill the bot restarts.",
+        info: "R2-D2 only stores this information until the bot restarts.",
         options: []
     },
     perms: {
