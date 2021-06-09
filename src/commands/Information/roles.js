@@ -26,6 +26,15 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "page",
+            type: "INTEGER",
+            description: "The page you want to view.",
+            required: false
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -56,10 +65,46 @@ module.exports = {
             .setAuthor(`Roles of ${message.guild.name}`, message.guild.iconURL({ format: "png", dynamic: true }))
             .setFooter(`${sorted.length} total roles | Page ${page + 1} of ${pages.length}`)
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
-            .setDescription(description);
+            .setDescription(description.join("\n"));
 
         // Send the embed
-        message.channel.send(embed);
+        message.reply(embed);
+
+    },
+
+    run_interaction: async (bot, interaction) => {
+
+        // Define page vars
+        const pages = [];
+        let page = 0;
+
+        // Sort the roles by position
+        const sorted = interaction.guild.roles.cache.sort((a, b) => b.position - a.position).array();
+
+        // Devide the roles into pages of 10
+        for (let i = 0; i < sorted.length; i += 10) {
+            pages.push(sorted.slice(i, i + 10));
+        }
+
+        // If the page option is there set it as the page
+        if (interaction.options.get("page")?.value) 
+            page = interaction.options.get("page").value -= 1;
+        // Return if the page wasn't found
+        if (!pages[page]) 
+            return interaction.error("You didn't specify a valid page!");
+
+        // Format the description
+        const description = pages[page].map(r => `${r} | **ID:** ${r.id} | **${r.members.size}** member(s)`);
+
+        // Build the embed
+        const embed = new MessageEmbed()
+            .setAuthor(`Roles of ${interaction.guild.name}`, interaction.guild.iconURL({ format: "png", dynamic: true }))
+            .setFooter(`${sorted.length} total roles | Page ${page + 1} of ${pages.length}`)
+            .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
+            .setDescription(description.join("\n"));
+
+        // Send the embed
+        interaction.reply(embed);
 
     }
 };

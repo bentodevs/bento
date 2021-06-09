@@ -30,6 +30,15 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "user",
+            type: "USER",
+            description: "The user who's name history you want to view.",
+            required: false
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -58,6 +67,30 @@ module.exports = {
 
         // Send a message with the usernames
         message.confirmation(`Last **${usernames.length}** names for **${user.user?.tag ?? user.tag}:** \`${usernames.join("`, `")}\``);
+
+    },
+
+    run_interaction: async (bot, interaction) => {
+
+        // Grab the user & their data
+        const user = interaction.options.get("user")?.user || interaction.user,
+        data = await users.findOne({ _id: user.id });
+
+        // TODO: [BOT-7] Give users an option to stop the bot from tracking their usernames
+
+        // If no data was found return an error
+        if (!data)
+            return interaction.error("I don't have any data on the user you specified!");
+        // If the user only has 1 name return an error
+        if (data.usernames.length <= 1)
+            return interaction.error("I don't remember any name changes for this user!");
+
+        // Sort the usernames and create a map with only the usernames
+        const sorted = data.usernames.sort((a, b) => b.time - a.time),
+        usernames = sorted.map(a => a.username);
+
+        // Send a message with the usernames
+        interaction.confirmation(`Last **${usernames.length}** names for **${user.user?.tag ?? user.tag}:** \`${usernames.join("`, `")}\``);
 
     }
 };

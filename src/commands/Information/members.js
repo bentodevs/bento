@@ -30,6 +30,20 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "role",
+            type: "ROLE",
+            description: "Select a role to display the members of.",
+            required: false
+        }, {
+            name: "page",
+            type: "INTEGER",
+            description: "The page you want to view.",
+            required: false
+        }]
+    },
 
     run: async function (bot, message, args) {
 
@@ -75,7 +89,7 @@ module.exports = {
                 .setDescription(description);
             
             // Send the members embed
-            message.channel.send(embed);
+            message.reply(embed);
         } else if (role) {
             // Pages variables
             const pages = [];
@@ -109,10 +123,86 @@ module.exports = {
                 .setAuthor(`Members of ${role.name}`, message.guild.iconURL({format: "png", dynamic: true}))
                 .setFooter(`${role.members.size} total members | Page ${page + 1} of ${pages.length}`)
                 .setColor(role.hexColor ?? bot.config.general.embedColor)
-                .setDescription(description);
+                .setDescription(description.join("\n"));
             
             // Send the members embed
-            message.channel.send(embed);
+            message.reply(embed);
+        }
+
+    },
+
+    run_interaction: async (bot, interaction) => {
+
+        const role = interaction.options.get("role")?.role;
+
+        if (!role) {
+            // Pages variables
+            const pages = [];
+            let page = 0;
+
+            // Sort members by role position
+            const members = interaction.guild.members.cache.sort((a,b) => b.roles.highest.position - a.roles.highest.position).array();
+
+            // Loop through the members and devide them into pages of 20
+            for (let i = 0; i < members.length; i += 20) {
+                pages.push(members.slice(i,i+20));
+            }
+
+            // If the page option is there set it as the page
+            if (interaction.options.get("page")?.value) 
+                page = interaction.options.get("page").value -= 1;
+            // Return if the page wasn't found
+            if (!pages[page]) 
+                return interaction.error("You didn't specify a valid page!");
+
+            // Format the description
+            const description = pages[page].map(m => `\`${m.user.tag}\` | **ID:** ${m.id}`);
+
+            // Create the members embed
+            const embed = new MessageEmbed()
+                .setAuthor(`Members of ${interaction.guild.name}`, interaction.guild.iconURL({format: "png", dynamic: true}))
+                .setFooter(`${interaction.guild.memberCount} total members | Page ${page + 1} of ${pages.length}`)
+                .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
+                .setDescription(description.join("\n"));
+            
+            // Send the members embed
+            interaction.reply(embed);
+        } else {
+            // Pages variables
+            const pages = [];
+            let page = 0;
+
+            // Return an error if the role doesn't have any members
+            if (!role.members.size)
+                return interaction.error("The role you specified doesn't have any members!");
+
+            // Format and map the members
+            const members = role.members.array();
+
+            // Loop through the members and devide them into pages of 20
+            for (let i = 0; i < members.length; i += 20) {
+                pages.push(members.slice(i, i+20));
+            }
+
+            // If the page option is there set it as the page
+            if (interaction.options.get("page")?.value) 
+                page = interaction.options.get("page").value -= 1;
+            // Return if the page wasn't found
+            if (!pages[page]) 
+                return interaction.error("You didn't specify a valid page!");
+
+            // Format the description
+            const description = pages[page].map(m => `\`${m.user.tag}\` | **ID:** ${m.id}`);
+
+            // Create the members embed
+            const embed = new MessageEmbed()
+                .setAuthor(`Members of ${role.name}`, interaction.guild.iconURL({format: "png", dynamic: true}))
+                .setFooter(`${role.members.size} total members | Page ${page + 1} of ${pages.length}`)
+                .setColor(role.hexColor ?? bot.config.general.embedColor)
+                .setDescription(description.join("\n"));
+            
+            // Send the members embed
+            interaction.reply(embed);
         }
 
     }

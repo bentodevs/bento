@@ -32,11 +32,20 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "user",
+            type: "USER",
+            description: "Specify a user.",
+            required: false
+        }]
+    },
 
     run: async function (bot, message, args) {
 
         // Grab the member or user
-        const member = await getMember(message, args.join(" "), true) || await getUser(bot, message, args.join(" "), true);
+        const member = message.options?.get("user")?.member || await getMember(message, args?.join(" "), true) || await getUser(bot, message, args?.join(" "), true);
 
         // Return an error if nothing was found
         if (!member) 
@@ -114,7 +123,7 @@ module.exports = {
             embed.setAuthor(`${member.user.tag}${member.nickname ? ` ~ ${member.nickname}` : ""}`, member.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 }));
             embed.setThumbnail(member.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 }));
             embed.setDescription(stripIndents(description));
-            embed.setColor(member.displayColor ? member.displayHexColor : "#ABCDEF");
+            embed.setColor(member.displayColor ?? bot.config.embedColor);
             embed.setFooter(`Member #${message.guild.members.cache.filter(u => u.joinedTimestamp !== null).sort((a,b) => a.joinedTimestamp - b.joinedTimestamp).map(user => user.id).indexOf(member.id) +1} | ID: ${member.id}`);
         } else {
             // Get the users account creation time and format it
@@ -151,7 +160,7 @@ module.exports = {
         }
 
         // Send the embed
-        message.channel.send(embed);
+        message.reply(embed);
 
-    }
+    },
 };

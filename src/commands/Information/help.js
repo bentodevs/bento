@@ -28,6 +28,15 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "command",
+            type: "STRING",
+            description: "The command you want to view the information of.",
+            required: false
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -40,25 +49,27 @@ module.exports = {
             return getCategories.indexOf(item) >= index;
         });
 
+        const find = message.options?.get("command")?.value || args?.[0]?.toLowerCase();
+
         // Get the command or category
-        const command = bot.commands.get(args[0]?.toLowerCase()) || bot.commands.get(bot.aliases.get(args[0]?.toLowerCase())),
-        category = categories[categories.indexOf(args[0]?.toLowerCase())];
+        const command = bot.commands.get(find) || bot.commands.get(bot.aliases.get(find)),
+        category = categories[categories.indexOf(find)];
 
         // If the command or category is dev only return an error
         if ((command?.info.category.toLowerCase() == "dev" || category == "dev") && !bot.config.general.devs.includes(message.author.id))
             return message.error("You didn't specify a valid command or category!");
 
-        if (!args[0] || args[0]?.toLowerCase() == "all") {
+        if ((!args?.[0] && !message.options?.get("command")?.value) || (args?.[0]?.toLowerCase() == "all" || message.options?.get("command")?.value == "all")) {
             // Grab all the commands
             let commands = bot.commands.array();
             // Define the catery object
             const categories = {};
 
             // If the user isn't a dev remove all the dev only commands
-            if (!bot.config.general.devs.includes(message.author.id))
+            if (!bot.config.general.devs.includes(message.author?.id ?? message.user.id))
                 commands = commands.filter(c => !c.opts.devOnly || !c.opts.disabled);
             // If the command was run in dms remove all the guild only commands
-            if (!message.guild && args[0]?.toLowerCase() !== "all")
+            if (!message.guild && (args?.[0]?.toLowerCase() !== "all" || message.options?.get("command")?.value !== "all"))
                 commands = commands.filter(c => !c.opts.guildOnly);
 
             // Sort the commands
@@ -90,7 +101,7 @@ module.exports = {
             }
 
             // Send the embed to the user
-            message.author.send(embed)
+            (message.author?.send(embed) ?? message.user.send(embed))
                 .then(() => {
                     // If the command was ran in a guild send a confirmation message
                     if (message.guild)
@@ -182,7 +193,7 @@ module.exports = {
                 .setFooter("Do not include <> or [] — They indicate <required> and [optional] arguments.");
 
             // Send the embed
-            message.channel.send(embed);
+            message.reply(embed);
         } else if (category) {
             // Get all the commands for the specified category
             const commands = bot.commands.filter(c => c.info.category.toLowerCase() == category).map(c => `\`${prefix}${c.info.name}\``);
@@ -238,7 +249,7 @@ module.exports = {
                 .setFooter(`For more detailed information about a command use ${prefix}help <command>`);
 
             // Send the embed
-            message.channel.send(embed);
+            message.reply(embed);
         } else {
             // Send an error
             message.error("You didn't specify a valid command or category!");

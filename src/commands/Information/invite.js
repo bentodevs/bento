@@ -4,7 +4,7 @@ module.exports = {
         aliases: ["createinvite", "inv"],
         usage: "",
         examples: [],
-        description: "Creates a permanent guild invite.",
+        description: "Creates a permanent guild invite. (or sends an existing one)",
         category: "Information",
         info: null,
         options: []
@@ -21,16 +21,20 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: []
+    },
 
     run: async (bot, message) => {
 
         if (message.guild.vanityURLCode) {
             // If the guild has a vanity URL send it
-            message.channel.send(`https://discord.gg/${message.guild.vanityURLCode}`);
+            message.reply(`https://discord.gg/${message.guild.vanityURLCode}`);
         } else {
             // Create a permanent invite and send it
             message.channel.createInvite({ maxAge: 0 }).then(invite => {
-                message.channel.send(invite.toString());
+                message.reply(invite.toString());
             }).catch(err => {
                 message.error(`Something went wrong while creating the invite: \`${err.message}\``);
             });

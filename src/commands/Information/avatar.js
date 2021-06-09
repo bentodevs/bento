@@ -26,6 +26,15 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "user",
+            type: "USER",
+            description: "The user who's avatar you want to display.",
+            required: false
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -44,6 +53,22 @@ module.exports = {
 
         // Send the embed
         message.channel.send(embed);
+
+    }, 
+
+    run_interaction: async (bot, interaction) => {
+
+        // Get the user
+        const target = interaction.options.get("user")?.user ?? interaction.user;
+
+        // Build the embed
+        const embed = new MessageEmbed()
+            .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
+            .setAuthor(`Avatar for ${target.tag}`, target.displayAvatarURL({ format: "png", dynamic: true }))
+            .setImage(target.displayAvatarURL({ format: "png", dynamic: true, size: 1024}));
+
+        // Send the embed
+        interaction.reply(embed);
 
     }
 };

@@ -31,6 +31,15 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "role",
+            type: "ROLE",
+            description: "Select a role.",
+            required: true
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -59,7 +68,34 @@ module.exports = {
             **Mentionable:** ${role.mentionable.toString().toTitleCase()}`);
 
         // Send the embed
-        message.channel.send(embed);
+        message.reply(embed);
+
+    },
+
+    run_interaction: async (bot, interaction) => {
+
+        // Get the role
+        const role = interaction.options.get("role").role;
+
+        // Format the role creation timestamp
+        const created = format(role.createdTimestamp, "PPp"),
+        timeSince = formatDistance(role.createdTimestamp, Date.now(), { addSuffix: true });
+
+        // Build the embed
+        const embed = new MessageEmbed()
+            .setAuthor(`Role: ${role.name}`, `https://dummyimage.com/64x64/${role.hexColor.replace("#", "")}/${role.hexColor.replace("#", "")}`)
+            .setThumbnail(`https://dummyimage.com/256x256/${role.hexColor.replace("#", "")}/${role.hexColor.replace("#", "")}`)
+            .setFooter(`ID: ${role.id}`)
+            .setColor(role.hexColor ?? bot.config.general.embedColor)
+            .setDescription(stripIndents`**Position:** ${role.position + 1}/${interaction.guild.roles.cache.size}
+            **Color:** ${!role.color ? "Default" : role.hexColor}
+            **${role.members.size} member(s)** | <:online:774282494593466388> **${role.members.filter(m => m.presence.status !== "offline").size}** online
+            **Created:** ${created} (${timeSince})
+            **Hoisted:** ${role.hoist.toString().toTitleCase()}
+            **Mentionable:** ${role.mentionable.toString().toTitleCase()}`);
+
+        // Send the embed
+        interaction.reply(embed);
 
     }
 };

@@ -7,7 +7,7 @@ module.exports = {
         usage: "logging [setting] [option]",
         examples: [],
         description: "",
-        category: "",
+        category: "Settings",
         info: null,
         options: []
     },
@@ -70,7 +70,7 @@ module.exports = {
                 message.confirmation("Manual member modification event logging has been enabled");
             }
         } else {
-            return message.error(`You didn't specify a valid logging option! Valid options are: \`${events.join("`, `")}\``)
+            return message.error(`You didn't specify a valid logging option! Valid options are: \`${events.join("`, `")}\``);
         }
     }
 };

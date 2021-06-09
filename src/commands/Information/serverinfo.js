@@ -30,6 +30,10 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: []
+    },
 
     run: async (bot, message) => {
 
@@ -54,6 +58,9 @@ module.exports = {
         // Format the guild creation date
         const created = format(guild.createdTimestamp, "PPp O"),
         timeSince = formatDistance(guild.createdTimestamp, Date.now(), { addSuffix: true });
+
+        // Fetch the guild owner
+        const owner = await guild.fetchOwner();
 
         // Security options
         const security = {
@@ -90,20 +97,20 @@ module.exports = {
         // Build embed
         const embed = new MessageEmbed()
             .setAuthor(message.guild.name, message.guild.iconURL({ format: "png", dynamic: true }))
-            .setColor(message.guild.owner.displayHexColor ? message.guild.owner.displayHexColor : "#ABCDEF")
+            .setColor(owner.displayColor ?? bot.config.general.embedColor)
             .setThumbnail(message.guild.iconURL({ format: "png", dynamic: true }))
             .setDescription(stripIndents`🧑‍🤝‍🧑 **${members}** ${members > 1 ? "members" : "member"} [${bots} ${(bots > 1) || (bots === 0) ? "bots" : "bot"}] | <:online:774282494593466388> **${online}** online
             📆 **Created:** ${created} (${timeSince})
             🔒 **Security:** ${security[message.guild.verificationLevel]}
             🌎 **Region:** ${region[message.guild.region]}
             <:boost_t2:699573553795956787> **Server Boost Level:** ${boostLevel} (${boosters} ${(boosters > 1) || (boosters === 0) ? "boosters" : "booster"})
-            <:ceo:782583876106059799> **Owner:** ${message.guild.owner.user.tag}
+            <:ceo:782583876106059799> **Owner:** ${owner.user.tag}
             
             **Other**
             ${channels} channels | ${emotes} emotes | ${roles} roles`);
         
         // Send embed
-        message.channel.send(embed);
+        message.reply(embed);
 
     }
 };

@@ -26,6 +26,10 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: []
+    },
 
     run: async (bot, message) => {
 
@@ -48,7 +52,7 @@ module.exports = {
             ${bot.config.emojis.djs} Discord.js **v${version}** | ${bot.config.emojis.nodejs} Node.js **${process.version}**`);
 
         // Send the embed
-        message.channel.send(embed);
+        message.reply(embed);
         
     }
 };

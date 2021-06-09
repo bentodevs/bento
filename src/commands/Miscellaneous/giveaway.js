@@ -2,7 +2,7 @@ const { stripIndents } = require("common-tags");
 const { formatDuration, intervalToDuration } = require("date-fns");
 const { MessageEmbed } = require("discord.js");
 const giveaways = require("../../database/models/giveaways");
-const { getChannel } = require("../../modules/functions/getters");
+const { getChannel, getUser } = require("../../modules/functions/getters");
 const { parseTime, drawGiveawayWinners } = require("../../modules/functions/misc");
 
 module.exports = {
