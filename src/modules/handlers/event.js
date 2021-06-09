@@ -5,7 +5,7 @@ const { readdirSync } = require("fs");
  * 
  * @param {Object} bot The client which is used to transact between this app & Discord
  * 
- * @returns {Promise<Number} The amount of events loaded
+ * @returns {Promise<Number>} The amount of events loaded
  */
 exports.init = bot => {
     return new Promise((resolve) => {
