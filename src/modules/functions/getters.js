@@ -61,6 +61,7 @@ exports.getMember = async (message, args, noArgsAuthor) => {
 /**
  * Gets a Discord User from the cache/fetches it from the Discord API
  * 
+ * @param {Object} bot The client that instantiated this request
  * @param {Object} message The message object from which to get certain data (Such as guild ID, etc.)
  * @param {String} args The provided search terms for which to lookup a user
  * @param {Boolean} noArgsAuthor Whether we can return the author, if no other member was found
