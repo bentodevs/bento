@@ -38,4 +38,40 @@ module.exports = message => {
         });
     };
 
+    /**
+     * Reply to the previous message with an error emote
+     * @param {srring} string
+     */
+    message.errorReply = string => {
+        return new Promise((resolve, reject) => {
+            message.reply(`${config.emojis.error} ${string}`)
+                .then(msg => { resolve(msg); })
+                .catch(err => { reject(err); });
+        });
+    };
+
+    /**
+     * Reply to the previous message with an error emote
+     * @param {srring} string
+     */
+    message.loadingReply = string => {
+        return new Promise((resolve, reject) => {
+            message.reply(`${config.emojis.loading} ${string}`)
+                .then(msg => { resolve(msg); })
+                .catch(err => { reject(err); });
+        });
+    };
+
+    /**
+     * Reply to the previous message with an error emote
+     * @param {srring} string
+     */
+    message.confirmationReply = string => {
+        return new Promise((resolve, reject) => {
+            message.reply(`${config.emojis.confirmation} ${string}`)
+                .then(msg => { resolve(msg); })
+                .catch(err => { reject(err); });
+        });
+    };
+    
 };

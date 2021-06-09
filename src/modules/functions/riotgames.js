@@ -7,7 +7,7 @@ const config = require("../../config");
  * @param {String} region 
  * @param {String} summoner 
  * 
- * @returns {Promise<Object>} Player Data (Regionalised)
+ * @returns {Promise.Object} Player Data (Regionalised)
  * 
  * @example
  * 
@@ -67,7 +67,7 @@ exports.getLeagueSummoner = async (region, summoner) => {
  * 
  * @param {Number} champID 
  * 
- * @returns {<Promise>Object} Champion data
+ * @returns {Promise.Object} Champion data
  * 
  * @example
  * 
@@ -103,7 +103,7 @@ exports.getLeagueChampByID = async (champID) => {
  * 
  * @param {Number} champID 
  * 
- * @returns {<Promise>Object} Champion data
+ * @returns {Promise.Object} Champion data
  * 
  * @example
  * 

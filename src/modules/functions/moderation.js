@@ -136,7 +136,7 @@ exports.checkMesage = async (message, settings) => {
  * 
  * @param {Object} message The message object from which to get certain data (Such as guild ID, etc.)
  * 
- * @returns {Promise<Boolean>} True if blacklisted, false if not blacklisted.
+ * @returns {Promise.Boolean} True if blacklisted, false if not blacklisted.
  */
 exports.checkBlacklist = async (message) => {
     if (message.settings.blacklist.users.includes(message.author.id) || message.settings.blacklist.channels.includes(message.author.id) || message.settings.blacklist.roles.filter(a => message.member.roles.cache.has(a)).length) {

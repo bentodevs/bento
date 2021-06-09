@@ -8,7 +8,7 @@ const config = require("../../config");
  * @param {String} args The provided search terms for which to lookup a member
  * @param {Boolean} noArgsAuthor Whether we can return the author, if no other member was found
  * 
- * @returns {Promise<Object|Boolean>} Either the guild member, or false if no match could be found 
+ * @returns {Promise.<Object|Boolean>} Either the guild member, or false if no match could be found 
  */
 exports.getMember = async (message, args, noArgsAuthor) => {
     // If no args were supplied and noArgsAuthor is true, resolve as the member that sent the msg
@@ -66,7 +66,7 @@ exports.getMember = async (message, args, noArgsAuthor) => {
  * @param {String} args The provided search terms for which to lookup a user
  * @param {Boolean} noArgsAuthor Whether we can return the author, if no other member was found
  * 
- * @returns {Promise<Object|Boolean>} Either the user, or false if no match could be found 
+ * @returns {Promise.<Object|Boolean>} Either the user, or false if no match could be found 
  */
 exports.getUser = async (bot, message, args, noArgsAuthor) => {
     // If no args were specified and noArgsAuthor is true return the author
@@ -111,7 +111,7 @@ exports.getUser = async (bot, message, args, noArgsAuthor) => {
  * @param {String} args The provided search terms for which to lookup a channel
  * @param {Boolean} noArgsChannel Whether we can return the author, if no other member was found
  * 
- * @returns {Promise<Object|Boolean>} Either the guild channel, or false if no match could be found 
+ * @returns {Promise.<Object|Boolean>} Either the guild channel, or false if no match could be found 
  */
 exports.getChannel = async (message, args, noArgsChannel) => {
     // If no args were specified and noArgsChannel is true return the current channel
@@ -151,7 +151,7 @@ exports.getChannel = async (message, args, noArgsChannel) => {
  * @param {Object} message The message object from which to get certain data (Such as guild ID, etc.)
  * @param {String} args The provided search terms for which to lookup a role
  * 
- * @returns {Promise<Object|Boolean>} Either the role, or false if no match could be found 
+ * @returns {Promise.<Object|Boolean>} Either the role, or false if no match could be found 
  */
 exports.getRole = async (message, args) => {
     // If no args were specified return false
