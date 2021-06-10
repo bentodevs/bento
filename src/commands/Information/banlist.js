@@ -97,7 +97,7 @@ module.exports = {
             pages.push(bans.slice(i, i + 10));
         }
 
-        // If args[0] is a number set it as the page
+        // If the page option is there set it as the page
         if (interaction.options.get("page")?.value) 
             page = interaction.options.get("page")?.value - 1;
         // If the page doesn't exist retrun an error
