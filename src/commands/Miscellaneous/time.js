@@ -1,8 +1,6 @@
 const { stripIndents } = require("common-tags");
-const { format, parse } = require("date-fns");
-const { getTimezoneOffset } = require("date-fns-tz");
 const { MessageEmbed } = require("discord.js");
-const { getWeather, getTime } = require("../../modules/functions/misc");
+const { getWeather } = require("../../modules/functions/misc");
 
 module.exports = {
     info: {
@@ -46,10 +44,11 @@ module.exports = {
         if (!weather)
             return message.error("You didn't specify a valid city!");
         
+        // Define the clock var
         let clock = "";
 
         const dt = new Date(Date.now()),
-            clockHour = dt.toLocaleTimeString('en-US', { timeZone: weather.location.tz_id }).split(":");
+        clockHour = dt.toLocaleTimeString('en-US', { timeZone: weather.location.tz_id }).split(":");
         
         // Switch-case for adding the correct clock emoji
         switch (clockHour[0]) {
@@ -67,6 +66,7 @@ module.exports = {
             case "12": clock = "🕛"; break;
         }
 
+        // Build the embed
         const embed = new MessageEmbed()
             .setAuthor(`Time information for ${weather.location.name} (${weather.location.country})`)
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
@@ -74,6 +74,7 @@ module.exports = {
             🗺️ **Timezone:** \`${weather.location.tz_id}\``)
             .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: "png" }));
 
+        // Send the embed
         message.channel.send(embed);
     }
 };
