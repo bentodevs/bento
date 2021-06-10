@@ -24,60 +24,90 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "query",
+            type: "STRING",
+            description: "The name of the show/movie you are searching or a specific IMDB ID.",
+            required: true
+        }, {
+            name: "id",
+            type: "BOOLEAN",
+            description: "Wether or not your query is a IMDB ID.",
+            required: true
+        }]
+    },
 
     run: async (bot, message, args) => {
 
-        if (args[0].toLowerCase() === "-t") {
+        // Get the query, fetch the URL and convert the data to JSON
+        const query = args[0].toLowerCase() == "-t" ? args[1] : args.join(" "),
+        req = await fetch(`https://www.omdbapi.com/?apiKey=${bot.config.apiKeys.omdb}&${args[0].toLowerCase() == "-t" ? "i" : "t"}=${query}`),
+        json = await req.json();
 
-            const url = args[1],
-            req = await fetch(`https://www.omdbapi.com/?apiKey=${bot.config.apiKeys.omdb}&i=${url}`),
-            res = await req.json();
-        
-            if (res.Response !== "True")
-                return message.error("A film/show could not be found with that name! Make sure your search is accurate and try again!");
+        // If the response isn't "True" return an error
+        if (json.Response !== "True")
+            return message.error("A film/show could not be found with that name! Make sure your search is accurate and try again!");
+
+        // Define the msg var
+        let msg = "";
+
+        // Add the data to the msg
+        if (json.Year && json.Released) msg += `**Released:** ${json.Released}\n\n`;
+        if (json.Year && !json.Released) msg += `**Release Year(s):** ${json.Year}\n\n`;
+        if (json.Plot) msg += `**Plot:** ${json.Plot}\n\n`;
+        if (json.imdbRating) msg += `**IMDB Rating:** ${json.imdbRating}\n`;
+        if (json.Poster) msg += `**Poster Link:** [Click here](${json.Poster})\n`;
+        if (json.imdbID) msg += `**IMDB Link:** [Click here](https://www.imdb.com/title/${json.imdbID}/)`;
             
-            let msg = "";
-            if (res.Year && res.Released) msg += `**Released:** ${res.Released}\n\n`;
-            if (res.Year && !res.Released) msg += `**Release Year(s):** ${res.Year}\n\n`;
-            if (res.Plot) msg += `**Plot:** ${res.Plot}\n\n`;
-            if (res.imdbRating) msg += `**IMDB Rating:** ${res.imdbRating}\n`;
-            if (res.Poster) msg += `**Poster Link:** [Click here](${res.Poster})\n`;
-            if (res.imdbID) msg += `**IMDB Link:** [Click here](https://www.imdb.com/title/${res.imdbID}/)`;
+        // Build the embed
+        const embed = new MessageEmbed()
+            .setAuthor(json.Title, (json.Poster ?? "https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png"))
+            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+            .setThumbnail((json.Poster ?? "https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png"))
+            .setDescription(msg)
+            .setTimestamp()
+            .setFooter(`Requested by ${message.author.tag}`);
             
-            const embed = new MessageEmbed()
-                .setAuthor(res.Title, (res.Poster ?? "https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png"))
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
-                .setThumbnail((res.Poster ?? "https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png"))
-                .setDescription(msg)
-                .setTimestamp()
-                .setFooter(`Requested by ${message.author.tag}`);
+        // Send the embed
+        message.reply(embed);
+
+    },
+    
+    run_interaction: async (bot, interaction) => {
+
+        // Get the query, fetch the URL and convert the data to JSON
+        const query = interaction.options.get("query").value,
+        req = await fetch(`https://www.omdbapi.com/?apiKey=${bot.config.apiKeys.omdb}&${interaction.options.get("id").value ? "i" : "t"}=${query}`),
+        json = await req.json();
+
+        // If the response isn't "True" return an error
+        if (json.Response !== "True")
+            return interaction.error("A film/show could not be found with that name! Make sure your search is accurate and try again!");
+
+        // Define the msg var
+        let msg = "";
+
+        // Add the data to the msg
+        if (json.Year && json.Released) msg += `**Released:** ${json.Released}\n\n`;
+        if (json.Year && !json.Released) msg += `**Release Year(s):** ${json.Year}\n\n`;
+        if (json.Plot) msg += `**Plot:** ${json.Plot}\n\n`;
+        if (json.imdbRating) msg += `**IMDB Rating:** ${json.imdbRating}\n`;
+        if (json.Poster) msg += `**Poster Link:** [Click here](${json.Poster})\n`;
+        if (json.imdbID) msg += `**IMDB Link:** [Click here](https://www.imdb.com/title/${json.imdbID}/)`;
             
-            message.channel.send(embed);
-        } else {
-            const url = args.join(),
-                req = await fetch(`https://www.omdbapi.com/?apiKey=19b7aea0&t=${url}`),
-                res = await req.json();
+        // Build the embed
+        const embed = new MessageEmbed()
+            .setAuthor(json.Title, (json.Poster ?? "https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png"))
+            .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
+            .setThumbnail((json.Poster ?? "https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png"))
+            .setDescription(msg)
+            .setTimestamp()
+            .setFooter(`Requested by ${interaction.user.tag}`);
             
-            if (res.Response !== "True")
-                return message.error("A film/show could not be found with that name! Make sure your search is accurate and try again!");
-            
-            let msg = "";
-            if (res.Year && res.Released) msg += `**Released:** ${res.Released}\n\n`;
-            if (res.Year && !res.Released) msg += `**Release Year(s):** ${res.Year}\n\n`;
-            if (res.Plot) msg += `**Plot:** ${res.Plot}\n\n`;
-            if (res.imdbRating) msg += `**IMDB Rating:** ${res.imdbRating}\n`;
-            if (res.Poster) msg += `**Poster Link:** [Click here](${res.Poster})\n`;
-            if (res.imdbID) msg += `**IMDB Link:** [Click here](https://www.imdb.com/title/${res.imdbID}/)`;
-            
-            const embed = new MessageEmbed()
-                .setAuthor(res.Title, (res.Poster ?? "https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png"))
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
-                .setThumbnail((res.Poster ?? "https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png"))
-                .setDescription(msg)
-                .setTimestamp()
-                .setFooter(`Requested by ${message.author.tag}`);
-            
-            message.channel.send(embed);
-        }
+        // Send the embed
+        interaction.reply(embed);
+
     }
 };
