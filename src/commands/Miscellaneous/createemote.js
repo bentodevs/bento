@@ -27,6 +27,10 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: false,
+        opts: []
+    },
 
     run: async (bot, message, args) => {
 
@@ -80,8 +84,6 @@ module.exports = {
             // Convert the emoji to a buffer and grab the name
             const buffer = await res.buffer(),
             name = args.join(" ").replace(URL, "").trim() ? args.join(" ").replace(URL, "").trim() : path.parse(URL).name;
-
-            console.log(name);
 
             // Create the emoji
             message.guild.emojis.create(buffer, name, {
