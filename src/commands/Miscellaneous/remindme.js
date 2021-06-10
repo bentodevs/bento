@@ -33,6 +33,39 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "create",
+            type: "SUB_COMMAND",
+            description: "Create a reminder.",
+            options: [{
+                name: "time",
+                type: "STRING",
+                description: "In how long should I remind you? Example: 1d1h",
+                required: true
+            }, {
+                name: "reminder",
+                type: "STRING",
+                description: "What should I remind you about?",
+                required: true
+            }]
+        }, {
+            name: "list",
+            type: "SUB_COMMAND",
+            description: "View your active reminders."
+        }, {
+            name: "remove",
+            type: "SUB_COMMAND",
+            description: "Remove a reminder.",
+            options: [{
+                name: "id",
+                type: "INTEGER",
+                description: "The ID of your reminder.",
+                required: true
+            }]
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -154,6 +187,34 @@ module.exports = {
 
             // Send a confirmation message
             message.confirmation(`I will remind you about that in **${formatDuration(intervalToDuration({ start: created, end: created + time }), { delimiter: ", " })}**!`);
+        }
+
+    },
+
+    run_interaction: async (bot, interaction) => {
+
+        if (interaction.options.get("list")) {
+            // Get the remind data
+            const data = await reminders.findOne({ _id: interaction.user.id });
+
+            // If the user has no reminders send an error
+            if (!data?.reminders.length)
+                return interaction.error("You don't have any active reminders!");
+
+            // Define the reminders msg
+            let msg = "🔔 **Reminders**\n\n";
+
+            // Loop through the reminders and add them to the msg
+            data.reminders.forEach(r => {
+                msg += `**${r.id}.** ${r.reminder} | **In:** ${Date.now() > r.remindTime ? "<pending>" : formatDuration(intervalToDuration({ start: Date.now(), end: r.remindTime }), { delimiter: ", " })} | **Set:** ${format(r.timeCreated, "PPp")}\n`;
+            });
+
+            // Send the list of reminders
+            interaction.reply(msg, { ephemeral: true });
+        } else if (interaction.options.get("remove")) {
+            // Code
+        } else if (interaction.options.get("create")) {
+            // Code
         }
 
     }
