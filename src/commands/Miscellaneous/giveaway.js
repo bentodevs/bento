@@ -42,6 +42,75 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "list",
+            type: "SUB_COMMAND",
+            description: "List all giveaways.",
+            options: [{
+                name: "page",
+                type: "INTEGER",
+                description: "The page you want to view.",
+                required: false
+            }]
+        }, {
+            name: "start",
+            type: "SUB_COMMAND",
+            description: "Starts a giveaway.",
+            options: [{
+                name: "channel",
+                type: "CHANNEL",
+                description: "The channel you want to host the giveaway in.",
+                required: true
+            }, {
+                name: "duration",
+                type: "STRING",
+                description: "The time the giveaway should last. Example: 1d2h",
+                required: true
+            }, {
+                name: "winners",
+                type: "INTEGER",
+                description: "Amount of winners the giveaway should have.",
+                required: true
+            }, {
+                name: "prize",
+                type: "STRING",
+                description: "The name of the prize you are giving away",
+                required: true
+            }]
+        }, {
+            name: "stop",
+            type: "SUB_COMMAND",
+            description: "Stops an active giveaway without picking a winner.",
+            options: [{
+                name: "id",
+                type: "INTEGER",
+                description: "The ID of the giveaway.",
+                required: true
+            }]
+        }, {
+            name: "end",
+            type: "SUB_COMMAND",
+            description: "Ends an active givewaway and picks a winner.",
+            options: [{
+                name: "id",
+                type: "INTEGER",
+                description: "The ID of the giveaway.",
+                required: true
+            }]
+        }, {
+            name: "reroll",
+            type: "SUB_COMMAND",
+            description: "Re-roll the winner(s) of a giveaway.",
+            options: [{
+                name: "id",
+                type: "INTEGER",
+                description: "The ID of the giveaway.",
+                required: true
+            }]
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -79,7 +148,7 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setAuthor(`Giveaways hosted in ${message.guild.name}`, message.guild.iconURL({ format: "png", dynamic: true }))
                 .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
-                .setDescription(description)
+                .setDescription(description.join("\n"))
                 .setFooter(`${g.length} Total Giveaways | Page ${page + 1} of ${pages.length}`);
 
             // Send the embed
@@ -358,11 +427,242 @@ module.exports = {
             }
 
             // Send the new winners
-            message.channel.send(`The giveaway in ${message.guild.channels.cache.get(g.channel) ? message.guild.channels.cache.get(g.channel) : "<deleted channel>"} was re-rolled. The new winner(s) are ${arr.join(", ")}!`);
-            message.guild.channels.cache.get(g.channel)?.send(`🎉 The giveaway was re-rolled - The new winner(s) are ${arr.join(", ")}!`);
+            message.channel.send(`The giveaway in ${message.guild.channels.cache.get(g.guild.channel_id) ? message.guild.channels.cache.get(g.guild.channel_id) : "<deleted channel>"} was re-rolled. The new winner(s) are ${arr.join(", ")}!`);
+            message.guild.channels.cache.get(g.guild.channel_id)?.send(`🎉 The giveaway was re-rolled - The new winner(s) are ${arr.join(", ")}!`);
         } else {
             // Send an error message
             return message.error("You didn't specify a valid option! Try one of these: `start`, `stop`, `end` or `reroll`!");
+        }
+
+    },
+
+    run_interaction: async (bot, interaction) => {
+        
+        if (interaction.options.get("list")) {
+            // Get the list options
+            const options = interaction.options.get("list").options;
+
+            // Get all the giveaways
+            const g = await giveaways.find({ "guild.guild_id": interaction.guild.id });
+
+            // If there are no giveaways return an error
+            if (!g.length)
+                return interaction.error("There are no giveaways to list!");
+
+            // Page Vars
+            const pages = [];
+            let page = 0;
+
+            // Sort the giveaways by ID
+            const sorted = g.sort((a, b) => a.id - b.id);
+
+            // Loop through the giveaways and split them into pages of 10
+            for (let i = 0; i < sorted.length; i += 10) {
+                pages.push(sorted.slice(i, i + 10));
+            }
+
+            // If the page option is there set it as the page
+            if (options?.get("page")?.value) 
+                page = options.get("page")?.value - 1;
+            // If the page doesn't exist return an error
+            if (!pages[page])
+                return interaction.error("You didn't specify a valid page!");
+
+            // Format the description
+            const description = pages[page].map(a => `${a.active ? bot.config.emojis.online : bot.config.emojis.dnd} | **ID:** ${a.id} | **Duration:** ${formatDuration(intervalToDuration({ start: a.timestamps.start, end: a.timestamps.ends }), { delimiter: ", " })} | **Winners:** ${a.winners} | **Prize:** ${a.prize}`);
+
+            // Build the embed
+            const embed = new MessageEmbed()
+                .setAuthor(`Giveaways hosted in ${interaction.guild.name}`, interaction.guild.iconURL({ format: "png", dynamic: true }))
+                .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
+                .setDescription(description.join("\n"))
+                .setFooter(`${g.length} Total Giveaways | Page ${page + 1} of ${pages.length}`);
+
+            // Send the embed
+            interaction.reply(embed);
+        } else if (interaction.options.get("start")) {
+            // Get the list options
+            const options = interaction.options.get("start").options;
+
+            // Get all the options
+            const channel = options.get("channel").channel,
+            time = parseTime(options.get("duration").value, "ms"),
+            winners = options.get("winners").value,
+            prize = options.get("prize").value;
+
+            // Channel Checks
+            if (channel.type !== "news" && channel.type !== "text")
+                return interaction.error("The channel you specified isn't a text or news channel!");
+
+            // Time Checks
+            if (!time)
+                return interaction.error("You didn't specify a valid giveaway duration!");
+            if (time < 60000)
+                return interaction.error("The minumum duration for a giveaway is 1 minute!");
+            if (time > 31556952000)
+                return interaction.error("The maximum duration for a giveaway is 1 year!");
+
+            // Winner Checks
+            if (winners > 20)
+                return interaction.error("The maximum winners for a giveaway is 20!");
+            if (winners <= 0)
+                return interaction.error("The giveaway should at least have 1 winner!");
+
+            // Prize Checks
+            if (`Giveaway: ${prize}`.length > 256)
+                return interaction.error("Please enter a shorter prize name!");
+
+            // Get the giveaway ID, start time and end time
+            const ID = await giveaways.countDocuments({ "guild.guild_id": interaction.guild.id }) + 1 ?? 1,
+            start = Date.now(),
+            end = Date.now() + time;
+
+            // Build the embed
+            const embed = new MessageEmbed()
+                .setAuthor(`Giveaway: ${prize}`, interaction.guild.iconURL({ dynamic: true, format: "png" }))
+                .setDescription(stripIndents`React with 🎉 to enter the giveaway!
+                
+                **Duration:** ${formatDuration(intervalToDuration({ start: start, end: end }), { delimiter: "," })}
+                **Hosted By:** ${interaction.user}`)
+                .setTimestamp(end)
+                .setColor(bot.config.general.embedColor)
+                .setFooter(`${winners} winners | Ends`);
+
+            // Send the embed & add the reaction
+            const message_id = await channel.send(embed).then(msg => { msg.react("🎉"); return msg.id; });
+
+            // Create the db entry
+            await giveaways.create({
+                id: ID,
+                guild: {
+                    guild_id: interaction.guild.id,
+                    message_id: message_id,
+                    channel_id: channel.id
+                },
+                creator: interaction.user.id,
+                winners: winners,
+                prize: prize,
+                entries: [],
+                timestamps: {
+                    start: start,
+                    ends: end,
+                    length: time
+                },
+                active: true
+            });
+
+            // Send a confirmation message
+            interaction.reply(`🎉 Nice, the giveaway for \`${prize}\` is now starting in ${channel}!`);
+        } else if (interaction.options.get("stop")) {
+            // Get the giveaway ID
+            const id = interaction.options.get("stop").options.get("id").value;
+
+            // Get the giveaway
+            const g = await giveaways.findOne({ "guild.guild_id": interaction.guild.id, id: id, active: true });
+
+            // If the giveaway wasn't found return an error
+            if (!g)
+                return interaction.error("There is no giveaway with that ID or the giveaway is not active!");
+
+            // Get the giveaway message
+            const msg = await interaction.guild.channels.cache.get(g.guild.channel_id)?.messages.fetch(g.guild.message_id).catch(() => {});
+
+            // Delete the giveaway message and set the giveaway to inactive
+            await msg?.delete().catch(() => {});
+            await giveaways.findOneAndUpdate({ "guild.guild_id": interaction.guild.id, id: id, active: true }, { active: false });
+
+            // Send a confirmation
+            interaction.confirmation(`The giveaway with the ID \`${g.id}\` has been cancelled!`);
+        } else if (interaction.options.get("end")) {
+            // Get the giveaway ID
+            const id = interaction.options.get("end").options.get("id").value;
+
+            // Get the giveaway
+            const g = await giveaways.findOne({ "guild.guild_id": interaction.guild.id, id: id, active: true });
+
+            // If the giveaway wasn't found return an error
+            if (!g)
+                return interaction.error("There is no giveaway with that ID or the giveaway is not active!");
+
+            // Get the winners and define the array
+            const winners = drawGiveawayWinners(g.entries, g.winners),
+            arr = [];
+
+            // Loop through the winners
+            for (const data of (winners)) {
+                // Get the user
+                const user = await getUser(bot, interaction, data);
+
+                // If the user exists add it to the array otherwise add <deleted user>
+                if (user) {
+                    arr.push(user);
+                } else {
+                    arr.push("<deleted user>");
+                }
+            }
+
+            // Get the channel, message and giveaway creator
+            const channel = interaction.guild.channels.cache.get(g.guild.channel_id),
+            msg = await channel?.messages.fetch(g.guild.message_id).catch(() => {}),
+            creator = interaction.guild.members.cache.get(g.creator);
+
+            // Build the embed
+            const embed = new MessageEmbed()
+                .setAuthor(`Giveaway: ${g.prize}`, interaction.guild.iconURL({ dynamic: true, format: "png" }))
+                .setDescription(`${arr.length ? arr.length > 1 ? `**Winners:**\n${arr.join("\n")}` : `**Winner:** ${arr.join("\n")}`  : "Could not determine a winner!"}\n**Hosted By:** ${creator}`)
+                .setTimestamp(Date.now())
+                .setColor(bot.config.general.embedColor)
+                .setFooter(`${g.winners} winners | Ended at`);
+
+            // Update the embed
+            msg?.edit(embed);
+
+            // Set the giveaway to inactive in the db
+            await giveaways.findOneAndUpdate({ "guild.guild_id": interaction.guild.id, id: id, active: true }, {
+                active: false
+            });
+
+            // If no winners were selected return an error otherwise announce the winners
+            if (!arr.length) {
+                channel?.send(`${bot.config.emojis.error} A winner could not be determined!`);
+            } else {
+                channel?.send(`🎉 Congratulations to ${arr.join(", ")} on winning the giveaway for \`${g.prize}\`!`);
+            }
+
+            // Send a confirmation message
+            interaction.confirmation("Successfully ended that giveaway!");
+        } else if (interaction.options.get("reroll")) {
+            // Get the giveaway ID
+            const id = interaction.options.get("reroll").options.get("id").value;
+
+            // Get the giveaway
+            const g = await giveaways.findOne({ "guild.guild_id": interaction.guild.id, id: id, active: false });
+
+            // If the giveaway wasn't found return an error
+            if (!g)
+                return interaction.error("There is no giveaway with that ID or the giveaway is still active!");
+
+            // Get the winners and define the array
+            const winners = drawGiveawayWinners(g.entries, g.winners),
+            arr = [];
+
+            // Loop through the winners
+            for (const data of (winners)) {
+                // Get the user
+                const user = await getUser(bot, interaction, data);
+
+                // If the user exists add it to the array otherwise add <deleted user>
+                if (user) {
+                    arr.push(user);
+                } else {
+                    arr.push("<deleted user>");
+                }
+            }
+
+
+            // Send the new winners
+            interaction.confirmation(`The giveaway in ${interaction.guild.channels.cache.get(g.guild.channel_id) ? interaction.guild.channels.cache.get(g.guild.channel_id) : "<deleted channel>"} was re-rolled. The new winner(s) are ${arr.join(", ")}!`);
+            interaction.guild.channels.cache.get(g.guild.channel_id)?.send(`🎉 The giveaway was re-rolled - The new winner(s) are ${arr.join(", ")}!`);
         }
 
     }
