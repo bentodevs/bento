@@ -102,7 +102,7 @@ module.exports = {
             }
         } else if (opt == "remove") {
             // Get the remind data and the reminder id
-            const data = await reminders.findOne({_id: message.author.id }),
+            const data = await reminders.findOne({ _id: message.author.id }),
             reminder = parseInt(args[1]);
 
             // If the user has no reminders return an error
@@ -212,9 +212,91 @@ module.exports = {
             // Send the list of reminders
             interaction.reply(msg, { ephemeral: true });
         } else if (interaction.options.get("remove")) {
-            // Code
+            // Get the remind data and the reminder id
+            const data = await reminders.findOne({ _id: interaction.user.id }),
+            reminder = interaction.options.get("remove").options.get("id").value;
+
+            // If the user has no reminders return an error
+            if (!data?.reminders?.length)
+                return interaction.error("You don't have any active reminders!");
+            // If the user specified an invalid number return an error
+            if (!reminder)
+                return interaction.error("You didn't specify a valid number!");
+            // If the user specified and invalid reminder id return an error
+            if (!data.reminders.find(r => r.id == reminder))
+                return interaction.error("You didn't specify a valid reminder ID!");
+
+            if (data.reminders.length <= 1) {
+                // If this was the users last reminder delete their reminddata
+                await reminders.findOneAndDelete({ _id: interaction.user.id });
+            } else {
+                // Remove the reminder from the users reminders
+                await reminders.findOneAndUpdate({ _id: interaction.user.id }, {
+                    $pull: {
+                        reminders: {
+                            id: reminder
+                        }
+                    }
+                });
+            }
+
+            interaction.confirmation(`Successfully removed the reminder with the ID: \`${reminder}\`!`);
         } else if (interaction.options.get("create")) {
-            // Code
+            const options = interaction.options.get("create").options;
+
+            // Get the time, reminder, current time and remind data
+            const time = parseTime(options.get("time").value, "ms"),
+            reminder = options.get("reminder").value,
+            created = Date.now(),
+            data = await reminders.findOne({ _id: interaction.user.id });
+
+            // If no time was specified return an error
+            if (!time)
+                return interaction.error("You didn't specify a valid time!");
+            // If the time is longer than a year return an error
+            if (time > 31556952000)
+                return interaction.error("The maximum time for a reminder is 1 year!");
+            // If the time is less than a minute return an error
+            if (time < 60000)
+                return interaction.error("The minimum time for a reminder is 1 minute.");
+            // If the user didn't specify a reminder return an error
+            if (!reminder)
+                return interaction.error("You didn't specify anything to remind you about!");
+            // If the user already has 25 reminders set return an error
+            if (data && data.reminders?.length >= 25)
+                return interaction.error("You cannot set more than 25 reminders!");
+
+            // Get the reminder id
+            const id = (data?.reminders[data?.reminders.length - 1]?.id ?? 0) + 1;
+
+            // Create the reminder object
+            const obj = {
+                id: id,
+                reminder: reminder,
+                guild: interaction.guild?.id ?? null,
+                timeCreated: created,
+                remindTime: created + time
+            };
+
+            if (!data) {
+                // If the user has no remind data create it
+                await reminders.create({
+                    _id: interaction.user.id,
+                    reminders: [
+                        obj
+                    ]
+                });
+            } else if (data) {
+                // Push the reminder to the array in the DB
+                await reminders.findOneAndUpdate({ _id: interaction.user.id }, {
+                    $push: {
+                        reminders: obj
+                    }
+                });
+            }
+
+            // Send a confirmation message
+            interaction.confirmation(`I will remind you about that in **${formatDuration(intervalToDuration({ start: created, end: created + time }), { delimiter: ", " })}**!`);
         }
 
     }
