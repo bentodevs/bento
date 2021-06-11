@@ -6,6 +6,7 @@ const { getSettings, getPerms } = require("../database/mongo");
 const { checkMesage, checkBlacklist } = require("../modules/functions/moderation");
 const { getTag } = require("../modules/functions/getters");
 const { checkSelf, checkPerms } = require("../modules/functions/permissions");
+const afk = require("../database/models/afk");
 
 module.exports = async (bot, message) => {
     // If a message is partial try to fetch it.
@@ -33,6 +34,16 @@ module.exports = async (bot, message) => {
     // If the message was sent in a guild, then check it against the automod
     if (message.guild) {
         await checkMesage(message, settings);
+    }
+
+    // AFK User check
+    if (message.content.indexOf(prefix) !== 0) {
+        if (message.mentions.users.size) {
+            const first = message.mentions.users.first(),
+            afkUser = await afk.findOne({ user: first.id, guild: message.guild.id });
+            if (afkUser?.status && first.id !== message.author.id)
+                return message.reply(`${first} is current AFK - ${afkUser.status}`);
+        }
     }
 
     // Return if the message doesn't start with the prefix
