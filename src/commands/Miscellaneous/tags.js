@@ -40,6 +40,45 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "create",
+            type: "SUB_COMMAND",
+            description: "Create a new tag.",
+            options: [{
+                name: "name",
+                type: "STRING",
+                description: "The name of the tag (cannot include spaces, special characters, etc).",
+                required: true
+            }, {
+                name: "content",
+                type: "STRING",
+                description: "The content of the tag.",
+                required: true
+            }]
+        }, {
+            name: "list",
+            type: "SUB_COMMAND",
+            description: "Sends a list of the tags in this guild.",
+            options: [{
+                name: "page",
+                type: "INTEGER",
+                description: "The page you want to view.",
+                required: false
+            }]
+        }, {
+            name: "delete",
+            type: "SUB_COMMAND",
+            description: "Delete a tag.",
+            options: [{
+                name: "name",
+                type: "STRING",
+                description: "The name of the tag you want to delete.",
+                required: true
+            }]
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -78,7 +117,7 @@ module.exports = {
                 .setAuthor(`Custom tags in ${message.guild.name}`, message.guild.iconURL({format: "png", dynamic: true}))
                 .setFooter(`${guildTags.length} total tags | Page ${page + 1} of ${pages.length}`)
                 .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
-                .setDescription(description);
+                .setDescription(description.join("\n"));
             
             // Send the embed
             message.channel.send(embed);
@@ -151,6 +190,102 @@ module.exports = {
                 tags.create(object);
                 // Send a confirmation message
                 message.confirmation(`Successfully created the tag **${name}**!`);
+            }
+        }
+
+    },
+
+    run_interaction: async (bot, interaction) => {
+
+        // Get all the tags for this guild
+        const guildTags = await tags.find({ guild: interaction.guild.id });
+
+        if (interaction.options.get("list")) {
+            // If the guild doesn't have any tags return an error
+            if (!guildTags.length)
+                return interaction.error("This guild doesn't have any tags!");
+
+            // Sort the tags
+            const sorted = guildTags.sort((a, b) => b.lastModified - a.lastModified);
+            
+            // Page vars
+            const pages = [];
+            let page = 0;
+
+            // Loop through the tags and devide them into pages of 10
+            for (let i = 0; i < sorted.length; i += 10) {
+                pages.push(sorted.slice(i, i + 10));
+            }
+
+            // If the page option is there set it as the page
+            if (interaction.options.get("list").options?.get("page")?.value)
+                page = interaction.options.get("list").options.get("page").value -= 1;
+            // If the page doesn't exist return an error
+            if (!pages[page])
+                return interaction.error("You didn't specify a valid page!");
+
+            // Format the description
+            const description = pages[page].map(m => `**Name:** \`${m.name}\` | **Last Modified:** ${format(m.lastModified, "PPp")} (${formatDistance(m.lastModified, Date.now(), { addSuffix: true })})`);
+
+            // Create the tags embed
+            const embed = new MessageEmbed()
+                .setAuthor(`Custom tags in ${interaction.guild.name}`, interaction.guild.iconURL({format: "png", dynamic: true}))
+                .setFooter(`${guildTags.length} total tags | Page ${page + 1} of ${pages.length}`)
+                .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
+                .setDescription(description.join("\n"));
+            
+            // Send the embed
+            interaction.reply(embed);
+        } else if (interaction.options.get("delete")) {
+            // Get the tag name and try to find the tag in the database
+            const name = interaction.options.get("delete").options.get("name").value,
+            tag = await tags.findOne({ guild: interaction.guild.id, name: name });
+
+            // If the tag wasn't found return an error
+            if (!tag)
+                return interaction.error("You didn't specify a valid tag!");
+
+            // Delete the tag
+            await tags.findOneAndDelete({ guild: interaction.guild.id, name: name });
+
+            // Send a confirmation message
+            interaction.confirmation(`The tag **${name}** was successfully deleted!`);
+        } else if (interaction.options.get("create")) {
+            // If the guild is at the max of 50 tags return an error
+            if (guildTags.size >= 50)
+                return interaction.error("This guild has reached the limit of 50 tags!");
+
+            // Grab the tag name, check if a tag with the name already exists and grab the tag content
+            const name = interaction.options.get("create").options.get("name").value,
+            tag = await tags.findOne({ guild: interaction.guild.id, name: name}),
+            content = interaction.options.get("create").options.get("content").value;
+
+            // Check if the tag name has any spaces
+            if (/ /g.test(name))
+                return interaction.error("A tag name cannot contain any spaces!");
+
+            // If a command or alias already exists with the tag name return an error
+            if (bot.commands.has(name) || bot.aliases.has(name))
+                return interaction.error("The tag you specified is already being used as a command or alias! You cannot use it as a tag.");
+
+            // Prepare the tag data object
+            const object = {
+                guild: interaction.guild.id,
+                name: name,
+                content: content,
+                lastModified: Date.now()
+            };
+
+            if (tag) {
+                // If the tag already exists update the tag content
+                await tags.findOneAndUpdate({ guild: interaction.guild.id, name: name }, object);
+                // Send a confirmation message
+                interaction.confirmation(`Successfully updated the tag **${name}** with the new content!`);
+            } else {
+                // If the tag doesn't exist create the db object
+                tags.create(object);
+                // Send a confirmation message
+                interaction.confirmation(`Successfully created the tag **${name}**!`);
             }
         }
 
