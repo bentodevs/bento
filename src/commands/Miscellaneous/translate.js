@@ -30,6 +30,20 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "text",
+            type: "STRING",
+            description: "The text you want to translate.",
+            required: true
+        }, {
+            name: "destination_language",
+            type: "STRING",
+            description: "The language you want to translate the text too.",
+            required: false
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -51,7 +65,31 @@ module.exports = {
             .addField(`Translated (${translate.languages[language] ? ISO.getName(language) : language ?? "English"})`, result.text);
 
         // Send the embed
-        message.channel.send(embed);
+        message.reply(embed);
+
+    },
+
+    run_interaction: async (bot, interaction) => {
+
+        // Get the language and the text to translate
+        const language = translate.languages[interaction.options.get("destination_language")?.value?.toLowerCase()] || Object.values(translate.languages).find(a => typeof(a) == "string" ? a.toLowerCase() == interaction.options.get("destination_language")?.value?.toLowerCase() : ""),
+        toTranslate = interaction.options.get("text").value;
+
+        // Translate the text
+        const result = await translate(toTranslate, {
+            to: language ?? "en"
+        });
+
+        // Build the embed
+        const embed = new MessageEmbed()
+            .setAuthor(`Translated From: ${ISO.getName(result.from.language.iso)}`)
+            .setThumbnail("https://i.imgur.com/Lg3ZDtn.png")
+            .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
+            .addField(`Original (${ISO.getName(result.from.language.iso)})`, toTranslate)
+            .addField(`Translated (${translate.languages[language] ? ISO.getName(language) : language ?? "English"})`, result.text);
+
+        // Send the embed
+        interaction.reply(embed);
 
     }
 };
