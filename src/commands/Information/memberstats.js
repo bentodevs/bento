@@ -16,7 +16,7 @@ module.exports = {
     perms: {
         permission: ["@everyone"],
         type: "discord",
-        self: ["EMBED_MESSAGES"]
+        self: ["EMBED_LINKS"]
     },
     opts: {
         guildOnly: true,
