@@ -29,7 +29,7 @@ module.exports = {
 
     run: async (bot, message, args) => {
 
-        const bans = await message.guild.fetchBans(),
+        const bans = await message.guild.bans.fetch(),
             reason = args.slice(1).join(" ") || "No reason provided",
             match = /<@!?(\d{17,19})>/g.exec(args[0]),
             action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1;
