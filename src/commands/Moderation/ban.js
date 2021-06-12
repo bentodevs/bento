@@ -28,6 +28,20 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "user",
+            type: "USER",
+            description: "The user you wish to ban.",
+            required: true
+        }, {
+            name: "reason",
+            type: "STRING",
+            description: "The reason for the ban.",
+            required: false
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -113,6 +127,78 @@ module.exports = {
 
             // Send the punishment to the log channel
             punishmentLog(message, member, action, reason, "ban");
+        }
+    },
+
+    run_interaction: async (bot, interaction) => {
+
+        // 1. Get the user from the interaction
+        // 2. Get the reason from the interaction, or set to a default if wasn't given
+        // 3. Get the punishment ID
+        const user = interaction.options.get("user"),
+            reason = interaction.options.get("reason")?.value || "No reason specified",
+            action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1;
+        
+        // If the user they want to ban is themselves, then return an error
+        if (interaction.member.id === user.user.id)
+            return interaction.reply("You are unable ban yourself!");
+        
+        if (user.member) {
+
+            if (user.member.roles.highest.position >= interaction.member.roles.highest.position)
+                return interaction.reply("Questioning authority are we? Sorry, but this isn't a democracy...", { files: ["https://i.imgur.com/K9hmVdA.png"] });
+
+            if (!interaction.guild.members.cache.get(user.user.id).bannable)
+                return interaction.reply("I can't ban that member! *They may have a higher role than me!*");
+            
+            await user.member.send(`:hammer: You have been banned from **${interaction.guild.name}** for \`${reason}\``).catch(() => { });
+            user.member.ban({ days: 1, reason: `[Case: ${action} | ${interaction.member.user.tag} on ${format(Date.now(), 'PPp')}] ${reason}]` });
+            interaction.confirmation(`\`${user.user.tag}\` was banned for **${reason}** *(Case #${action})*`);
+            
+            // Create the punishment record in the DB
+            await punishments.create({
+                id: action,
+                guild: interaction.guild.id,
+                type: "ban",
+                user: user.member.id,
+                moderator: interaction.member.id,
+                actionTime: Date.now(),
+                reason: reason
+            });
+            
+            // Send the punishment to the log channel
+            punishmentLog(interaction, user.user, action, reason, "ban");
+        } else {
+            // If the member is not part of the server, but the ID does exist, then we'll add them to the pre-ban database
+            // This means that if/when they join the guild, they will be banned
+            if (await preban.findOne({ user: user.user.id }))
+                return interaction.error("That user will already be banned if they join the server!");
+            
+            // Send chat message stating member was banned
+            interaction.confirmation(stripIndents`${user.user.tag} was banned for **${reason}** 
+            *The user is not currently in this server, so will be banned upon joining*`);
+
+            // Add the ban to the preban database
+            await preban.create({
+                user: user.user.id,
+                guild: interaction.guild.id,
+                reason: reason,
+                executor: interaction.member.id
+            });
+
+            // Create the punishment record in the DB
+            await punishments.create({
+                id: action,
+                guild: interaction.guild.id,
+                type: "ban",
+                user: user.user.id,
+                moderator: interaction.member.id,
+                actionTime: Date.now(),
+                reason: reason
+            });
+
+            // Send the punishment to the log channel
+            punishmentLog(interaction, user.user, action, reason, "ban");
         }
     }
 };
