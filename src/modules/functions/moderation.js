@@ -21,7 +21,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
             **Moderator:** ${message.author} (\`${message.author.tag}\`)
             **Time:** ${length}
             **Reason:** ${reason}`)
-            .setColor(message.member.displayHexColor)
+            .setColor(message.member.displayColor)
             .setTimestamp()
             .setFooter(`User ID: ${member.user.id}`);
         
@@ -35,7 +35,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
             .setDescription(stripIndents`**User:** ${member} (\`${member.user.tag}\`)
             **Moderator:** ${message.author}
             **Reason:** ${reason}`)
-            .setColor(member.displayHexColor)
+            .setColor(member.displayColor)
             .setTimestamp()
             .setFooter(`User ID: ${member.user.id}`);
         
@@ -50,7 +50,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
             **Moderator:** ${message.author} (\`${message.author.tag}\`)
             **Time:** Forever
             **Reason:** ${reason}`)
-            .setColor(message.member.displayHexColor)
+            .setColor(message.member.displayColor)
             .setTimestamp()
             .setFooter(`User ID: ${member.id}`);
         
@@ -64,7 +64,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
             .setDescription(stripIndents`**User:** ${member} (\`${member.tag}\`)
             **Moderator:** ${message.author} (\`${message.author.tag}\`)
             **Reason:** ${reason}`)
-            .setColor(message.member.displayHexColor)
+            .setColor(message.member.displayColor)
             .setTimestamp()
             .setFooter(`User ID: ${member.id}`);
         
@@ -78,7 +78,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
             .setDescription(stripIndents`**User:** ${member} (\`${member.user.tag}\`)
             **Moderator:** ${message.author} (\`${message.author.tag}\`)
             **Reason:** ${reason}`)
-            .setColor(message.member.displayHexColor)
+            .setColor(message.member.displayColor)
             .setTimestamp()
             .setFooter(`User ID: ${member.user.id}`);
         
