@@ -40,7 +40,7 @@ module.exports = {
 
             // Build embed
             const embed = new MessageEmbed()
-                .setColor(message.member?.displayHexColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
                 .setDescription(text);
         
             // Send the embed
@@ -64,7 +64,7 @@ module.exports = {
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setColor(message.member.displayHexColor)
+                .setColor(message.member.displayColor)
                 .setDescription(description)
                 .setTitle(title);
 

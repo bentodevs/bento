@@ -99,7 +99,7 @@ module.exports = {
             // Build the history embed
             const embed = new MessageEmbed()
                 .setAuthor(`Punishment History for ${member.user?.tag ?? member.tag}`, (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }))
-                .setColor(message.member?.displayHexColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
                 .setDescription(formatted.join("\n"))
                 .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
             
@@ -121,7 +121,7 @@ module.exports = {
             // "mute" is only added when the punishment type is a mute (Semi-obvious tbh...)
             const embed = new MessageEmbed()
                 .setAuthor(`Case #${punishment.id} - ${punishment.type.toTitleCase()}`, usr.displayAvatarURL({ format: "png", dynamic: true }))
-                .setColor((message.member.displayHexColor ? message.member.displayHexColor : "#B00B1E"))
+                .setColor((message.member.displayColor ? message.member.displayColor : "#B00B1E"))
                 .setDescription(stripIndents`**User:** \`${usr.tag}\`
                 **Moderator:** \`${mod.tag}\`
                 **Reason:** ${punishment.reason}
@@ -172,7 +172,7 @@ module.exports = {
             // Build the history embed
             const embed = new MessageEmbed()
                 .setAuthor(`Punishment History for ${member.user?.tag ?? member.tag}`, (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }))
-                .setColor(message.member?.displayHexColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
                 .setDescription(formatted.join("\n"))
                 .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
             
@@ -224,7 +224,7 @@ module.exports = {
             // Build the history embed
             const embed = new MessageEmbed()
                 .setAuthor(`Punishment History for ${member.user.tag}`, member.user.displayAvatarURL({ format: 'png', dynamic: true }))
-                .setColor(member.member?.displayHexColor ?? bot.config.general.embedColor)
+                .setColor(member.member?.displayColor ?? bot.config.general.embedColor)
                 .setDescription(formatted.join("\n"))
                 .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
             
@@ -246,7 +246,7 @@ module.exports = {
             // "mute" is only added when the punishment type is a mute (Semi-obvious tbh...)
             const embed = new MessageEmbed()
                 .setAuthor(`Case #${punishment.id} - ${punishment.type.toTitleCase()}`, usr.displayAvatarURL({ format: "png", dynamic: true }))
-                .setColor(interaction.member.displayHexColor ?? bot.config.general.embedColor)
+                .setColor(interaction.member.displayColor ?? bot.config.general.embedColor)
                 .setDescription(stripIndents`**User:** \`${usr.tag}\`
                 **Moderator:** \`${mod.tag}\`
                 **Reason:** ${punishment.reason}

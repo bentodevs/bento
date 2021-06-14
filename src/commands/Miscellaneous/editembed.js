@@ -58,7 +58,7 @@ module.exports = {
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setColor(message.member.displayHexColor)
+                .setColor(message.member.displayColor)
                 .setDescription(description);
 
             // Update the message with the embed
@@ -94,7 +94,7 @@ module.exports = {
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setColor(message.member.displayHexColor)
+                .setColor(message.member.displayColor)
                 .setDescription(description)
                 .setTitle(title);
 
