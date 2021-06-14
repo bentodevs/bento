@@ -6,7 +6,7 @@ module.exports = {
     info: {
         name: "character",
         aliases: [],
-        usage: "character [name]",
+        usage: "character <name>",
         examples: [
             "character Elaina"
         ],
@@ -27,10 +27,19 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "name",
+            type: "STRING",
+            description: "The name of the character.",
+            required: true
+        }]
+    },
 
     run: async (bot, message, args) => {
 
-        getCharacter(args.join(" ")).then(data => {
+        getCharacter(message.options?.get("name")?.value ?? args.join(" ")).then(data => {
             // Get the description and remove html tags and markdown
             let description = data.description.removeHTML().convertMarkdown();
 
@@ -60,7 +69,7 @@ module.exports = {
                 .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
 
             // Send the embed
-            message.channel.send(embed);
+            message.reply({ embeds: [embed] });
         }).catch(err => {
             // Send the error message
             message.error(`Something went wrong while fetching the character: \`${err.message}\``);

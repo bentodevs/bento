@@ -50,7 +50,7 @@ module.exports = {
 
         // Delete the status message & send the embed
         msg.delete().catch(() => {});
-        message.channel.send(embed);
+        message.channel.send({ embeds: [embed] });
 
     },
 
@@ -70,7 +70,7 @@ module.exports = {
             .setFooter(meme.data.subreddit_name_prefixed, bot.user.displayAvatarURL({ format: "png", dynamic: true }));
 
         // Send the embed
-        interaction.editReply(embed);
+        interaction.editReply({ embeds: [embed] });
 
     }
 };

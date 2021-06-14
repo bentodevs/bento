@@ -27,10 +27,19 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "username",
+            type: "STRING",
+            description: "The users anilist username.",
+            required: true
+        }]
+    },
 
     run: async (bot, message, args) => {
 
-        getProfile(args.join(" ")).then(data => {
+        getProfile(message.options?.get("username")?.value ?? args.join(" ")).then(data => {
             // Build the embed
             const embed = new MessageEmbed()
                 .setAuthor(data.name, "https://i.imgur.com/3Crs2k9.png", data.siteUrl)
@@ -49,7 +58,7 @@ module.exports = {
                 .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
 
             // Send the embed
-            message.channel.send(embed);
+            message.reply({ embeds: [embed] });
         }).catch(err => {
             // Send the error message
             message.error(`Something went wrong while fetching the character: \`${err.message}\``);

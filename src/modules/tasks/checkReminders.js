@@ -36,7 +36,7 @@ exports.init = async bot => {
                             .addField("Set at", format(rmdData.timeCreated, "PPp"));
 
                         // Send the embed to the user
-                        user.send(embed)
+                        user.send({ embeds: [embed] })
                             .catch(() => {});
 
                         // Check if the user has more than 1 reminder

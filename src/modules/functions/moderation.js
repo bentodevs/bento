@@ -26,7 +26,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
             .setFooter(`User ID: ${member.user.id}`);
         
         // Send the completed embed
-        modlog.send(embed);
+        modlog.send({ embeds: [embed] });
     } else if (type.toLowerCase() === "unmute") {
         // Built the embed
         const embed = new MessageEmbed()
@@ -40,7 +40,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
             .setFooter(`User ID: ${member.user.id}`);
         
         // Send the completed embed
-        modlog.send(embed);
+        modlog.send({ embeds: [embed] });
     } else if (type.toLowerCase() === "ban") {
         // Built the embed
         const embed = new MessageEmbed()
@@ -55,7 +55,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
             .setFooter(`User ID: ${member.id}`);
         
         // Send the completed embed
-        modlog.send(embed);
+        modlog.send({ embeds: [embed] });
     } else if (type.toLowerCase() === "unban") {
         // Built the embed
         const embed = new MessageEmbed()
@@ -69,7 +69,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
             .setFooter(`User ID: ${member.id}`);
         
         // Send the completed embed
-        modlog.send(embed);
+        modlog.send({ embeds: [embed] });
     } else if (type.toLowerCase() === "kick") {
         // Built the embed
         const embed = new MessageEmbed()
@@ -83,7 +83,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
             .setFooter(`User ID: ${member.user.id}`);
         
         // Send the completed embed
-        modlog.send(embed);
+        modlog.send({ embeds: [embed] });
     } else {
         return log.error(`Received invalid punishment type: ${type.toLowerCase()}`);
     }

@@ -27,11 +27,20 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "title",
+            type: "STRING",
+            description: "The title of the manga.",
+            required: true
+        }]
+    },
 
     run: async (bot, message, args) => {
 
         // Get the data
-        getMedia(args.join(" "), "MANGA").then(data => {
+        getMedia(message.options?.get("title")?.value ?? args.join(" "), "MANGA").then(data => {
             // Get the description and remove html tags and markdown
             let description = data.description.removeHTML().convertMarkdown();
 
@@ -61,7 +70,7 @@ module.exports = {
                 .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
 
             // Send the embed
-            message.channel.send(embed);
+            message.reply({ embeds: [embed] });
         }).catch((err) => {
             // Send the error message
             message.error(`Something went wrong while fetching the manga: \`${err.message}\``);

@@ -160,7 +160,7 @@ module.exports = {
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
 
         // Send the embed
-        const eMsg = await channel.send(embed);
+        const eMsg = await channel.send({ embeds: [embed] });
 
         // If the embed was send to a different channel send a confirmation message
         if (channel.id !== message.channel.id)
@@ -226,7 +226,7 @@ module.exports = {
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor);
 
         // Send the embed
-        const eMsg = await channel.send(embed);
+        const eMsg = await channel.send({ embeds: [embed] });
 
         // Send a confirmation message
         interaction.confirmation(`The poll has successfully been started in ${channel}!`, { ephemeral: true });

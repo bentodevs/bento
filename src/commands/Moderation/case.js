@@ -102,9 +102,8 @@ module.exports = {
                 .setColor(message.member?.displayHexColor ?? bot.config.general.embedColor)
                 .setDescription(formatted.join("\n"))
                 .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
-
-            message.channel.send(embed);
-
+            
+            message.channel.send({ embeds: [embed] });
         } else if (!isNaN(args[0])) {
             
             // We are now presuming the number provided is a Case ID...
@@ -132,7 +131,7 @@ module.exports = {
                 .setFooter(`Requested by ${message.author.tag}`);
             
             // Send the embed
-            message.channel.send(embed);
+            message.channel.send({ embeds: [embed] });
             
         } else {
             // Try and fetch a guild member from args[0]
@@ -240,7 +239,7 @@ module.exports = {
                 .setDescription(formatted.join("\n"))
                 .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
             
-            interaction.reply(embed);
+            interaction.reply({ embeds: [embed] });
         } else if (interaction.options.get("info")) {
             const int = interaction.options.get("info")?.options?.find(o => o.name === "case");
             
@@ -268,7 +267,7 @@ module.exports = {
                 .setFooter(`Requested by ${interaction.member.user.tag}`);
             
             // Send the embed
-            interaction.reply(embed);
+            interaction.reply({ embeds: [embed] });
         }
     }
 };

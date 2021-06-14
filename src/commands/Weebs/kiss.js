@@ -26,6 +26,15 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "member",
+            type: "USER",
+            description: "The member you want to bonk.",
+            required: true
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -39,7 +48,23 @@ module.exports = {
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
         
         // Send the embed
-        message.channel.send(`${message.member} kissed ${member}`, embed);
+        message.reply(`${message.member} kissed ${member}`, embed);
+
+    },
+
+    run_interaction: async (bot, interaction) => {
+
+        // Fetch the image
+        const URL = await fetchWaifuApi("kiss"),
+        member = interaction.options.get("member").member;
+
+        // Build the embed
+        const embed = new MessageEmbed()
+            .setImage(URL)
+            .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor);
+        
+        // Send the embed
+        interaction.reply(`${interaction.member} kissed ${member}`, embed);
 
     }
 };

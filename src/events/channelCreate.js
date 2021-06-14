@@ -26,6 +26,6 @@ module.exports = async (bot, channel) => {
             .setFooter(`Created at`)
             .setTimestamp(channel.createdTimestamp)
         
-        log.send(embed)
+        log.send({ embeds: [embed] })
     }
 }

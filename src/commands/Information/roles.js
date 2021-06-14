@@ -68,7 +68,7 @@ module.exports = {
             .setDescription(description.join("\n"));
 
         // Send the embed
-        message.reply(embed);
+        message.reply({ embeds: [embed] });
 
     },
 
@@ -104,7 +104,7 @@ module.exports = {
             .setDescription(description.join("\n"));
 
         // Send the embed
-        interaction.reply(embed);
+        interaction.reply({ embeds: [embed] });
 
     }
 };

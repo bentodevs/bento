@@ -68,7 +68,7 @@ module.exports = {
             **Mentionable:** ${role.mentionable.toString().toTitleCase()}`);
 
         // Send the embed
-        message.reply(embed);
+        message.reply({ embeds: [embed] });
 
     },
 
@@ -95,7 +95,7 @@ module.exports = {
             **Mentionable:** ${role.mentionable.toString().toTitleCase()}`);
 
         // Send the embed
-        interaction.reply(embed);
+        interaction.reply({ embeds: [embed] });
 
     }
 };

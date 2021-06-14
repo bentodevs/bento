@@ -89,7 +89,7 @@ module.exports = {
                 .setDescription(description);
             
             // Send the members embed
-            message.reply(embed);
+            message.reply({ embeds: [embed] });
         } else if (role) {
             // Pages variables
             const pages = [];
@@ -126,7 +126,7 @@ module.exports = {
                 .setDescription(description.join("\n"));
             
             // Send the members embed
-            message.reply(embed);
+            message.reply({ embeds: [embed] });
         }
 
     },
@@ -166,7 +166,7 @@ module.exports = {
                 .setDescription(description.join("\n"));
             
             // Send the members embed
-            interaction.reply(embed);
+            interaction.reply({ embeds: [embed] });
         } else {
             // Pages variables
             const pages = [];
@@ -202,7 +202,7 @@ module.exports = {
                 .setDescription(description.join("\n"));
             
             // Send the members embed
-            interaction.reply(embed);
+            interaction.reply({ embeds: [embed] });
         }
 
     }

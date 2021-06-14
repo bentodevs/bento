@@ -62,7 +62,7 @@ module.exports = {
                 .setDescription(description);
 
             // Update the message with the embed
-            msg.edit(embed);
+            msg.edit({ embeds: [embed] });
 
             // Send a confirmation message
             message.confirmationReply("Successfully updated the embed!");
@@ -99,7 +99,7 @@ module.exports = {
                 .setTitle(title);
 
             // Update the message with the embed
-            msg.edit(embed);
+            msg.edit({ embeds: [embed] });
 
             // Send a confirmation message
             message.confirmationReply("Successfully updated the embed!");

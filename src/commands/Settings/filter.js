@@ -60,7 +60,7 @@ module.exports = {
                 .setDescription(formatted.join(', '))
                 .setFooter(`The filter is currently ${filter.state ? "enabled" : "disabled"} | Page ${page + 1} of ${pages.length}`);
             
-            message.channel.send(embed);
+            message.channel.send({ embeds: [embed] });
         } else if (args[0].toLowerCase() === "add") {
             // If nothing was specified to be added, then return an error
             if (!args[1])

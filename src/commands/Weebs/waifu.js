@@ -24,6 +24,10 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: []
+    },
 
     run: async (bot, message) => {
 
@@ -36,7 +40,7 @@ module.exports = {
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
 
         // Send the embed
-        message.channel.send(embed);
+        message.reply({ embeds: [embed] });
 
     }
 };

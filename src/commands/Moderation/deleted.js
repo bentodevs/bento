@@ -47,7 +47,7 @@ module.exports = {
             .setFooter(deleted.id)
             .setTimestamp(deleted.deletedTimestamp);
 
-        message.channel.send(embed);
+        message.channel.send({ embeds: [embed] });
         
     }
 };

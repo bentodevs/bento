@@ -52,7 +52,7 @@ module.exports = {
             ${bot.config.emojis.djs} Discord.js **v${version}** | ${bot.config.emojis.nodejs} Node.js **${process.version}**`);
 
         // Send the embed
-        message.reply(embed);
+        message.reply({ embeds: [embed] });
         
     }
 };

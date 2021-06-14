@@ -44,7 +44,7 @@ module.exports = {
                 .setDescription(text);
         
             // Send the embed
-            message.channel.send(embed);
+            message.channel.send({ embeds: [embed] });
         } else {
             // Grab options
             const opts = args.join(" ").split("|");
@@ -69,7 +69,7 @@ module.exports = {
                 .setTitle(title);
 
             // Send the embed
-            channel.send(embed);
+            channel.send({ embeds: [embed] });
 
             message.confirmationReply("Successfully sent the embed!");
         }

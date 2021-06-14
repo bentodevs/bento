@@ -70,7 +70,7 @@ module.exports = {
             .setFooter(`Requested by: ${message.author.tag}`);
 
         // Send the embed
-        message.reply(embed);
+        message.reply({ embeds: [embed] });
 
     },
 
@@ -98,7 +98,7 @@ module.exports = {
             .setFooter(`Requested by: ${interaction.user.tag}`);
 
         // Send the embed
-        interaction.reply(embed);
+        interaction.reply({ embeds: [embed] });
 
     }
 };

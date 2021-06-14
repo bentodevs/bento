@@ -152,7 +152,7 @@ module.exports = {
                 .setFooter(`${g.length} Total Giveaways | Page ${page + 1} of ${pages.length}`);
 
             // Send the embed
-            message.channel.send(embed);
+            message.channel.send({ embeds: [embed] });
         } else if (option == "start") {
             // Define the filter and message collector options
             const filter = m => m.author.id == message.author.id,
@@ -284,7 +284,7 @@ module.exports = {
                 .setFooter(`${winners} winners | Ends`);
 
             // Send the embed & add the reaction
-            const message_id = await channel.send(embed).then(msg => { msg.react("🎉"); return msg.id; });
+            const message_id = await channel.send({ embeds: [embed] }).then(msg => { msg.react("🎉"); return msg.id; });
 
             // Create the db entry
             await giveaways.create({
@@ -378,7 +378,7 @@ module.exports = {
                 .setFooter(`${g.winners} winners | Ended at`);
 
             // Update the embed
-            msg?.edit(embed);
+            msg?.edit({ embeds: [embed] });
 
             // Set the giveaway to inactive in the db
             await giveaways.findOneAndUpdate({ "guild.guild_id": message.guild.id, id: id, active: true }, {
@@ -479,7 +479,7 @@ module.exports = {
                 .setFooter(`${g.length} Total Giveaways | Page ${page + 1} of ${pages.length}`);
 
             // Send the embed
-            interaction.reply(embed);
+            interaction.reply({ embeds: [embed] });
         } else if (interaction.options.get("start")) {
             // Get the list options
             const options = interaction.options.get("start").options;
@@ -529,7 +529,7 @@ module.exports = {
                 .setFooter(`${winners} winners | Ends`);
 
             // Send the embed & add the reaction
-            const message_id = await channel.send(embed).then(msg => { msg.react("🎉"); return msg.id; });
+            const message_id = await channel.send({ embeds: [embed] }).then(msg => { msg.react("🎉"); return msg.id; });
 
             // Create the db entry
             await giveaways.create({
@@ -615,7 +615,7 @@ module.exports = {
                 .setFooter(`${g.winners} winners | Ended at`);
 
             // Update the embed
-            msg?.edit(embed);
+            msg?.edit({ embeds: [embed] });
 
             // Set the giveaway to inactive in the db
             await giveaways.findOneAndUpdate({ "guild.guild_id": interaction.guild.id, id: id, active: true }, {

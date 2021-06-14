@@ -102,7 +102,7 @@ module.exports = {
         // Delete the loading message
         msg.delete().catch(() => { });
         // Send the embed
-        message.channel.send(embed);
+        message.channel.send({ embeds: [embed] });
 
     },
 
@@ -148,7 +148,7 @@ module.exports = {
             .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ dynamic: true, format: "png" }));
         
         // Send the embed
-        interaction.editReply(embed);
+        interaction.editReply({ embeds: [embed] });
 
     }
 };

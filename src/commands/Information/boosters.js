@@ -75,7 +75,7 @@ module.exports = {
             .setFooter(`${sorted.size} total boosters | Page ${page + 1} of ${pages.length}`);
 
         // Send the embed
-        message.reply(embed);
+        message.reply({ embeds: [embed] });
 
     },
 
@@ -118,7 +118,7 @@ module.exports = {
             .setFooter(`${sorted.size} total boosters | Page ${page + 1} of ${pages.length}`);
 
         // Send the embed
-        interaction.reply(embed);
+        interaction.reply({ embeds: [embed] });
         
     }
 };

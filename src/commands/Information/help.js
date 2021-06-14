@@ -101,7 +101,7 @@ module.exports = {
             }
 
             // Send the embed to the user
-            (message.author?.send(embed) ?? message.user.send(embed))
+            (message.author?.send({ embeds: [embed] }) ?? message.user.send({ embeds: [embed] }))
                 .then(() => {
                     // If the command was ran in a guild send a confirmation message
                     if (message.guild)
@@ -193,7 +193,7 @@ module.exports = {
                 .setFooter("Do not include <> or [] — They indicate <required> and [optional] arguments.");
 
             // Send the embed
-            message.reply(embed);
+            message.reply({ embeds: [embed] });
         } else if (category) {
             // Get all the commands for the specified category
             const commands = bot.commands.filter(c => c.info.category.toLowerCase() == category).map(c => `\`${prefix}${c.info.name}\``);
@@ -249,7 +249,7 @@ module.exports = {
                 .setFooter(`For more detailed information about a command use ${prefix}help <command>`);
 
             // Send the embed
-            message.reply(embed);
+            message.reply({ embeds: [embed] });
         } else {
             // Send an error
             message.error("You didn't specify a valid command or category!");
