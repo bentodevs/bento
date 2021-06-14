@@ -29,17 +29,17 @@
     "@vitalets/google-translate-api": "^7.0.0",
     "chalk": "^4.1.0",
     "common-tags": "^1.8.0",
-    "date-fns": "^2.19.0",
+    "date-fns": "^2.22.1",
     "date-fns-tz": "^1.1.4",
-    "discord.js": "^13.0.0-dev.e980948de55e91e59c9e3293ac76bc645a058a53",
+    "discord.js": "^13.0.0-dev.918921e8211fc16e9b12d2502f3168264246ea22",
     "iso-639-1": "^2.1.9",
-    "mongoose": "^5.12.2",
+    "mongoose": "^5.12.13",
     "node-fetch": "^2.6.1",
-    "ora": "^5.4.0",
+    "ora": "^5.4.1",
     "os": "^0.1.1",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
-    "eslint": "^7.25.0"
+    "eslint": "^7.28.0"
   }
 }
