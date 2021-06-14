@@ -136,8 +136,8 @@ module.exports = {
         // 2. Get the reason from the interaction, or set to a default if wasn't given
         // 3. Get the punishment ID
         const user = interaction.options.get("user"),
-            reason = interaction.options.get("reason")?.value || "No reason specified",
-            action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1;
+        reason = interaction.options.get("reason")?.value || "No reason specified",
+        action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1;
         
         // If the user they want to ban is themselves, then return an error
         if (interaction.member.id === user.user.id)
