@@ -70,7 +70,7 @@ module.exports = {
                 .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
 
             // Send the embed
-            message.reply(embed);
+            message.reply({ embeds: [embed] });
         }).catch((err) => {
             // Send the error message
             message.error(`Something went wrong while fetching the anime: \`${err.message}\``);

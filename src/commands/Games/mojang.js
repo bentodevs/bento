@@ -53,7 +53,7 @@ module.exports = {
             .setTimestamp(bot.mojang.lastUpdated);
 
         // Send the embed
-        message.reply(embed);
+        message.reply({ embeds: [embed] });
 
     }
 };

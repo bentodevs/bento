@@ -110,7 +110,7 @@ module.exports = {
             ${channels} channels | ${emotes} emotes | ${roles} roles`);
         
         // Send embed
-        message.reply(embed);
+        message.reply({ embeds: [embed] });
 
     }
 };

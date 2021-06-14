@@ -65,7 +65,7 @@ module.exports = {
                 .setDescription(msg);
 
             // Send the embed
-            message.channel.send(embed);
+            message.channel.send({ embeds: [embed] });
         } else {
             // Define the valid logging options
             const options = ["default", "events", "commands", "edited", "deleted"];

@@ -63,7 +63,7 @@ module.exports = {
                                 .setTimestamp()
                                 .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: 'png' }));
                             
-                            message.channel.send(embed);
+                            message.channel.send({ embeds: [embed] });
                         })
                         .catch(e => message.error(`I encountered an error whilst getting the requested stats: \`${e.message}\``));
                 })
@@ -92,7 +92,7 @@ module.exports = {
                                 .setTimestamp()
                                 .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: 'png' }));
                             
-                            message.channel.send(embed);
+                            message.channel.send({ embeds: [embed] });
                         })
                         .catch(e => message.error(`I encountered an error whilst getting the requested stats: \`${e.message}\``));
                 })
@@ -133,7 +133,7 @@ module.exports = {
                                 .setTimestamp()
                                 .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ dynamic: true, format: 'png' }));
                             
-                            interaction.editReply(embed);
+                            interaction.editReply({ embeds: [embed] });
                         })
                         .catch(e => interaction.editReply(`${bot.config.emojis.error} I encountered an error whilst getting the requested stats: \`${e.message}\``));
                 })
@@ -162,7 +162,7 @@ module.exports = {
                                 .setTimestamp()
                                 .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ dynamic: true, format: 'png' }));
                             
-                            interaction.editReply(embed);
+                            interaction.editReply({ embeds: [embed] });
                         })
                         .catch(e => interaction.editReply(`${bot.config.emojis.error} I encountered an error whilst getting the requested stats: \`${e.message}\``));
                 })

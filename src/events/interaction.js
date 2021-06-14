@@ -48,7 +48,7 @@ module.exports = async (bot, interaction) => {
                 **Error:**\`\`\`${err.stack}\`\`\``)
                 .setColor("#FF2D00");
 
-            channel?.send(embed);
+            channel?.send({ embeds: [embed] });
 
             interaction.error(stripIndents`An error occurred while running the command: \`${err}\`
             

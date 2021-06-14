@@ -53,7 +53,7 @@ module.exports = {
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
 
         // Send the embed and delete the status message
-        message.channel.send(embed);
+        message.channel.send({ embeds: [embed] });
         msg.delete().catch(() => {});
 
     },
@@ -78,7 +78,7 @@ module.exports = {
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor);
 
         // Send the embed
-        interaction.editReply(embed);
+        interaction.editReply({ embeds: [embed] });
 
     }
 };

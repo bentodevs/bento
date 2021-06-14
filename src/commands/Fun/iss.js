@@ -57,7 +57,7 @@ module.exports = {
             embed.addField(`${craft}`, ppl.join('\n'));
         }
 
-        message.reply(embed);
+        message.reply({ embeds: [embed] });
 
     }
 };

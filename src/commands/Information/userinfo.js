@@ -160,7 +160,7 @@ module.exports = {
         }
 
         // Send the embed
-        message.reply(embed);
+        message.reply({ embeds: [embed] });
 
     },
 };

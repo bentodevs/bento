@@ -54,7 +54,7 @@ exports.init = async bot => {
                     .setFooter(`${data.winners} winners | Ended at`);
 
                 // Update the embed
-                msg?.edit(embed);
+                msg?.edit({ embeds: [embed] });
 
                 // Set the giveaway to inactive in the db
                 await giveaways.findOneAndUpdate({ "guild.guild_id": guild.id, id: data.id }, {

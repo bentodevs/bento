@@ -84,7 +84,7 @@ module.exports = {
             .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: "png" }));
 
         // Send the embed
-        message.reply(embed);
+        message.reply({ embeds: [embed] });
 
     },
 
@@ -135,7 +135,7 @@ module.exports = {
             .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ dynamic: true, format: "png" }));
 
         // Send the embed
-        interaction.reply(embed);
+        interaction.reply({ embeds: [embed] });
 
     }
 };

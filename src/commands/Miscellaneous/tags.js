@@ -120,7 +120,7 @@ module.exports = {
                 .setDescription(description.join("\n"));
             
             // Send the embed
-            message.channel.send(embed);
+            message.channel.send({ embeds: [embed] });
         } else if (!args[1]) {
             // Get the tag name and try to find the tag in the database
             const name = args[0].toLowerCase(),
@@ -141,7 +141,7 @@ module.exports = {
                 .setThumbnail("https://i.imgur.com/LCbKsrE.png");
 
             // Send a message with the tag content
-            message.channel.send(embed);
+            message.channel.send({ embeds: [embed] });
         } else if (args[1]?.toLowerCase() == "delete") {
             // Get the tag name and try to find the tag in the database
             const name = args[0].toLowerCase(),
@@ -235,7 +235,7 @@ module.exports = {
                 .setDescription(description.join("\n"));
             
             // Send the embed
-            interaction.reply(embed);
+            interaction.reply({ embeds: [embed] });
         } else if (interaction.options.get("delete")) {
             // Get the tag name and try to find the tag in the database
             const name = interaction.options.get("delete").options.get("name").value,

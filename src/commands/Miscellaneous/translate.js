@@ -65,7 +65,7 @@ module.exports = {
             .addField(`Translated (${translate.languages[language] ? ISO.getName(language) : language ?? "English"})`, result.text);
 
         // Send the embed
-        message.reply(embed);
+        message.reply({ embeds: [embed] });
 
     },
 
@@ -89,7 +89,7 @@ module.exports = {
             .addField(`Translated (${translate.languages[language] ? ISO.getName(language) : language ?? "English"})`, result.text);
 
         // Send the embed
-        interaction.reply(embed);
+        interaction.reply({ embeds: [embed] });
 
     }
 };

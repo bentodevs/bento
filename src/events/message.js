@@ -122,7 +122,7 @@ module.exports = async (bot, message) => {
             .setColor("#FF2D00");
 
         // Send the embed
-        channel?.send(embed);
+        channel?.send({ embeds: [embed] });
 
         // Send an error message to the user
         message.error(stripIndents`An error occurred while running the command: \`${err}\`

@@ -118,7 +118,7 @@ module.exports = {
                 .setDescription(description.join("\n"));
             
             // Send the members embed
-            message.reply(embed);
+            message.reply({ embeds: [embed] });
         } else {
             message.errorReply("You did not specify a valid option! Valid options are: `status`, `list`");
         }
@@ -191,7 +191,7 @@ module.exports = {
                 .setDescription(description.join("\n"));
             
             // Send the members embed
-            interaction.reply(embed);
+            interaction.reply({ embeds: [embed] });
         }
     }
 };
