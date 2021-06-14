@@ -169,25 +169,14 @@ module.exports = {
             // Format the cases
             const formatted = pages[page].map(p => `**#${p.id}** | **${p.type.toTitleCase()}** | **Reason:** ${p.reason} | ${format(p.actionTime, "PPp")}`);
             
-            if (member.guild) {
-                // Build the history embed
-                const embed = new MessageEmbed()
-                    .setAuthor(`Punishment History for ${member.user.tag}`, member.user.displayAvatarURL({ format: 'png', dynamic: true }))
-                    .setColor(message.member?.displayHexColor ?? bot.config.general.embedColor)
-                    .setDescription(formatted.join("\n"))
-                    .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
-
-                message.channel.send(embed);
-            } else {
-                // Build the history embed
-                const embed = new MessageEmbed()
-                    .setAuthor(`Punishment History for ${member.tag}`, member.displayAvatarURL({ format: 'png', dynamic: true }))
-                    .setColor(message.member?.displayHexColor ?? bot.config.general.embedColor)
-                    .setDescription(formatted.join("\n"))
-                    .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
-
-                message.channel.send(embed);
-            }
+            // Build the history embed
+            const embed = new MessageEmbed()
+                .setAuthor(`Punishment History for ${member.user?.tag ?? member.tag}`, (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }))
+                .setColor(message.member?.displayHexColor ?? bot.config.general.embedColor)
+                .setDescription(formatted.join("\n"))
+                .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
+            
+            message.channel.send({ embeds: [embed] });
         }
     },
 
