@@ -7,7 +7,7 @@ module.exports = async (bot, guild, user) => {
     // Fetch the guild settings
     const sets = await settings.findOne({ _id: guild.id });
 
-    if (sets.manual_events.moderation) {
+    if (sets?.manual_events?.moderation) {
         // Fetch latest Audit Log entry
         const entry = await guild.fetchAuditLogs({ type: "MEMBER_BAN_REMOVE" }).then(a => a.entries.first());
 
@@ -37,9 +37,9 @@ module.exports = async (bot, guild, user) => {
             moderator: entry.executor.id,
             actionTime: Date.now(),
             reason: reason
-        })
+        });
     
         // Log the unban
         punishmentLog(message, entry.target, action, reason, "ban");
     }
-}
+};
