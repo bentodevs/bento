@@ -5,11 +5,20 @@ module.exports = {
         name: "logging",
         aliases: [],
         usage: "logging [setting] [option]",
-        examples: [],
-        description: "",
+        examples: [
+            "logging moderation #mod-logs",
+            "logging channels disable"
+        ],
+        description: "Change or view event logging settings.",
         category: "Settings",
         info: null,
-        options: []
+        options: [
+            "`moderation` - Logs manual moderation actions (Such as kicks & bans)",
+            "`guild` - Logs server-level changes (Server name, icon, etc.)",
+            "`channels` - Logs channel modifications, removals and additions",
+            "`roles` - Logs role modifications, removals and additions",
+            "`members` - Logs user chanes (Profile pictures, etc.), leaves and joins"
+        ]
     },
     perms: {
         permission: "ADMISTRATOR",
