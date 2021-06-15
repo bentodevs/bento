@@ -6,7 +6,7 @@ module.exports = {
     info: {
         name: "logchannel",
         aliases: ["logs", "log"],
-        usage: "logchannel [option] [value]",
+        usage: "logchannel [option] <value>",
         examples: ["log deleted #message-logs", "log commands disable"],
         description: "Change or view logging settings",
         category: "Settings",
@@ -31,9 +31,31 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "option",
+            type: "STRING",
+            description: "Choose an option.",
+            choices: [
+                { name: "default", value: "default" },
+                { name: "commands", value: "commands" },
+                { name: "edited", value: "edited" },
+                { name: "deleted", value: "deleted" },
+                { name: "events", value: "events" }
+            ],
+            required: false
+        }, {
+            name: "channel",
+            type: "CHANNEL",
+            description: "Select the channel you want to use.",
+            required: false
+        }]
+    },
 
     run: async (bot, message, args) => {
 
+        // Get the option
         const option = args?.[0]?.toLowerCase();
 
         if (!option) {
@@ -42,10 +64,10 @@ module.exports = {
 
             // Get all the log channels
             const defaultLogs = message.guild.channels.cache.get(logs.default),
-                  eventLogs = message.guild.channels.cache.get(logs.events),
-                  commandLogs = message.guild.channels.cache.get(logs.commands),
-                  editedLogs = message.guild.channels.cache.get(logs.edited),
-                  deletedLogs = message.guild.channels.cache.get(logs.deleted);
+            eventLogs = message.guild.channels.cache.get(logs.events),
+            commandLogs = message.guild.channels.cache.get(logs.commands),
+            editedLogs = message.guild.channels.cache.get(logs.edited),
+            deletedLogs = message.guild.channels.cache.get(logs.deleted);
 
             // Define the embed message
             let msg = "";
@@ -125,5 +147,76 @@ module.exports = {
                     break;
             }
         }
+
+    },
+
+    run_interaction: async (bot, interaction) => {
+
+        // Get the option
+        const option = interaction.options?.get("option")?.value;
+
+        if (!option) {
+            // Define logs
+            const logs = interaction.settings.logs;
+
+            // Get all the log channels
+            const defaultLogs = interaction.guild.channels.cache.get(logs.default),
+            eventLogs = interaction.guild.channels.cache.get(logs.events),
+            commandLogs = interaction.guild.channels.cache.get(logs.commands),
+            editedLogs = interaction.guild.channels.cache.get(logs.edited),
+            deletedLogs = interaction.guild.channels.cache.get(logs.deleted);
+
+            // Define the embed message
+            let msg = "";
+            
+            // Prepare the embed message
+            if (logs.default && defaultLogs) msg += `🗨️ The default log channel is set to ${defaultLogs}\n\n`; else msg += "🗨️ The default log channel is not set\n\n";
+            if (logs.commands && commandLogs) msg += `🔧 Command logging is set to ${commandLogs}\n`; else msg += "🔧 Command logging is **disabled**\n";
+            if (logs.edited && editedLogs) msg += `📝 Edited message logging is set to ${editedLogs}\n`; else msg += "📝 Edited message logging is **disabled**\n";
+            if (logs.deleted && deletedLogs) msg += `:wastebasket: Deleted message logging is set to ${deletedLogs}\n`; else msg += ":wastebasket: Deleted message logging is **disabled**\n";
+            if (logs.events && eventLogs) msg += `:bell: Event logging is set to ${eventLogs}\n`; else msg += ":bell: Event logging is **disabled**\n";
+            
+            // Create the embed
+            const embed = new MessageEmbed()
+                .setTitle("Logging")
+                .setThumbnail("https://i.imgur.com/iML7LKF.png")
+                .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
+                .setDescription(msg);
+
+            // Send the embed
+            interaction.reply({ embeds: [embed] });
+        } else {
+            // Grab the channel
+            const channel = interaction.options.get("channel")?.channel;
+
+            // If no channel could be found return an error
+            if (!channel)
+                return interaction.error("You didn't specify a valid channel!");
+
+            // If the channel isn't a text channel return an error
+            if (channel.type !== "text")
+                return interaction.error("The channel you specified isn't a text channel!");
+
+            // Set the logging channel
+            await settings.findOneAndUpdate({ _id: interaction.guild.id }, {
+                [`logs.${option}`]: channel.id
+            });
+
+            // Send a confirmation message based on the option
+            switch(option) {
+                case "default":
+                    interaction.confirmation(`${channel} will now be used as the default logging channel!`);
+                    break;
+                case "events":
+                case "commands":
+                    interaction.confirmation(`${channel} will now be used as the logging channel for \`${option}\`!`);
+                    break;
+                case "edited":
+                case "deleted":
+                    interaction.confirmation(`${channel} will now be used as the logging channel for \`${option} messages\`!`);
+                    break;
+            }
+        }
+
     }
 };
