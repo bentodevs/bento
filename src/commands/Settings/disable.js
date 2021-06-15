@@ -26,6 +26,15 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "target",
+            type: "STRING",
+            description: "The name of the command or category you want to disable.",
+            required: true
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -42,33 +51,54 @@ module.exports = {
 
         // Check if the user specified a valid command or category
         if (!command && !category)
-                return message.error("You didn't specify a valid command or category!");
+            return message.error("You didn't specify a valid command or category!");
+        // If the command/category is already disabled send an error message
+        if (message.settings.general.disabled_commands.includes(command?.info.name) || message.settings.general.disabled_categories.includes(category))
+            return message.error(`The ${command ? "command" : "category"} you specified is already disabled!`);
 
-        if (command) {
-            // If the command is already disabled send an error message
-            if (message.settings.general.disabled_commands.includes(command.info.name))
-                return message.error("The command you specified is already disabled!");
+        // Get the DB query
+        const toUpdate = command 
+            ? { $addToSet: { "general.disabled_commands": command.info.name } }
+            : { $addToSet: { "general.disabled_categories": category } };
 
-            // Add the command to the disabled_commands array
-            await settings.findOneAndUpdate({ _id: message.guild.id }, {
-                $addToSet: { "general.disabled_commands": command.info.name }
-            });
+        // Update the setting
+        await settings.findOneAndUpdate({ _id: message.guild.id }, toUpdate);
 
-            // Send a confirmation message
-            message.confirmation(`The command \`${command.info.name}\` has been disabled!`);
-        } else if (category) {
-            // If the category is already disabled send an error message
-            if (message.settings.general.disabled_categories.includes(category))
-                return message.error("The category you specified is already disabled!");
+        // Send a confirmation message
+        message.confirmation(`The ${command ? "command" : "category"} \`${command ? command.info.name : category}\` has been disabled!`);
 
-            // Add the category to the disabled_categories array
-            await settings.findOneAndUpdate({ _id: message.guild.id }, {
-                $addToSet: { "general.disabled_categories": category }
-            });
+    },
 
-            // Send a confirmation message
-            message.confirmation(`The category \`${category}\` has been disabled!`);
-        }
+    run_interaction: async (bot, interaction) => {
+
+        // Get all the command categories
+        const getCategories = bot.commands.map(c => c.info.category.toLowerCase()),
+        categories = getCategories.filter((item, index) => {
+            return getCategories.indexOf(item) >= index;
+        });
+
+        // Get the command or category that the user specified
+        const target = interaction.options.get("target").value,
+        command = bot.commands.get(target) || bot.commands.get(bot.aliases.get(target)),
+        category = categories[categories.indexOf(target)];
+
+        // Check if the user specified a valid command or category
+        if (!command && !category)
+            return interaction.error("You didn't specify a valid command or category!");
+        // If the command/category is already disabled send an error message
+        if (interaction.settings.general.disabled_commands.includes(command?.info.name) || interaction.settings.general.disabled_categories.includes(category))
+            return interaction.error(`The ${command ? "command" : "category"} you specified is already disabled!`);
+
+        // Get the DB query
+        const toUpdate = command 
+            ? { $addToSet: { "general.disabled_commands": command.info.name } }
+            : { $addToSet: { "general.disabled_categories": category } };
+
+        // Update the setting
+        await settings.findOneAndUpdate({ _id: interaction.guild.id }, toUpdate);
+
+        // Send a confirmation message
+        interaction.confirmation(`The ${command ? "command" : "category"} \`${command ? command.info.name : category}\` has been disabled!`);
 
     }
 };
