@@ -26,6 +26,20 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "user",
+            type: "USER",
+            description: "The user you wish to kick.",
+            required: true
+        }, {
+            name: "reason",
+            type: "STRING",
+            description: "The reason for the kick.",
+            required: false
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -54,7 +68,7 @@ module.exports = {
         
         try {
             // Try and send the member a DM stating that they were kicked - Catch silently if there is an issue
-            await member.send(`:hammer: You have been kicked from ** ${message.guild.name} for \`${reason}\``).catch(() => { });
+            await member.send(`:hammer: You have been kicked from **${message.guild.name}** for \`${reason}\``).catch(() => { });
 
             // kick the member & set the reason
             member.kick({ reason: `[Case: ${action} | ${message.author.tag} on ${format(Date.now(), 'PPp')}] ${reason}]` });
@@ -79,5 +93,60 @@ module.exports = {
             // Catch any errors during the kick process & send error message
             message.error(`There was an issue kicking \`${member.user.tag}\` - \`${e.message}\``);
         }
+    },
+    
+    run_interaction: async (bot, interaction) => {
+
+        // 1. Get the user from the interaction
+        // 2. Get the reason from the interaction, or set to a default if wasn't given
+        // 3. Get the punishment ID
+        const user = interaction.options.get("user"),
+        reason = interaction.options.get("reason")?.value || "No reason specified",
+        action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1;
+        
+        
+        if (!user.member)
+            return interaction.error("You can only kick server members");
+        
+        // If the user they want to ban is themselves, then return an error
+        if (interaction.member.id === user.user.id)
+            return interaction.reply("You are unable ban yourself!");
+        
+        // If the member's highest role is higher than the executors highest role, then return an error
+        if (user.member.roles.highest.position >= interaction.member.roles.highest.position)
+            return interaction.reply("Questioning authority are we? Sorry, but this isn't a democracy...", { files: ["https://i.imgur.com/K9hmVdA.png"] });
+        
+        // If the bot cannot kick the user, then return an error
+        if (!user.member.kickable)
+            return interaction.error("I am not able to kick this member! *They may have a higher role than me!*");
+        
+        try {
+            // Try and send the member a DM stating that they were kicked - Catch silently if there is an issue
+            await user.member.send(`:hammer: You have been kicked from **${interaction.guild.name}** for \`${reason}\``).catch(() => { });
+
+            // kick the member & set the reason
+            user.member.kick({ reason: `[Case: ${action} | ${interaction.member.user.tag} on ${format(Date.now(), 'PPp')}] ${reason}]` });
+
+            // Send a message confirming the action
+            interaction.confirmation(`\`${user.user.tag}\` was kicked for **${reason}** *(Case #${action})*`);
+
+            // Create the punishment record in the DB
+            await punishments.create({
+                id: action,
+                guild: interaction.guild.id,
+                type: "kick",
+                user: user.user.id,
+                moderator: interaction.member.id,
+                actionTime: Date.now(),
+                reason: reason
+            });
+
+            // Send the punishment to the log channel
+            punishmentLog(interaction, user, action, reason, "kick");
+        } catch (e) {
+            // Catch any errors during the kick process & send error message
+            interaction.error(`There was an issue kicking \`${user.user.tag}\` - \`${e.message}\``);
+        }
+
     }
 };
