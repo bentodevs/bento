@@ -22,7 +22,7 @@ exports.init = async bot => {
             if (data.muteTime !== "forever") {
                 const guild = bot.guilds.cache.get(data.guild),
                     mutedUser = guild?.members.cache.get(data.mutedUser),
-                    settings = await getSettings(data, guild),
+                    settings = await getSettings(guild.id),
                     muteRole = guild?.roles.cache.get(settings.roles.mute),
                     dateCalc = data.timeMuted + parseInt(data.muteTime),
                     message = {};
