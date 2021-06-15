@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node .",
     "lint": "eslint .",
-    "start": "cd src && node bot.js"
+    "start": "cd src && node bot.js",
+    "tracer": "cd src && node --trace-warnings bot.js"
   },
   "engines": {
     "node": ">=14.0.0"
