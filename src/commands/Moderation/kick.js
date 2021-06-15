@@ -60,7 +60,7 @@ module.exports = {
         
         // If the member's highest role is higher than the executors highest role, then return an error
         if (member.roles.highest.position >= message.member.roles.highest.position)
-            return message.error("You are unable to kick those of the same or higher rank!");
+            return message.error("Questioning authority are we? Sorry, but this isn't a democracy...", { files: ["https://i.imgur.com/K9hmVdA.png"] });
         
         // If the bot cannot kick the user, then return an error
         if (!member.kickable)
@@ -108,9 +108,9 @@ module.exports = {
         if (!user.member)
             return interaction.error("You can only kick server members");
         
-        // If the user they want to ban is themselves, then return an error
+        // If the user they want to kick is themselves, then return an error
         if (interaction.member.id === user.user.id)
-            return interaction.reply("You are unable ban yourself!");
+            return interaction.reply("You are unable kick yourself!");
         
         // If the member's highest role is higher than the executors highest role, then return an error
         if (user.member.roles.highest.position >= interaction.member.roles.highest.position)

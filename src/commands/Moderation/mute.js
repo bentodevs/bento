@@ -29,6 +29,25 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "user",
+            type: "USER",
+            description: "The user you wish to mute.",
+            required: true
+        }, {
+            name: "time",
+            type: "STRING",
+            description: "The length of mute.",
+            required: false
+        }, {
+            name: "reason",
+            type: "STRING",
+            description: "Teh reason for the mute.",
+            required: false
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -126,5 +145,87 @@ module.exports = {
 
         // Send punishment log
         punishmentLog(message, member, action, reason, "mute", (time == "forever" ? "Forever" : `${formatDistanceToNowStrict(Date.now() + time)}`));
+    },
+
+    run_interaction: async (bot, interaction) => {
+        // Check that the mute role exists in the DB
+        if (!interaction.settings.roles.mute)
+            return interaction.error(`There is no mute role configured! Create one using \`${interaction.settings.general.prefix}setup\``);
+        
+        // If the mute role we have doesn't exist, then remove it from the DB & send an error
+        if (!interaction.guild.roles.cache.get(interaction.settings.roles.mute)) {
+            await settings.findOneAndUpdate({ _id: interaction.guild.id }, { "roles.mute": null });
+            return interaction.error(`The mute role I knew was deleted! You'll need to set up up again using \`${interaction.settings.general.prefix}setup\``);
+        }
+
+        // 1. Get the user specified in the interaction
+        // 2. Get the length string, if specified
+        // 3. Get the reason, if specified
+        // 4. Calculate the punishment id
+        const user = interaction.options.get("user"),
+            reason = interaction.options.get("reason")?.value || "No reason specified",
+            action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1,
+            mute = await mutes.findOne({ guild: interaction.guild.id, mutedUser: user.member?.id }),
+            muterole = interaction.guild.roles.cache.get(interaction.settings.roles?.mute);
+        
+        let time = "";
+
+        if (interaction.options.get("time")?.value) {
+            time = interaction.options.get("time")?.value;
+        } else {
+            time = 1800000;
+        }
+    
+        // If the user is not a member of the server, then return an error
+        if (!user.member)
+            return interaction.error("You did not specify a valid server member to mute!");
+        
+        // If the user they want to kick is themselves, then return an error
+        if (interaction.member.id === user.user.id)
+            return interaction.reply("You are unable mute yourself!");
+
+        // If the user has a higher, or equal, role to the executor, then return an error
+        if (user.member.roles.highest.position >= interaction.member.roles.highest.position)
+            return interaction.error("Questioning authority are we? Sorry, but this isn't a democracy...", { files: ["https://i.imgur.com/K9hmVdA.png"] });
+        
+        if (time && time !== 1800000) {
+            if (time.match(/^[A-Za-z]+$/))
+                return "forever";
+            
+            time = parseTime(time, "ms");
+        }
+
+        // Add the role to the user, add reason
+        user.member.roles.add(muterole, `[Issued by ${interaction.member.user.tag}] ${reason}`);
+        // Message the user informing them of the action
+        await user.member.send(`🔇 You have been muted in **${interaction.guild.name}** ${time == "forever" ? "for **forever**" : `for **${formatDistanceToNowStrict(Date.now() + time)}**`} with the reason **${reason}**`).catch(() => { });
+        // Send confirmation message
+        interaction.confirmation(`**${user.user.tag}** has been ${mute ? "re" : ""}muted ${time == "forever" ? "**forever**" : `for **${formatDistanceToNowStrict(Date.now() + time)}**`}! *(Case ID: ${action})*`);
+        
+        if (mute)
+            await mutes.findOneAndDelete({ guild: interaction.guild.id, mutedUser: user.user.id });
+
+        // Set mute in DB (Will overwrite any pre-existing mute)
+        await mutes.create({
+            guild: interaction.guild.id,
+            mutedUser: user.user.id,
+            muteTime: time,
+            mutedBy: interaction.member.user.id,
+            timeMuted: Date.now(),
+            reason: reason,
+            caseID: action
+        });
+        
+        // Set punishment in punishment DB
+        await punishments.create({
+            id: action,
+            guild: interaction.guild.id,
+            type: "mute",
+            user: user.user.id,
+            moderator: interaction.member.id,
+            actionTime: Date.now(),
+            reason: reason,
+            muteTime: time == "forever" ? "forever" : time.toString()
+        });
     }
 };
