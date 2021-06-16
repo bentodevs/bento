@@ -88,7 +88,7 @@ module.exports = {
                 // Set the channel in the guild's settings
                 await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.channel": chan.id });
                 // Send a confirmation message
-                message.confirmation(`The welcome channel was set to ${chan}`);
+                message.confirmationReply(`The welcome channel was set to ${chan}`);
             }
         } else if (args[0].toLowerCase() === "join-msg") {
             // If no message is specified...
@@ -106,7 +106,7 @@ module.exports = {
                 // Set the new welcome message in the DB
                 await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.joinMessage": msg });
                 // Send a confirmation message
-                message.confirmation(`The join message was set to ${msg}`);
+                message.confirmationReply(`The join message was set to ${msg}`);
             }
         } else if (args[0].toLowerCase() === "leave-msg") {
             // If no message is specified...
@@ -124,7 +124,7 @@ module.exports = {
                 // Set the new leave message in the DB
                 await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.leaveMessage": msg });
                 // Send a confirmation message
-                message.confirmation(`The leave message was set to ${msg}`);
+                message.confirmationReply(`The leave message was set to ${msg}`);
             }
         } else if (args[0].toLowerCase() === "dm") {
             // If no dm is specified...
@@ -142,10 +142,10 @@ module.exports = {
                 // Set the new welcome dm in the DB
                 await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.userMessage": msg });
                 // Send a confirmation message
-                message.confirmation(`The join DM was set to ${msg}`);
+                message.confirmationReply(`The join DM was set to ${msg}`);
             }
         } else {
-            return message.error("Valid options are: `channel`, `join-msg`, `leave-msg` and `dm`. To view all settings, run the command with no options.");
+            return message.errorReply("Valid options are: `channel`, `join-msg`, `leave-msg` and `dm`. To view all settings, run the command with no options.");
         }
 
     }

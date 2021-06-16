@@ -44,10 +44,10 @@ module.exports = {
 
             // Return an error if a invalid command was specified
             if (!cmd)
-                return message.error("You didn't specify a valid command to reload!");
+                return message.errorReply("You didn't specify a valid command to reload!");
 
             // Send a status message
-            const msg = await message.loading(`Attempting to reload \`${cmd.info.name}\``);
+            const msg = await message.loadingReply(`Attempting to reload \`${cmd.info.name}\``);
 
             // Attempt to reload the command
             command.reload(bot, cmd).then(() => {
@@ -61,7 +61,7 @@ module.exports = {
             });
         } else if (option == "event") {
             // Send a status message
-            const msg = await message.loading(`Attempting to reload the \`${args[1].toLowerCase()}\` event.`);
+            const msg = await message.loadingReply(`Attempting to reload the \`${args[1].toLowerCase()}\` event.`);
 
             // Attempt to reload the event
             event.reload(bot, args[1]).then((res) => {
@@ -75,7 +75,7 @@ module.exports = {
             });
         } else if (option == "task") {
             // Send a status message
-            const msg = await message.loading(`Attempting to reload the \`${args[1].toLowerCase()}\` task.`);
+            const msg = await message.loadingReply(`Attempting to reload the \`${args[1].toLowerCase()}\` task.`);
 
             // Attempt to reload the task
             task.reload(bot, args[1]).then((res) => {
@@ -94,24 +94,24 @@ module.exports = {
 
             // If the file doesn't exist return an error
             if (!file)
-                return message.error("You didn't specify a valid functions file!");
+                return message.errorReply("You didn't specify a valid functions file!");
 
             // Try to reload the file
             try {
                 // Delete the file from the cache
                 delete require.cache[require.resolve(`../../modules/functions/${file}`)];
                 // Send a confirmation message
-                message.confirmation(`Succesfully reloaded the \`${file.split(".")[0]}\` function!`);
+                message.confirmationReply(`Succesfully reloaded the \`${file.split(".")[0]}\` function!`);
             } catch (err) {
                 // Log the error
                 bot.logger.error(`Failed to reload ${file}`);
                 bot.logger.error(err.stack);
                 // Reject with the error
-                return message.error(`Failed to reload the function: \`${file.split(".")[0]}\`!`);
+                return message.errorReply(`Failed to reload the function: \`${file.split(".")[0]}\`!`);
             }
         } else {
             // Send an error message
-            message.error("You didn't specify a valid option! Try one of these: `cmd`, `event`, `task` or `func`!");
+            message.errorReply("You didn't specify a valid option! Try one of these: `cmd`, `event`, `task` or `func`!");
         }
 
     }

@@ -53,12 +53,12 @@ module.exports = {
         const member = await getMember(message, args[0], true);
         
         if (!member)
-            return message.error("That member doesn't seem to exist in this guild!");
+            return message.errorReply("That member doesn't seem to exist in this guild!");
         
         const cases = await punishments.find({ guild: message.guild.id, moderator: member.user.id });
 
         if (cases.length === 0)
-            return message.error("That user has not created any punishments!");
+            return message.errorReply("That user has not created any punishments!");
         
         // Page variables
         const pages = [];
@@ -76,7 +76,7 @@ module.exports = {
 
         // Check if the user specified a valid page
         if (!pages[page])
-            return message.error("You didn't specify a valid page!");
+            return message.errorReply("You didn't specify a valid page!");
         
         // Format the cases
         const formatted = Promise.all(pages[page].map(async p => `**#${p.id}** | **${p.type.toTitleCase()}** | **User:** ${await getCaseUser(bot, message, p.user)} | **Reason:** ${p.reason}`));

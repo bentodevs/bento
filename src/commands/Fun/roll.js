@@ -46,22 +46,22 @@ module.exports = {
 
         // If an invalid number was specified return an error
         if (args[0] && !number)
-            return message.error("You didn't specify a valid number!");
+            return message.errorReply("You didn't specify a valid number!");
         // If no number was specified default to 6
         if (!args[0])
             number = 6;
         // If the number is 0 or lower return an error
         if (number <= 0)
-            return message.error("Please enter a number above 0!");
+            return message.errorReply("Please enter a number above 0!");
         // If the number is above 1 trillion return an error
         if (number > 1000000000000)
-            return message.error("Please enter a number below **1,000,000,000,000**!");
+            return message.errorReply("Please enter a number below **1,000,000,000,000**!");
 
         // Get the result
         const result = Math.floor(Math.random() * number + 1);
 
         // Send the result
-        message.confirmation(`You rolled a **${result}**!`);
+        message.confirmationReply(`You rolled a **${result}**!`);
 
     },
 

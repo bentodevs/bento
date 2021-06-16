@@ -53,7 +53,7 @@ module.exports = {
 
         // Return an error if the API returned one
         if (status.error)
-            return message.error("The requested server isn't online.");
+            return message.errorReply("The requested server isn't online.");
 
         // Get the icon
         const buf = new Buffer.from(status.favicon.split(",")[1], "base64"),

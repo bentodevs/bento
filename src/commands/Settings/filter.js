@@ -82,7 +82,7 @@ module.exports = {
 
             // If there are no filter entries, return an error
             if (filter.entries.length === 0)
-                return message.error("There are no entries in the automod filter!");
+                return message.errorReply("There are no entries in the automod filter!");
             
             // Page variables
             const pages = [];
@@ -98,7 +98,7 @@ module.exports = {
 
             // Check if the user specified a valid page
             if (!pages[page])
-                return message.error("You didn't specify a valid page!");
+                return message.errorReply("You didn't specify a valid page!");
 
             // Format the entries
             const formatted = pages[page].map(p => `\`${p}\``);
@@ -114,7 +114,7 @@ module.exports = {
         } else if (args[0].toLowerCase() === "add") {
             // If nothing was specified to be added, then return an error
             if (!args[1])
-                return message.error("You did not specify a word to add to the filter!");
+                return message.errorReply("You did not specify a word to add to the filter!");
             
             // 1. Transform word to lowercase
             // 2. Fetch the current filter
@@ -123,21 +123,21 @@ module.exports = {
             
             // If the word already exists in the filter, then return an error
             if (filter.includes(toAdd))
-                return message.error("That word already exists in the filter!");
+                return message.errorReply("That word already exists in the filter!");
             
             await settings.findOneAndUpdate({ _id: message.guild.id }, {
                 $push: {
                     "moderation.filter.entries": toAdd
                 }
             }).then(() => {
-                message.confirmation(`\`${toAdd}\` was successfully added to the filter!`);
+                message.confirmationReply(`\`${toAdd}\` was successfully added to the filter!`);
             }).catch((err) => {
-                message.error(`There was an error adding \`${toAdd}\` to the filter: \`${err.message}\``);
+                message.errorReply(`There was an error adding \`${toAdd}\` to the filter: \`${err.message}\``);
             });
         } else if (args[0].toLowerCase() === "remove") {
             // If nothing was specified to be added, then return an error
             if (!args[1])
-                return message.error("You did not specify a word to remove from the filter!");
+                return message.errorReply("You did not specify a word to remove from the filter!");
             
             // 1. Transform word to lowercase
             // 2. Fetch the current filter
@@ -146,16 +146,16 @@ module.exports = {
             
             // If the word already exists in the filter, then return an error
             if (!filter.includes(toRem))
-                return message.error("That word doesn't exist in the filter!");
+                return message.errorReply("That word doesn't exist in the filter!");
             
             await settings.findOneAndUpdate({ _id: message.guild.id }, {
                 $pull: {
                     "moderation.filter.entries": toRem
                 }
             }).then(() => {
-                message.confirmation(`\`${toRem}\` was successfully removed from the filter!`);
+                message.confirmationReply(`\`${toRem}\` was successfully removed from the filter!`);
             }).catch(err => {
-                message.error(`There was an error removing \`${toRem}\` from the filter: \`${err.message}\``);
+                message.errorReply(`There was an error removing \`${toRem}\` from the filter: \`${err.message}\``);
             });
         } else if (args[0].toLowerCase() == "toggle") {
             // Get the DB query
@@ -167,10 +167,10 @@ module.exports = {
             await settings.findOneAndUpdate({ _id: message.guild.id }, toUpdate);
 
             // Send a confirmation message
-            message.confirmation(`Message filtering has been **${message.settings.moderation.filter.state ? "disabled" : "enabled"}**!`);
+            message.confirmationReply(`Message filtering has been **${message.settings.moderation.filter.state ? "disabled" : "enabled"}**!`);
         } else {
             // If there was no page specifed, or the option was invalid, return an error
-            message.error("You did not specify a valid option!");
+            message.errorReply("You did not specify a valid option!");
         }
 
     }, 

@@ -35,13 +35,13 @@ module.exports = {
         
         // If the member doesn't exist, return an error
         if (!member)
-            return message.error("You did not specify a valid user!");
+            return message.errorReply("You did not specify a valid user!");
         
         // Fetch the last 100 messages from the user
         const messages = await message.channel.messages.fetch({ limit: 100 });
 
         // Delete the messages previously gathered
-        await message.channel.bulkDelete(messages.filter(m => m.author.id === member.id)).catch(e => message.error(`There was an issue cleaning messages - \`${e.message}\``));
+        await message.channel.bulkDelete(messages.filter(m => m.author.id === member.id)).catch(e => message.errorReply(`There was an issue cleaning messages - \`${e.message}\``));
 
         // Delete the command
         message.delete().catch(() => { });

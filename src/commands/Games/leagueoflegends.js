@@ -58,7 +58,7 @@ module.exports = {
 
         // If no summoner was provided, then throw an error
         if (!args[1])
-            return message.error("You didn't provide any summoner name!");
+            return message.errorReply("You didn't provide any summoner name!");
         
         // Send a loading message & assign it to msg
         const msg = await message.loadingReply(`Fetching the League of Legends profile for \`${args.splice(1).join("")}\``);

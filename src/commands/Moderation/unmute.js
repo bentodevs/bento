@@ -41,7 +41,7 @@ module.exports = {
 
         // If no member was found return an error
         if (!member)
-            return message.error("You didn't specify a valid member!");
+            return message.errorReply("You didn't specify a valid member!");
 
         if (mute && member.roles.cache.has(muterole)) {
             // If the user has the role, remove it
@@ -54,12 +54,12 @@ module.exports = {
             // Send log message & confirmation message
             punishmentLog(message, member, mute.caseID, reason, "unmute");
             member.send(`🔈 You have been unmuted in **${message.guild.name}**`).catch(() => {});
-            message.confirmation(`**${member.user.tag}** has been unmuted successfully!`);
+            message.confirmationReply(`**${member.user.tag}** has been unmuted successfully!`);
         } else if (!mute && member.roles.cache.has(muterole)) {
             // If the user has the role, remove it
             await member.roles.remove(muterole);
             // Send confirmation msg
-            message.confirmation(`**${member.user.tag}** was unmuted! *(They were not listed as muted in the database)*`);
+            message.confirmationReply(`**${member.user.tag}** was unmuted! *(They were not listed as muted in the database)*`);
         } else if (mute && !member.roles.cache.has(muterole)) {
             // Remove the mute from the DB
             await mutes.findOneAndDelete({
@@ -69,10 +69,10 @@ module.exports = {
             // Send log message & confirmation message
             punishmentLog(message, member, mute.caseID, reason, "unmute");
             member.send(`🔈 You have been unmuted in **${message.guild.name}**`).catch(() => {});
-            message.confirmation(`**${member.user.tag}** has been unmuted successfully! *(They did not seem to have the role)*`);
+            message.confirmationReply(`**${member.user.tag}** has been unmuted successfully! *(They did not seem to have the role)*`);
         } else if (!mute && !member.roles.cache.has(muterole)) {
             // If member doesn't have muted role AND is not in the DB, then remove the mute
-            message.error("That user is not muted!");
+            message.errorReply("That user is not muted!");
         }
     }
 };

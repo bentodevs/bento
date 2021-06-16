@@ -39,7 +39,7 @@ module.exports = {
 
         // Return an error if the channel wasn't found
         if (!channel)
-            return message.error("You didn't specify a valid channel!");
+            return message.errorReply("You didn't specify a valid channel!");
 
         // Check if the group has permissions to send messages or not
         if (channel.permissionsFor(message.guild.id).has("SEND_MESSAGES")) {
@@ -50,7 +50,7 @@ module.exports = {
             });
 
             // Send a confirmation message
-            message.confirmation(`${channel} has been locked!`);
+            message.confirmationReply(`${channel} has been locked!`);
         } else {
             // Set the send messages & add reaction perms to null
             channel.updateOverwrite(message.guild.id, {
@@ -59,7 +59,7 @@ module.exports = {
             });
 
             // Send a confirmation message
-            message.confirmation(`${channel} has been unlocked!`);
+            message.confirmationReply(`${channel} has been unlocked!`);
         }
     },
 

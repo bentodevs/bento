@@ -65,14 +65,14 @@ module.exports = {
 
             // If there was no member returned, then send an error
             if (!member)
-                return message.error("I couldn't find a user with that ID!");
+                return message.errorReply("I couldn't find a user with that ID!");
 
             // Fetch all punishments from this guild for this user
             const entries = await punishments.find({ guild: message.guild.id, user: member.id });
 
             // If the returned array is empty, then send an error
             if (entries.length === 0)
-                return message.error("This user doesn't have any punishments recorded!");
+                return message.errorReply("This user doesn't have any punishments recorded!");
 
             // Page variables
             const pages = [];
@@ -91,7 +91,7 @@ module.exports = {
 
             // Check if the user specified a valid page
             if (!pages[page])
-                return message.error("You didn't specify a valid page!");
+                return message.errorReply("You didn't specify a valid page!");
             
             // Format the cases
             const formatted = pages[page].map(p => `**#${p.id}** | **${p.type.toTitleCase()}** | **Reason:** ${p.reason} | ${format(p.actionTime, "PPp")}`);
@@ -112,7 +112,7 @@ module.exports = {
 
             // If the punishment doesn't exist, then return an error
             if (!punishment)
-                return message.error("A punishment with that ID was not found!");
+                return message.errorReply("A punishment with that ID was not found!");
             
             const usr = await getUser(bot, message, punishment.user),
                 mod = await getUser(bot, message, punishment.moderator);
@@ -138,14 +138,14 @@ module.exports = {
             const member = await getMember(message, args[0], false) || await getUser(bot, message, args[0], false);
 
             if (!member)
-                return message.error("You did not specify a valid member!");
+                return message.errorReply("You did not specify a valid member!");
             
             // Fetch all punishments from this guild for this user
             const entries = await punishments.find({ guild: message.guild.id, user: member.id });
 
             // If the returned array is empty, then send an error
             if (entries.length === 0)
-                return message.error("This user doesn't have any punishments recorded!");
+                return message.errorReply("This user doesn't have any punishments recorded!");
 
             // Page variables
             const pages = [];
@@ -164,7 +164,7 @@ module.exports = {
 
             // Check if the user specified a valid page
             if (!pages[page])
-                return message.error("You didn't specify a valid page!");
+                return message.errorReply("You didn't specify a valid page!");
             
             // Format the cases
             const formatted = pages[page].map(p => `**#${p.id}** | **${p.type.toTitleCase()}** | **Reason:** ${p.reason} | ${format(p.actionTime, "PPp")}`);

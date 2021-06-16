@@ -48,7 +48,7 @@ module.exports = {
 
         // If a invalid role was specified return an error
         if (!role)
-            return message.error("You didn't specify a valid role!");
+            return message.errorReply("You didn't specify a valid role!");
 
         // Format the role creation timestamp
         const created = format(role.createdTimestamp, "PPp"),

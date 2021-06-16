@@ -29,7 +29,7 @@ module.exports = {
     run: async (bot, message, args) => {
 
         // Send a status message
-        const msg = await message.loading(`Running the command: \`git ${args.join(" ")}\``);
+        const msg = await message.loadingReply(`Running the command: \`git ${args.join(" ")}\``);
 
         // Run the command
         exec(`git ${args.join(" ")}`, (err, stdout) => {

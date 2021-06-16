@@ -40,10 +40,10 @@ module.exports = {
 
             // Return an error if a invalid command was specified
             if (!cmd)
-                return message.error("You didn't specify a valid command to reload!");
+                return message.errorReply("You didn't specify a valid command to reload!");
 
             // Send a status message
-            const msg = await message.loading(`Attempting to unload ${cmd.info.name}`);
+            const msg = await message.loadingReply(`Attempting to unload ${cmd.info.name}`);
 
             // Attempt to unload the command
             command.unload(bot, cmd).then(() => {
@@ -57,7 +57,7 @@ module.exports = {
             });
         } else if (option == "event") {
             // Send a status message
-            const msg = await message.loading(`Attempting to unload the \`${args[1].toLowerCase()}\` event.`);
+            const msg = await message.loadingReply(`Attempting to unload the \`${args[1].toLowerCase()}\` event.`);
 
             // Attempt to unload the event
             event.unload(bot, args[1]).then((res) => {
@@ -71,7 +71,7 @@ module.exports = {
             });
         } else if (option == "task") {
             // Send a status message
-            const msg = await message.loading(`Attempting to unload the \`${args[1].toLowerCase()}\` task.`);
+            const msg = await message.loadingReply(`Attempting to unload the \`${args[1].toLowerCase()}\` task.`);
 
             // Attempt to unload the task
             task.unload(bot, args[1]).then((res) => {

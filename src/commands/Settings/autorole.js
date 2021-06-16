@@ -82,13 +82,13 @@ module.exports = {
 
                 // If no roles were found return an error
                 if (!roles.length)
-                    return message.error("There aren't any auto roles setup!");
+                    return message.errorReply("There aren't any auto roles setup!");
 
                 // Send a message with the roles
-                message.confirmation(`The following roles have been added: ${roles.join(", ")}`);
+                message.confirmationReply(`The following roles have been added: ${roles.join(", ")}`);
             } else {
                 // Send an error message
-                message.error("There aren't any auto roles setup!");
+                message.errorReply("There aren't any auto roles setup!");
             }
         } else {
             // Check if the user specified to disable the autoroles system
@@ -99,14 +99,14 @@ module.exports = {
                 });
                 
                 // Send a confirmation message
-                message.confirmation("Successfully removed all auto roles!");
+                message.confirmationReply("Successfully removed all auto roles!");
             } else {
                 // Get the role
                 const role = await getRole(message, args.join(" "));
 
                 // If the role doesn't exist return an error
                 if (!role)
-                    message.error("You didn't specify a valid role!");
+                    message.errorReply("You didn't specify a valid role!");
 
                 if (message.settings.roles.auto.includes(role.id)) {
                     // Remove the role from the database
@@ -117,14 +117,14 @@ module.exports = {
                     });
 
                     // Send a confirmation message
-                    message.confirmation(`Successfully removed the ${role} role from the auto roles!`);
+                    message.confirmationReply(`Successfully removed the ${role} role from the auto roles!`);
                 } else {
                     // If the role is higher than or equal to the bots highest role return an error
                     if (message.guild.me.roles.highest.position <= role.position)
-                        return message.error("That role is higher than or equal to my highest role!");
+                        return message.errorReply("That role is higher than or equal to my highest role!");
                     // If the role is higher than or equal to the users highest role return an error
                     if (message.member.roles.highest.position <= role.position)
-                        return message.error("That role is higher than or equal to your highest role!");
+                        return message.errorReply("That role is higher than or equal to your highest role!");
 
                     // Add the role to the database
                     await settings.findOneAndUpdate({ _id: message.guild.id }, {
@@ -134,7 +134,7 @@ module.exports = {
                     });
 
                     // Send a confirmation message
-                    message.confirmation(`Successfully added the ${role} role to the auto roles!`);
+                    message.confirmationReply(`Successfully added the ${role} role to the auto roles!`);
                 }
             }
         }

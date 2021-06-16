@@ -52,19 +52,19 @@ module.exports = {
         
         // If the member doesn't exist/isn't part of the guild, then return an error
         if (!member)
-            return message.error("That user is not a member of this server!");
+            return message.errorReply("That user is not a member of this server!");
         
         // If the member's ID is the author's ID, then return an error
         if (member.id === message.author.id)
-            return message.error("You are unable to kick yourself!");
+            return message.errorReply("You are unable to kick yourself!");
         
         // If the member's highest role is higher than the executors highest role, then return an error
         if (member.roles.highest.position >= message.member.roles.highest.position)
-            return message.error("Questioning authority are we? Sorry, but this isn't a democracy...", { files: ["https://i.imgur.com/K9hmVdA.png"] });
+            return message.errorReply("Questioning authority are we? Sorry, but this isn't a democracy...", { files: ["https://i.imgur.com/K9hmVdA.png"] });
         
         // If the bot cannot kick the user, then return an error
         if (!member.kickable)
-            return message.error("I am not able to kick this member! *They may have a higher role than me!*");
+            return message.errorReply("I am not able to kick this member! *They may have a higher role than me!*");
         
         try {
             // Try and send the member a DM stating that they were kicked - Catch silently if there is an issue
@@ -74,7 +74,7 @@ module.exports = {
             member.kick({ reason: `[Case: ${action} | ${message.author.tag} on ${format(Date.now(), 'PPp')}] ${reason}]` });
 
             // Send a message confirming the action
-            message.confirmation(`\`${member.user.tag}\` was kicked for **${reason}** *(Case #${action})*`);
+            message.confirmationReply(`\`${member.user.tag}\` was kicked for **${reason}** *(Case #${action})*`);
 
             // Create the punishment record in the DB
             await punishments.create({
@@ -91,7 +91,7 @@ module.exports = {
             punishmentLog(message, member, action, reason, "kick");
         } catch (e) {
             // Catch any errors during the kick process & send error message
-            message.error(`There was an issue kicking \`${member.user.tag}\` - \`${e.message}\``);
+            message.errorReply(`There was an issue kicking \`${member.user.tag}\` - \`${e.message}\``);
         }
     },
     

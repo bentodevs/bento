@@ -77,7 +77,7 @@ module.exports = {
                 member.ban({ days: 1, reason: `[Case: ${action} | ${message.author.tag} on ${format(Date.now(), 'PPp')}] ${reason}]` });
 
                 // Send a message confirming the action
-                message.confirmation(`\`${member.user.tag}\` was banned for **${reason}** *(Case #${action})*`);
+                message.confirmationReply(`\`${member.user.tag}\` was banned for **${reason}** *(Case #${action})*`);
 
                 // Create the punishment record in the DB
                 await punishments.create({
@@ -94,7 +94,7 @@ module.exports = {
                 punishmentLog(message, member.user, action, reason, "ban");
             } catch (e) {
                 // Catch any errors during the ban process & send error message
-                message.error(`There was an issue banning \`${member.user.tag}\` - \`${e.message}\``);
+                message.errorReply(`There was an issue banning \`${member.user.tag}\` - \`${e.message}\``);
             }
         } else {
             // If the member is not part of the server, but the ID does exist, then we'll add them to the pre-ban database
@@ -103,7 +103,7 @@ module.exports = {
                 return message.errorReply("That user will already be banned if they join the server!");
             
             // Send chat message stating member was banned
-            message.confirmation(stripIndents`${member.tag} was banned for **${reason}** 
+            message.confirmationReply(stripIndents`${member.tag} was banned for **${reason}** 
             *The user is not currently in this server, so will be banned upon joining*`);
 
             // Add the ban to the preban database

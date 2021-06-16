@@ -42,7 +42,7 @@ module.exports = {
 
         // Catch any errors
         if (champ === "NO_CHAMP_FOUND")
-            return message.error("It looks like you didn't provide a valid Champion!");
+            return message.errorReply("It looks like you didn't provide a valid Champion!");
 
         // Build the embed
         const embed = new MessageEmbed()

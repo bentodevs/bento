@@ -78,7 +78,7 @@ module.exports = async (bot, message) => {
 
     // Return an error if the command is disabled and the user isn't a bot owner
     if (cmd.opts.disabled && !bot.config.general.devs.includes(message.author.id))
-        return message.error("This command is currently disabled!");
+        return message.errorReply("This command is currently disabled!");
     // Return if the command is a dev only command and the user isn't a dev
     if (cmd.opts.devOnly && !bot.config.general.devs.includes(message.author.id))
         return;
@@ -87,7 +87,7 @@ module.exports = async (bot, message) => {
         return bot.commands.get("help").run(bot, message, [cmd.info.name]);
     // Return an error if a guild only command gets used in dms
     if (cmd.opts.guildOnly && !message.guild)
-        return message.error("This command is unavailable via private messages. Please run this command in a guild.");
+        return message.errorReply("This command is unavailable via private messages. Please run this command in a guild.");
     // Return if the command or category is disabled
     if (message.guild && (settings.general.disabled_commands?.includes(cmd.info.name) || settings.general.disabled_categories?.includes(cmd.info.category)) && !message.channel.permissionsFor(message.member).has("ADMINISTRATOR") && !bot.config.general.devs.includes(message.author.id))
         return;
@@ -98,7 +98,7 @@ module.exports = async (bot, message) => {
     // If the user doesn't have permissions to run the command return
     // TODO: [BOT-75] Add an option to disable the permission message
     if (await checkPerms(bot, message, permissions, cmd))
-        return message.error("You don't have permissions to run that command!");
+        return message.errorReply("You don't have permissions to run that command!");
 
     try {
         // Run the command
@@ -125,7 +125,7 @@ module.exports = async (bot, message) => {
         channel?.send({ embeds: [embed] });
 
         // Send an error message to the user
-        message.error(stripIndents`An error occurred while running the command: \`${err}\`
+        message.errorReply(stripIndents`An error occurred while running the command: \`${err}\`
         
         ${bot.config.emojis.url} If this issue persists please report it in our discord: ${bot.config.general.errors.url}`);
     }

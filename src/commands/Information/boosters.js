@@ -47,7 +47,7 @@ module.exports = {
 
         // If the guild has no boosters return an error
         if (!boosters.size)
-            return message.error("This guild doesn't have any boosters!");
+            return message.errorReply("This guild doesn't have any boosters!");
 
         // Sort the boosters
         const sorted = boosters.sort((a, b) => a.premiumSinceTimestamp - b.premiumSinceTimestamp);
@@ -62,7 +62,7 @@ module.exports = {
             page = args[0] - 1;
         // If the page doesn't exist return an error
         if (!pages[page])
-            return message.error("You didn't specify a valid page!");
+            return message.errorReply("You didn't specify a valid page!");
 
         // Format the boosters
         const formatted = pages[page].map(a => `\`${a.user.tag}\` | **Boosting Since:** ${format(a.premiumSinceTimestamp, "PPp")} (${formatDistance(a.premiumSinceTimestamp, Date.now())} ago)`);

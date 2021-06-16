@@ -52,34 +52,34 @@ module.exports = {
 
         // If an invalid member was specified return an error
         if (!member)
-            return message.error("You didn't specify a valid member!");
+            return message.errorReply("You didn't specify a valid member!");
 
         // TODO: [BOT-35] Nickname permission check
 
         // If the members role is higher than or equal to the user running the command return an error
         if (member.roles.highest.position >= message.member.roles.highest.position && member.id !== message.author.id)
-            return message.error("You don't have permissions to change that users nickname!");
+            return message.errorReply("You don't have permissions to change that users nickname!");
         // If the bot can't manage the user return an error
         if (!member.manageable)
-            return message.error(`I don't have permissions to set ${member}'s nickname!`);
+            return message.errorReply(`I don't have permissions to set ${member}'s nickname!`);
         // If the nickname is longer than 32 characters return an error
         if (nick?.length > 32)
-            return message.error("Nicknames cannot be longer than 32 characters!");
+            return message.errorReply("Nicknames cannot be longer than 32 characters!");
 
         if (!nick) {
             // If the user doesn't have a nickname return an error
             if (!member.nickname)
-                return message.error("This user doesn't have a nickname to remove!");
+                return message.errorReply("This user doesn't have a nickname to remove!");
 
             // Remove the users nickname
             await member.setNickname(member.user.username);
             // Send a confirmation message
-            message.confirmation(`Removed ${member}'s nickname!`);
+            message.confirmationReply(`Removed ${member}'s nickname!`);
         } else {
             // Set the users nickname
             await member.setNickname(nick);
             // Send a confirmation message
-            message.confirmation(`Set **${member.user.username}**'s nickname to ${member}!`);
+            message.confirmationReply(`Set **${member.user.username}**'s nickname to ${member}!`);
         }
     },
 

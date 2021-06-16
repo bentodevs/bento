@@ -73,7 +73,7 @@ module.exports = {
             message.reply({ embeds: [embed] });
         }).catch((err) => {
             // Send the error message
-            message.error(`Something went wrong while fetching the manga: \`${err.message}\``);
+            message.errorReply(`Something went wrong while fetching the manga: \`${err.message}\``);
         });
 
     }

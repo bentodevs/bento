@@ -36,7 +36,7 @@ module.exports = {
             message.channel.createInvite({ maxAge: 0 }).then(invite => {
                 message.reply(invite.toString());
             }).catch(err => {
-                message.error(`Something went wrong while creating the invite: \`${err.message}\``);
+                message.errorReply(`Something went wrong while creating the invite: \`${err.message}\``);
             });
         }
 

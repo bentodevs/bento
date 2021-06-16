@@ -56,7 +56,7 @@ module.exports = {
 
         // If the user specified a invalid role return an error
         if (!role && args[0])
-            return message.error("You didn't specify a valid role!");
+            return message.errorReply("You didn't specify a valid role!");
 
         if (!role) {
             // Pages variables
@@ -76,7 +76,7 @@ module.exports = {
                 page = args[0] -= 1;
             // Return if the page wasn't found
             if (!pages[page]) 
-                return message.error("You didn't specify a valid page!");
+                return message.errorReply("You didn't specify a valid page!");
 
             // Format the description
             const description = pages[page].map(m => `\`${m.user.tag}\` | **ID:** ${m.id}`);
@@ -97,7 +97,7 @@ module.exports = {
 
             // Return an error if the role doesn't have any members
             if (!role.members.size)
-                return message.error("The role you specified doesn't have any members!");
+                return message.errorReply("The role you specified doesn't have any members!");
 
             // Format and map the members
             const members = role.members.array();
@@ -113,7 +113,7 @@ module.exports = {
 
             // If the page specified doesn't exists return
             if (!pages[page])
-                return message.error("You didn't specify a valid page!");
+                return message.errorReply("You didn't specify a valid page!");
 
             // Format the description
             const description = pages[page].map(m => `\`${m.user.tag}\` | **ID:** ${m.id}`);

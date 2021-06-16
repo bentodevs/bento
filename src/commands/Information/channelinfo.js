@@ -47,7 +47,7 @@ module.exports = {
 
         // If the user specified a invalid channel return an error!
         if (!channel)
-            return message.error("You didn't specify a valid channel!");
+            return message.errorReply("You didn't specify a valid channel!");
 
         // Define formatting for all the channel types
         const types = {

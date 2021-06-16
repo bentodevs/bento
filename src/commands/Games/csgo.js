@@ -65,9 +65,9 @@ module.exports = {
                             
                             message.reply({ embeds: [embed] });
                         })
-                        .catch(e => message.error(`I encountered an error whilst getting the requested stats: \`${e.message}\``));
+                        .catch(e => message.errorReply(`I encountered an error whilst getting the requested stats: \`${e.message}\``));
                 })
-                .catch(() => message.error("I couldn't find a user with that ID!"));
+                .catch(() => message.errorReply("I couldn't find a user with that ID!"));
         } else {
             await fetchSteamUserByName(args[0])
                 .then(async data => {
@@ -94,9 +94,9 @@ module.exports = {
                             
                             message.reply({ embeds: [embed] });
                         })
-                        .catch(e => message.error(`I encountered an error whilst getting the requested stats: \`${e.message}\``));
+                        .catch(e => message.errorReply(`I encountered an error whilst getting the requested stats: \`${e.message}\``));
                 })
-                .catch(() => message.error("I couldn't find a user with that username!"));
+                .catch(() => message.errorReply("I couldn't find a user with that username!"));
         }
 
     },

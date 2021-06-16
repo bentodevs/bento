@@ -123,7 +123,7 @@ module.exports = {
 
             // If there are no giveaways return an error
             if (!g.length)
-                return message.error("There are no giveaways to list!");
+                return message.errorReply("There are no giveaways to list!");
 
             // Page Vars
             const pages = [];
@@ -171,20 +171,20 @@ module.exports = {
                 const m = msgs.first();
 
                 if (m.content.toLowerCase() == "cancel") {
-                    return message.confirmation("Alright, consider it canceled.");
+                    return message.confirmationReply("Alright, consider it canceled.");
                 } else {
                     channel = await getChannel(m, m.content);
                 }
             }).catch(() => {
-                message.error("The giveaway has been canceled.");
+                message.errorReply("The giveaway has been canceled.");
             });
 
             // If no channel was specified return an error
             if (!channel)
-                return message.error("You didn't specify a valid channel! The giveaway has been canceled.");
+                return message.errorReply("You didn't specify a valid channel! The giveaway has been canceled.");
             // If the channel isn't a news or text channel return an error
             if (channel.type !== "news" && channel.type !== "text")
-                return message.error("The channel you specified isn't a text or new channel. The giveaway has been canceled.");
+                return message.errorReply("The channel you specified isn't a text or new channel. The giveaway has been canceled.");
 
             // Send the duration message
             await message.channel.send(stripIndents`🎉 Awesome! The giveaway will be hosted in ${channel}! Now, how long would you like the giveaway to last?
@@ -196,23 +196,23 @@ module.exports = {
                 const m = msgs.first();
 
                 if (m.content.toLowerCase() == "cancel") {
-                    return message.confirmation("Alright, consider it canceled.");
+                    return message.confirmationReply("Alright, consider it canceled.");
                 } else {
                     time = parseTime(m.content, "ms");
                 }
             }).catch(() => {
-                message.error("The giveaway has been canceled.");
+                message.errorReply("The giveaway has been canceled.");
             });
 
             // If no duration was specified return an error
             if (!time)
-                return message.error("You didn't specify a valid time! The giveaway has been canceled.");
+                return message.errorReply("You didn't specify a valid time! The giveaway has been canceled.");
             // If the duration is shorter than 1 minute return an error
             if (time < 60000)
-                return message.error("The minumum time for a giveaway is 1 minute! The giveaway has been canceled.");
+                return message.errorReply("The minumum time for a giveaway is 1 minute! The giveaway has been canceled.");
             // If the duration is longer than 1 year return an error
             if (time > 31556952000)
-                return message.error("Giveaways cannot run for longer than 1 year! The giveaway has been canceled.");
+                return message.errorReply("Giveaways cannot run for longer than 1 year! The giveaway has been canceled.");
 
             // Send the winners message
             await message.channel.send(stripIndents`🎉 Cool, the giveaway will run for **${formatDuration(intervalToDuration({ start: 0, end: time }), { delimiter: "," })}**. So, how many winners should there be?
@@ -224,23 +224,23 @@ module.exports = {
                 const m = msgs.first();
 
                 if (m.content.toLowerCase() == "cancel") {
-                    return message.confirmation("Alright, consider it canceled.");
+                    return message.confirmationReply("Alright, consider it canceled.");
                 } else {
                     winners = parseInt(m.content);
                 }
             }).catch(() => {
-                message.error("The giveaway has been canceled.");
+                message.errorReply("The giveaway has been canceled.");
             });
 
             // If no winners weres specified return an error
             if (!winners)
-                return message.error("You didn't specify a valid number! The giveaway has been canceled.");
+                return message.errorReply("You didn't specify a valid number! The giveaway has been canceled.");
             // If more than 20 winners were specified return an error
             if (winners > 20)
-                return message.error("You can't have more than 20 winners! The giveaway has been canceled.");
+                return message.errorReply("You can't have more than 20 winners! The giveaway has been canceled.");
             // If 0 or less winners were specified return an error
             if (winners <= 0)
-                return message.error("You must have at least 1 winner! The giveaway has been canceled.");
+                return message.errorReply("You must have at least 1 winner! The giveaway has been canceled.");
 
             // Send the prize message
             await message.channel.send(stripIndents`🎉 Alright, there will be **${winners}** winners. Lastly, what would you like the prize(s) to be?
@@ -252,20 +252,20 @@ module.exports = {
                 const m = msgs.first();
 
                 if (m.content.toLowerCase() == "cancel") {
-                    return message.confirmation("Alright, consider it canceled.");
+                    return message.confirmationReply("Alright, consider it canceled.");
                 } else {
                     prize = m.content;
                 }
             }).catch(() => {
-                message.error("The giveaway has been canceled!");
+                message.errorReply("The giveaway has been canceled!");
             });
 
             // If no prize was specified
             if (!prize)
-                return message.error("You didn't specify a prize! The giveaway has been canceled.");
+                return message.errorReply("You didn't specify a prize! The giveaway has been canceled.");
             // If the giveaway title is longer than 256 characters return an error (https://discordjs.guide/popular-topics/embeds.html#embed-limits)
             if (`Giveaway: ${prize}`.length > 256)
-                return message.error("Please enter a shorter prize name! The giveaway has been canceled.");
+                return message.errorReply("Please enter a shorter prize name! The giveaway has been canceled.");
 
             // Get the giveaway ID, start time and end time
             const id = await giveaways.countDocuments({ "guild.guild_id": message.guild.id }) + 1 || 1,
@@ -314,14 +314,14 @@ module.exports = {
 
             // If an invalid ID was specified return an error
             if (!id)
-                return message.error("You must provide a numeric giveaway ID!");
+                return message.errorReply("You must provide a numeric giveaway ID!");
 
             // Get the giveaway
             const g = await giveaways.findOne({ "guild.guild_id": message.guild.id, id: id, active: true });
 
             // If the giveaway wasn't found return an error
             if (!g)
-                return message.error("There is no giveaway with that ID or the giveaway is not active!");
+                return message.errorReply("There is no giveaway with that ID or the giveaway is not active!");
 
             // Get the giveaway message
             const msg = await message.guild.channels.cache.get(g.guild.channel_id)?.messages.fetch(g.guild.message_id).catch(() => {});
@@ -331,21 +331,21 @@ module.exports = {
             await giveaways.findOneAndUpdate({ "guild.guild_id": message.guild.id, id: id, active: true }, { active: false });
 
             // Send a confirmation
-            message.confirmation(`The giveaway with the ID \`${g.id}\` has been cancelled!`);
+            message.confirmationReply(`The giveaway with the ID \`${g.id}\` has been cancelled!`);
         } else if (option == "end") {
             // Get the giveaway ID
             const id = parseInt(args[1]);
 
             // If an invalid ID was specified return an error
             if (!id)
-                return message.error("You must provide a numeric giveaway ID!");
+                return message.errorReply("You must provide a numeric giveaway ID!");
 
             // Get the giveaway
             const g = await giveaways.findOne({ "guild.guild_id": message.guild.id, id: id, active: true });
 
             // If the giveaway wasn't found return an error
             if (!g)
-                return message.error("There is no giveaway with that ID or the giveaway is not active!");
+                return message.errorReply("There is no giveaway with that ID or the giveaway is not active!");
 
             // Get the winners and define the array
             const winners = drawGiveawayWinners(g.entries, g.winners),
@@ -393,21 +393,21 @@ module.exports = {
             }
 
             // Send a confirmation message
-            message.confirmation("Successfully ended that giveaway!");
+            message.confirmationReply("Successfully ended that giveaway!");
         } else if (option == "reroll") {
             // Get the giveaway ID
             const id = parseInt(args[1]);
 
             // If an invalid ID was specified return an error
             if (!id)
-                return message.error("You must provide a numeric giveaway ID!");
+                return message.errorReply("You must provide a numeric giveaway ID!");
 
             // Get the giveaway
             const g = await giveaways.findOne({ "guild.guild_id": message.guild.id, id: id, active: false });
 
             // If the giveaway wasn't found return an error
             if (!g)
-                return message.error("There is no giveaway with that ID or the giveaway is still active!");
+                return message.errorReply("There is no giveaway with that ID or the giveaway is still active!");
 
             // Get the winners and define the array
             const winners = drawGiveawayWinners(g.entries, g.winners),
@@ -431,7 +431,7 @@ module.exports = {
             message.guild.channels.cache.get(g.guild.channel_id)?.send(`🎉 The giveaway was re-rolled - The new winner(s) are ${arr.join(", ")}!`);
         } else {
             // Send an error message
-            return message.error("You didn't specify a valid option! Try one of these: `start`, `stop`, `end` or `reroll`!");
+            return message.errorReply("You didn't specify a valid option! Try one of these: `start`, `stop`, `end` or `reroll`!");
         }
 
     },

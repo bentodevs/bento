@@ -94,23 +94,23 @@ module.exports = {
 
             // If the option the user specified isn't a valid option return an error
             if (!options.includes(option))
-                return message.error(`You didn't specify a valid option! Valid options are: \`${options.join("`, `")}\``);
+                return message.errorReply(`You didn't specify a valid option! Valid options are: \`${options.join("`, `")}\``);
 
             // If the user didn't specify a channel return an error
             if (!args[1])
-                return message.error("You didn't specify a channel!");
+                return message.errorReply("You didn't specify a channel!");
 
             if (args[1].toLowerCase() === "disable") {
                 // If the option is already disabled return an error
                 if (!message.settings.logs?.[option])
-                    return message.error("I can't disable something that is already disabled...");
+                    return message.errorReply("I can't disable something that is already disabled...");
                 
                 // Disable the option
                 await settings.findOneAndUpdate({ _id: message.guild.id }, {
                     [`logs.${option}`]: null
                 });
                 // Send a confirmation message
-                message.confirmation(`${option} logging has been disabled!`);
+                message.confirmationReply(`${option} logging has been disabled!`);
 
                 // Return
                 return;
@@ -121,11 +121,11 @@ module.exports = {
 
             // If no channel could be found return an error
             if (!channel)
-                return message.error("You didn't specify a valid channel!");
+                return message.errorReply("You didn't specify a valid channel!");
 
             // If the channel isn't a text channel return an error
             if (channel.type !== "text")
-                return message.error("The channel you specified isn't a text channel!");
+                return message.errorReply("The channel you specified isn't a text channel!");
 
             // Set the logging channel
             await settings.findOneAndUpdate({ _id: message.guild.id }, {
@@ -135,15 +135,15 @@ module.exports = {
             // Send a confirmation message based on the option
             switch(option) {
                 case "default":
-                    message.confirmation(`${channel} will now be used as the default logging channel!`);
+                    message.confirmationReply(`${channel} will now be used as the default logging channel!`);
                     break;
                 case "events":
                 case "commands":
-                    message.confirmation(`${channel} will now be used as the logging channel for \`${option}\`!`);
+                    message.confirmationReply(`${channel} will now be used as the logging channel for \`${option}\`!`);
                     break;
                 case "edited":
                 case "deleted":
-                    message.confirmation(`${channel} will now be used as the logging channel for \`${option} messages\`!`);
+                    message.confirmationReply(`${channel} will now be used as the logging channel for \`${option} messages\`!`);
                     break;
             }
         }

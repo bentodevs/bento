@@ -24,7 +24,7 @@ module.exports = {
     run: async (bot, message) => {
 
         // Send a confirmation message
-        await message.confirmation("Alright I will be right back, *I hope....*");
+        await message.confirmationReply("Alright I will be right back, *I hope....*");
 
         // If mongo is connected close the connection
         if (bot.mongo?.connection) {

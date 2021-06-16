@@ -29,15 +29,15 @@ module.exports = {
         const punishment = await punishments.findOne({ id: args[0], guild: message.guild.id });
 
         if (!punishment)
-            return message.error("You must specify a valid case!");
+            return message.errorReply("You must specify a valid case!");
         
         if (!args[1])
-            return message.error("You must provice a new punishment reason!");
+            return message.errorReply("You must provice a new punishment reason!");
         
         const reason = args.splice(1).join(" "); 
 
         await punishments.findOneAndUpdate({ id: args[0], guild: message.guild.id }, { reason: reason })
-            .then(() => message.confirmation(`The reason for ${punishment.id} has been updated to ${reason}`))
-            .catch((err) => message.error(`I encountered an error whilst updating the reason for ${punishment.id}: \`${err.message}\``));
+            .then(() => message.confirmationReply(`The reason for ${punishment.id} has been updated to ${reason}`))
+            .catch((err) => message.errorReply(`I encountered an error whilst updating the reason for ${punishment.id}: \`${err.message}\``));
     }
 };

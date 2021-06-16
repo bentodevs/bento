@@ -37,7 +37,7 @@ module.exports = {
 
         if (!args[0]) {
             // Send the current prefix
-            message.confirmation(`My prefix for this guild is \`${message.settings.general.prefix}\`!`);
+            message.confirmationReply(`My prefix for this guild is \`${message.settings.general.prefix}\`!`);
         } else {
             // Get the new prefix
             let newPrefix = args.join(" ").toLowerCase();
@@ -47,7 +47,7 @@ module.exports = {
                 newPrefix = bot.config.general.prefix;
             // If the user specified the same prefix that's already set return an error
             if (newPrefix == message.settings.general.prefix)
-                return message.error("The prefix you specified is already set as the current prefix!");
+                return message.errorReply("The prefix you specified is already set as the current prefix!");
 
             // Update the prefix
             await settings.findOneAndUpdate({ _id: message.guild.id }, {
@@ -55,7 +55,7 @@ module.exports = {
             });
 
             // Send a confirmation message
-            message.confirmation(`The prefix was successfully set to \`${newPrefix}\`!`);
+            message.confirmationReply(`The prefix was successfully set to \`${newPrefix}\`!`);
         }
     
     },
