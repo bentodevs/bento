@@ -38,7 +38,7 @@ module.exports = {
     run: async (bot, message, args) => {
 
         // Send a status message and get the definition
-        const msg = await message.loading("Fetching definition..."),
+        const msg = await message.loadingReply("Fetching definition..."),
         result = await urban(args.join(" "));
 
         // Send a error message if no definition was found
@@ -53,7 +53,7 @@ module.exports = {
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
 
         // Send the embed and delete the status message
-        message.channel.send({ embeds: [embed] });
+        message.reply({ embeds: [embed] });
         msg.delete().catch(() => {});
 
     },

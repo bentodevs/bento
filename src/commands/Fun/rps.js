@@ -54,7 +54,7 @@ module.exports = {
 
         // If the user specified an invalid option return an error
         if (!options.includes(args[0].toLowerCase()))
-            return message.error("You didn't specify a valid option! Please enter `rock`, `paper` or `scissors`!");
+            return message.errorReply("You didn't specify a valid option! Please enter `rock`, `paper` or `scissors`!");
 
         // Get the userPick and the botPick
         const userPick = options.indexOf(args[0].toLowerCase()),
@@ -62,11 +62,11 @@ module.exports = {
 
         // Check who won
         if (userPick == botPick) {
-            return message.channel.send(`I chose **${formatted[botPick]}**, its a draw!`);
+            return message.reply(`I chose **${formatted[botPick]}**, its a draw!`);
         } else if (botPick > userPick || botPick == 0 && userPick == 2) {
-            message.channel.send(`I chose **${formatted[botPick]}**, I win!`);
+            message.reply(`I chose **${formatted[botPick]}**, I win!`);
         } else {
-            message.channel.send(`I chose **${formatted[botPick]}**, you win!`);
+            message.reply(`I chose **${formatted[botPick]}**, you win!`);
         }
                
     },

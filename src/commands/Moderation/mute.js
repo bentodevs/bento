@@ -53,12 +53,12 @@ module.exports = {
 
         // Check that the mute role exists in the DB
         if (!message.settings.roles.mute)
-            return message.error(`There is no mute role configured! Create one using \`${message.settings.general.prefix}setup mute [role]\``);
+            return message.errorReply(`There is no mute role configured! Create one using \`${message.settings.general.prefix}setup mute [role]\``);
         
         // If the mute role we have doesn't exist, then remove it from the DB & send an error
         if (!message.guild.roles.cache.get(message.settings.roles.mute)) {
             await settings.findOneAndUpdate({ _id: message.guild.id }, { "roles.mute": null });
-            return message.error(`The mute role I knew was deleted! You'll need to set up up again using \`${message.settings.general.prefix}setup mute [role]\``);
+            return message.errorReply(`The mute role I knew was deleted! You'll need to set up up again using \`${message.settings.general.prefix}setup mute [role]\``);
         }
         
         // If there are no args[0] (User), then return an error
@@ -75,15 +75,15 @@ module.exports = {
 
         // If there is no member, then return an error
         if (!member)
-            return message.error("You did not specify a valid member!");
+            return message.errorReply("You did not specify a valid member!");
         
         // Check if the member ID is equal to the executors id
         if (member.id === message.author.id)
-            return message.error("You cannot mute yourself!");
+            return message.errorReply("You cannot mute yourself!");
         
         // Check the member doesn't have a higher or equal role- if they do then throw error
         if (member.roles.highest.position >= message.member.roles.highest.position)
-            return message.error("You are unable to mute those of the same or a higher rank!");
+            return message.errorReply("You are unable to mute those of the same or a higher rank!");
         
         // If the time is "forever" then set the time variable to "forever"
         if (args[1]?.toLowerCase() === "forever" && !args[2]) {
@@ -106,8 +106,8 @@ module.exports = {
             // Defaults to 30m if no specified time
             if (!time) time = 1800000;
             // Reject mute over 1 year & below 1 minute
-            if (time >= 31557600000) return message.error("You cannot mute someone for 1 year (or longer)!");
-            if (time < 60000) return message.error("The minimum time for a mute is 1 minute!");
+            if (time >= 31557600000) return message.errorReply("You cannot mute someone for 1 year (or longer)!");
+            if (time < 60000) return message.errorReply("The minimum time for a mute is 1 minute!");
         }
 
         // Add the role to the user, add reason
@@ -115,7 +115,7 @@ module.exports = {
         // Message the user informing them of the action
         await member.send(`🔇 You have been muted in **${message.guild.name}** ${time == "forever" ? "for **forever**" : `for **${formatDistanceToNowStrict(Date.now() + time)}**`} with the reason **${reason}**`).catch(() => { });
         // Send confirmation message
-        message.confirmation(`**${member.user.tag}** has been ${mute ? "re" : ""}muted ${time == "forever" ? "**forever**" : `for **${formatDistanceToNowStrict(Date.now() + time)}**`}! *(Case ID: ${action})*`);
+        message.confirmationReply(`**${member.user.tag}** has been ${mute ? "re" : ""}muted ${time == "forever" ? "**forever**" : `for **${formatDistanceToNowStrict(Date.now() + time)}**`}! *(Case ID: ${action})*`);
         
         if (mute)
             await mutes.findOneAndDelete({ guild: message.guild.id, mutedUser: member.id });

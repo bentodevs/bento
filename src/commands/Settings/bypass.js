@@ -56,7 +56,7 @@ module.exports = {
         if (!args[0]) {
             // If no bypass roles are set return an error
             if (!message.settings.blacklist.bypass.hierarchicRoleId && !message.settings.blacklist.bypass.roles.length)
-                return message.error("Nothing other than users with the Discord Permission `ADMINISTRATOR` currently bypass the command blacklist.");
+                return message.errorReply("Nothing other than users with the Discord Permission `ADMINISTRATOR` currently bypass the command blacklist.");
 
             // Define the role vars
             const hierarchicRole = message.guild.roles.cache.get(message.settings.blacklist.bypass.hierarchicRoleId),
@@ -100,17 +100,17 @@ module.exports = {
                 msg += `\n${bot.config.emojis.group} The following roles bypass the command blacklist: ${roles.join(", ")}`;
 
             // Send the message
-            message.channel.send(msg);
+            message.reply(msg);
         } else {
             // Get the role
             const role = await getRole(message, args.join(" ")) || await getRole(message, args.join(" ").replace("+", ""));
 
             // If no role was found return an error
             if (!role)
-                return message.error("You didn't specify a valid role!");
+                return message.errorReply("You didn't specify a valid role!");
             // If the role is higher than or equal to the users highest role return an error
             if (message.member.roles.highest.position <= role.position)
-                return message.error("That role is higher than or equal to your highest role!");
+                return message.errorReply("That role is higher than or equal to your highest role!");
 
             // Check if the role is hierarchic
             const hierarchic = args.join(" ").toLowerCase().includes("+") && (role.name.match(/\+/g) || []).length < (args.join("").match(/\+/g) || []).length;
@@ -129,8 +129,8 @@ module.exports = {
 
             // Send the confirmation message
             hierarchic 
-                ? message.confirmation(`The ${role} role and up will ${message.settings.blacklist.bypass.hierarchicRoleId == role.id ? "no longer" : "now"} bypass the command blacklist.`)
-                : message.confirmation(`Successfully ${message.settings.blacklist.bypass.roles.includes(role.id) ? "removed" : "added"} the ${role} role ${message.settings.blacklist.bypass.roles.includes(role.id) ? "from" : "to"} the bypass roles.`);
+                ? message.confirmationReply(`The ${role} role and up will ${message.settings.blacklist.bypass.hierarchicRoleId == role.id ? "no longer" : "now"} bypass the command blacklist.`)
+                : message.confirmationReply(`Successfully ${message.settings.blacklist.bypass.roles.includes(role.id) ? "removed" : "added"} the ${role} role ${message.settings.blacklist.bypass.roles.includes(role.id) ? "from" : "to"} the bypass roles.`);
         }
 
     },

@@ -41,13 +41,13 @@ module.exports = {
 
         // If no options were specified or all options are the same return an error
         if (options.every((val, i, arr) => val.trim() === arr[0].trim()))
-            return message.error("You didn't really specify an options there?");
+            return message.errorReply("You didn't really specify an options there?");
 
         // Choose a random option
         const choice = Math.floor((Math.random() * options.length));
 
         // Send the chosen option
-        message.channel.send(`🤔 I choose ${options[choice].trim()}`);
+        message.reply(`🤔 I choose ${options[choice].trim()}`);
 
     },
 

@@ -29,7 +29,7 @@ module.exports = {
         cmd = bot.commands.get(cmdName) || bot.commands.get(bot.aliases.get(cmdName));
 
         if (!cmd)
-            return message.error("You didn't specify a valid command!");
+            return message.errorReply("You didn't specify a valid command!");
 
         const data = {
             name: cmd.info.name,
@@ -39,7 +39,7 @@ module.exports = {
 
         await message.guild.commands.create(data);
 
-        message.confirmation("Successfully registered that command!");
+        message.confirmationReply("Successfully registered that command!");
 
     }
 }; 

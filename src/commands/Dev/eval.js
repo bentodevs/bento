@@ -49,10 +49,10 @@ module.exports = {
             }
 
             // Return the response
-            message.channel.send(clean(evaled), { code: "xl", split: { maxLength: "1800" } });
+            message.reply({ content: clean(evaled), code: "xl", split: { maxLength: "1800" } });
         } catch (err) {
             // Return an error if something went wrong
-            message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
+            message.reply(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
         }
 
     }

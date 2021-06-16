@@ -43,7 +43,7 @@ module.exports = {
 
         // If a invalid user was specified return an error
         if (!target)
-            return message.error("You didn't specify a valid user!");
+            return message.errorReply("You didn't specify a valid user!");
 
         // Build the embed
         const embed = new MessageEmbed()
@@ -52,7 +52,7 @@ module.exports = {
             .setImage(target.displayAvatarURL({ format: "png", dynamic: true, size: 1024}));
 
         // Send the embed
-        message.channel.send({ embeds: [embed] });
+        message.reply({ embeds: [embed] });
 
     }, 
 

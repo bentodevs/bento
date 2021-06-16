@@ -33,9 +33,9 @@ module.exports = {
         deleted = bot.deletedMsgs.get(`${message.guild.id}-${channel?.id}`);
 
         if (!channel)
-            return message.error("You didn't specify a valid channel!");
+            return message.errorReply("You didn't specify a valid channel!");
         if (!deleted)
-            return message.error(`I don't remember any deleted messages for ${channel.id == message.channel.id ? "this" : "that"} channel!`);
+            return message.errorReply(`I don't remember any deleted messages for ${channel.id == message.channel.id ? "this" : "that"} channel!`);
 
         const user = await getUser(bot, message, deleted.author.id),
         member = await getMember(message, deleted.author.id);
@@ -47,7 +47,7 @@ module.exports = {
             .setFooter(deleted.id)
             .setTimestamp(deleted.deletedTimestamp);
 
-        message.channel.send({ embeds: [embed] });
+        message.reply({ embeds: [embed] });
         
     }
 };

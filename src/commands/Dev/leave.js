@@ -34,10 +34,10 @@ module.exports = {
 
         // If the guild wasn't found return an error
         if (!guild)
-            return message.error("You didn't specify a valid guild!");
+            return message.errorReply("You didn't specify a valid guild!");
 
         // Send a message asking if the user is sure
-        await message.channel.send(stripIndents`Are you sure you want me to leave \`${guild.name} (${guild.id})\`?
+        await message.reply(stripIndents`Are you sure you want me to leave \`${guild.name} (${guild.id})\`?
         
         Type \`y\` or \`yes\` to continue.`);
 
@@ -57,14 +57,14 @@ module.exports = {
                 if (guild.id == message.guild.id) {
                     message.author.send(`${bot.config.emojis.confirmation} Successfully left \`${guild.name} (${guild.id})\`!`);
                 } else {
-                    message.confirmation(`Successfully left \`${guild.name} (${guild.id})\`!`);
+                    message.confirmationReply(`Successfully left \`${guild.name} (${guild.id})\`!`);
                 }
             } else {
-                message.confirmation("The command has been canceled.");
+                message.confirmationReply("The command has been canceled.");
             }
         }).catch(() => {
             // Send an error message
-            message.error("The command has been canceled.");
+            message.errorReply("The command has been canceled.");
         });
 
     }

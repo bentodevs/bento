@@ -81,7 +81,7 @@ module.exports = {
         if (!args[0]) {
             // If there are no blacklists return an error
             if (!message.settings.blacklist.users.length && !message.settings.blacklist.roles.length && !message.settings.blacklist.channels.length)
-                return message.error("There aren't any blacklists in this guild!");
+                return message.errorReply("There aren't any blacklists in this guild!");
 
             // Define the blacklist msg
             let msg = "__**Blacklists**__\n\n";
@@ -174,7 +174,7 @@ module.exports = {
             }
 
             // Send the message
-            message.channel.send(msg);
+            message.reply(msg);
         } else if (member) {
             if (message.settings.blacklist.users.includes(member.id)) {
                 // Remove the user from the blacklist
@@ -185,7 +185,7 @@ module.exports = {
                 });
 
                 // Send a confirmation message
-                message.confirmation(`**${member.user?.tag ?? member.tag}** has been removed from the blacklist!`);
+                message.confirmationReply(`**${member.user?.tag ?? member.tag}** has been removed from the blacklist!`);
             } else {
                 // Add the user to the blacklist
                 await settings.findOneAndUpdate({ _id: message.guild.id }, {
@@ -195,7 +195,7 @@ module.exports = {
                 });
 
                 // Send a confirmation message
-                message.confirmation(`**${member?.user?.tag ?? member.tag}** has been added to the blacklist!`);
+                message.confirmationReply(`**${member?.user?.tag ?? member.tag}** has been added to the blacklist!`);
             }
         } else if (channel) {
             if (message.settings.blacklist.channels.includes(channel.id)) {
@@ -207,11 +207,11 @@ module.exports = {
                 });
 
                 // Send a confirmation message
-                message.confirmation(`The ${channel} channel has been removed from the blacklist!`);
+                message.confirmationReply(`The ${channel} channel has been removed from the blacklist!`);
             } else {
                 // If the channel isn't a text or news channel return an error
                 if (channel.type !== "text" && channel.type !== "news")
-                    return message.error("The channel you specified isn't a text or news channel!");
+                    return message.errorReply("The channel you specified isn't a text or news channel!");
 
                 // Add the channel to the blacklist
                 await settings.findOneAndUpdate({ _id: message.guild.id }, {
@@ -221,13 +221,13 @@ module.exports = {
                 });
 
                 // Send a confirmation message
-                message.confirmation(`The ${channel} channel has been added to the blacklist!`);
+                message.confirmationReply(`The ${channel} channel has been added to the blacklist!`);
             }
         } else if (role) {
             if (message.settings.blacklist.roles.includes(role.id)) {
                 // If the users highest role is lower than the specified role return an error
                 if (message.member.roles.highest.position <= role.position)
-                    return message.error("That role is higher than or equal to your highest role!");
+                    return message.errorReply("That role is higher than or equal to your highest role!");
 
                 // Remove the role from the blacklist
                 await settings.findOneAndUpdate({ _id: message.guild.id }, {
@@ -237,11 +237,11 @@ module.exports = {
                 });
 
                 // Send a confirmation message
-                message.confirmation(`The ${role} role has been removed from the blacklist!`);
+                message.confirmationReply(`The ${role} role has been removed from the blacklist!`);
             } else {
                 // If the users highest role is lower than the specified role return an error
                 if (message.member.roles.highest.position <= role.position)
-                    return message.error("That role is higher than or equal to your highest role!");
+                    return message.errorReply("That role is higher than or equal to your highest role!");
 
                 // Add the role to the blacklist
                 await settings.findOneAndUpdate({ _id: message.guild.id }, {
@@ -251,11 +251,11 @@ module.exports = {
                 });
 
                 // Send a confirmation message
-                message.confirmation(`The ${role} role has been added to the blacklist!`);
+                message.confirmationReply(`The ${role} role has been added to the blacklist!`);
             }
         } else {
             // Send an error
-            message.error("You didn't specify a valid member, channel or role!");
+            message.errorReply("You didn't specify a valid member, channel or role!");
         }
 
     },

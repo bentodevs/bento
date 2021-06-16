@@ -33,13 +33,13 @@ module.exports = {
 
         // If no amount of messages were specified return an error
         if (!deleteCount) 
-            return message.error("You didn't specify a number of messages to purge!");
+            return message.errorReply("You didn't specify a number of messages to purge!");
         // If the user specified a number above 100 return an error
         if (deleteCount - 2 > 1000)
-            return message.error("Please specify a number between 1 and 1000!");
+            return message.errorReply("Please specify a number between 1 and 1000!");
 
         // Send the status message
-        const msg = await message.loading(`Deleting \`${deleteCount - 2}\` messages...`);
+        const msg = await message.loadingReply(`Deleting \`${deleteCount - 2}\` messages...`);
 
         // Create the bulkDelete function
         async function bulkDelete() {

@@ -78,7 +78,7 @@ module.exports = {
 
             // If the user has no reminders send an error
             if (!data?.reminders.length)
-                return message.error("You don't have any active reminders!");
+                return message.errorReply("You don't have any active reminders!");
 
             // Define the reminders msg
             let msg = "🔔 **Reminders**\n\n";
@@ -92,13 +92,13 @@ module.exports = {
                 // If the message was sent in a guild send the user the reminders in their dms
                 message.author.send(msg)
                     .then(() => {
-                        message.confirmation("I have sent you a DM with your reminders!");
+                        message.confirmationReply("I have sent you a DM with your reminders!");
                     }).catch(() => {
-                        message.error("Something went wrong, you most likely have your DM's disabled!");
+                        message.errorReply("Something went wrong, you most likely have your DM's disabled!");
                     });
             } else {
                 // Send the reminders
-                message.channel.send(msg);
+                message.reply(msg);
             }
         } else if (opt == "remove") {
             // Get the remind data and the reminder id
@@ -107,16 +107,16 @@ module.exports = {
 
             // If the user has no reminders return an error
             if (!data?.reminders?.length)
-                return message.error("You don't have any active reminders!");
+                return message.errorReply("You don't have any active reminders!");
             // If the user didn't specify an ID return an error
             if (!args[1])
-                return message.error("You didn't specify a reminder ID!");
+                return message.errorReply("You didn't specify a reminder ID!");
             // If the user specified an invalid number return an error
             if (!reminder)
-                return message.error("You didn't specify a valid number!");
+                return message.errorReply("You didn't specify a valid number!");
             // If the user specified and invalid reminder id return an error
             if (!data.reminders.find(r => r.id == reminder))
-                return message.error("You didn't specify a valid reminder ID!");
+                return message.errorReply("You didn't specify a valid reminder ID!");
 
             if (data.reminders.length <= 1) {
                 // If this was the users last reminder delete their reminddata
@@ -132,7 +132,7 @@ module.exports = {
                 });
             }
 
-            message.confirmation(`Successfully removed the reminder with the ID: \`${reminder}\`!`);
+            message.confirmationReply(`Successfully removed the reminder with the ID: \`${reminder}\`!`);
         } else {
             // Get the time, reminder, current time and remind data
             const time = parseTime(args[0], "ms"),
@@ -142,19 +142,19 @@ module.exports = {
 
             // If no time was specified return an error
             if (!time)
-                return message.error("You didn't specify a valid time!");
+                return message.errorReply("You didn't specify a valid time!");
             // If the time is longer than a year return an error
             if (time > 31556952000)
-                return message.error("The maximum time for a reminder is 1 year!");
+                return message.errorReply("The maximum time for a reminder is 1 year!");
             // If the time is less than a minute return an error
             if (time < 60000)
-                return message.error("The minimum time for a reminder is 1 minute.");
+                return message.errorReply("The minimum time for a reminder is 1 minute.");
             // If the user didn't specify a reminder return an error
             if (!reminder)
-                return message.error("You didn't specify anything to remind you about!");
+                return message.errorReply("You didn't specify anything to remind you about!");
             // If the user already has 25 reminders set return an error
             if (data && data.reminders?.length >= 25)
-                return message.error("You cannot set more than 25 reminders!");
+                return message.errorReply("You cannot set more than 25 reminders!");
 
             // Get the reminder id
             const id = (data?.reminders[data?.reminders.length - 1]?.id ?? 0) + 1;
@@ -186,7 +186,7 @@ module.exports = {
             }
 
             // Send a confirmation message
-            message.confirmation(`I will remind you about that in **${formatDuration(intervalToDuration({ start: created, end: created + time }), { delimiter: ", " })}**!`);
+            message.confirmationReply(`I will remind you about that in **${formatDuration(intervalToDuration({ start: created, end: created + time }), { delimiter: ", " })}**!`);
         }
 
     },

@@ -49,7 +49,7 @@ module.exports = {
             // Unban the user
             message.guild.members.unban(ban.user.id, `[Issued by ${message.author.tag}] ${reason}`);
             // Send a confirmation message
-            message.confirmation(`Successfully unbanned **${ban.user.username}#${ban.user.discriminator}**! *(Case #${action})*`);
+            message.confirmationReply(`Successfully unbanned **${ban.user.username}#${ban.user.discriminator}**! *(Case #${action})*`);
 
             // Create the punishment record in the DB
             await punishments.create({
@@ -83,7 +83,7 @@ module.exports = {
             // Find the ban in the preban database
             await preban.findOneAndDelete({ user: user.id });
             // Send a confirmation message
-            message.confirmation(`Successfully unbanned **${user.tag}**! *(Case #${action})*`);
+            message.confirmationReply(`Successfully unbanned **${user.tag}**! *(Case #${action})*`);
             // Log the unban
             punishmentLog(message, user, null, reason, "unban");
         }

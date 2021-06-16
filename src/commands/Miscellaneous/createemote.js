@@ -44,7 +44,7 @@ module.exports = {
 
         // If no emote, url or attachments were found return an error
         if (!emote && !url && !message.attachments.size)
-            return message.error("You didn't specify a valid URL, attachment or emote!");
+            return message.errorReply("You didn't specify a valid URL, attachment or emote!");
 
         if (emote) {
             // 1. Prepare the emoji URL
@@ -54,7 +54,7 @@ module.exports = {
 
             // If the file size is too big return an error
             if (res.headers.get("content-length") > 256 * 1024)
-                return message.error("The emoji is too big! It must be 256KB or less.");
+                return message.errorReply("The emoji is too big! It must be 256KB or less.");
 
             // Convert the emoji to a buffer and grab the emote name
             const buffer = await res.buffer(),
@@ -64,9 +64,9 @@ module.exports = {
             message.guild.emojis.create(buffer, name, {
                 reason: `Issued by ${message.author.tag} using the createemote command.`
             }).then(emote => {
-                message.confirmation(`Successfully created the emote: \`:${emote.name}:\` ${emote}`);
+                message.confirmationReply(`Successfully created the emote: \`:${emote.name}:\` ${emote}`);
             }).catch(err => {
-                message.error(`Failed to create the emote: \`${err}\``);
+                message.errorReply(`Failed to create the emote: \`${err}\``);
             });
         } else {
             // Grab the url and fetch the emoji
@@ -76,10 +76,10 @@ module.exports = {
 
             // If the url didn't contain an image return an error
             if (!res.headers.get("content-type").startsWith("image"))
-                return message.error("The URL or File you specified isn't an image!");
+                return message.errorReply("The URL or File you specified isn't an image!");
             // If the size of the file is too big return an error
             if (res.headers.get("content-length") > 256 * 1024)
-                return message.error("The emoji is too big! It must be 256KB or less.");
+                return message.errorReply("The emoji is too big! It must be 256KB or less.");
 
             // Convert the emoji to a buffer and grab the name
             const buffer = await res.buffer(),
@@ -89,9 +89,9 @@ module.exports = {
             message.guild.emojis.create(buffer, name, {
                 reason: `Issued by ${message.author.tag} using the createemote command.`
             }).then(emote => {
-                message.confirmation(`Successfully created the emote: \`:${emote.name}:\` ${emote}`);
+                message.confirmationReply(`Successfully created the emote: \`:${emote.name}:\` ${emote}`);
             }).catch(err => {
-                message.error(`Failed to create the emote: \`${err}\``);
+                message.errorReply(`Failed to create the emote: \`${err}\``);
             });
         }
 

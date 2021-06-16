@@ -51,10 +51,10 @@ module.exports = {
 
         // Check if the user specified a valid command or category
         if (!command && !category)
-            return message.error("You didn't specify a valid command or category!");
+            return message.errorReply("You didn't specify a valid command or category!");
         // If the command/category is already enabled send an error message
         if (!message.settings.general.disabled_commands.includes(command?.info.name) || !message.settings.general.disabled_categories.includes(category))
-            return message.error(`The ${command ? "command" : "category"} you specified is already enabled!`);
+            return message.errorReply(`The ${command ? "command" : "category"} you specified is already enabled!`);
 
         // Get the DB query
         const toUpdate = command 
@@ -65,7 +65,7 @@ module.exports = {
         await settings.findOneAndUpdate({ _id: message.guild.id }, toUpdate);
 
         // Send a confirmation message
-        message.confirmation(`The ${command ? "command" : "category"} \`${command ? command.info.name : category}\` has been enabled!`);
+        message.confirmationReply(`The ${command ? "command" : "category"} \`${command ? command.info.name : category}\` has been enabled!`);
 
     },
 

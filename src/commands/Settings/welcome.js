@@ -25,10 +25,10 @@ module.exports = {
         \`{server}\` - The Server's name
         \`{count}\` - The member's guild member number (E.g. The number in which they joined at)`,
         options: [
-            "`channel` - Sets the channel the join/leave message should be sent to",
-            "`join-msg` - The message to send when a user joins the server",
-            "`leave-msg` - The message to send when a user leaves the server",
-            "`dm` - The message to DM the user when they join the guild"
+            "`channel <channel>` - Sets the channel the join/leave message should be sent to",
+            "`join-msg <message>` - The message to send when a user joins the server",
+            "`leave-msg <message>` - The message to send when a user leaves the server",
+            "`dm <message>` - The message to DM the user when they join the guild"
         ]
     },
     perms: {
@@ -43,13 +43,16 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: false,
+        opts: []
+    },
 
     run: async (bot, message, args) => {
 
         // TODO: Add proper commenting to welcome file
 
         if (!args[0]) {
-            
             // If the welcome channel is no longer in the guild cache, then remove it
             if (message.settings.welcome.channel && !message.guild.channels.cache.get(message.settings.welcome.channel)) {
                 await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.channel": null });
@@ -64,20 +67,20 @@ module.exports = {
             :speech_balloon: The welcome DM is ${message.settings.welcome.userMessage ? `currently set to: ${message.settings.welcome.userMessage}` : "not currently set"}`;
 
             // Send the welcome settings message
-            message.channel.send(msg);
+            message.reply(msg);
         } else if (args[0].toLowerCase() === "channel") {
             // If no channel is provided...
             if (!args[1]) {
                 if (!message.settings.welcome.channel) {
                     // If there is no channel set, return such
-                    return message.channel.send(`:books: The welcome channel is not currently set`);
+                    return message.reply(`:books: The welcome channel is not currently set`);
                 } else if (!message.guild.channels.cache.get(message.settings.welcome.channel)) {
                     // If the guild doesn't have the channel in settings, set settings to null & return there is no channel set
                     await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.channel": null });
-                    return message.channel.send(":books: The welcome channel is not currently set");
+                    return message.reply(":books: The welcome channel is not currently set");
                 } else {
                     // Return the channel which is currently the welcome channel
-                    return message.channel.send(`:books: The welcome channel is currently set to ${message.guild.channels.cache.get(message.settings.welcome.channel)}`);
+                    return message.reply(`:books: The welcome channel is currently set to ${message.guild.channels.cache.get(message.settings.welcome.channel)}`);
                 }
             } else {
                 // Grab the Channel the user specifies from Discord
@@ -85,17 +88,17 @@ module.exports = {
                 // Set the channel in the guild's settings
                 await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.channel": chan.id });
                 // Send a confirmation message
-                message.confirmation(`The welcome channel was set to ${chan}`);
+                message.confirmationReply(`The welcome channel was set to ${chan}`);
             }
         } else if (args[0].toLowerCase() === "join-msg") {
             // If no message is specified...
             if (!args[1]) {
                 if (!message.settings.welcome.joinMessage) {
                     // If there is no welcome message, return such
-                    return message.channel.send(":wave: The welcome message is not currently set");
+                    return message.reply(":wave: The welcome message is not currently set");
                 } else {
                     // Return the welcome message
-                    return message.channel.send(`:wave: The welcome message is currently set to ${message.settings.welcome.joinMessage}`);
+                    return message.reply(`:wave: The welcome message is currently set to ${message.settings.welcome.joinMessage}`);
                 }
             } else {
                 // Ignore args[0] & join any text after the fact - Assign as "msg"
@@ -103,17 +106,17 @@ module.exports = {
                 // Set the new welcome message in the DB
                 await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.joinMessage": msg });
                 // Send a confirmation message
-                message.confirmation(`The join message was set to ${msg}`);
+                message.confirmationReply(`The join message was set to ${msg}`);
             }
         } else if (args[0].toLowerCase() === "leave-msg") {
             // If no message is specified...
             if (!args[1]) {
                 if (!message.settings.welcome.leaveMessage) {
                     // If there is no leave message, return such
-                    return message.channel.send(":wave: The leave message is not currently set");
+                    return message.reply(":wave: The leave message is not currently set");
                 } else {
                     // Return the leave message
-                    return message.channel.send(`:wave: The leave message is currently set to ${message.settings.welcome.leaveMessage}`);
+                    return message.reply(`:wave: The leave message is currently set to ${message.settings.welcome.leaveMessage}`);
                 }
             } else {
                 // Ignore args[0] & join any text after the fact - Assign as "msg"
@@ -121,17 +124,17 @@ module.exports = {
                 // Set the new leave message in the DB
                 await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.leaveMessage": msg });
                 // Send a confirmation message
-                message.confirmation(`The leave message was set to ${msg}`);
+                message.confirmationReply(`The leave message was set to ${msg}`);
             }
         } else if (args[0].toLowerCase() === "dm") {
             // If no dm is specified...
             if (!args[1]) {
                 if (!message.settings.welcome.joinMessage) {
                     // If there is no welcome dm, return such
-                    return message.channel.send(":wave: The join DM is not currently set");
+                    return message.reply(":wave: The join DM is not currently set");
                 } else {
                     // Return the welcome dm
-                    return message.channel.send(`:wave: The join DM is currently set to ${message.settings.welcome.userMessage}`);
+                    return message.reply(`:wave: The join DM is currently set to ${message.settings.welcome.userMessage}`);
                 }
             } else {
                 // Ignore args[0] & join any text after the fact - Assign as "msg"
@@ -139,10 +142,10 @@ module.exports = {
                 // Set the new welcome dm in the DB
                 await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.userMessage": msg });
                 // Send a confirmation message
-                message.confirmation(`The join DM was set to ${msg}`);
+                message.confirmationReply(`The join DM was set to ${msg}`);
             }
         } else {
-            return message.error("Valid options are: `channel`, `join-msg`, `leave-msg` and `dm`. To view all settings, run the command with no options.");
+            return message.errorReply("Valid options are: `channel`, `join-msg`, `leave-msg` and `dm`. To view all settings, run the command with no options.");
         }
 
     }

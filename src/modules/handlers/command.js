@@ -172,3 +172,33 @@ exports.unload = (bot, command) => {
         }
     });
 };
+
+/**
+ * Register all commands
+ * 
+ * @param {Object} bot The client which is used to transact between this app & Discord
+ * 
+ * @returns {Promise.<Boolean>} Returns true if the commands registered successfully
+ */
+exports.register = (bot) => {
+    return new Promise((resolve, reject) => {
+        const arr = [];
+
+        for (const data of bot.commands.array()) {
+            if (data.slash?.enabled) {
+                arr.push({
+                    name: data.info.name,
+                    description: data.info.description,
+                    options: data.slash?.opts ?? []
+                });
+            }
+        }
+    
+        // Set the guild commands
+        bot.application.commands.set(arr).then(() => {
+            resolve(true);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+};

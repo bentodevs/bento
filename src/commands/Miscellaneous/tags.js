@@ -88,7 +88,7 @@ module.exports = {
         if (args[0].toLowerCase() == "list") {
             // If the guild doesn't have any tags return an error
             if (!guildTags.length)
-                return message.error("This guild doesn't have any tags!");
+                return message.errorReply("This guild doesn't have any tags!");
 
             // Sort the tags
             const sorted = guildTags.sort((a, b) => b.lastModified - a.lastModified);
@@ -107,7 +107,7 @@ module.exports = {
                 page = args[1] -= 1;
             // If the page doesn't exist return an error
             if (!pages[page])
-                return message.error("You didn't specify a valid page!");
+                return message.errorReply("You didn't specify a valid page!");
 
             // Format the description
             const description = pages[page].map(m => `**Name:** \`${m.name}\` | **Last Modified:** ${format(m.lastModified, "PPp")} (${formatDistance(m.lastModified, Date.now(), { addSuffix: true })})`);
@@ -120,7 +120,7 @@ module.exports = {
                 .setDescription(description.join("\n"));
             
             // Send the embed
-            message.channel.send({ embeds: [embed] });
+            message.reply({ embeds: [embed] });
         } else if (!args[1]) {
             // Get the tag name and try to find the tag in the database
             const name = args[0].toLowerCase(),
@@ -128,7 +128,7 @@ module.exports = {
 
             // If the tag wasn't found return an error
             if (!tag)
-                return message.error("You didn't specify a valid tag!");
+                return message.errorReply("You didn't specify a valid tag!");
 
             // Build the embed
             const embed = new MessageEmbed()
@@ -141,7 +141,7 @@ module.exports = {
                 .setThumbnail("https://i.imgur.com/LCbKsrE.png");
 
             // Send a message with the tag content
-            message.channel.send({ embeds: [embed] });
+            message.reply({ embeds: [embed] });
         } else if (args[1]?.toLowerCase() == "delete") {
             // Get the tag name and try to find the tag in the database
             const name = args[0].toLowerCase(),
@@ -149,19 +149,19 @@ module.exports = {
 
             // If the tag wasn't found return an error
             if (!tag)
-                return message.error("You didn't specify a valid tag!");
+                return message.errorReply("You didn't specify a valid tag!");
 
             // Delete the tag
             await tags.findOneAndDelete({ guild: message.guild.id, name: name });
 
             // Send a confirmation message
-            message.confirmation(`The tag **${name}** was successfully deleted!`);
+            message.confirmationReply(`The tag **${name}** was successfully deleted!`);
         } else if (args[1]?.toLowerCase() == "perms") {
             // TODO: [BOT-6] Tag Permissions
         } else {
             // If the guild is at the max of 50 tags return an error
             if (guildTags.size >= 50)
-                return message.error("This guild has reached the limit of 50 tags!");
+                return message.errorReply("This guild has reached the limit of 50 tags!");
 
             // Grab the tag name, check if a tag with the name already exists and grab the tag content
             const name = args[0].toLowerCase(),
@@ -170,7 +170,7 @@ module.exports = {
 
             // If a command or alias already exists with the tag name return an error
             if (bot.commands.has(name) || bot.aliases.has(name))
-                return message.error("The tag you specified is already being used as a command or alias! You cannot use it as a tag.");
+                return message.errorReply("The tag you specified is already being used as a command or alias! You cannot use it as a tag.");
 
             // Prepare the tag data object
             const object = {
@@ -184,12 +184,12 @@ module.exports = {
                 // If the tag already exists update the tag content
                 await tags.findOneAndUpdate({ guild: message.guild.id, name: name }, object);
                 // Send a confirmation message
-                message.confirmation(`Successfully updated the tag **${name}** with the new content!`);
+                message.confirmationReply(`Successfully updated the tag **${name}** with the new content!`);
             } else {
                 // If the tag doesn't exist create the db object
                 tags.create(object);
                 // Send a confirmation message
-                message.confirmation(`Successfully created the tag **${name}**!`);
+                message.confirmationReply(`Successfully created the tag **${name}**!`);
             }
         }
 

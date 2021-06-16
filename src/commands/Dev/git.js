@@ -29,7 +29,7 @@ module.exports = {
     run: async (bot, message, args) => {
 
         // Send a status message
-        const msg = await message.loading(`Running the command: \`git ${args.join(" ")}\``);
+        const msg = await message.loadingReply(`Running the command: \`git ${args.join(" ")}\``);
 
         // Run the command
         exec(`git ${args.join(" ")}`, (err, stdout) => {
@@ -42,7 +42,7 @@ module.exports = {
                 // Delete the status message
                 msg.delete().catch(() => {});
                 // Send the output
-                message.channel.send(stdout, { code: "xl", split: { maxLenght: "1800" } });
+                message.reply({ content: stdout, code: "xl", split: { maxLenght: "1800" } });
             }
         });
 

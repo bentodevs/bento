@@ -44,14 +44,14 @@ module.exports = {
 
         // Check if the user used any special characters
         if (specialChrs.test(args.join(" ")))
-            return message.error("Please don't include any special characters in your search query!");
+            return message.errorReply("Please don't include any special characters in your search query!");
 
         // Fetch the weather from the API
         const weather = await getWeather(args.join(" "));
 
         // If no data was returned, return an error
         if (!weather)
-            return message.error("You didn't specify a valid city!");
+            return message.errorReply("You didn't specify a valid city!");
         
         // Define the clock var
         let clock = "";

@@ -115,7 +115,7 @@ exports.checkSelf = async (message, cmd) => {
         for (const data of cmd.perms.self) {
             // If the bot doesn't have one of the permissions return an error and true
             if (!message.channel.permissionsFor(message.guild.me).has(data)) {
-                await message.error(`I am lacking the permission \`${data}\`!`)
+                await message.errorReply(`I am lacking the permission \`${data}\`!`)
                     .catch(() => {});
 
                 return true;

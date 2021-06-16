@@ -1,5 +1,6 @@
 // Import Dependencies
 const ora = require("ora");
+const { register } = require("../modules/handlers/command");
 const { init } = require("../modules/handlers/task");
 
 module.exports = async bot => {
@@ -21,6 +22,8 @@ module.exports = async bot => {
 
     // Set the bots status
     await bot.user.setPresence({ activity: { name: `${bot.config.general.prefix}help | r2-d2.dev`, type: "WATCHING" }, status: "online"});
+    // Register all the slash commands
+    await register(bot);
 
     // Stop and update the ready message
     rdyMsg.stopAndPersist({

@@ -57,7 +57,7 @@ module.exports = {
 
         // If the command or category is dev only return an error
         if ((command?.info.category.toLowerCase() == "dev" || category == "dev") && !bot.config.general.devs.includes(message.author.id))
-            return message.error("You didn't specify a valid command or category!");
+            return message.errorReply("You didn't specify a valid command or category!");
 
         if ((!args?.[0] && !message.options?.get("command")?.value) || (args?.[0]?.toLowerCase() == "all" || message.options?.get("command")?.value == "all")) {
             // Grab all the commands
@@ -105,11 +105,11 @@ module.exports = {
                 .then(() => {
                     // If the command was ran in a guild send a confirmation message
                     if (message.guild)
-                        message.confirmation("Sent you a DM with a list of my commands!");
+                        message.confirmationReply("Sent you a DM with a list of my commands!");
                 })
                 .catch(() => {
                     // If something went wrong return an error specifying the user most likely has their DM's disabled
-                    message.error("Something went wrong, you most likely have your DM's disabled!");
+                    message.errorReply("Something went wrong, you most likely have your DM's disabled!");
                 });
         } else if (command) {
             // Define the description var
@@ -252,7 +252,7 @@ module.exports = {
             message.reply({ embeds: [embed] });
         } else {
             // Send an error
-            message.error("You didn't specify a valid command or category!");
+            message.errorReply("You didn't specify a valid command or category!");
         }
 
     }

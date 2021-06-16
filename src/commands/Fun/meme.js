@@ -38,7 +38,7 @@ module.exports = {
     run: async (bot, message) => {
 
         // Send a status message & get a random meme
-        const msg = await message.loading("Requesting meme..."),
+        const msg = await message.loadingReply("Requesting meme..."),
         meme = await getMeme();
 
         // Build the embed
@@ -50,7 +50,7 @@ module.exports = {
 
         // Delete the status message & send the embed
         msg.delete().catch(() => {});
-        message.channel.send({ embeds: [embed] });
+        message.reply({ embeds: [embed] });
 
     },
 

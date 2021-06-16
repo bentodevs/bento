@@ -49,7 +49,7 @@ module.exports = {
 
         // Return an error if nothing was found
         if (!member) 
-            return message.error("You didn't specify a valid user!");
+            return message.errorReply("You didn't specify a valid user!");
 
         // Create the MessageEmbed object.
         const embed = new MessageEmbed();

@@ -42,14 +42,14 @@ module.exports = {
                         // Set the role to null in the DB
                         await settings.findOneAndUpdate({ _id: message.guild.id }, { "roles.mute": null });
                         // Return error message
-                        return message.error(`No role is currently set as the mute role! Set one up using \`${message.settings.general.prefix}setup mute [role]\``);
+                        return message.errorReply(`No role is currently set as the mute role! Set one up using \`${message.settings.general.prefix}setup mute [role]\``);
                     } else {
                         // Return the mute role
-                        return message.confirmation(`The mute role is currently set to ${message.guild.roles.cache.get(message.settings.roles.mute)}`);
+                        return message.confirmationReply(`The mute role is currently set to ${message.guild.roles.cache.get(message.settings.roles.mute)}`);
                     }
                 } else {
                     // Send loading message
-                    const msg = await message.loading("Attempting to create the muted role... *This may take some time*");
+                    const msg = await message.loadingReply("Attempting to create the muted role... *This may take some time*");
 
                     // Create the muted role, set color and provide creation reason
                     const muteRole = await message.guild.roles.create({
@@ -81,10 +81,10 @@ module.exports = {
                         // Set the mute role to null in the DB
                         await settings.findOneAndUpdate({ _id: message.guild.id }, { "roles.mute": null });
                         // Return a confirmation message
-                        return message.confirmation(`The mute role has been cleared!`);
+                        return message.confirmationReply(`The mute role has been cleared!`);
                     } else {
                         // Return error message if no role existed to clear
-                        return message.error("There was no mute role for me to clear!");
+                        return message.errorReply("There was no mute role for me to clear!");
                     }
                 } else {
                     // Fetch the role from the guild
@@ -93,21 +93,21 @@ module.exports = {
                     if (role) {
                         // If the role is higher than, or equal to, the bot's highest role then send an error
                         if (message.guild.me.roles.highest.position <= role.position)
-                            return message.error("That role is higher than, or equal to, my highest role!");
+                            return message.errorReply("That role is higher than, or equal to, my highest role!");
                         // If the role is higher than, or equal to, the user's highest role then send an error
                         if (message.member.roles.highest.position <= role.position)
-                            return message.error("That role is higher than, or equal to, your highest role!");
+                            return message.errorReply("That role is higher than, or equal to, your highest role!");
                         // If the role is already in use then send an error
                         if (message.settings.roles.mute === role.id)
-                            return message.error("That role is already being used for the mute role!");
+                            return message.errorReply("That role is already being used for the mute role!");
                         
                         // Set the role in the DB
                         await settings.findOneAndUpdate({ _id: message.guild.id }, { "roles.mute": role.id });
                         // Send a confirmation message with the role
-                        return message.confirmation(`The mute role has been set to ${role}`);
+                        return message.confirmationReply(`The mute role has been set to ${role}`);
                     } else {
                         // If there was no role returned, then throw an error
-                        return message.error("You did not specify a valid role!");
+                        return message.errorReply("You did not specify a valid role!");
                     }
                 }
             }
@@ -116,33 +116,33 @@ module.exports = {
                 if (message.settings.general.command_channel) {
                     if (!message.guild.channels.cache.has(message.settings.general.command_channel)) {
                         await settings.findOneAndUpdate({ _id: message.guild.id }, { "general.command_channel": null });
-                        return message.error(`No channel is currently set as the command channel! Set one up using \`${message.settings.general.prefix}setup cmdchannel <channel>\``);
+                        return message.errorReply(`No channel is currently set as the command channel! Set one up using \`${message.settings.general.prefix}setup cmdchannel <channel>\``);
                     }
 
-                    return message.confirmation(`The command channel is currently set to ${message.guild.channels.cache.get(message.settings.general.command_channel)}`);
+                    return message.confirmationReply(`The command channel is currently set to ${message.guild.channels.cache.get(message.settings.general.command_channel)}`);
                 } else {
-                    return message.error(`No channel is currently set as the command channel! Set one up using \`${message.settings.general.prefix}setup cmdchannel <channel>\``);
+                    return message.errorReply(`No channel is currently set as the command channel! Set one up using \`${message.settings.general.prefix}setup cmdchannel <channel>\``);
                 }
             } else {
                 if (args[1].toLowerCase() === "disable") {
                     if (!message.settings.general.command_channel) {
-                        return message.error(`There is no command channel currently set!`);
+                        return message.errorReply(`There is no command channel currently set!`);
                     } else {
                         await settings.findByIdAndUpdate({ _id: message.guild.id }, { "general.command_channel": null });
-                        return message.confirmation(`Successfully reset the command channel!`);
+                        return message.confirmationReply(`Successfully reset the command channel!`);
                     }
                 } else {
                     const channel = await getChannel(message, args.slice(1).join(" "), true);
 
                     if (!channel)
-                        return message.error("I could not find a channel with those details!");
+                        return message.errorReply("I could not find a channel with those details!");
                     
                     await settings.findByIdAndUpdate({ _id: message.guild.id }, { "general.command_channel": channel.id });
-                    return message.confirmation(`The command channel is now set to ${channel}`);
+                    return message.confirmationReply(`The command channel is now set to ${channel}`);
                 }
             }
         } else {
-            message.error(`It looks like you didn't provide a valid option! Valid options are: \`${options.join("`, `")}\``);
+            message.errorReply(`It looks like you didn't provide a valid option! Valid options are: \`${options.join("`, `")}\``);
         }
     }
 };

@@ -48,7 +48,7 @@ module.exports = {
 
         // If the response isn't "True" return an error
         if (json.Response !== "True")
-            return message.error("A film/show could not be found with that name! Make sure your search is accurate and try again!");
+            return message.errorReply("A film/show could not be found with that name! Make sure your search is accurate and try again!");
 
         // Define the msg var
         let msg = "";

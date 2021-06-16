@@ -35,7 +35,7 @@ module.exports = {
 
         if (option == "event") {
             // Send a status message
-            const msg = await message.loading(`Attempting to load the \`${args[1].toLowerCase()}\` event.`);
+            const msg = await message.loadingReply(`Attempting to load the \`${args[1].toLowerCase()}\` event.`);
 
             // Attempt to load the event
             event.load(bot, args[1]).then((res) => {
@@ -49,7 +49,7 @@ module.exports = {
             });
         } else if (option == "task") {
             // Send a status message
-            const msg = await message.loading(`Attempting to load the \`${args[1].toLowerCase()}\` task.`);
+            const msg = await message.loadingReply(`Attempting to load the \`${args[1].toLowerCase()}\` task.`);
 
             // Attempt to load the task
             task.load(bot, args[1]).then((res) => {
@@ -68,13 +68,13 @@ module.exports = {
 
             // If no command was specified return an error
             if (!cmd)
-                return message.error("You didn't specify a command!");
+                return message.errorReply("You didn't specify a command!");
             // If no category was specified return an error
             if (!category)
-                return message.error("You didn't specify a category!");
+                return message.errorReply("You didn't specify a category!");
 
             // Send the status message
-            const msg = await message.loading(`Attempting to load \`${cmd}\`!`);
+            const msg = await message.loadingReply(`Attempting to load \`${cmd}\`!`);
 
             // Attempt to load the command
             command.load(bot, cmd, category).then((props) => {

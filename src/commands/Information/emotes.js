@@ -56,7 +56,7 @@ module.exports = {
             page = args[0] -= 1;
         // If the page doesn't exist return an error
         if (!pages[page])
-            return message.error("You didn't specify a valid page!");
+            return message.errorReply("You didn't specify a valid page!");
 
         // Prepare the description
         const description = pages[page].map(a => `${a} | **Name:** ${a.name} | **ID:** ${a.id} `);

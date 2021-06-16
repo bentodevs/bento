@@ -46,7 +46,7 @@ module.exports = {
 
         // If the guild has no bans return an error
         if (!bans.length || !bans)
-            return message.error("This guild doesn't have any bans!");
+            return message.errorReply("This guild doesn't have any bans!");
 
         // Page Vars
         const pages = [];
@@ -62,7 +62,7 @@ module.exports = {
             page = args[0] - 1;
         // If the page doesn't exist retrun an error
         if (!pages[page])
-            return message.error("You didn't specify a valid page!");
+            return message.errorReply("You didn't specify a valid page!");
 
         // Format the data
         const description = pages[page].map(b => `\`${b.user.username}#${b.user.discriminator}\` | **ID:** ${b.user.id}`);

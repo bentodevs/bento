@@ -50,19 +50,19 @@ module.exports = {
 
         // If no member was found return an error
         if (!member)
-            return message.error("You didn't specify a valid member!");
+            return message.errorReply("You didn't specify a valid member!");
         // If the member is a bot dev return an error
         if (bot.config.general.devs.includes(member.id))
-            return message.error("You cannot use this command on that member!");
+            return message.errorReply("You cannot use this command on that member!");
         // If the member is a bot return an error
         if (member.user.bot)
-            return message.error("You cannot use this command on bots!");
+            return message.errorReply("You cannot use this command on bots!");
         // If the members display name is shorter than 2 characters return an error
         if (member.displayName.length < 2)
-            return message.error("The name of the member you specified is shorter than 2 characters!");
+            return message.errorReply("The name of the member you specified is shorter than 2 characters!");
         // If no message was specified return an error
         if (!args[1])
-            return message.error("You didn't specify a message to send!");
+            return message.errorReply("You didn't specify a message to send!");
 
         // Delete the authors message
         await message.delete().catch(() => {});
@@ -80,7 +80,7 @@ module.exports = {
             // Log the error
             console.error(err);
             // Send an error message
-            message.error(`Something went wrong: \`${err.message}\`!`);
+            message.errorReply(`Something went wrong: \`${err.message}\`!`);
         });
 
     },
