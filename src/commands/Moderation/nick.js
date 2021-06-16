@@ -29,6 +29,20 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "user",
+            type: "USER",
+            description: "The user you wish to mute.",
+            required: true
+        }, {
+            name: "nickname",
+            type: "STRING",
+            description: "Nickname you wish to set (Do not enter anything to remove the nickname)",
+            required: false
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -67,6 +81,43 @@ module.exports = {
             // Send a confirmation message
             message.confirmation(`Set **${member.user.username}**'s nickname to ${member}!`);
         }
+    },
 
+    run_interaction: async (bot, interaction) => {
+        // Get the member and the nick
+        const user = interaction.options.get("user"),
+        nick = interaction.options.get("nickname")?.value;
+
+        // If an invalid member was specified return an error
+        if (!user.member)
+            return interaction.error("You didn't specify a valid member!");
+
+        // TODO: [BOT-35] Nickname permission check
+
+        // If the members role is higher than or equal to the user running the command return an error
+        if (user.member.roles.highest.position >= interaction.member.roles.highest.position && user.member.id !== interaction.member.id)
+            return interaction.error("You don't have permissions to change that users nickname!");
+        // If the bot can't manage the user return an error
+        if (!user.member.manageable)
+            return interaction.error(`I don't have permissions to set ${user.member}'s nickname!`);
+        // If the nickname is longer than 32 characters return an error
+        if (nick?.length > 32)
+            return interaction.error("Nicknames cannot be longer than 32 characters!");
+
+        if (!nick) {
+            // If the user doesn't have a nickname return an error
+            if (!user.member.nickname)
+                return interaction.error("This user doesn't have a nickname to remove!");
+
+            // Remove the users nickname
+            await user.member.setNickname(user.user.username);
+            // Send a confirmation message
+            interaction.confirmation(`Removed ${user.member}'s nickname!`);
+        } else {
+            // Set the users nickname
+            await user.member.setNickname(nick);
+            // Send a confirmation message
+            interaction.confirmation(`Set **${user.user.username}**'s nickname to ${user.member}!`);
+        }
     }
 };
