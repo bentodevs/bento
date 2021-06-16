@@ -67,10 +67,9 @@ module.exports = {
         // Grab the channel
         const channel = interaction.options.get("channel")?.channel || interaction.channel;
 
+        // If the channel is not a text channel, then return an error
         if (channel.type !== "text")
             return interaction.error("You did not specify a text channel!");
-        
-        console.log(interaction.options.get("channel")?.channel);
 
         // Check if the group has permissions to send messages or not
         if (channel.permissionsFor(interaction.guild.id).has("SEND_MESSAGES")) {
