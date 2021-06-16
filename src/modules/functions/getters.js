@@ -211,3 +211,33 @@ exports.getTag = async (tag, message, args) => {
     // Return true
     return true;
 };
+
+/**
+ * Check a string for emojis
+ * 
+ * @param {Object} guild The guild object with all the relevant data
+ * @param {String} string The string that needs to be checked for emojis
+ * 
+ * @returns {Object} Returns an object with the emoji info if it found one, otherwise returns false.
+ */
+exports.getEmoji = (guild, string) => {
+    // 1. Check the string for unicode emojis
+    // 2. Check the string for discord emojis
+    const unicode = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g.exec(string);
+    const discord = /<a?:(\w+):(\d+)>/gi.exec(string);
+
+    // If the string contains a unicode emoji return it
+    if (unicode)
+        return { emoji: unicode[0], type: "unicode" };
+
+    // If the string contains a discord emoji get the discord emoji and return it
+    if (discord) {
+        const emoji = guild.emojis.cache.get(discord[2]);
+
+        if (emoji)
+            return { emoji: emoji, type: "discord" };
+    }
+
+    // If nothing was found return false
+    return false;
+};
