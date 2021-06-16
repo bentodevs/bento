@@ -104,6 +104,11 @@ module.exports = {
     },
 
     run_interaction: async (bot, interaction) => {
+
+        // 1. Fetch all guild bans
+        // 2. Get the user specified
+        // 3. Get the reason for the unban, or default if not specified
+        // 4. Get the case id
         const bans = await interaction.guild.bans.fetch(),
         user = interaction.options.get("user"),
         reason = interaction.options.get("reason")?.value || "No reason specified",
