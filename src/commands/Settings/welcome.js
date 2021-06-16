@@ -25,10 +25,10 @@ module.exports = {
         \`{server}\` - The Server's name
         \`{count}\` - The member's guild member number (E.g. The number in which they joined at)`,
         options: [
-            "`channel` - Sets the channel the join/leave message should be sent to",
-            "`join-msg` - The message to send when a user joins the server",
-            "`leave-msg` - The message to send when a user leaves the server",
-            "`dm` - The message to DM the user when they join the guild"
+            "`channel <channel>` - Sets the channel the join/leave message should be sent to",
+            "`join-msg <message>` - The message to send when a user joins the server",
+            "`leave-msg <message>` - The message to send when a user leaves the server",
+            "`dm <message>` - The message to DM the user when they join the guild"
         ]
     },
     perms: {
@@ -43,13 +43,16 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: false,
+        opts: []
+    },
 
     run: async (bot, message, args) => {
 
         // TODO: Add proper commenting to welcome file
 
         if (!args[0]) {
-            
             // If the welcome channel is no longer in the guild cache, then remove it
             if (message.settings.welcome.channel && !message.guild.channels.cache.get(message.settings.welcome.channel)) {
                 await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.channel": null });
