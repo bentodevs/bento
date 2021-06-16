@@ -174,7 +174,7 @@ module.exports = {
             }
 
             // Send the message
-            message.channel.send(msg);
+            message.reply(msg);
         } else if (member) {
             if (message.settings.blacklist.users.includes(member.id)) {
                 // Remove the user from the blacklist

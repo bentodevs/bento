@@ -24,8 +24,9 @@ module.exports = async (bot, channel) => {
             .setDescription(stripIndents`**Channel:** ${channel} (\`${channel.id}\`)
             **Channel Type:** ${channel.type.toTitleCase()}`)
             .setFooter(`Created at`)
-            .setTimestamp(channel.createdTimestamp)
+            .setTimestamp(channel.createdTimestamp);
         
-        log.send({ embeds: [embed] })
+        log.send({ embeds: [embed] });
     }
-}
+    
+};

@@ -63,7 +63,7 @@ module.exports = {
                                 .setTimestamp()
                                 .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: 'png' }));
                             
-                            message.channel.send({ embeds: [embed] });
+                            message.reply({ embeds: [embed] });
                         })
                         .catch(e => message.error(`I encountered an error whilst getting the requested stats: \`${e.message}\``));
                 })
@@ -92,7 +92,7 @@ module.exports = {
                                 .setTimestamp()
                                 .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: 'png' }));
                             
-                            message.channel.send({ embeds: [embed] });
+                            message.reply({ embeds: [embed] });
                         })
                         .catch(e => message.error(`I encountered an error whilst getting the requested stats: \`${e.message}\``));
                 })

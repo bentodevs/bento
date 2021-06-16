@@ -75,7 +75,7 @@ module.exports = {
             <:BlobSaluteBan:852647544558452756> ${bans.size <= 0 ? "**0** bans" : `**${bans.size.toLocaleString()}**`} ${bans.size <= 0 ? "" : bans.size > 1 ? "bans" : "ban"} *(${banMessage})*`);
 
         // Send the embed
-        message.channel.send({ embeds: [embed] });
+        message.reply({ embeds: [embed] });
     },
 
     run_interaction: async (bot, interaction) => {

@@ -124,7 +124,7 @@ module.exports = {
                 .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ format: "png", dynamic: true }));
             
             // Send embed
-            message.channel.send({ embeds: [embed] });
+            message.reply({ embeds: [embed] });
         } else if (args[0].toLowerCase() === "filter") {
             if (args[1].toLowerCase() === "enable") {
                 // Enable filter & send confirmation

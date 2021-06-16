@@ -103,7 +103,7 @@ module.exports = {
                 .setDescription(formatted.join("\n"))
                 .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
             
-            message.channel.send({ embeds: [embed] });
+            message.reply({ embeds: [embed] });
         } else if (!isNaN(args[0])) {
             
             // We are now presuming the number provided is a Case ID...
@@ -131,7 +131,7 @@ module.exports = {
                 .setFooter(`Requested by ${message.author.tag}`);
             
             // Send the embed
-            message.channel.send({ embeds: [embed] });
+            message.reply({ embeds: [embed] });
             
         } else {
             // Try and fetch a guild member from args[0]
@@ -176,7 +176,7 @@ module.exports = {
                 .setDescription(formatted.join("\n"))
                 .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
             
-            message.channel.send({ embeds: [embed] });
+            message.reply({ embeds: [embed] });
         }
     },
 

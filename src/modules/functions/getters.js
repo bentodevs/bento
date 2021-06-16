@@ -206,7 +206,7 @@ exports.getTag = async (tag, message, args) => {
     }
 
     // Send the tag
-    await message.channel.send(content);
+    await message.reply(content);
 
     // Return true
     return true;

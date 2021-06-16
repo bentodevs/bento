@@ -98,7 +98,7 @@ module.exports = {
                     });
             } else {
                 // Send the reminders
-                message.channel.send(msg);
+                message.reply(msg);
             }
         } else if (opt == "remove") {
             // Get the remind data and the reminder id

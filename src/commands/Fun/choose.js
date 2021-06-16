@@ -47,7 +47,7 @@ module.exports = {
         const choice = Math.floor((Math.random() * options.length));
 
         // Send the chosen option
-        message.channel.send(`🤔 I choose ${options[choice].trim()}`);
+        message.reply(`🤔 I choose ${options[choice].trim()}`);
 
     },
 

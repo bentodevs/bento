@@ -62,11 +62,11 @@ module.exports = {
 
         // Check who won
         if (userPick == botPick) {
-            return message.channel.send(`I chose **${formatted[botPick]}**, its a draw!`);
+            return message.reply(`I chose **${formatted[botPick]}**, its a draw!`);
         } else if (botPick > userPick || botPick == 0 && userPick == 2) {
-            message.channel.send(`I chose **${formatted[botPick]}**, I win!`);
+            message.reply(`I chose **${formatted[botPick]}**, I win!`);
         } else {
-            message.channel.send(`I chose **${formatted[botPick]}**, you win!`);
+            message.reply(`I chose **${formatted[botPick]}**, you win!`);
         }
                
     },

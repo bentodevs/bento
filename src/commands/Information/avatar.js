@@ -52,7 +52,7 @@ module.exports = {
             .setImage(target.displayAvatarURL({ format: "png", dynamic: true, size: 1024}));
 
         // Send the embed
-        message.channel.send({ embeds: [embed] });
+        message.reply({ embeds: [embed] });
 
     }, 
 

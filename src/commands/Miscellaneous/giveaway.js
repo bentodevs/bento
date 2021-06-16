@@ -152,7 +152,7 @@ module.exports = {
                 .setFooter(`${g.length} Total Giveaways | Page ${page + 1} of ${pages.length}`);
 
             // Send the embed
-            message.channel.send({ embeds: [embed] });
+            message.reply({ embeds: [embed] });
         } else if (option == "start") {
             // Define the filter and message collector options
             const filter = m => m.author.id == message.author.id,
@@ -427,7 +427,7 @@ module.exports = {
             }
 
             // Send the new winners
-            message.channel.send(`The giveaway in ${message.guild.channels.cache.get(g.guild.channel_id) ? message.guild.channels.cache.get(g.guild.channel_id) : "<deleted channel>"} was re-rolled. The new winner(s) are ${arr.join(", ")}!`);
+            message.reply(`The giveaway in ${message.guild.channels.cache.get(g.guild.channel_id) ? message.guild.channels.cache.get(g.guild.channel_id) : "<deleted channel>"} was re-rolled. The new winner(s) are ${arr.join(", ")}!`);
             message.guild.channels.cache.get(g.guild.channel_id)?.send(`🎉 The giveaway was re-rolled - The new winner(s) are ${arr.join(", ")}!`);
         } else {
             // Send an error message

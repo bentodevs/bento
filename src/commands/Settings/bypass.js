@@ -100,7 +100,7 @@ module.exports = {
                 msg += `\n${bot.config.emojis.group} The following roles bypass the command blacklist: ${roles.join(", ")}`;
 
             // Send the message
-            message.channel.send(msg);
+            message.reply(msg);
         } else {
             // Get the role
             const role = await getRole(message, args.join(" ")) || await getRole(message, args.join(" ").replace("+", ""));

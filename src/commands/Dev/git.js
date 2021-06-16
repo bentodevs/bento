@@ -42,7 +42,7 @@ module.exports = {
                 // Delete the status message
                 msg.delete().catch(() => {});
                 // Send the output
-                message.channel.send(stdout, { code: "xl", split: { maxLenght: "1800" } });
+                message.reply({ content: stdout, code: "xl", split: { maxLenght: "1800" } });
             }
         });
 

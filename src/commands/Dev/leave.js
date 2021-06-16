@@ -37,7 +37,7 @@ module.exports = {
             return message.error("You didn't specify a valid guild!");
 
         // Send a message asking if the user is sure
-        await message.channel.send(stripIndents`Are you sure you want me to leave \`${guild.name} (${guild.id})\`?
+        await message.reply(stripIndents`Are you sure you want me to leave \`${guild.name} (${guild.id})\`?
         
         Type \`y\` or \`yes\` to continue.`);
 

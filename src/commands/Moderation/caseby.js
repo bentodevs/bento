@@ -90,7 +90,7 @@ module.exports = {
             .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
         
         // Send the history embed
-        message.channel.send({ embeds: [embed] });
+        message.reply({ embeds: [embed] });
     },
 
     run_interaction: async (bot, interaction) => {

@@ -54,7 +54,7 @@ module.exports = {
         }
 
         // Send the completed message
-        message.channel.send(muteList, { split: { char: "\n" } });
+        message.reply(muteList, { split: { char: "\n" } });
     },
 
     run_interaction: async (bot, interaction) => {

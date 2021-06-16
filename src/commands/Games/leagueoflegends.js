@@ -61,7 +61,7 @@ module.exports = {
             return message.error("You didn't provide any summoner name!");
         
         // Send a loading message & assign it to msg
-        const msg = await message.loading(`Fetching the League of Legends profile for \`${args.splice(1).join("")}\``);
+        const msg = await message.loadingReply(`Fetching the League of Legends profile for \`${args.splice(1).join("")}\``);
         
         // Fetch the league summoner data
         const data = await getLeagueSummoner(args[0], args.splice(1).join());
@@ -102,7 +102,7 @@ module.exports = {
         // Delete the loading message
         msg.delete().catch(() => { });
         // Send the embed
-        message.channel.send({ embeds: [embed] });
+        message.reply({ embeds: [embed] });
 
     },
 

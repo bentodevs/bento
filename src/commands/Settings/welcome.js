@@ -67,20 +67,20 @@ module.exports = {
             :speech_balloon: The welcome DM is ${message.settings.welcome.userMessage ? `currently set to: ${message.settings.welcome.userMessage}` : "not currently set"}`;
 
             // Send the welcome settings message
-            message.channel.send(msg);
+            message.reply(msg);
         } else if (args[0].toLowerCase() === "channel") {
             // If no channel is provided...
             if (!args[1]) {
                 if (!message.settings.welcome.channel) {
                     // If there is no channel set, return such
-                    return message.channel.send(`:books: The welcome channel is not currently set`);
+                    return message.reply(`:books: The welcome channel is not currently set`);
                 } else if (!message.guild.channels.cache.get(message.settings.welcome.channel)) {
                     // If the guild doesn't have the channel in settings, set settings to null & return there is no channel set
                     await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.channel": null });
-                    return message.channel.send(":books: The welcome channel is not currently set");
+                    return message.reply(":books: The welcome channel is not currently set");
                 } else {
                     // Return the channel which is currently the welcome channel
-                    return message.channel.send(`:books: The welcome channel is currently set to ${message.guild.channels.cache.get(message.settings.welcome.channel)}`);
+                    return message.reply(`:books: The welcome channel is currently set to ${message.guild.channels.cache.get(message.settings.welcome.channel)}`);
                 }
             } else {
                 // Grab the Channel the user specifies from Discord
@@ -95,10 +95,10 @@ module.exports = {
             if (!args[1]) {
                 if (!message.settings.welcome.joinMessage) {
                     // If there is no welcome message, return such
-                    return message.channel.send(":wave: The welcome message is not currently set");
+                    return message.reply(":wave: The welcome message is not currently set");
                 } else {
                     // Return the welcome message
-                    return message.channel.send(`:wave: The welcome message is currently set to ${message.settings.welcome.joinMessage}`);
+                    return message.reply(`:wave: The welcome message is currently set to ${message.settings.welcome.joinMessage}`);
                 }
             } else {
                 // Ignore args[0] & join any text after the fact - Assign as "msg"
@@ -113,10 +113,10 @@ module.exports = {
             if (!args[1]) {
                 if (!message.settings.welcome.leaveMessage) {
                     // If there is no leave message, return such
-                    return message.channel.send(":wave: The leave message is not currently set");
+                    return message.reply(":wave: The leave message is not currently set");
                 } else {
                     // Return the leave message
-                    return message.channel.send(`:wave: The leave message is currently set to ${message.settings.welcome.leaveMessage}`);
+                    return message.reply(`:wave: The leave message is currently set to ${message.settings.welcome.leaveMessage}`);
                 }
             } else {
                 // Ignore args[0] & join any text after the fact - Assign as "msg"
@@ -131,10 +131,10 @@ module.exports = {
             if (!args[1]) {
                 if (!message.settings.welcome.joinMessage) {
                     // If there is no welcome dm, return such
-                    return message.channel.send(":wave: The join DM is not currently set");
+                    return message.reply(":wave: The join DM is not currently set");
                 } else {
                     // Return the welcome dm
-                    return message.channel.send(`:wave: The join DM is currently set to ${message.settings.welcome.userMessage}`);
+                    return message.reply(`:wave: The join DM is currently set to ${message.settings.welcome.userMessage}`);
                 }
             } else {
                 // Ignore args[0] & join any text after the fact - Assign as "msg"
