@@ -28,6 +28,20 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "user",
+            type: "USER",
+            description: "The user to add a role to/remove a role from.",
+            required: true
+        }, {
+            name: "role",
+            type: "ROLE",
+            description: "The role you want to add to/remove from the user",
+            required: true
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -67,6 +81,41 @@ module.exports = {
             // Send a confirmation message
             message.confirmation(`Added the ${role} role to ${member}!`);
         }
+    },
 
+    run_interaction: async (bot, interaction) => {
+
+        // Get the member and the nick
+        const user = interaction.options.get("user"),
+        role = interaction.options.get("role");
+
+        // If an invalid member was specified return an error
+        if (!user.member)
+            return interaction.error("You didn't specify a valid member!");
+        // If an invalid role was specified return an error
+        if (!role.role || role.role.id === interaction.guild.id)
+            return interaction.error("You didn't specify a valid role!");
+        // If the roles position is higher than or equal to the users highest role return an error
+        if (interaction.member.roles.highest.position <= role.role.position)
+            return interaction.error("That role is higher than or equal to your highest role!");
+        // If the roles position is higher than or equal to the bots highest role return an error
+        if (interaction.guild.me.roles.highest.position <= role.role.position)
+            return interaction.error("That role is higher than or equal to my highest role!");
+        // If the role is managed return an error
+        if (role.role.managed)
+            return interaction.error("The role you specified cannot be given to users! The role is either managed by an external service or is the Nitro Booster role!");
+
+        // If the use has the role remove it, if the user doesn't have it add it
+        if (user.member.roles.cache.get(role.role.id)) {
+            // Remove the role
+            await user.member.roles.remove(role.role);
+            // Send a confirmation message
+            interaction.confirmation(`Removed the ${role.role} role from ${user.member}!`);
+        } else {
+            // Add the role
+            await user.member.roles.add(role.role);
+            // Send a confirmation message
+            interaction.confirmation(`Added the ${role.role} role to ${user.member}!`);
+        }
     }
 };
