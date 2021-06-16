@@ -36,7 +36,7 @@ module.exports = {
         }, {
             name: "reason",
             type: "STRING",
-            description: "The reason for the ban.",
+            description: "The reason for the unban.",
             required: false
         }]
     },
