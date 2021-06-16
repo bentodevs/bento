@@ -33,6 +33,20 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "time",
+            type: "STRING",
+            description: "The slowmode interval (Use \"off\" to disable)",
+            required: true
+        }, {
+            name: "channel",
+            type: "CHANNEL",
+            description: "The chnannel to enable slowmode on",
+            required: false
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -59,5 +73,27 @@ module.exports = {
         // Send a confirmation message
         message.confirmationReply(time === 0 ? `Slowmode turned off for ${channel}!` : `Slowmode set for ${channel} to **${formatDuration(intervalToDuration({ start: 0, end: time * 1000 }), { delimiter: ", " })}**!`);
 
+    },
+
+    run_interaction: async (bot, interaction) => {
+        // Get the channel and the time
+        const channel = interaction.options.get("channel")?.channel || interaction.channel;
+        let time =  interaction.options.get("time")?.value;
+
+        // If the user specified "off" set the time to 0
+        if (time.toLowerCase() == "off"){
+            time = 0;
+        } else {
+            time = parseTime(time, "seconds");
+        }
+        
+        // If the time is higher than 6 hours return an error
+        if (time > 21600)
+            return interaction.error("The slow mode cannot be higher than 6 hours!");
+
+        // Set the rate limit
+        channel.setRateLimitPerUser(time, `[Issued by ${interaction.member.user.tag}]`);
+        // Send a confirmation message
+        interaction.confirmation(time === 0 ? `Slowmode turned off for ${channel}!` : `Slowmode set for ${channel} to **${formatDuration(intervalToDuration({ start: 0, end: time * 1000 }), { delimiter: ", " })}**!`);
     }
 };
