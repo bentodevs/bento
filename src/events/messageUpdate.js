@@ -12,6 +12,5 @@ module.exports = async (bot, oldMsg, newMsg) => {
     if (oldMsg.channel.type === "dm")
         return;
 
-    // Add the msg id to the editedMsgs collection
-    bot.editedMsgs.set(`${newMsg.guild.id}-${newMsg.channel.id}`, newMsg.id);
+    // Logging code
 };
