@@ -26,6 +26,20 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: true,
+        opts: [{
+            name: "user",
+            type: "USER",
+            description: "The user you wish to unban.",
+            required: true
+        }, {
+            name: "reason",
+            type: "STRING",
+            description: "The reason for the ban.",
+            required: false
+        }]
+    },
 
     run: async (bot, message, args) => {
 
@@ -86,6 +100,52 @@ module.exports = {
             message.confirmationReply(`Successfully unbanned **${user.tag}**! *(Case #${action})*`);
             // Log the unban
             punishmentLog(message, user, null, reason, "unban");
+        }
+    },
+
+    run_interaction: async (bot, interaction) => {
+        const bans = await interaction.guild.bans.fetch(),
+        user = interaction.options.get("user"),
+        reason = interaction.options.get("reason")?.value || "No reason specified",
+        action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1;
+
+        // Try to find the ban
+        const ban = bans.find(u => u.user.id == user.user.id);
+
+        if (ban) {
+            // Unban the user
+            interaction.guild.members.unban(user.user.id, `[Issued by ${interaction.member.user.tag}] ${reason}`);
+            // Send a confirmation message
+            interaction.confirmation(`Successfully unbanned **${user.user.tag}**! *(Case #${action})*`);
+
+            // Create the punishment record in the DB
+            await punishments.create({
+                id: action,
+                guild: interaction.guild.id,
+                type: "unban",
+                user: user.user.id,
+                moderator: interaction.member.id,
+                actionTime: Date.now(),
+                reason: reason
+            });
+
+            // Log the unban
+            punishmentLog(interaction, user, null, reason, "unban");
+        } else {            
+            // Find the ban in the preban database
+            const pban = await preban.findOne({ user: user.user.id });
+
+            // If the preban database doesn't have the user, and the user doesn't exist in the guild's bans
+            // then return an error
+            if (!pban && !ban)
+                return interaction.error("You didn't specify a banned user!");
+            
+            // Find the ban in the preban database
+            await preban.findOneAndDelete({ user: user.user.id });
+            // Send a confirmation message
+            interaction.confirmation(`Successfully unbanned **${user.user.tag}**! *(Case #${action})*`);
+            // Log the unban
+            punishmentLog(interaction, user, null, reason, "unban");
         }
     }
 };
