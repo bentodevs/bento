@@ -26,7 +26,7 @@ module.exports = async (bot, message) => {
     // If the channel is a command channel delete the message after 15 seconds
     if (message.settings.general.command_channel) {
         if (message.channel.id === message.settings.general.command_channel)
-            setTimeout(() => message.delete(), 15000);
+            setTimeout(() => message.delete().catch(() => {}), 15000);
     }
 
     // Return if the user is a bot
