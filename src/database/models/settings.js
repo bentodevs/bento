@@ -8,12 +8,13 @@ module.exports = model("settings", new Schema({
         default: {
             prefix: config.general.prefix, // Bot Prefix
             premium: false, // Whether the guild is a premium guild or not
-            timezone: "Europe/Amsterdam", // The timezone of the bot
+            timezone: "UTC", // The timezone of the bot
             disabled_categories: [], // List of disabled command categories
             disabled_commands: [], // List of disabled commands
             command_channel: null, // Auto-clearing command channel
             permission_message: true, // Whether the bot sends permission messages or not
-            permission_dms: true // Wether the bot sends permission dms or not
+            permission_dms: true, // Wether the bot sends permission dms or not
+            disabled_message: true // Wether the bot sends "command/category is disabled" messages or not
         }
     },
     welcome: {
