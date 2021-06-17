@@ -48,7 +48,7 @@ module.exports = {
 
             if (!fetched.filter(m => m.id !== msg.id).size) 
                 return msg.edit(`${bot.config.emojis.confirmation} Deleted \`${actualCount}\` messages!`)
-                    .then(m => m.delete({ timeout: 10000 })).catch(() => {});
+                    .then(m => setTimeout(() => m.delete().catch(() => {}), 10000));
 
             // Delete the messages
             await message.channel.bulkDelete(fetched.filter(m => m.id !== msg.id))
@@ -75,7 +75,7 @@ module.exports = {
 
             if (!fetched.filter(m => m.id !== msg.id).size) 
                 return msg.edit(`${bot.config.emojis.confirmation} Deleted \`${actualCount}\` messages!`)
-                    .then(m => m.delete({ timeout: 10000 })).catch(() => {});
+                    .then(m => setTimeout(() => m.delete().catch(() => {}), 10000));
 
             // Delete the remaining messages 
             await message.channel.bulkDelete(fetched.filter(m => m.id !== msg.id))

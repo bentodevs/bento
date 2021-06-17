@@ -99,7 +99,7 @@ exports.checkMesage = async (message, settings) => {
         for (const data of settings.moderation.filter?.entires) {
             if (message.content.toLowerCase().includes(data.toLowerCase())) {
                 message.delete().catch(() => { });
-                await message.reply(`you are unable to say that here!`).then(m => m.delete({ timeout: 5000 })).catch(() => { });
+                await message.reply(`you are unable to say that here!`).then(m => setTimeout(() => m.delete().catch(() => {}), 5000));
             }
         }
     }
@@ -108,7 +108,7 @@ exports.checkMesage = async (message, settings) => {
         const zalgo = new RegExp(/[\xCC\xCD]/);
         if (zalgo.test(message.content)) {
             message.delete().catch(() => { });
-            await message.reply(`you are unable to use Zalgo text here!`).then(m => m.delete({ timeout: 5000 })).catch(() => { });
+            await message.reply(`you are unable to use Zalgo text here!`).then(m => setTimeout(() => m.delete().catch(() => {}), 5000));
         }
     }
 
@@ -117,7 +117,7 @@ exports.checkMesage = async (message, settings) => {
 
         if (invite.test(message.content)) {
             message.delete().catch(() => { });
-            await message.reply(`you are unable to send invite links here!`).then(m => m.delete({ timeout: 5000 })).catch(() => { });
+            await message.reply(`you are unable to send invite links here!`).then(m => setTimeout(() => m.delete().catch(() => {}), 5000));
         }
     }
 
@@ -126,7 +126,7 @@ exports.checkMesage = async (message, settings) => {
 
         if (link.test(message.content)) {
             message.delete().catch(() => { });
-            await message.reply(`you are unable to send URLs here!`).then(m => m.delete({ timeout: 5000 })).catch(() => { });
+            await message.reply(`you are unable to send URLs here!`).then(m => setTimeout(() => m.delete().catch(() => {}), 5000));
         }
     }
 };
