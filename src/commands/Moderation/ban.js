@@ -1,6 +1,5 @@
 const { stripIndents } = require("common-tags");
-const { format } = require("date-fns-tz");
-const { utcToZonedTime } = require("date-fns-tz/fp");
+const { format, utcToZonedTime } = require("date-fns-tz");
 const preban = require("../../database/models/preban");
 const punishments = require("../../database/models/punishments");
 const { getMember, getUser } = require("../../modules/functions/getters");

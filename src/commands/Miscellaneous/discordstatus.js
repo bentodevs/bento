@@ -1,7 +1,6 @@
 const { stripIndents } = require("common-tags");
 const { parseISO } = require("date-fns");
-const { format } = require("date-fns-tz");
-const { utcToZonedTime } = require("date-fns-tz/fp");
+const { format, utcToZonedTime } = require("date-fns-tz");
 const { MessageEmbed } = require("discord.js");
 const { getDiscordStatus } = require("../../modules/functions/misc");
 

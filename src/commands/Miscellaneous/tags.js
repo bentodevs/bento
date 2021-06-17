@@ -1,6 +1,5 @@
 const { formatDistance } = require("date-fns");
-const { format } = require("date-fns-tz");
-const { utcToZonedTime } = require("date-fns-tz/fp");
+const { format, utcToZonedTime } = require("date-fns-tz");
 const { MessageEmbed } = require("discord.js");
 const tags = require("../../database/models/tags");
 

@@ -1,6 +1,5 @@
 const { formatDuration, intervalToDuration } = require("date-fns");
-const { format } = require("date-fns-tz");
-const { utcToZonedTime } = require("date-fns-tz/fp");
+const { format, utcToZonedTime } = require("date-fns-tz");
 const reminders = require("../../database/models/reminders");
 const { parseTime } = require("../../modules/functions/misc");
 
