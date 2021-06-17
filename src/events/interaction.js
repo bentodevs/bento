@@ -1,6 +1,7 @@
 const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
 const { getSettings, getPerms } = require("../database/mongo");
+const { checkBlacklist } = require("../modules/functions/moderation");
 const { checkPerms, checkSelf } = require("../modules/functions/permissions");
 
 module.exports = async (bot, interaction) => {
@@ -25,6 +26,10 @@ module.exports = async (bot, interaction) => {
 
         // Get the command
         const cmd = bot.commands.get(interaction.commandName);
+
+        // Check if the user is blacklisted
+        if (await checkBlacklist(interaction))
+            return;
 
         // If the command doesn't exist return an error
         if (!cmd)
