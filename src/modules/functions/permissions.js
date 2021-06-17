@@ -5,7 +5,7 @@ const { getRole } = require("./getters");
  * Check if the user has permissions to run the command
  * 
  * @param {Object} bot The client which is used to transact between this app & Discord
- * @param {Object} message The message object from which to get certain data (Such as guild ID, etc.)
+ * @param {Object} message The message (or interaction) object from which to get certain data (Such as guild ID, etc.)
  * @param {Object} permissions The permission data
  * @param {Object} cmd The command data 
  * 
@@ -91,7 +91,7 @@ exports.checkPerms = async (bot, message, permissions, cmd) => {
 /**
  * Check if the bot has permissions to run the command
  * 
- * @param {Object} message The message object from which to get certain data (Such as guild ID, etc.)
+ * @param {Object} message The message (or interaction) object from which to get certain data (Such as guild ID, etc.)
  * @param {Object} cmd The command information 
  * 
  * @returns {Promise.Boolean}
