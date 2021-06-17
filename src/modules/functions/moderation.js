@@ -1,5 +1,5 @@
 const { stripIndents } = require("common-tags");
-const { MessageEmbed } = require("discord.js");
+const { MessageEmbed, Permissions } = require("discord.js");
 const config = require("../../config");
 const settings = require("../../database/models/settings");
 const { log } = require("./logger");
@@ -99,7 +99,7 @@ exports.checkMesage = async (message, settings) => {
         for (const data of settings.moderation.filter?.entires) {
             if (message.content.toLowerCase().includes(data.toLowerCase())) {
                 message.delete().catch(() => { });
-                await message.reply(`you are unable to say that here!`).then(m => m.delete({ timeout: 5000 })).catch(() => { });
+                await message.reply(`you are unable to say that here!`).then(m => setTimeout(() => m.delete().catch(() => {}), 5000));
             }
         }
     }
@@ -108,7 +108,7 @@ exports.checkMesage = async (message, settings) => {
         const zalgo = new RegExp(/[\xCC\xCD]/);
         if (zalgo.test(message.content)) {
             message.delete().catch(() => { });
-            await message.reply(`you are unable to use Zalgo text here!`).then(m => m.delete({ timeout: 5000 })).catch(() => { });
+            await message.reply(`you are unable to use Zalgo text here!`).then(m => setTimeout(() => m.delete().catch(() => {}), 5000));
         }
     }
 
@@ -117,7 +117,7 @@ exports.checkMesage = async (message, settings) => {
 
         if (invite.test(message.content)) {
             message.delete().catch(() => { });
-            await message.reply(`you are unable to send invite links here!`).then(m => m.delete({ timeout: 5000 })).catch(() => { });
+            await message.reply(`you are unable to send invite links here!`).then(m => setTimeout(() => m.delete().catch(() => {}), 5000));
         }
     }
 
@@ -126,7 +126,7 @@ exports.checkMesage = async (message, settings) => {
 
         if (link.test(message.content)) {
             message.delete().catch(() => { });
-            await message.reply(`you are unable to send URLs here!`).then(m => m.delete({ timeout: 5000 })).catch(() => { });
+            await message.reply(`you are unable to send URLs here!`).then(m => setTimeout(() => m.delete().catch(() => {}), 5000));
         }
     }
 };
@@ -134,12 +134,15 @@ exports.checkMesage = async (message, settings) => {
 /**
  * Check if the user running the command is blacklisted
  * 
- * @param {Object} message The message object from which to get certain data (Such as guild ID, etc.)
+ * @param {Object} message The message (or interaction) object from which to get certain data (Such as guild ID, etc.)
  * 
  * @returns {Promise.Boolean} True if blacklisted, false if not blacklisted.
  */
 exports.checkBlacklist = async (message) => {
-    if (message.settings.blacklist.users.includes(message.author.id) || message.settings.blacklist.channels.includes(message.author.id) || message.settings.blacklist.roles.filter(a => message.member.roles.cache.has(a)).length) {
+    // Get the author (to support interactions)
+    const author = message.author ?? message.user;
+
+    if (message.settings.blacklist.users.includes(author.id) || message.settings.blacklist.channels.includes(author.id) || message.settings.blacklist.roles.filter(a => message.member.roles.cache.has(a)).length) {
         // Define the blacklisted var
         let blacklisted = true;
 
@@ -166,7 +169,7 @@ exports.checkBlacklist = async (message) => {
         }
 
         // If the user has ADMINISTRATOR permissions or is a bot dev set blacklisted to false
-        if (message.channel.permissionsFor(message.member).has("ADMINISTRATOR") || config.general.devs.includes(message.author.id))
+        if (message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR) || config.general.devs.includes(author.id))
             blacklisted = false;
 
         // Return the blacklisted variable

@@ -1,6 +1,6 @@
 node_modules/
 .vscode/
 start.sh
-config.js
+src/config.js
 .DS_Store
 .dccache

@@ -4,11 +4,16 @@ module.exports = message => {
 
     /**
      * Send a message starting with a error emote
-     * @param {string} string 
+     * @param {option} option 
      */
-    message.error = string => {
+    message.error = option => {
         return new Promise((resolve, reject) => {
-            message.channel.send(`${config.emojis.error} ${string}`)
+            // Check if the option is a object and if so update the content
+            if (typeof(option) == "object" && option.content)
+                option.content = `${config.emojis.error} ${option.content}`;
+
+            // Send the message
+            message.channel.send(typeof(option) == "object" ? option : `${config.emojis.error} ${option}`)
                 .then(msg => { resolve(msg); })
                 .catch(err => { reject(err); });
         });
@@ -16,11 +21,16 @@ module.exports = message => {
 
     /**
      * Send a message starting with a loading emote
-     * @param {string} string 
+     * @param {string} option 
      */
-    message.loading = string => {
+    message.loading = option => {
         return new Promise((resolve, reject) => {
-            message.channel.send(`${config.emojis.loading} ${string}`)
+            // Check if the option is a object and if so update the content
+            if (typeof(option) == "object" && option.content)
+                option.content = `${config.emojis.loading} ${option.content}`;
+
+            // Send the message
+            message.channel.send(typeof(option) == "object" ? option : `${config.emojis.loading} ${option}`)
                 .then(msg => { resolve(msg); })
                 .catch(err => { reject(err); });
         });
@@ -28,11 +38,16 @@ module.exports = message => {
 
     /**
      * Send a message starting with a confirmation emote
-     * @param {string} string 
+     * @param {string} option 
      */
-    message.confirmation = string => {
+    message.confirmation = option => {
         return new Promise((resolve, reject) => {
-            message.channel.send(`${config.emojis.confirmation} ${string}`)
+            // Check if the option is a object and if so update the content
+            if (typeof(option) == "object" && option.content)
+                option.content = `${config.emojis.confirmation} ${option.content}`;
+
+            // Send the message
+            message.channel.send(typeof(option) == "object" ? option : `${config.emojis.confirmation} ${option}`)
                 .then(msg => { resolve(msg); })
                 .catch(err => { reject(err); });
         });
@@ -40,11 +55,16 @@ module.exports = message => {
 
     /**
      * Reply to the previous message with an error emote
-     * @param {srring} string
+     * @param {srring} option
      */
-    message.errorReply = string => {
+    message.errorReply = option => {
         return new Promise((resolve, reject) => {
-            message.reply(`${config.emojis.error} ${string}`)
+            // Check if the option is a object and if so update the content
+            if (typeof(option) == "object" && option.content)
+                option.content = `${config.emojis.error} ${option.content}`;
+            
+            // Send the reply
+            message.reply(typeof(option) == "object" ? option : `${config.emojis.error} ${option}`)
                 .then(msg => { resolve(msg); })
                 .catch(err => { reject(err); });
         });
@@ -52,11 +72,16 @@ module.exports = message => {
 
     /**
      * Reply to the previous message with an error emote
-     * @param {srring} string
+     * @param {srring} option
      */
-    message.loadingReply = string => {
+    message.loadingReply = option => {
         return new Promise((resolve, reject) => {
-            message.reply(`${config.emojis.loading} ${string}`)
+            // Check if the option is a object and if so update the content
+            if (typeof(option) == "object" && option.content)
+                option.content = `${config.emojis.loading} ${option.content}`;
+            
+            // Send the reply
+            message.reply(typeof(option) == "object" ? option : `${config.emojis.loading} ${option}`)
                 .then(msg => { resolve(msg); })
                 .catch(err => { reject(err); });
         });
@@ -64,11 +89,16 @@ module.exports = message => {
 
     /**
      * Reply to the previous message with an error emote
-     * @param {srring} string
+     * @param {srring} option
      */
-    message.confirmationReply = string => {
+    message.confirmationReply = option => {
         return new Promise((resolve, reject) => {
-            message.reply(`${config.emojis.confirmation} ${string}`)
+            // Check if the option is a object and if so update the content
+            if (typeof(option) == "object" && option.content)
+                option.content = `${config.emojis.confirmation} ${option.content}`;
+            
+            // Send the reply
+            message.reply(typeof(option) == "object" ? option : `${config.emojis.confirmation} ${option}`)
                 .then(msg => { resolve(msg); })
                 .catch(err => { reject(err); });
         });

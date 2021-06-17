@@ -1,5 +1,3 @@
-// TODO: Add proper commenting to file
-
 // Import dependencies
 const { Client, Collection, Intents } = require("discord.js"),
 { connect } = require("mongoose"),
@@ -42,6 +40,7 @@ bot.mojang = {};
 // Create the deletedMsgs collection
 bot.deletedMsgs = new Collection();
 
+// Init function
 const init = async () => {
     // Log R2-D2 ascii art
     console.log(`     ____  ____       ____ ____  
@@ -52,9 +51,11 @@ const init = async () => {
     console.log(" ");
     console.log(" ");
 
+    // Send the command message and load all the commands
     const commandMessage = ora("Loading commands...").start(),
     cmds = await commands.init(bot);
     
+    // Update the command message
     if (bot.commands.filter(a => a.slash?.enabled).size > 100) {
         commandMessage.stopAndPersist({
             symbol: "❌",
@@ -67,16 +68,20 @@ const init = async () => {
         });
     }
 
+    // Send the event message and load the events
     const eventMessage = ora("Loading events...").start(),
     evts = await events.init(bot);
 
+    // Update the event message
     eventMessage.stopAndPersist({
         symbol: "✔️",
         text: ` Loaded ${evts} events.`,
     });
 
+    // Send the mongo message
     const mongoMsg = ora("Connecting to the Mongo database...").start();
 
+    // Connect to the mongo DB
     bot.mongo = await connect(getMongooseURL(bot.config.mongo), {
         useFindAndModify: false,
         useNewUrlParser: true,
@@ -85,13 +90,16 @@ const init = async () => {
         throw new Error(err);
     });
 
+    // Update the mongo message
     mongoMsg.stopAndPersist({
         symbol: "✔️",
         text: " Successfully connected to the Mongo database!"
     });
 
+    // Send the login message
     const loginMessage = ora("Logging into the Discord API...").start();
 
+    // Login to the Discord API and update the login message
     bot.login(bot.config.general.token)
         .then(() => {
             loginMessage.stopAndPersist({
@@ -106,9 +114,12 @@ const init = async () => {
         });
 };
 
+// Run the init function
 init();
 
+// Handle CTRL + C presses
 process.on("SIGINT", async () => {
+    // Check if there is a mongo connection and if so close it
     if (bot.mongo?.connection) {
         bot.logger.log("Received SIGINT - Terminating MongoDB connection");
         await bot.mongo.connection.close().catch(err => {
@@ -116,5 +127,6 @@ process.on("SIGINT", async () => {
         });
     }
 
+    // Exit the process
     process.exit(1);
 });

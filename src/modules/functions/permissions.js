@@ -5,7 +5,7 @@ const { getRole } = require("./getters");
  * Check if the user has permissions to run the command
  * 
  * @param {Object} bot The client which is used to transact between this app & Discord
- * @param {Object} message The message object from which to get certain data (Such as guild ID, etc.)
+ * @param {Object} message The message (or interaction) object from which to get certain data (Such as guild ID, etc.)
  * @param {Object} permissions The permission data
  * @param {Object} cmd The command data 
  * 
@@ -13,7 +13,7 @@ const { getRole } = require("./getters");
  */
 exports.checkPerms = async (bot, message, permissions, cmd) => {
     // If the user is a bot owner return false
-    if (bot.config.general.devs.includes(message.author.id))
+    if (bot.config.general.devs.includes(message.author?.id ?? message.user.id))
         return false;
 
     // Get the permissions
@@ -72,7 +72,7 @@ exports.checkPerms = async (bot, message, permissions, cmd) => {
             }
         } else if (permission.type == "discord") {
             // If the user is lacking the permission return true
-            if (!message.channel.permissionsFor(message.member).has(permission.permission))
+            if (!message.member.permissions.has(permission.permission))
                 return true;
         } else {
             // If all the checks passed return false
@@ -91,7 +91,7 @@ exports.checkPerms = async (bot, message, permissions, cmd) => {
 /**
  * Check if the bot has permissions to run the command
  * 
- * @param {Object} message The message object from which to get certain data (Such as guild ID, etc.)
+ * @param {Object} message The message (or interaction) object from which to get certain data (Such as guild ID, etc.)
  * @param {Object} cmd The command information 
  * 
  * @returns {Promise.Boolean}
@@ -103,7 +103,7 @@ exports.checkSelf = async (message, cmd) => {
 
     // If the bot doesn't have send messages permissions send the user a dm and return true
     if (!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) {
-        await message.author.send(`${config.emojis.error} I don't have permissions to send messages in the channel you ran your command in!`)
+        await (message.author ?? message.user).send(`${config.emojis.error} I don't have permissions to send messages in the channel you ran your command in!`)
             .catch(() => {});
 
         return true;

@@ -18,13 +18,15 @@ module.exports = async (bot, message) => {
         }
     }
 
+    // Get important options
     const prefixMention = new RegExp(`^<@!?${bot.user.id}>`),
     settings = message.settings = await getSettings(message.guild?.id),
     prefix = message.content.match(prefixMention) ? message.content.match(prefixMention)[0] : settings.general.prefix;
 
+    // If the channel is a command channel delete the message after 15 seconds
     if (message.settings.general.command_channel) {
         if (message.channel.id === message.settings.general.command_channel)
-            message.delete({ timeout: 15000 }).catch(() => { });
+            setTimeout(() => message.delete().catch(() => {}), 15000);
     }
 
     // Return if the user is a bot
@@ -53,6 +55,7 @@ module.exports = async (bot, message) => {
     if (message.guild && !message.member) 
         await message.guild.members.fetch(message.author);
 
+    // Get the args and the command/tag.
     const args = message.content.slice(prefix.length).trim().split(/ +/g),
     command = args.shift().toLowerCase(),
     cmd = bot.commands.get(command) || bot.commands.get(bot.aliases.get(command)),
@@ -100,6 +103,7 @@ module.exports = async (bot, message) => {
     if (await checkPerms(bot, message, permissions, cmd))
         return message.errorReply("You don't have permissions to run that command!");
 
+    // Try to run the command
     try {
         // Run the command
         await cmd.run(bot, message, args);

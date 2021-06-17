@@ -489,3 +489,28 @@ exports.fetchWaifuApi = (type) => {
 exports.drawGiveawayWinners = (entries, winners) => {
     return entries.sort(() => 0.5 - Math.random()).slice(0, winners);
 };
+
+/**
+ * Get the current Discord status
+ * 
+ * @returns {Promise.<Object>} Discord Status API Data
+ */
+exports.getDiscordStatus = () => {
+    return new Promise((resolve, reject) => {
+        // Specify the API URL
+        const URL = "https://discordstatus.com/api/v2/summary.json";
+
+        // Fetch the API
+        fetch(URL, {
+            headers: {
+                "content-type": "application/json",
+                "accept": "application/json"
+            }
+        }).then(res => res.json()).then(json => {
+            resolve(json);
+        }).catch(err => {
+            console.error(err);
+            reject(err);
+        });
+    });
+};

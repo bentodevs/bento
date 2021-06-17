@@ -33,6 +33,7 @@
     "date-fns": "^2.22.1",
     "date-fns-tz": "^1.1.4",
     "discord.js": "^13.0.0-dev.a3cbcca13da1af416c219bd64a0a6e84bb87a057",
+    "https-proxy-agent": "^5.0.0",
     "iso-639-1": "^2.1.9",
     "mongoose": "^5.12.13",
     "node-fetch": "^2.6.1",
