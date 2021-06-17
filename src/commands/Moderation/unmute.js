@@ -15,9 +15,9 @@ module.exports = {
         options: []
     },
     perms: {
-        permission: "",
+        permission: "MANAGE_MESSAGES",
         type: "discord",
-        self: []
+        self: ["MANAGE_ROLES"]
     },
     opts: {
         guildOnly: true,
@@ -49,10 +49,8 @@ module.exports = {
         const member = await getMember(message, args[0]),
             reason = args.splice(1, args.length).join(' ') || "No reason provided",
             muterole = message.settings.roles.mute,
-            mute = await mutes.findOne({
-                guild: message.guild.id,
-                mutedUser: member?.id
-            });
+            mute = await mutes.findOne({ guild: message.guild.id, mutedUser: member?.id }),
+            action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1;
 
         // TODO: [BOT-78] Add case creation in non-slash unmute command
         // If no member was found return an error
@@ -63,13 +61,24 @@ module.exports = {
             // If the user has the role, remove it
             await member.roles.remove(muterole);
             // Remove the mute from the DB
-            await mutes.findOneAndDelete({
+            await mutes.findOneAndDelete({ guild: message.guild.id, mutedUser: member.id });
+            
+            // Create the punishment record in the DB
+            await punishments.create({
+                id: action,
                 guild: message.guild.id,
-                mutedUser: member.id
+                type: "unmute",
+                user: member.id,
+                moderator: message.author.id,
+                actionTime: Date.now(),
+                reason: reason
             });
-            // Send log message & confirmation message
-            punishmentLog(message, member, mute.caseID, reason, "unmute");
-            member.send(`🔈 You have been unmuted in **${message.guild.name}**`).catch(() => {});
+
+            // Send punishment log message
+            punishmentLog(message, member, action, reason, "unmute");
+            // Send the user a confirmation message
+            member.send(`🔈 You have been unmuted in **${message.guild.name}**`).catch(() => { });
+            // Confirm that the command completed
             message.confirmationReply(`**${member.user.tag}** has been unmuted successfully!`);
         } else if (!mute && member.roles.cache.has(muterole)) {
             // If the user has the role, remove it
@@ -78,13 +87,24 @@ module.exports = {
             message.confirmationReply(`**${member.user.tag}** was unmuted! *(They were not listed as muted in the database)*`);
         } else if (mute && !member.roles.cache.has(muterole)) {
             // Remove the mute from the DB
-            await mutes.findOneAndDelete({
+            await mutes.findOneAndDelete({ guild: message.guild.id, mutedUser: member.id });
+
+            // Create the punishment record in the DB
+            await punishments.create({
+                id: action,
                 guild: message.guild.id,
-                mutedUser: member.id
+                type: "unmute",
+                user: member.id,
+                moderator: message.author.id,
+                actionTime: Date.now(),
+                reason: reason
             });
-            // Send log message & confirmation message
-            punishmentLog(message, member, mute.caseID, reason, "unmute");
-            member.send(`🔈 You have been unmuted in **${message.guild.name}**`).catch(() => {});
+
+            // Send punishment log message
+            punishmentLog(message, member, action, reason, "unmute");
+            // Send the user a confirmation message
+            member.send(`🔈 You have been unmuted in **${message.guild.name}**`).catch(() => { });
+            // Confirm that the command completed
             message.confirmationReply(`**${member.user.tag}** has been unmuted successfully! *(They did not seem to have the role)*`);
         } else if (!mute && !member.roles.cache.has(muterole)) {
             // If member doesn't have muted role AND is not in the DB, then remove the mute
@@ -123,9 +143,11 @@ module.exports = {
                 reason: reason
             });
 
-            // Send log message & confirmation message
+            // Send punishment log message
             punishmentLog(interaction, user.member, action, reason, "unmute");
-            user.member.send(`🔈 You have been unmuted in **${interaction.guild.name}**`).catch(() => {});
+            // Send the user a confirmation message
+            user.member.send(`🔈 You have been unmuted in **${interaction.guild.name}**`).catch(() => { });
+            // Confirm that the command completed
             interaction.confirmation(`**${user.user.tag}** has been unmuted successfully! *(Case #${action})*`);
         } else if (!mute && user.member.roles.cache.has(muterole)) {
             // If the user has the role, remove it
@@ -147,9 +169,11 @@ module.exports = {
                 reason: reason
             });
 
-            // Send log message & confirmation message
+            // Send punishment log message
             punishmentLog(interaction, user.member, action, reason, "unmute");
-            user.member.send(`🔈 You have been unmuted in **${interaction.guild.name}**`).catch(() => {});
+            // Send the user a confirmation message
+            user.member.send(`🔈 You have been unmuted in **${interaction.guild.name}**`).catch(() => { });
+            // Confirm that the command completed
             interaction.confirmation(`**${user.user.tag}** has been unmuted successfully! *(They did not seem to have the role) (Case #${action})*`);
         } else if (!mute && !user.member.roles.cache.has(muterole)) {
             // If member doesn't have muted role AND is not in the DB, then remove the mute
