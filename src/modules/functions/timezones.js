@@ -2542,5 +2542,11 @@ exports.timezones = [
         tzCode: "Pacific/Kiritimati",
         name: "(GMT+14:00) Kiritimati",
         utc: "+14:00"
+    }, 
+    {
+        label: "UTC (GMT+00:00)",
+        tzCode: "UTC",
+        name: "UTC",
+        utc: "+00:00"
     }
 ];
