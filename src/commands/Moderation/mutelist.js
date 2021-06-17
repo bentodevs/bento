@@ -1,4 +1,5 @@
-const { format, formatDistance } = require("date-fns");
+const { formatDistance } = require("date-fns");
+const { format, utcToZonedTime } = require("date-fns-tz");
 const mutes = require("../../database/models/mutes");
 const { getUser } = require("../../modules/functions/getters");
 
@@ -35,7 +36,7 @@ module.exports = {
         // Find all mutes with the guild ID set as their guild value
         const mutedata = await mutes.find({ guild: message.guild.id });
         // Define mute list text
-        let muteList = `🔇 Muted users as of **${format(Date.now(), "PPp")}**\n\n`;
+        let muteList = `🔇 Muted users as of **${format(utcToZonedTime(Date.now(), message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone })}**\n\n`;
 
         // If there are no mutes, then return error
         if (mutedata.length < 1)
@@ -61,7 +62,7 @@ module.exports = {
         // Find all mutes with the guild ID set as their guild value
         const mutedata = await mutes.find({ guild: interaction.guild.id });
         // Define mute list text
-        let muteList = `🔇 Muted users as of **${format(Date.now(), "PPp")}**\n\n`;
+        let muteList = `🔇 Muted users as of **${format(utcToZonedTime(Date.now(), interaction.settings.general.timezone), "PPp (z)", { timeZone: interaction.settings.general.timezone })}**\n\n`;
 
         // If there are no mutes, then return error
         if (mutedata.length < 1)

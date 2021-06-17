@@ -1,5 +1,6 @@
 const { stripIndents } = require("common-tags");
-const { format, formatDistance } = require("date-fns");
+const { formatDistance } = require("date-fns");
+const { format, utcToZonedTime } = require("date-fns-tz");
 const { MessageEmbed } = require("discord.js");
 
 module.exports = {
@@ -56,7 +57,7 @@ module.exports = {
         boosters = guild.premiumSubscriptionCount;
 
         // Format the guild creation date
-        const created = format(guild.createdTimestamp, "PPp O"),
+        const created = format(utcToZonedTime(guild.createdTimestamp, message.settings.general.timezone), "PPp (z)"),
         timeSince = formatDistance(guild.createdTimestamp, Date.now(), { addSuffix: true });
 
         // Fetch the guild owner

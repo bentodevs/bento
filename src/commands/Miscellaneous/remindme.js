@@ -1,4 +1,6 @@
-const { formatDuration, intervalToDuration, format } = require("date-fns");
+const { formatDuration, intervalToDuration } = require("date-fns");
+const { format } = require("date-fns-tz");
+const { utcToZonedTime } = require("date-fns-tz/fp");
 const reminders = require("../../database/models/reminders");
 const { parseTime } = require("../../modules/functions/misc");
 
@@ -85,7 +87,7 @@ module.exports = {
 
             // Loop through the reminders and add them to the msg
             data.reminders.forEach(r => {
-                msg += `**${r.id}.** ${r.reminder} | **In:** ${Date.now() > r.remindTime ? "<pending>" : formatDuration(intervalToDuration({ start: Date.now(), end: r.remindTime }), { delimiter: ", " })} | **Set:** ${format(r.timeCreated, "PPp")}\n`;
+                msg += `**${r.id}.** ${r.reminder} | **In:** ${Date.now() > r.remindTime ? "<pending>" : formatDuration(intervalToDuration({ start: Date.now(), end: r.remindTime }), { delimiter: ", " })} | **Set:** ${format(utcToZonedTime(r.timeCreated, message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone })}\n`;
             });
 
             if (message.guild) {

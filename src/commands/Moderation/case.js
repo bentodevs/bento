@@ -1,5 +1,6 @@
 const { stripIndents } = require("common-tags");
-const { formatDistanceStrict, format } = require("date-fns");
+const { formatDistanceStrict } = require("date-fns");
+const { format, utcToZonedTime } = require("date-fns-tz");
 const { MessageEmbed } = require("discord.js");
 const punishments = require("../../database/models/punishments");
 const { getMember, getUser } = require("../../modules/functions/getters");
@@ -94,7 +95,7 @@ module.exports = {
                 return message.errorReply("You didn't specify a valid page!");
             
             // Format the cases
-            const formatted = pages[page].map(p => `**#${p.id}** | **${p.type.toTitleCase()}** | **Reason:** ${p.reason} | ${format(p.actionTime, "PPp")}`);
+            const formatted = pages[page].map(p => `**#${p.id}** | **${p.type.toTitleCase()}** | **Reason:** ${p.reason} | ${format(utcToZonedTime(p.actionTime, message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone })}`); 
             
             // Build the history embed
             const embed = new MessageEmbed()
@@ -167,7 +168,7 @@ module.exports = {
                 return message.errorReply("You didn't specify a valid page!");
             
             // Format the cases
-            const formatted = pages[page].map(p => `**#${p.id}** | **${p.type.toTitleCase()}** | **Reason:** ${p.reason} | ${format(p.actionTime, "PPp")}`);
+            const formatted = pages[page].map(p => `**#${p.id}** | **${p.type.toTitleCase()}** | **Reason:** ${p.reason} | ${format(utcToZonedTime(p.actionTime, message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone })}`);
             
             // Build the history embed
             const embed = new MessageEmbed()
@@ -219,7 +220,7 @@ module.exports = {
                 return interaction.error("You didn't specify a valid page!");
             
             // Format the cases
-            const formatted = pages[page].map(p => `**#${p.id}** | **${p.type.toTitleCase()}** | **Reason:** ${p.reason} | ${format(p.actionTime, "PPp")}`);
+            const formatted = pages[page].map(p => `**#${p.id}** | **${p.type.toTitleCase()}** | **Reason:** ${p.reason} | ${format(utcToZonedTime(p.actionTime, interaction.settings.general.timezone), "PPp (z)", { timeZone: interaction.settings.general.timezone })}`);
             
             // Build the history embed
             const embed = new MessageEmbed()

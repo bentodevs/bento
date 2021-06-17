@@ -1,7 +1,8 @@
 const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
-const { format, formatDistance } = require("date-fns");
+const { formatDistance } = require("date-fns");
 const { getMember, getUser } = require("../../modules/functions/getters");
+const { utcToZonedTime, format } = require("date-fns-tz");
 
 module.exports = {
     info: {
@@ -60,9 +61,9 @@ module.exports = {
             // 2. Get the time the user joined the guild and format it
             // 3. Get the time the user started boosting and format it
             // 4. Get the roles the user has and format them
-            const userCreated = format(member.user.createdTimestamp, "PPp"); const timeSinceCreated = formatDistance(member.user.createdTimestamp, Date.now(), { addSuffix: true });
-            const userJoined = format(member.joinedTimestamp, "PPp"); const timeSinceJoin = formatDistance(member.joinedTimestamp, Date.now(), { addSuffix: true });
-            const userBoosted = member.premiumSinceTimestamp ? format(member.premiumSinceTimestamp, "PPp") : null; const timeSinceBoost = member.premiumSinceTimestamp ? formatDistance(member.premiumSinceTimestamp, Date.now(), { addSuffix: true }) : null;
+            const userCreated = format(utcToZonedTime(member.user.createdTimestamp, message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone }); const timeSinceCreated = formatDistance(member.user.createdTimestamp, Date.now(), { addSuffix: true });
+            const userJoined = format(utcToZonedTime(member.joinedTimestamp, message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone }); const timeSinceJoin = formatDistance(member.joinedTimestamp, Date.now(), { addSuffix: true });
+            const userBoosted = member.premiumSinceTimestamp ? format(utcToZonedTime(member.premiumSinceTimestamp, message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone }) : null; const timeSinceBoost = member.premiumSinceTimestamp ? formatDistance(member.premiumSinceTimestamp, Date.now(), { addSuffix: true }) : null;
             const roles = member.roles.cache.filter(role => role.name !== "@everyone").sort((b, a) => a.position - b.position).map(role => role.toString()).join(", ");
 
             // Define vars
@@ -127,7 +128,7 @@ module.exports = {
             embed.setFooter(`Member #${message.guild.members.cache.filter(u => u.joinedTimestamp !== null).sort((a,b) => a.joinedTimestamp - b.joinedTimestamp).map(user => user.id).indexOf(member.id) +1} | ID: ${member.id}`);
         } else {
             // Get the users account creation time and format it
-            const userCreated = format(member.createdTimestamp, "PPp"); const timeSinceCreated = formatDistance(member.createdTimestamp, Date.now(), { addSuffix: true });
+            const userCreated = format(utcToZonedTime(member.createdTimestamp, message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone }); const timeSinceCreated = formatDistance(member.createdTimestamp, Date.now(), { addSuffix: true });
 
             // Define status var
             let status;

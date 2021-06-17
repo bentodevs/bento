@@ -1,5 +1,7 @@
 const { stripIndents } = require("common-tags");
-const { format, parseISO } = require("date-fns");
+const { parseISO } = require("date-fns");
+const { format } = require("date-fns-tz");
+const { utcToZonedTime } = require("date-fns-tz/fp");
 const { MessageEmbed } = require("discord.js");
 const { getDiscordStatus } = require("../../modules/functions/misc");
 
@@ -83,7 +85,7 @@ module.exports = {
         if (status.incidents.length) {
             for (const data of status.incidents) {
                 incidents += stripIndents(`**Issue:** [${data.name}](https://discordstatus.com/incidents/${data.id})
-                **Identified:** ${format(parseISO(data.created_at))}
+                **Identified:** ${format(utcToZonedTime(parseISO(data.created_at), message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone })}
                 **Status:** ${data.status.toTitleCase()}\n\n`);
             }
         }

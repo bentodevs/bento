@@ -1,4 +1,5 @@
-const { format, formatDistance, formatDuration, intervalToDuration } = require("date-fns");
+const { formatDistance, formatDuration, intervalToDuration } = require("date-fns");
+const { format, utcToZonedTime } = require("date-fns-tz");
 const { MessageEmbed } = require("discord.js");
 const { getChannel } = require("../../modules/functions/getters");
 
@@ -75,7 +76,7 @@ module.exports = {
 
         // 1. Format the channel creation time
         // 2. Format the time since the channel was created
-        const channelCreated = format(channel.createdTimestamp, "PPp"),
+        const channelCreated = format(utcToZonedTime(channel.createdTimestamp, message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone }),
         timeSince = formatDistance(channel.createdTimestamp, Date.now(), { addSuffix: true });
 
         // Define the desc and lastMessage vars

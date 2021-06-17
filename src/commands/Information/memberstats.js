@@ -1,5 +1,6 @@
 const { stripIndents } = require("common-tags");
-const { startOfToday } = require("date-fns");
+const { startOfToday, startOfWeek } = require("date-fns");
+const { utcToZonedTime } = require("date-fns-tz");
 const { MessageEmbed } = require("discord.js");
 
 module.exports = {
@@ -35,8 +36,8 @@ module.exports = {
         // 1. Grab the amount of members that joined today
         // 2. Grab the amount of members that joined this week
         // 3. Grab all the bans
-        const joinedToday = message.guild.members.cache.filter(m => m.joinedTimestamp >= startOfToday()),
-        joinedWeek = message.guild.members.cache.filter(m => m.joinedTimestamp >= startOfToday(Date.now())),
+        const joinedToday = message.guild.members.cache.filter(m => utcToZonedTime(m.joinedTimestamp, message.settings.general.timezone) >= utcToZonedTime(startOfToday(), message.settings.general.timezone)),
+        joinedWeek = message.guild.members.cache.filter(m => m.joinedTimestamp >= utcToZonedTime(startOfWeek(Date.now()), message.settings.general.timezone)),
         bans = await message.guild.bans.fetch();
 
         // Define all the ban messages

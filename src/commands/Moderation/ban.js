@@ -1,5 +1,6 @@
 const { stripIndents } = require("common-tags");
-const { format } = require("date-fns");
+const { format } = require("date-fns-tz");
+const { utcToZonedTime } = require("date-fns-tz/fp");
 const preban = require("../../database/models/preban");
 const punishments = require("../../database/models/punishments");
 const { getMember, getUser } = require("../../modules/functions/getters");
@@ -49,8 +50,8 @@ module.exports = {
         // 2. Define the reason, and set a default if none was provided
         // 3. Get the ID of this action
         const member = await getMember(message, args[0], true) || await getUser(bot, message, args[0], true),
-            reason = args.splice(1, args.length).join(" ") || "No reason provided",
-            action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1;
+        reason = args.splice(1, args.length).join(" ") || "No reason provided",
+        action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1;
         
         // If the member doesn't exist/isn't part of the guild, then return an error
         if (!member)
@@ -74,7 +75,7 @@ module.exports = {
                 await member.send(`:hammer: You have been banned from ** ${message.guild.name} for \`${reason}\``).catch(() => { });
 
                 // Ban the member, remove 1d of messages & set the reason
-                member.ban({ days: 1, reason: `[Case: ${action} | ${message.author.tag} on ${format(Date.now(), 'PPp')}] ${reason}]` });
+                member.ban({ days: 1, reason: `[Case: ${action} | ${message.author.tag} on ${format(utcToZonedTime(Date.now(), message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone })}] ${reason}]` });
 
                 // Send a message confirming the action
                 message.confirmationReply(`\`${member.user.tag}\` was banned for **${reason}** *(Case #${action})*`);
@@ -152,7 +153,7 @@ module.exports = {
                 return interaction.reply("I can't ban that member! *They may have a higher role than me!*");
             
             await user.member.send(`:hammer: You have been banned from **${interaction.guild.name}** for \`${reason}\``).catch(() => { });
-            user.member.ban({ days: 1, reason: `[Case: ${action} | ${interaction.member.user.tag} on ${format(Date.now(), 'PPp')}] ${reason}]` });
+            user.member.ban({ days: 1, reason: `[Case: ${action} | ${interaction.member.user.tag} on ${format(utcToZonedTime(Date.now(), interaction.settings.general.timezone), "PPp (z)", { timeZone: interaction.settings.general.timezone })}] ${reason}]` });
             interaction.confirmation(`\`${user.user.tag}\` was banned for **${reason}** *(Case #${action})*`);
             
             // Create the punishment record in the DB

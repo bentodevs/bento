@@ -1,5 +1,5 @@
 const { stripIndents } = require("common-tags");
-const { format } = require("date-fns");
+const { format, utcToZonedTime } = require("date-fns-tz");
 const { MessageEmbed } = require("discord.js");
 const { getLeagueSummoner, getLeagueChampByID } = require("../../modules/functions/riotgames");
 
@@ -84,7 +84,7 @@ module.exports = {
         for await (const m of matchList.slice(0, 5)) {
             const champ = await getLeagueChampByID(m.champion);
 
-            matches += `**Played:** ${format(m.timestamp, "Pp")} | **Lane:** ${m.lane.toTitleCase()} | **Champ:** ${champ.name}\n`;
+            matches += `**Played:** ${format(utcToZonedTime(m.timestamp, message.settings.general.timezone), "Pp (z)", { timeZone: message.settings.general.timezone })} | **Lane:** ${m.lane.toTitleCase()} | **Champ:** ${champ.name}\n`;
         }
 
         // Build the embed

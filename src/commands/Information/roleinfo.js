@@ -1,5 +1,6 @@
 const { stripIndents } = require("common-tags");
-const { formatDistance, format } = require("date-fns");
+const { formatDistance } = require("date-fns");
+const { format, utcToZonedTime } = require("date-fns-tz");
 const { MessageEmbed } = require("discord.js");
 const { getRole } = require("../../modules/functions/getters");
 
@@ -51,7 +52,7 @@ module.exports = {
             return message.errorReply("You didn't specify a valid role!");
 
         // Format the role creation timestamp
-        const created = format(role.createdTimestamp, "PPp"),
+        const created = format(utcToZonedTime(role.createdTimestamp, message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone }),
         timeSince = formatDistance(role.createdTimestamp, Date.now(), { addSuffix: true });
 
         // Build the embed
@@ -78,7 +79,7 @@ module.exports = {
         const role = interaction.options.get("role").role;
 
         // Format the role creation timestamp
-        const created = format(role.createdTimestamp, "PPp"),
+        const created = format(utcToZonedTime(role.createdTimestamp, interaction.settings.general.timezone), "PPp (z)", { timeZone: interaction.settings.general.timezone }),
         timeSince = formatDistance(role.createdTimestamp, Date.now(), { addSuffix: true });
 
         // Build the embed

@@ -1,7 +1,7 @@
-const { format } = require("date-fns");
 const punishments = require("../../database/models/punishments");
 const { punishmentLog } = require("../../modules/functions/moderation");
 const { getMember } = require("../../modules/functions/getters");
+const { utcToZonedTime, format } = require("date-fns-tz");
 
 module.exports = {
     info: {
@@ -71,7 +71,7 @@ module.exports = {
             await member.send(`:hammer: You have been kicked from **${message.guild.name}** for \`${reason}\``).catch(() => { });
 
             // kick the member & set the reason
-            member.kick({ reason: `[Case: ${action} | ${message.author.tag} on ${format(Date.now(), 'PPp')}] ${reason}]` });
+            member.kick({ reason: `[Case: ${action} | ${message.author.tag} on ${format(utcToZonedTime(Date.now(), message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone })}] ${reason}]` });
 
             // Send a message confirming the action
             message.confirmationReply(`\`${member.user.tag}\` was kicked for **${reason}** *(Case #${action})*`);
@@ -125,7 +125,7 @@ module.exports = {
             await user.member.send(`:hammer: You have been kicked from **${interaction.guild.name}** for \`${reason}\``).catch(() => { });
 
             // kick the member & set the reason
-            user.member.kick({ reason: `[Case: ${action} | ${interaction.member.user.tag} on ${format(Date.now(), 'PPp')}] ${reason}]` });
+            user.member.kick({ reason: `[Case: ${action} | ${interaction.member.user.tag} on ${format(utcToZonedTime(Date.now(), interaction.settings.general.timezone), "PPp (z)", { timeZone: interaction.settings.general.timezone })}] ${reason}]` });
 
             // Send a message confirming the action
             interaction.confirmation(`\`${user.user.tag}\` was kicked for **${reason}** *(Case #${action})*`);

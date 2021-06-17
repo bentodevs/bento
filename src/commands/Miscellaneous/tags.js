@@ -1,4 +1,6 @@
-const { format, formatDistance } = require("date-fns");
+const { formatDistance } = require("date-fns");
+const { format } = require("date-fns-tz");
+const { utcToZonedTime } = require("date-fns-tz/fp");
 const { MessageEmbed } = require("discord.js");
 const tags = require("../../database/models/tags");
 
@@ -110,7 +112,7 @@ module.exports = {
                 return message.errorReply("You didn't specify a valid page!");
 
             // Format the description
-            const description = pages[page].map(m => `**Name:** \`${m.name}\` | **Last Modified:** ${format(m.lastModified, "PPp")} (${formatDistance(m.lastModified, Date.now(), { addSuffix: true })})`);
+            const description = pages[page].map(m => `**Name:** \`${m.name}\` | **Last Modified:** ${format(utcToZonedTime(m.lastModified, message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone })} (${formatDistance(m.lastModified, Date.now(), { addSuffix: true })})`);
 
             // Create the tags embed
             const embed = new MessageEmbed()
