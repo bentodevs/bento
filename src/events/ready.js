@@ -21,7 +21,7 @@ module.exports = async bot => {
     const rdyMsg = ora("Getting bot ready...").start();
 
     // Set the bots status
-    await bot.user.setPresence({ activity: { name: `${bot.config.general.prefix}help | r2-d2.dev`, type: "WATCHING" }, status: "online"});
+    await bot.user.setPresence({ activities: [{ name: `${bot.config.general.prefix}help | r2-d2.dev`, type: "WATCHING" }], status: "online"});
     // Register all the slash commands
     await register(bot);
 
