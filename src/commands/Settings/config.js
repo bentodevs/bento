@@ -68,6 +68,7 @@ module.exports = {
 
     run: async (bot, message, args) => {
 
+        // Get the option
         const option = args?.[0]?.toLowerCase();
 
         if (!option) {
@@ -164,6 +165,7 @@ module.exports = {
 
     run_interaction: async (bot, interaction) => {
 
+        // Get the options
         const view = interaction.options.get("view"),
         perm_msgs = interaction.options.get("perm-msgs"),
         perm_dms = interaction.options.get("perm-dms"),
