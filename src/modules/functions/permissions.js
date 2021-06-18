@@ -103,8 +103,10 @@ exports.checkSelf = async (message, cmd) => {
 
     // If the bot doesn't have send messages permissions send the user a dm and return true
     if (!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) {
-        await (message.author ?? message.user).send(`${config.emojis.error} I don't have permissions to send messages in the channel you ran your command in!`)
-            .catch(() => {});
+        // If DM messages are on send a message
+        if (message.settings.general.permission_dms) {
+            await (message.author ?? message.user).send(`${config.emojis.error} I don't have permissions to send messages in the channel you ran your command in!`).catch(() => {});
+        }
 
         return true;
     }
@@ -115,8 +117,13 @@ exports.checkSelf = async (message, cmd) => {
         for (const data of cmd.perms.self) {
             // If the bot doesn't have one of the permissions return an error and true
             if (!message.channel.permissionsFor(message.guild.me).has(data)) {
-                await message.errorReply(`I am lacking the permission \`${data}\`!`)
+                if (message.errorReply) {
+                    await message.errorReply(`I am lacking the permission \`${data}\`!`)
                     .catch(() => {});
+                } else {
+                    await message.error(`I am lacking the permission \`${data}\`!`)
+                    .catch(() => {});
+                }
 
                 return true;
             }

@@ -80,8 +80,15 @@ module.exports = async (bot, message) => {
     const permissions = message.permissions = await getPerms(bot, message.guild?.id);
 
     // Return an error if the command is disabled and the user isn't a bot owner
-    if (cmd.opts.disabled && !bot.config.general.devs.includes(message.author.id))
-        return message.errorReply("This command is currently disabled!");
+    if (cmd.opts.disabled && !bot.config.general.devs.includes(message.author.id)) {
+        // If disabled messages are enabled send one
+        if (message.settings.general.disabled_message) {
+            await message.errorReply("This command is currently disabled!");
+        }
+
+        // Return
+        return;
+    }
     // Return if the command is a dev only command and the user isn't a dev
     if (cmd.opts.devOnly && !bot.config.general.devs.includes(message.author.id))
         return;
@@ -91,17 +98,29 @@ module.exports = async (bot, message) => {
     // Return an error if a guild only command gets used in dms
     if (cmd.opts.guildOnly && !message.guild)
         return message.errorReply("This command is unavailable via private messages. Please run this command in a guild.");
-    // Return if the command or category is disabled
-    if (message.guild && (settings.general.disabled_commands?.includes(cmd.info.name) || settings.general.disabled_categories?.includes(cmd.info.category)) && !message.channel.permissionsFor(message.member).has("ADMINISTRATOR") && !bot.config.general.devs.includes(message.author.id))
+    if (message.guild && (settings.general.disabled_commands?.includes(cmd.info.name) || settings.general.disabled_categories?.includes(cmd.info.category)) && !message.channel.permissionsFor(message.member).has("ADMINISTRATOR") && !bot.config.general.devs.includes(message.author.id)) {
+        // If disabled messages are enabled send one
+        if (message.settings.general.disabled_message) {
+            await message.errorReply("This command (or the category the command is in) is currently disabled!");
+        }
+
+        // Return
         return;
+    }
+
     // If the bot doesn't have permissions to run the command return
     if (await checkSelf(message, cmd))
         return;
-    
     // If the user doesn't have permissions to run the command return
-    // TODO: [BOT-75] Add an option to disable the permission message
-    if (await checkPerms(bot, message, permissions, cmd))
-        return message.errorReply("You don't have permissions to run that command!");
+    if (await checkPerms(bot, message, permissions, cmd)) {
+        // If permission messages are enabled send one
+        if (message.settings.general.permission_message) {
+            await message.errorReply("You don't have permissions to run that command!");
+        }
+
+        // Return
+        return;
+    }
 
     // Try to run the command
     try {
