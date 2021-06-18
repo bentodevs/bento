@@ -104,5 +104,6 @@ module.exports = {
             // Send a confirmation message
             message.confirmationReply("Successfully updated the embed!");
         }
+        
     }
 };

@@ -73,5 +73,6 @@ module.exports = {
 
             message.confirmationReply("Successfully sent the embed!");
         }
+        
     }
 };
