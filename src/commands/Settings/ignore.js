@@ -7,7 +7,7 @@ module.exports = {
         aliases: [],
         usage: "ignore [channel | role]",
         examples: ["ignore #commands", "ignore moderator", "ignore moderator+"],
-        description: "Manage what roles or channels are ignored by automatic moderation features",
+        description: "Manage what roles or channels are ignored by the automatic moderation features.",
         category: "Settings",
         info: `The bot will always ignore those with the permission \`ADMINISTRATOR\` permission.
         This commnand works as a toggle, run it again with the same role/channel and you will removed it.`,
