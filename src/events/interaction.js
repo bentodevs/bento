@@ -35,21 +35,43 @@ module.exports = async (bot, interaction) => {
         if (!cmd)
             return interaction.error({ content: "The command you ran wasn't found!", ephemeral: true });
         // If the command is disabled return an error
-        if (cmd.opts.disabled && !bot.config.general.devs.includes(interaction.user.id))
-            return interaction.error({ content: "This command is currently disabled!", ephemeral: true });
+        if (cmd.opts.disabled && !bot.config.general.devs.includes(interaction.user.id)) {
+            // If disabled messages are enabled send one
+            if (interaction.settings.general.disabled_message) {
+                await interaction.error({ content: "This command is currently disabled!", ephemeral: true });
+            }
+
+            // Return
+            return;
+        }
         // If a guildOnly command is run in dms return an error
         if (cmd.opts.guildOnly && !interaction.guild)
             return interaction.error({ content: "This command is unavailable via private messages. Please run this command in a guild.", ephemeral: true });
         // If the command or category is disabled return an error
-        if (interaction.guild && (settings.general.disabled_commands?.includes(cmd.info.name) || settings.general.disabled_categories?.includes(cmd.info.category)) && !interaction.channel.permissionsFor(interaction.member).has("ADMINISTRATOR") && !bot.config.general.devs.includes(interaction.user.id))
-            return interaction.error({ content: "This command (or the category the command is in) is currently disabled!", ephemeral: true });
+        if (interaction.guild && (settings.general.disabled_commands?.includes(cmd.info.name) || settings.general.disabled_categories?.includes(cmd.info.category)) && !interaction.channel.permissionsFor(interaction.member).has("ADMINISTRATOR") && !bot.config.general.devs.includes(interaction.user.id)) {
+            // If disabled messages are enabled send one
+            if (interaction.settings.general.disabled_message) {
+                await interaction.error({ content: "This command (or the category the command is in) is currently disabled!", ephemeral: true });
+            }
+
+            // Return
+            return;
+        }
 
         // If the bot doesn't have permissions to run the command return
         if (await checkSelf(interaction, cmd))
             return;
         // Check if the user has permissions to run the command
-        if (await checkPerms(bot, interaction, permissions, cmd))
-            return interaction.error({ content: "You don't have permissions to run that command!", ephemeral: true });
+        if (await checkPerms(bot, interaction, permissions, cmd)) {
+            // If permission messages are enabled send one
+            if (interaction.settings.general.permission_message) {
+                await interaction.error({ content: "You don't have permissions to run that command!", ephemeral: true });
+            }
+
+            // Return
+            return;
+        }
+
 
         // Try to run the command
         try {
