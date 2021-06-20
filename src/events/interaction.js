@@ -103,4 +103,5 @@ module.exports = async (bot, interaction) => {
             ${bot.config.emojis.url} If this issue persists please report it in our discord: ${bot.config.general.errors.url}`), ephemeral: true });
         }
     }
+    // TODO: [BOT-79] Add "isSelectMenu()" interaction event handling
 };
