@@ -6,7 +6,7 @@ const { checkPerms, checkSelf } = require("../modules/functions/permissions");
 
 module.exports = async (bot, interaction) => {
 
-    if (interaction.isMessageComponent() && interaction.componentType == "BUTTON") {
+    if (interaction.isButton()) {
         // Button Code
     } else if (interaction.isCommand()) {
         // Return if the user is a bot
