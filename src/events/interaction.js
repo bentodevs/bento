@@ -6,9 +6,7 @@ const { checkPerms, checkSelf } = require("../modules/functions/permissions");
 
 module.exports = async (bot, interaction) => {
 
-    if (interaction.isButton()) {
-        // Button Code
-    } else if (interaction.isCommand()) {
+    if (interaction.isCommand()) {
         // Return if the user is a bot
         if (interaction.user.bot)
             return;
@@ -72,7 +70,6 @@ module.exports = async (bot, interaction) => {
             return;
         }
 
-
         // Try to run the command
         try {
             // Run the command
@@ -103,5 +100,5 @@ module.exports = async (bot, interaction) => {
             ${bot.config.emojis.url} If this issue persists please report it in our discord: ${bot.config.general.errors.url}`), ephemeral: true });
         }
     }
-    // TODO: [BOT-79] Add "isSelectMenu()" interaction event handling
+
 };
