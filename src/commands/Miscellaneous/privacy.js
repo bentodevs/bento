@@ -12,7 +12,7 @@ module.exports = {
             "privacy all"
         ],
         description: "Allows you to instantly delete your data from R2-D2's database.",
-        category: "Utility",
+        category: "Miscellaneous",
         info: null,
         options: [
             "`reminders` - Clear all your current reminders from the bot's database",
