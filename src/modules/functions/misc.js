@@ -7,7 +7,7 @@ const config = require("../../config");
  * 
  * @param {String} query
  *  
- * @returns {Promise.Object} definition
+ * @returns {Promise.<Object>} definition
  * 
  * @example
  * 
@@ -60,7 +60,7 @@ exports.urban = (query) => {
 /**
  * Gets a random meme from reddit
  * 
- * @returns {Promise.Object} Reddit Post
+ * @returns {Promise.<Object>} Reddit Post
  * 
  * @example
  * 
@@ -119,7 +119,7 @@ exports.getMeme = () => {
  * 
  * @param {String} query
  *  
- * @returns {Promise.Object} weather data
+ * @returns {Promise.<Object>} weather data
  * 
  * @example
  * 
@@ -164,7 +164,7 @@ exports.getWeather = (query) => {
 /**
  * Fetches a random dad joke from the icanhazdadjoke.com api
  * 
- * @returns {Promise.Object} dad joke data
+ * @returns {Promise.<Object>} dad joke data
  * 
  * @example
  * 
@@ -293,7 +293,7 @@ exports.parseTime = (string, returnUnit, opts) => {
  * 
  * @param {String} username
  * 
- * @returns {Promise.Object} Steam user data
+ * @returns {Promise.<Object>} Steam user data
  * 
  * @example
  * 
@@ -334,7 +334,7 @@ exports.fetchSteamUserByID = (user) => {
  * 
  * @param {String} username
  * 
- * @returns {Promise<Object>} Steam user data
+ * @returns {Promise.<Object>} Steam user data
  * 
  * @example
  * 
@@ -376,7 +376,7 @@ exports.fetchSteamUserByID = (user) => {
  * 
  * @param {String} type 
  * 
- * @returns {Promise<String>} URL to the image 
+ * @returns {Promise.<String>} URL to the image 
  */
 exports.fetchWaifuApi = (type) => {
     return new Promise((resolve, reject) => {
@@ -441,7 +441,7 @@ exports.fetchWaifuApi = (type) => {
 /**
  * Fetches the status of a minecraft server from the R2-D2 API
  * 
- * @returns {Promise<Object>} server status
+ * @returns {Promise.<Object>} server status
  * 
  * @example
  * 

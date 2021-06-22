@@ -8,7 +8,7 @@ const endpoint = "https://graphql.anilist.co";
  * @param {String} title
  * @param {String} type
  * 
- * @returns {Promise<Object>}
+ * @returns {Promise.<Object>}
  * 
  * @example
  * 
@@ -79,7 +79,7 @@ exports.getMedia = (title, type) => {
  * 
  * @param {String} name 
  * 
- * @returns {Promise<Object>}
+ * @returns {Promise.<Object>}
  * 
  * @example
  * 
@@ -133,7 +133,7 @@ exports.getCharacter = name => {
  * 
  * @param {String} username 
  * 
- * @returns {Promise<Object>}
+ * @returns {Promise.<Object>}
  * 
  * @example
  * 

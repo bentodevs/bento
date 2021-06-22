@@ -186,7 +186,7 @@ exports.getRole = async (message, args) => {
  * @param {Object} message The message object from which to get certain data (Such as guild ID, etc.)
  * @param {Array} args An array of arguments taken from the message content
  * 
- * @returns {Boolean} true 
+ * @returns {Promise.<Boolean>} true 
  */
 exports.getTag = async (tag, message, args) => {
     // Replace all the placeholders
