@@ -42,31 +42,81 @@ module.exports = {
 
     run: async (bot, message, args) => {
 
-        // Grab the user or guild member
-        const user = await getMember(message, args.join(" "), true) || await getUser(bot, message, args.join(" "), true);
+        if (args[0]?.toLowerCase() == "enable") {
+            // Find the user
+            const user = await users.findOne({ _id: message.author.id });
 
-        // If no user/member was found return an error
-        if (!user)
-            return message.errorReply("You didn't specify a valid user!");
+            if (!user) {
+                await users.create({
+                    _id: message.author.id,
+                    track: {
+                        usernames: true
+                    },
+                    usernames: [
+                        {
+                            username: message.author.username,
+                            time: Date.now()
+                        }
+                    ]
+                });
 
-        // Grab the data
-        const data = await users.findOne({ _id: user.id });
+                message.confirmationReply("Username tracking has been enabled!");
+            } else {
+                await users.findOneAndUpdate({ _id: message.author.id }, { "track.usernames": true });
 
-        // TODO: [BOT-7] Give users an option to stop the bot from tracking their usernames
+                message.confirmationReply("Username tracking has been enabled!");
+            }
+        } else if (args[0]?.toLowerCase() == "disable") {
+            // Find the user
+            const user = await users.findOne({ _id: message.author.id });
 
-        // If no data was found return an error
-        if (!data)
-            return message.errorReply("I don't have any data on the user you specified!");
-        // If the user only has 1 name return an error
-        if (data.usernames.length <= 1)
-            return message.errorReply("I don't remember any name changes for this user!");
+            if (!user) {
+                await users.create({
+                    _id: message.author.id,
+                    track: {
+                        usernames: false
+                    },
+                    usernames: [
+                        {
+                            username: message.author.username,
+                            time: Date.now()
+                        }
+                    ]
+                });
 
-        // Sort the usernames and create a map with only the usernames
-        const sorted = data.usernames.sort((a, b) => b.time - a.time),
-        usernames = sorted.map(a => a.username);
+                message.confirmationReply("Username tracking has been disabled!");
+            } else {
+                await users.findOneAndUpdate({ _id: message.author.id }, { "track.usernames": false });
 
-        // Send a message with the usernames
-        message.confirmationReply(`Last **${usernames.length}** names for **${user.user?.tag ?? user.tag}:** \`${usernames.join("`, `")}\``);
+                message.confirmationReply("Username tracking has been disabled!");
+            }
+        } else {
+            // Grab the user or guild member
+            const user = await getMember(message, args.join(" "), true) || await getUser(bot, message, args.join(" "), true);
+
+            // If no user/member was found return an error
+            if (!user)
+                return message.errorReply("You didn't specify a valid user!");
+
+            // Grab the data
+            const data = await users.findOne({ _id: user.id });
+
+            // TODO: [BOT-7] Give users an option to stop the bot from tracking their usernames
+
+            // If no data was found return an error
+            if (!data)
+                return message.errorReply("I don't have any data on the user you specified!");
+            // If the user only has 1 name return an error
+            if (data.usernames.length <= 1)
+                return message.errorReply("I don't remember any name changes for this user!");
+
+            // Sort the usernames and create a map with only the usernames
+            const sorted = data.usernames.sort((a, b) => b.time - a.time),
+            usernames = sorted.map(a => a.username);
+
+            // Send a message with the usernames
+            message.confirmationReply(`Last **${usernames.length}** names for **${user.user?.tag ?? user.tag}:** \`${usernames.join("`, `")}\``);
+        }
 
     },
 
