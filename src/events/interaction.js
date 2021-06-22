@@ -60,7 +60,7 @@ module.exports = async (bot, interaction) => {
         if (await checkSelf(interaction, cmd))
             return;
         // Check if the user has permissions to run the command
-        if (await checkPerms(bot, interaction, permissions, cmd)) {
+        if (await checkPerms(bot, interaction, permissions, cmd) && cmd.info.name !== "nick") {
             // If permission messages are enabled send one
             if (interaction.settings.general.permission_message) {
                 await interaction.error({ content: "You don't have permissions to run that command!", ephemeral: true });

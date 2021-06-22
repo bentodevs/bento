@@ -112,7 +112,7 @@ module.exports = async (bot, message) => {
     if (await checkSelf(message, cmd))
         return;
     // If the user doesn't have permissions to run the command return
-    if (await checkPerms(bot, message, permissions, cmd)) {
+    if (await checkPerms(bot, message, permissions, cmd) && cmd.info.name !== "nick") {
         // If permission messages are enabled send one
         if (message.settings.general.permission_message) {
             await message.errorReply("You don't have permissions to run that command!");
