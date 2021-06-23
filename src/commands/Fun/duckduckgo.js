@@ -9,12 +9,12 @@ module.exports = {
         usage: "duckduckgo <search query>",
         examples: ["duckduckgo Elon Musk age"],
         description: "Fetch an instant answer from DuckDuckGo",
-        category: "",
+        category: "Fun",
         info: null,
         options: []
     },
     perms: {
-        permission: "",
+        permission: ["@everyone"],
         type: "discord",
         self: []
     },
@@ -22,7 +22,7 @@ module.exports = {
         guildOnly: false,
         devOnly: false,
         premium: false,
-        noArgsHelp: false,
+        noArgsHelp: true,
         disabled: false
     },
     slash: {
