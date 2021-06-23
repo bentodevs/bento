@@ -121,7 +121,6 @@ module.exports = {
     run_interaction: async (bot, interaction) => {
 
         // Get the channel
-        // TODO: [BOT-77] Channels received from interactions seem to be missing data, check back once v13 releases
         const channel = interaction.options.get("channel").channel;
 
         // Define formatting for all the channel types
@@ -150,7 +149,7 @@ module.exports = {
 
         // 1. Format the channel creation time
         // 2. Format the time since the channel was created
-        const channelCreated = format(channel.createdTimestamp, "PPp"),
+        const channelCreated = format(channel.createdTimestamp, "PPp (z)"),
         timeSince = formatDistance(channel.createdTimestamp, Date.now(), { addSuffix: true });
 
         // Define the desc and lastMessage vars
