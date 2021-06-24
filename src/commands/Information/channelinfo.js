@@ -157,7 +157,7 @@ module.exports = {
 
         // 1. Format the channel creation time
         // 2. Format the time since the channel was created
-        const channelCreated = format(channel.createdTimestamp, "PPp"),
+        const channelCreated = format(channel.createdTimestamp, "PPp (z)"),
         timeSince = formatDistance(channel.createdTimestamp, Date.now(), { addSuffix: true });
 
         // Define the desc and lastMessage vars

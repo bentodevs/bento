@@ -9,7 +9,7 @@ const { getRole } = require("./getters");
  * @param {Object} permissions The permission data
  * @param {Object} cmd The command data 
  * 
- * @returns {Promise.Boolean} true if the user doesn't have permissions, false if the user does have permissions
+ * @returns {Promise.<Boolean>} true if the user doesn't have permissions, false if the user does have permissions
  */
 exports.checkPerms = async (bot, message, permissions, cmd) => {
     // If the user is a bot owner return false
@@ -94,7 +94,7 @@ exports.checkPerms = async (bot, message, permissions, cmd) => {
  * @param {Object} message The message (or interaction) object from which to get certain data (Such as guild ID, etc.)
  * @param {Object} cmd The command information 
  * 
- * @returns {Promise.Boolean}
+ * @returns {Promise.<Boolean>}
  */
 exports.checkSelf = async (message, cmd) => {
     // If the command was run in dms return false

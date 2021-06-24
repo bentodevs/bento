@@ -1,4 +1,6 @@
+const { Permissions } = require("discord.js");
 const { getMember } = require("../../modules/functions/getters");
+const { checkPerms } = require("../../modules/functions/permissions");
 
 module.exports = {
     info: {
@@ -54,7 +56,24 @@ module.exports = {
         if (!member)
             return message.errorReply("You didn't specify a valid member!");
 
-        // TODO: [BOT-35] Nickname permission check
+        // Check the users permissions
+        if (member.id == message.author.id) {
+            if (!message.member.permissions.has(Permissions.FLAGS.CHANGE_NICKNAME) && await checkPerms(bot, message, message.permissions, bot.commands.get("nick"))) {
+                if (message.settings.general.permission_message) {
+                    return message.errorReply(`You don't have permissions to change your own nickname!`);
+                }
+
+                return;
+            }
+        } else {
+            if (await checkPerms(bot, message, message.permissions, bot.commands.get("nick"))) {
+                if (message.settings.general.permission_message) {
+                    return message.errorReply("You don't have permissions to run that command!");
+                }
+
+                return;
+            }
+        }
 
         // If the members role is higher than or equal to the user running the command return an error
         if (member.roles.highest.position >= message.member.roles.highest.position && member.id !== message.author.id)

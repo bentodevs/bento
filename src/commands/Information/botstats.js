@@ -1,6 +1,6 @@
 const { stripIndents } = require("common-tags");
 const { formatDistance } = require("date-fns");
-const { MessageEmbed, version } = require("discord.js");
+const { MessageEmbed, version, MessageActionRow, MessageButton } = require("discord.js");
 const { connection } = require("mongoose");
 
 module.exports = {
@@ -50,9 +50,23 @@ module.exports = {
             
             **Dependencies**
             ${bot.config.emojis.djs} Discord.js **v${version}** | ${bot.config.emojis.nodejs} Node.js **${process.version}**`);
+        
+        const comps = new MessageActionRow()
+            .addComponents(
+                new MessageButton()
+                    .setURL(`https://r2-d2.dev`)
+                    .setStyle("LINK")
+                    .setLabel("Website")
+            )
+            .addComponents(
+                new MessageButton()
+                    .setURL(`https://discord.com/api/oauth2/authorize?client_id=854758155339038740&permissions=2097671415&scope=bot%20applications.commands`)
+                    .setStyle("LINK")
+                    .setLabel("Invite Link")
+            );
 
         // Send the embed
-        message.reply({ embeds: [embed] });
+        message.reply({ embeds: [embed], components: [comps] });
         
     }
 };

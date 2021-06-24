@@ -66,7 +66,7 @@ module.exports = {
             .setAuthor(`Emotes of ${message.guild.name}`, message.guild.iconURL({ format: "png", dynamic: true }))
             .setFooter(`${emotes.size} total emotes | Page ${page + 1} of ${pages.length}`)
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
-            .setDescription(description);
+            .setDescription(description.join("\n"));
 
         // Send the embed
         message.reply({ embeds: [embed] });
