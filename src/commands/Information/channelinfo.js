@@ -71,6 +71,10 @@ module.exports = {
             store: {
                 type: "Store Channel",
                 icon: "https://i.imgur.com/6VyvJWL.png"
+            },
+            stage: {
+                type: "Stage Channel",
+                icon: "https://i.imgur.com/yXE4Yg9.png"
             }
         };
 
@@ -121,7 +125,6 @@ module.exports = {
     run_interaction: async (bot, interaction) => {
 
         // Get the channel
-        // TODO: [BOT-77] Channels received from interactions seem to be missing data, check back once v13 releases
         const channel = interaction.options.get("channel").channel;
 
         // Define formatting for all the channel types
@@ -145,6 +148,10 @@ module.exports = {
             store: {
                 type: "Store Channel",
                 icon: "https://i.imgur.com/6VyvJWL.png"
+            },
+            stage: {
+                type: "Stage Channel",
+                icon: "https://i.imgur.com/yXE4Yg9.png"
             }
         };
 
