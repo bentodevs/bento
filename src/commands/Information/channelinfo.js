@@ -71,6 +71,10 @@ module.exports = {
             store: {
                 type: "Store Channel",
                 icon: "https://i.imgur.com/6VyvJWL.png"
+            },
+            stage: {
+                type: "Stage Channel",
+                icon: "https://i.imgur.com/yXE4Yg9.png"
             }
         };
 
@@ -144,6 +148,10 @@ module.exports = {
             store: {
                 type: "Store Channel",
                 icon: "https://i.imgur.com/6VyvJWL.png"
+            },
+            stage: {
+                type: "Stage Channel",
+                icon: "https://i.imgur.com/yXE4Yg9.png"
             }
         };
 
