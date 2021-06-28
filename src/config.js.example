@@ -19,8 +19,8 @@ const config = {
             url: "" // Support Discord URL
         },
         joinleave: {
-            guild: "826250676631502878", // Guild to log bot join/leaves in
-            channel: "859113556938326026" // Channel to log bot join/leaves in
+            guild: "", // Guild to log bot join/leaves in
+            channel: "" // Channel to log bot join/leaves in
         }
     },
 
