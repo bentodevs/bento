@@ -6,15 +6,22 @@ const config = {
         prefix: ".", // Default Bot Prefix
         version: "1.0.0", // Current Version
         embedColor: "#ABCDEF", // Default Embed Color
+        devs: [
+            "420325176379703298", // Jarno
+            "648882989471891499" // Waitrose
+        ]
+    },
+
+    logging: {
         errors: {
             guild: "", // Guild to log errors in
             channel: "", // Channel to log errors in
             url: "" // Support Discord URL
         },
-        devs: [
-            "420325176379703298", // Jarno
-            "648882989471891499" // Waitrose
-        ]
+        joinleave: {
+            guild: "826250676631502878", // Guild to log bot join/leaves in
+            channel: "859113556938326026" // Channel to log bot join/leaves in
+        }
     },
 
     // API Keys

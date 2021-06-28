@@ -128,8 +128,8 @@ module.exports = async (bot, message) => {
         await cmd.run(bot, message, args);
     } catch (err) {
         // Get the error guild and channel
-        const guild = bot.guilds.cache.get(bot.config.general.errors.guild) || await bot.guilds.fetch(bot.config.general.errors.guild).catch(() => {}),
-        channel = guild?.channels.cache.get(bot.config.general.errors.channel);
+        const guild = bot.guilds.cache.get(bot.config.logging.errors.guild) || await bot.guilds.fetch(bot.config.logging.errors.guild).catch(() => {}),
+        channel = guild?.channels.cache.get(bot.config.logging.errors.channel);
 
         // Build the error embed
         const embed = new MessageEmbed()
@@ -150,7 +150,7 @@ module.exports = async (bot, message) => {
         // Send an error message to the user
         message.errorReply(stripIndents`An error occurred while running the command: \`${err}\`
         
-        ${bot.config.emojis.url} If this issue persists please report it in our discord: ${bot.config.general.errors.url}`);
+        ${bot.config.emojis.url} If this issue persists please report it in our discord: ${bot.config.logging.errors.url}`);
     }
 
     // Log that the command has been run
