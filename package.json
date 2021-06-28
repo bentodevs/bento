@@ -32,7 +32,7 @@
     "common-tags": "^1.8.0",
     "date-fns": "^2.22.1",
     "date-fns-tz": "^1.1.4",
-    "discord.js": "^13.0.0-dev.b15d825bb3acdf432b94d8413a7a964ccc8734bc",
+    "discord.js": "^13.0.0-dev.03d3a5cdde5492433d27bbfe46afe0ebf2de5904",
     "https-proxy-agent": "^5.0.0",
     "iso-639-1": "^2.1.9",
     "mongoose": "^5.12.13",
