@@ -23,7 +23,7 @@ module.exports = async (bot, channel) => {
             .setColor(bot.config.general.embedColor)
             .setDescription(stripIndents`**Channel:** ${channel} (\`${channel.id}\`)
             **Channel Type:** ${channel.type.toTitleCase()}`)
-            .setFooter(`Created at`)
+            .setFooter(`Deleted at`)
             .setTimestamp(channel.createdTimestamp);
         
         log.send({ embeds: [embed] });
