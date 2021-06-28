@@ -1,4 +1,5 @@
 const { exec } = require("child_process");
+const { Util } = require("discord.js");
 
 module.exports = {
     info: {
@@ -40,9 +41,17 @@ module.exports = {
                 bot.logger.error(err.stack);
             } else {
                 // Delete the status message
-                msg.delete().catch(() => {});
-                // Send the output
-                message.reply({ content: stdout, code: "xl", split: { maxLenght: "1800" } });
+                msg.delete().catch(() => { });
+                
+                const msgs = Util.splitMessage(stdout, { maxLength: "1800" });
+
+                for (const data of msgs) {
+                    if (data == msgs[0]) {
+                        message.reply(`\`\`\`${data}\`\`\``);
+                    } else {
+                        message.channel.send(`\`\`\`${data}\`\`\``);
+                    }
+                }
             }
         });
 
