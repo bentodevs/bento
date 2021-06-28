@@ -35,12 +35,28 @@ module.exports = async (bot, member) => {
     const welcomeChannel = member.guild.channels.cache.get(settings.welcome.channel);
 
     // If the welcome channel exists and there is a message set in the DB, then send it
-    if (welcomeChannel && settings.welcome.joinMessage)
-        welcomeChannel.send(settings.welcome.joinMessage);
+    if (welcomeChannel && settings.welcome.joinMessage) {
+        const msg = settings.welcome.joinMessage
+            .replace("{id}", member.user.id)
+            .replace("{tag}", member.user.tag)
+            .replace("{member}", member)
+            .replace("{server}", member.guild.name)
+            .replace("{count}", await member.guild.members.fetch().then(a => a.size));
+        
+        welcomeChannel.send(msg);
+    }
     
     // If there is a DM message set in the DB, then send it to the user. Silently catch any issues.
-    if (settings.welcome.userMessage)
-        member.send(settings.welcome.userMessage).catch(() => { });
+    if (settings.welcome.userMessage) {
+        const msg = settings.welcome.userMessage
+            .replace("{id}", member.user.id)
+            .replace("{tag}", member.user.tag)
+            .replace("{member}", member)
+            .replace("{server}", member.guild.name)
+            .replace("{count}", await member.guild.members.fetch().then(a => a.size));
+
+        member.send(msg).catch(() => { });
+    }
     
     // Check if there are any roles to auto-assign
     if (settings.roles.auto?.length) {
@@ -52,7 +68,7 @@ module.exports = async (bot, member) => {
             // Grab the role
             const role = member.guild.roles.cache.get(data);
                     
-            // If the role exists push it to the array, if it doesn't exists remove it from the enmap
+            // If the role exists push it to the array, if it doesn't exists remove it from the db
             if (role) {
                 roles.push(role);
             } else {
