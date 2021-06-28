@@ -2,7 +2,7 @@ const punishments = require("../database/models/punishments");
 const settings = require("../database/models/settings");
 const { punishmentLog } = require("../modules/functions/moderation");
 
-module.exports = async (bot, guild, user) => {
+module.exports = async (bot, guild) => {
     
     // Fetch the guild settings
     const sets = await settings.findOne({ _id: guild.id });
