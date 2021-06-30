@@ -149,8 +149,6 @@ module.exports = async (bot, message) => {
         // Send the embed
         channel?.send({ embeds: [embed] });
 
-        console.error(err);
-
         // Send an error message to the user
         message.errorReply(stripIndents`An error occurred while running the command: \`${err}\`
         
