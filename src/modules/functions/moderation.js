@@ -89,7 +89,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
     }
 };
 
-exports.checkMesage = async (message, settings) => {
+exports.checkMessage = async (message, settings) => {
     if (settings.ignore.hierarchicRoleId && message.guild.roles.cache.get(settings.ignore.hierarchicRoleId).position <= message.member.roles.highest.position)
         return;
     if (settings.ignore.channels.includes(message.channel.id) || settings.ignore.roles.includes(message.member.roles.cache) || message.member.permissions.has("ADMINISTRATOR"))
