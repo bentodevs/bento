@@ -57,7 +57,8 @@ const config = {
         poll: "",
         users: "",
         chatting: "",
-        group: ""
+        group: "",
+        level_up: ""
     },
 
     // Mongo Info
