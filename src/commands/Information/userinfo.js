@@ -152,7 +152,7 @@ module.exports = {
             // Prepare the embed
             embed.setAuthor(member.tag, member.displayAvatarURL({ format: "png", dynamic: true, size: 1024 }));
             embed.setThumbnail(member.displayAvatarURL({ format: "png", dynamic: true, size: 1024 }));
-            embed.setColor("#ABCDEF");
+            embed.setColor(bot.config.general.embedColor);
             embed.setDescription(stripIndents`🙍 Human | ${status}
             **Created:** ${userCreated} (${timeSinceCreated})
             
