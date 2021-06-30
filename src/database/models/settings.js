@@ -88,5 +88,11 @@ module.exports = model("settings", new Schema({
             roles: false,
             members: false
         }
+    },
+    leveling: {
+        type: Object,
+        default: {
+            multiplier: 1.0
+        }
     }
 }));
