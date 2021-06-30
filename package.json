@@ -28,7 +28,9 @@
   "homepage": "https://github.com/AmirionStudios/R2-D2-Public#readme",
   "dependencies": {
     "@vitalets/google-translate-api": "^7.0.0",
+    "canvas": "^2.8.0",
     "chalk": "^4.1.0",
+    "color-thief-node": "^1.0.4",
     "common-tags": "^1.8.0",
     "date-fns": "^2.22.1",
     "date-fns-tz": "^1.1.4",
