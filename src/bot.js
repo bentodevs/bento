@@ -39,6 +39,8 @@ require("./modules/functions/prototypes")();
 bot.mojang = {};
 // Create the deletedMsgs collection
 bot.deletedMsgs = new Collection();
+// Create the cooldowns collection
+bot.cooldowns = new Collection();
 
 // Init function
 const init = async () => {
