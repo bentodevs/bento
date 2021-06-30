@@ -35,13 +35,13 @@
     "discord.js": "^13.0.0-dev.64f093f.1625054868",
     "https-proxy-agent": "^5.0.0",
     "iso-639-1": "^2.1.9",
-    "mongoose": "^5.12.13",
+    "mongoose": "^5.13.0",
     "node-fetch": "^2.6.1",
     "ora": "^5.4.1",
     "os": "^0.1.1",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
-    "eslint": "^7.28.0"
+    "eslint": "^7.29.0"
   }
 }
