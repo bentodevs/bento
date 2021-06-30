@@ -3,10 +3,11 @@ const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
 const tags = require("../database/models/tags");
 const { getSettings, getPerms } = require("../database/mongo");
-const { checkMesage, checkBlacklist } = require("../modules/functions/moderation");
+const { checkMessage, checkBlacklist } = require("../modules/functions/moderation");
 const { getTag } = require("../modules/functions/getters");
 const { checkSelf, checkPerms } = require("../modules/functions/permissions");
 const afk = require("../database/models/afk");
+const { checkLevel } = require("../modules/functions/leveling");
 
 module.exports = async (bot, message) => {
     // If a message is partial try to fetch it.
@@ -33,9 +34,10 @@ module.exports = async (bot, message) => {
     if (message.author.bot)
         return;
     
-    // If the message was sent in a guild, then check it against the automod
+    // If the message was sent in a guild, then check it against the automod & run the leveling function
     if (message.guild) {
-        await checkMesage(message, settings);
+        await checkMessage(message, settings);
+        await checkLevel(message);
     }
 
     // AFK User check
@@ -146,6 +148,8 @@ module.exports = async (bot, message) => {
 
         // Send the embed
         channel?.send({ embeds: [embed] });
+
+        console.error(err);
 
         // Send an error message to the user
         message.errorReply(stripIndents`An error occurred while running the command: \`${err}\`
