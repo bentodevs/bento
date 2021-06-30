@@ -58,7 +58,7 @@ exports.checkLevel = async (message) => {
     nextLvl = Math.floor(20 * (stats.level ** 2) + (100 * stats.level) + 100),
     newXp = stats.xp + xp;
 
-    if (nextLvl <= newXp) {
+    if (nextLvl <= newXp && stats.messages) {
         // Send the level up message
         message.reply(`${config.emojis.level_up} ${message.author} just reached level **${stats.level + 1}**!`).then(msg => {
             setTimeout(() => {

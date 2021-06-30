@@ -92,6 +92,7 @@ module.exports = model("settings", new Schema({
     leveling: {
         type: Object,
         default: {
+            messages: true,
             multiplier: 1.0
         }
     }

@@ -80,6 +80,7 @@ module.exports = {
                 .setDescription(`**Permission Messages:** \`${message.settings.general.permission_message ? "enabled" : "disabled"}\`
                 **Permission DM's:** \`${message.settings.general.permission_dms ? "enabled" : "disabled"}\`
                 **Disabled Messages:** \`${message.settings.general.disabled_message ? "enabled" : "disabled"}\`
+                **Level Messages:** \`${message.settings.leveling.messages ? "enabled" : "disabled"}\`
                 **TimeZone:** \`${timezones.find(a => a.tzCode == message.settings.general.timezone).label}\``);
 
             // Send the embed
@@ -111,7 +112,16 @@ module.exports = {
 
             // Send a confirmation message
             message.confirmationReply(`The disabled messages have been **${message.settings.general.disabled_message ? "disabled" : "enabled"}**!`);
-        } else if (option == "timezone") {
+        } else if (option == "level-msgs") {
+            // Get the DB query
+            const toUpdate = { "leveling.messages": message.settings.leveling.messages ? false : true };
+
+            // Update the setting in the DB
+            await settings.findOneAndUpdate({ _id: message.guild.id }, toUpdate);
+
+            // Send a confirmation message
+            message.confirmationReply(`The level-up messages have been **${message.settings.leveling.messages ? "disabled" : "enabled"}**!`);
+        }else if (option == "timezone") {
             // If no timezone was specified return an error
             if (!args[1])
                 return message.errorReply("You didn't specify a timezone!");
