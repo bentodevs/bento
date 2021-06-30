@@ -58,13 +58,16 @@ exports.checkLevel = async (message) => {
     nextLvl = Math.floor(20 * (stats.level ** 2) + (100 * stats.level) + 100),
     newXp = stats.xp + xp;
 
-    if (nextLvl <= newXp && stats.messages) {
-        // Send the level up message
-        message.reply(`${config.emojis.level_up} ${message.author} just reached level **${stats.level + 1}**!`).then(msg => {
-            setTimeout(() => {
-                msg.delete().catch(() => {});
-            }, 30000);
-        });
+    if (nextLvl <= newXp) {
+        // If lvl up messages are enabled
+        if (stats.messages) {
+            // Send the level up message
+            message.reply(`${config.emojis.level_up} ${message.author} just reached level **${stats.level + 1}**!`).then(msg => {
+                setTimeout(() => {
+                    msg.delete().catch(() => {});
+                }, 30000);
+            });
+        }
 
         // Update the DB
         await users.findOneAndUpdate({ _id: message.author.id, "guilds.id": message.guild.id }, {
