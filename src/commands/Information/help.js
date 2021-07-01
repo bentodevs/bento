@@ -92,12 +92,12 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setAuthor(`R2-D2 Commands`, bot.user.displayAvatarURL({ format: "png", dynamic: true }))
                 .setThumbnail(bot.user.displayAvatarURL({ format: "png", dynamic: true, size: 256 }))
-                .setDescription(`${!message.guild && args[0]?.toLowerCase() !== "all" ? `**-** Showing commands usable in DMs. To show all commands use \`${prefix}help all\`\n` : ""}**-** To use a command do \`${prefix}command\`.\n**-** Use \`${prefix}help <commandname>\` for additional details.`)
+                .setDescription(`${!message.guild && args[0]?.toLowerCase() !== "all" ? `**-** Showing commands usable in DMs. To show all commands use \`${prefix}help all\`\n` : ""}**-** To use a command do \`${prefix}command\`.\n**-** Use \`${prefix}help <commandname>\` for additional details.\n**-** Commands labeled with a 🏆 are premium commands.`)
                 .setColor("#ABCDEF");
 
             // Loop through the categories and add them as fields to the embed
             for (const [key, value] of Object.entries(categories)) {
-                embed.addField(key.toTitleCase(), `\`${prefix}${value.map(a => a.info.name).join(`\`, \`${prefix}`)}\``);
+                embed.addField(key.toTitleCase(), `\`${prefix}${value.map(a => `${a.info.name}${a.opts.premium ? " 🏆" : ""}`).join(`\`, \`${prefix}`)}\``);
             }
 
             // Send the embed to the user
@@ -180,6 +180,8 @@ module.exports = {
 
             // Add the permissions to the description
             desc += `\n**Permissions:** ${perm}`;
+
+            if (command.opts.premium) desc += `\n**Premium:** This command requires you to have [premium](https://r2-d2.dev/).`;
 
             // Add additional info and options to the description
             if (command.info.info) desc += `\n\n**Info:**\n${stripIndents(command.info.info)}`;
