@@ -39,8 +39,6 @@ module.exports = {
 
     run: async (bot, message, args) => {
 
-        // TODO: [BOT-73] Make it so you can roll multiple dices at once
-
         // Convert the string to a number
         let number = parseInt(args[0]);
 
