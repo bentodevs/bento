@@ -2,7 +2,8 @@
 const { Client, Collection, Intents } = require("discord.js"),
 { connect } = require("mongoose"),
 { getMongooseURL } = require("./database/mongo"),
-ora = require("ora");
+ora = require("ora"),
+Pokedex = require('pokedex-promise-v2');
 
 // Import handlers
 const commands = require("./modules/handlers/command"),
@@ -27,6 +28,9 @@ const bot = new Client({
     ],
     intents: intents
 });
+
+// Create pokedex
+bot.pokedex = new Pokedex();
 
 // Import the config
 bot.config = require("./config");
