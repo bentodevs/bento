@@ -16,6 +16,8 @@ module.exports = async (bot, oldMember, newMember) => {
     // Fetch guild settings
     const sets = await settings.findOne({ _id: newMember.guild.id });
 
+    // If the user was pending, and is now, then run the guildMemberAdd event
+    // Yes, this is super lazy but it's also efficient, so :pepeshrug:
     if (oldMember.pending !== newMember.pending) {
         bot.emit("guildMemberAdd", newMember);
     }
