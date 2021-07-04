@@ -49,7 +49,7 @@ exports.checkLevel = async (message) => {
     const gData = user.guilds.find(g => g.id == message.guild.id);
 
     // If the user is on cooldown return
-    if (gData.leveling.lastGained && (gData.leveling.lastGained + 60000) > Date.now())
+    if (gData?.leveling.lastGained && (gData?.leveling.lastGained + 60000) > Date.now())
         return;
 
     // Get the xp, xp needed for next level and the new xp
