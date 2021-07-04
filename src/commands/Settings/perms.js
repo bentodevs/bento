@@ -90,7 +90,23 @@ module.exports = {
                             roles.push("@everyone");
                         } else {
                             const role = await getRole(message, i);
-                            roles.push(role?.toString() ?? "<deleted role>");
+                            if (!role) {
+                                if (permission.permission.length == 1) {
+                                    await permissions.findOneAndUpdate({ _id: message.guild.id }, {
+                                        [location]: command ? filterSelfPerms(command.perms) : {}
+                                    });
+                                } else {
+                                    await permissions.findOneAndUpdate({ _id: message.guild.id }, {
+                                        $pull: {
+                                            [`${location}.permission`]: i
+                                        }
+                                    });
+                                }
+
+                                roles.push("<deleted role>");
+                            } else {
+                                roles.push(role?.toString() ?? "<deleted role>");
+                            }
                         }
                     }
 
