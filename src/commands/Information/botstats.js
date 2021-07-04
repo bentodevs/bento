@@ -60,6 +60,12 @@ module.exports = {
             )
             .addComponents(
                 new MessageButton()
+                    .setURL(`https://wiki.r2-d2.dev`)
+                    .setStyle("LINK")
+                    .setLabel("Wiki")
+            )
+            .addComponents(
+                new MessageButton()
                     .setURL(`https://discord.com/api/oauth2/authorize?client_id=854758155339038740&permissions=2097671415&scope=bot%20applications.commands`)
                     .setStyle("LINK")
                     .setLabel("Invite Link")
