@@ -16,6 +16,10 @@ module.exports = async (bot, oldMember, newMember) => {
     // Fetch guild settings
     const sets = await settings.findOne({ _id: newMember.guild.id });
 
+    if (oldMember.pending !== newMember.pending) {
+        bot.emit("guildMemberAdd", newMember);
+    }
+
     if (sets.manual_events.members) {
         // Fetch the manual event log channel™
         const log = newMember.guild.channels.cache.get(sets.logs.events);
@@ -31,6 +35,9 @@ module.exports = async (bot, oldMember, newMember) => {
         if (JSON.stringify(newMember._roles) !== JSON.stringify(oldMember._roles)) desc += `**__Roles Updated__**\n**Old Roles:** ${oldMember.roles.cache.filter(role => role.name !== "@everyone").sort((b, a) => a.position - b.position).map(role => role.toString()).join(", ")}\n**New Roles:** ${newMember.roles.cache.filter(role => role.name !== "@everyone").sort((b, a) => a.position - b.position).map(role => role.toString()).join(", ")}`;
         if (newMember.user.tag !== oldMember.user.tag) desc += `**__Username Updated__**\n**Old Username:**${oldMember.user.tag}\n**New Username:**${newMember.user.tag}\n\n`;
         if (newMember.user.displayAvatarURL({format: "png", dynamic:true}) !== oldMember.user.displayAvatarURL({format: "png", dynamic:true})) desc += `**__Avatar Updated__**\n**Old Avatar:**[${oldMember.user.displayAvatarURL({format: "png", dynamic:true})}](Click here!)\n**New Avatar:**[${newMember.user.displayAvatarURL({format: "png", dynamic:true})}](Click here!)\n\n`;
+
+        if (!desc)
+            return;
 
         // Build the embed
         const embed = new MessageEmbed()

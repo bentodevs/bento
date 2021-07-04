@@ -31,6 +31,10 @@ module.exports = async (bot, member) => {
     if (!settings.moderation.bots && member.user.bots)
         return member.kick("Bot joining is currently disabled!");
     
+    // If the user is in a pending state (Membership screening), then return
+    if (member.pending)
+        return;
+
     // Get the welcome channel
     const welcomeChannel = member.guild.channels.cache.get(settings.welcome.channel);
 
