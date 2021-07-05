@@ -10,7 +10,18 @@ const commands = require("./modules/handlers/command"),
 events = require("./modules/handlers/event");
 
 // Define Gateway Intents
-const intents = new Intents(Intents.ALL).remove(["DIRECT_MESSAGE_TYPING", "GUILD_MESSAGE_TYPING", "GUILD_INTEGRATIONS", "GUILD_INVITES"]);
+const intents = new Intents().add([
+    "GUILDS",
+    "GUILD_MEMBERS",
+    "GUILD_BANS",
+    "GUILD_EMOJIS",
+    "GUILD_WEBHOOKS",
+    "GUILD_VOICE_STATES",
+    "GUILD_PRESENCES",
+    "GUILD_MESSAGES",
+    "GUILD_MESSAGE_REACTIONS",
+    "DIRECT_MESSAGES"
+]);
 
 // Create the bot client
 const bot = new Client({
