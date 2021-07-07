@@ -72,28 +72,28 @@ module.exports = model("settings", new Schema({
     logs: {
         type: Object,
         default: {
-            default: null,
-            commands: null,
-            edited: null,
-            deleted: null,
-            events: null
+            default: null, // Default logging channel
+            commands: null, // Command logging channel
+            edited: null, // Edited messages logging channel
+            deleted: null, // Deleted messages logging channel
+            events: null // Event logging channel
         }
     },
     manual_events: {
         type: Object,
         default: {
-            moderation: false,
-            guild: false,
-            channels: false,
-            roles: false,
-            members: false
+            moderation: false, // Wether or not moderation actions get logged
+            guild: false, // Wether or not guild actions get logged
+            channels: false, // Wether or not channel actions get logged
+            roles: false, // Wether or not role actions get logged
+            members: false // Wether or not member actions get logged
         }
     },
     leveling: {
         type: Object,
         default: {
-            messages: true,
-            multiplier: 1.0
+            messages: true, // Wether the bot should send level up messages or not
+            multiplier: 1.0 // The XP multiplier for levels
         }
     }
 }));
