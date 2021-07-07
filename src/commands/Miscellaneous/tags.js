@@ -1,6 +1,6 @@
 const { formatDistance } = require("date-fns");
 const { format, utcToZonedTime } = require("date-fns-tz");
-const { MessageEmbed, Permissions } = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 const tags = require("../../database/models/tags");
 
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
         aliases: [
             "tag"
         ],
-        usage: "tags <name | \"list\"> [option | page] <value>",
+        usage: "tags <name | \"list\"> [content | page | \"delete\"]",
         examples: [
             "tags pong **Ping!**",
             "tags pong delete",
@@ -27,13 +27,7 @@ module.exports = {
         
         Add \`-e\` to the message to make the output an embed.
         You can set up to 50 tags per guild.`,
-        options: [
-            "`tags <name>` - Display the tag content.",
-            "`tags <name> delete` - Deletes the tag.",
-            "`tags <name> perms [role | discord permission | \"default\"]` - Set tag perms.",
-            "`tags <name> <content>` - Create or edit a tag.",
-            "`tags list [page]` - View a list of tags.",
-        ]
+        options: []
     },
     perms: {
         permission: "ADMINISTRATOR",
@@ -164,15 +158,7 @@ module.exports = {
             // Send a confirmation message
             message.confirmationReply(`The tag **${name}** was successfully deleted!`);
         } else if (args[1]?.toLowerCase() == "perms") {
-            if (!args[2]) {
-                // Code
-            } else if (Permissions.FLAGS[args[2].toUpperCase()]) {
-                // Code
-            } else if (args[2].toLowerCase() == "default") {
-                // Code
-            } else {
-                // Code
-            }
+            // TODO: [BOT-6] Tag Permissions
         } else {
             // If the guild is at the max of 50 tags return an error
             if (guildTags.size >= 50)

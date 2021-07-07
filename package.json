@@ -34,10 +34,10 @@
     "common-tags": "^1.8.0",
     "date-fns": "^2.22.1",
     "date-fns-tz": "^1.1.4",
-    "discord.js": "^13.0.0-dev.755c180.1625616230",
+    "discord.js": "^13.0.0-dev.2e078e4.1625521956",
     "https-proxy-agent": "^5.0.0",
     "iso-639-1": "^2.1.9",
-    "mongoose": "^5.13.2",
+    "mongoose": "^5.13.0",
     "node-fetch": "^2.6.1",
     "ora": "^5.4.1",
     "os": "^0.1.1",
@@ -45,6 +45,6 @@
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
-    "eslint": "^7.30.0"
+    "eslint": "^7.29.0"
   }
 }
