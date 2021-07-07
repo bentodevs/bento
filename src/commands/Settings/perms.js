@@ -50,7 +50,7 @@ module.exports = {
 
         // If no command was found or the command is a dev command return an error
         if ((!command && !category) || (command?.info.category.toLowerCase() == "dev" || category == "dev"))
-            return message.error("You didn't specify a valid category or command!");
+            return message.errorReply("You didn't specify a valid category or command!");
 
         // Get the perm info
         const perm = message.permissions.categories[category] || message.permissions.commands[command?.info.name] || undefined;
@@ -133,11 +133,11 @@ module.exports = {
             }
 
             // Send the message
-            message.channel.send(perm);
+            message.reply(perm);
         } else if (Permissions.FLAGS[args[1].toUpperCase()]) {
             // If the permission is already set to the specified permission return an error
             if (args[1].toUpperCase() == perm?.permission)
-                return message.error(`The permission for the \`${target}\` ${type} is already set to \`${args[1].toUpperCase()}\`!`);
+                return message.errorReply(`The permission for the \`${target}\` ${type} is already set to \`${args[1].toUpperCase()}\`!`);
 
             // Update the permission in the database
             await permissions.findOneAndUpdate({ _id: message.guild.id }, {
@@ -148,11 +148,11 @@ module.exports = {
             });
 
             // Send a confirmation message
-            message.confirmation(`The permission for the \`${target}\` ${type} has been set to \`${args[1].toUpperCase()}\`!`);
+            message.confirmationReply(`The permission for the \`${target}\` ${type} has been set to \`${args[1].toUpperCase()}\`!`);
         } else if (args[1].toLowerCase() == "default") {
             // If the permission is already set to default return an error
             if (!perm?.permission || JSON.stringify(perm) == JSON.stringify(command ? filterSelfPerms(command.perms) : null))
-                return message.error(`The ${type} is already set to the default permission!`);
+                return message.errorReply(`The ${type} is already set to the default permission!`);
 
             // Update the permission in the database
             await permissions.findOneAndUpdate({ _id: message.guild.id }, {
@@ -160,19 +160,19 @@ module.exports = {
             });
 
             // Send a confirmation message
-            message.confirmation(`The permission for the \`${target}\` ${type} has been set to the default permission!`);
+            message.confirmationReply(`The permission for the \`${target}\` ${type} has been set to the default permission!`);
         } else {
             // Get the role
             const role = await getRole(message, args.slice(1).join(" ")) || await getRole(message, args.slice(1).join(" ").replace("+", ""));
 
             // If no role was specified return an error
             if (!role)
-                return message.error("You didn't specify a valid role or permission!");
+                return message.errorReply("You didn't specify a valid role or permission!");
 
             if (args.slice(1).join(" ").toLowerCase().includes("+") && (role.name.match(/\+/g) || []).length < (args.slice(1).join(" ").match(/\+/g) || []).length) {
                 // If the permission is already set to the role specified return an error
                 if (role.id == perm?.permission && perm?.hierarchic)
-                    return message.error(`The ${type} is already set to the permission you specified!`);
+                    return message.errorReply(`The ${type} is already set to the permission you specified!`);
 
                 // Update the permission in the database
                 await permissions.findOneAndUpdate({ _id: message.guild.id }, {
@@ -180,7 +180,7 @@ module.exports = {
                 });
 
                 // Send a confirmation message
-                message.confirmation(`The permission for the \`${target}\` ${type} has been set to ${role.id == message.guild.id ? "be open to everyone" : `the ${role} role and up`}!`);
+                message.confirmationReply(`The permission for the \`${target}\` ${type} has been set to ${role.id == message.guild.id ? "be open to everyone" : `the ${role} role and up`}!`);
             } else {
                 if (Array.isArray(perm?.permission)) {
                     if (perm.permission.includes(role.id) || perm.permission.includes(role.name)) {
@@ -191,7 +191,7 @@ module.exports = {
                             });
 
                             // Send a confirmation message
-                            message.confirmation(`The permission for the \`${target}\` ${type} has been set to the default permission!`);
+                            message.confirmationReply(`The permission for the \`${target}\` ${type} has been set to the default permission!`);
                         } else {
                             // Pull the role from the permission in the database
                             await permissions.findOneAndUpdate({ _id: message.guild.id }, {
@@ -201,7 +201,7 @@ module.exports = {
                             });
 
                             // Send a confirmation message
-                            message.confirmation(`Successfully removed the ${role} role from the permissions for the \`${target}\` ${type}!`);
+                            message.confirmationReply(`Successfully removed the ${role} role from the permissions for the \`${target}\` ${type}!`);
                         }
                     } else {
                         // Push the role to the permission in the database
@@ -212,7 +212,7 @@ module.exports = {
                         });
 
                         // Send a confirmation message
-                        message.confirmation(`Successfully added the ${role} role to the permissions for the \`${target}\` ${type}!`);
+                        message.confirmationReply(`Successfully added the ${role} role to the permissions for the \`${target}\` ${type}!`);
                     }
                 } else {
                     // Update the permission in the database
@@ -224,7 +224,7 @@ module.exports = {
                     });
 
                     // Send a confirmation message
-                    message.confirmation(`Successfully added the ${role} role to the permissions for the \`${target}\` ${type}!`);
+                    message.confirmationReply(`Successfully added the ${role} role to the permissions for the \`${target}\` ${type}!`);
                 }
             }
         }
