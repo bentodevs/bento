@@ -14,7 +14,8 @@ module.exports = model("settings", new Schema({
             command_channel: null, // Auto-clearing command channel
             permission_message: true, // Whether the bot sends permission messages or not
             permission_dms: true, // Wether the bot sends permission dms or not
-            disabled_message: true // Wether the bot sends "command/category is disabled" messages or not
+            disabled_message: true, // Wether the bot sends "command/category is disabled" messages or not
+            restricted_channels: [] // An array with restricted channels
         }
     },
     welcome: {
