@@ -35,6 +35,7 @@
     "date-fns": "^2.22.1",
     "date-fns-tz": "^1.1.4",
     "discord.js": "^13.0.0-dev.28b5ffb.1625702624",
+    "flip": "^1.0.0",
     "https-proxy-agent": "^5.0.0",
     "iso-639-1": "^2.1.9",
     "mongoose": "^5.13.2",
