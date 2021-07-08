@@ -55,4 +55,9 @@ module.exports = () => {
         // Remove minecraft colour codes
         return this.replace(/\u00A7[0-9A-FK-OR]/ig, "");
     };
+
+    String.prototype.reverseText = function() {
+        // Reverse the string
+        return this.split("").reverse().join("");
+    };
 };
