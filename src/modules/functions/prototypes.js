@@ -64,4 +64,20 @@ module.exports = () => {
     String.prototype.cleanEmotes = function() {
         return this.replace(/<a?:(\w+):(\d+)>/gi, ":$1:");
     };
+
+    String.prototype.toBinary = function() {
+        return this.split('').map(function (char) {
+            return char.charCodeAt(0).toString(2);
+        }).join(' ');
+    };
+
+    String.prototype.binToClear = function () {
+        let binString = "";
+
+        this.split(" ").map(function (char) {
+            binString += String.fromCharCode(parseInt(char, 2));
+        });
+
+        return binString;
+    };
 };
