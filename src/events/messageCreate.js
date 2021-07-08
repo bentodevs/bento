@@ -108,7 +108,7 @@ module.exports = async (bot, message) => {
 
     // If its a tag return the getTag function
     if (tag)
-        return getTag(tag, message, args);
+        return await getTag(tag, message, args);
 
     // Get permissions
     const permissions = message.permissions = await getPerms(bot, message.guild?.id);
