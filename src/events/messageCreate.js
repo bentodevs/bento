@@ -76,7 +76,7 @@ module.exports = async (bot, message) => {
         // Return
         return;
     }
-    // Cache the guild member if they aren't isn't cached
+    // Cache the guild member if they aren't cached
     if (message.guild && !message.member) 
         await message.guild.members.fetch(message.author);
 
