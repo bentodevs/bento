@@ -5,7 +5,7 @@ module.exports = {
         usage: "",
         examples: [],
         description: "Check your premium status.",
-        category: "Miscellaneous",
+        category: "Utility",
         info: null,
         options: []
     },
@@ -26,7 +26,7 @@ module.exports = {
         opts: []
     },
 
-    run: async (bot, message, args) => {
+    run: async (bot, message) => {
 
         // Send a message
         message.reply(`${bot.config.emojis.confirmation} Premium is currently free and enabled for all users during the **beta** of R2-D2. Once the bot is ready to come out of its beta stage, premium will be a paid subscription.`);
