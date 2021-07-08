@@ -181,6 +181,10 @@ module.exports = async (bot, message) => {
         // Send the embed
         channel?.send({ embeds: [embed] });
 
+        // If the bot is in a dev environment log the error as well
+        if (bot.config.general.development)
+            console.error(err);
+
         // Send an error message to the user
         message.errorReply(stripIndents`An error occurred while running the command: \`${err}\`
         

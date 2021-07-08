@@ -9,7 +9,8 @@ const config = {
         devs: [
             "420325176379703298", // Jarno
             "648882989471891499" // Waitrose
-        ]
+        ],
+        development: false // Wether the bot is in a development environment or not
     },
 
     logging: {
