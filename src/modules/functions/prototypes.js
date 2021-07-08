@@ -60,4 +60,8 @@ module.exports = () => {
         // Reverse the string
         return this.split("").reverse().join("");
     };
+
+    String.prototype.cleanEmotes = function() {
+        return this.replace(/<a?:(\w+):(\d+)>/gi, ":$1:");
+    };
 };
