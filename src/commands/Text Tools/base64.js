@@ -12,8 +12,8 @@ module.exports = {
         category: "Text Tools",
         info: null,
         options: [
-            "`encode` - Encode a string to Base64",
-            "`decode` - Decode a Base64 sring"
+            "`encode <text>` - Encode a string to Base64",
+            "`decode <text>` - Decode a Base64 sring"
         ]
     },
     perms: {
@@ -36,7 +36,7 @@ module.exports = {
     run: async (bot, message, args) => {
         if (args[0].toLowerCase() === "encode") {
             // Get the string and encode it in base64
-            const string = args.splice(1).join(" "),
+            const string = args.slice(1).join(" "),
             encoded = Buffer.from(string).toString('base64');
             
             // Build the embed
@@ -49,7 +49,7 @@ module.exports = {
             message.reply({ embeds: [embed] });
         } else if (args[0].toLowerCase() === "decode") {
             // Get the string and decode it from base64
-            const string = args[1],
+            const string = args.slice(1).join(" "),
             encoded = Buffer.from(string, 'base64').toString();
             
             // Build the embed
