@@ -39,6 +39,10 @@ module.exports = {
         if (!args) 
             args = message.options.get("text").value.split(/ +/g);
 
+        // If the user only specified 1 word return an error
+        if (args.length == 1)
+            return message.reply(`${bot.config.emojis.error} You must specify at least 2 words!`);
+
         // Send the shuffled text
         message.reply(args.shuffle().join(" "));
 
