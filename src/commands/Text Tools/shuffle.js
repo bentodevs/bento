@@ -1,12 +1,12 @@
 module.exports = {
     info: {
-        name: "wordcount",
+        name: "shuffle",
         aliases: [],
-        usage: "wordcount <text>",
+        usage: "shuffle <text>",
         examples: [
-            "wordcount this is a test"
+            "shuffle this is a test"
         ],
-        description: "Counts the words and characters in a text.",
+        description: "Shuffles words around in a text.",
         category: "Text Tools",
         info: null,
         options: []
@@ -28,7 +28,7 @@ module.exports = {
         opts: [{
             name: "text",
             type: "STRING",
-            description: "The text you want to be counted.",
+            description: "The text you want to be shuffled.",
             required: true
         }]
     },
@@ -39,8 +39,8 @@ module.exports = {
         if (!args) 
             args = message.options.get("text").value.split(/ +/g);
 
-        // Send the counted text
-        message.reply(`${bot.config.emojis.confirmation} The text you provided has **${args.length}** words and **${args.join("").length}** characters!`);
+        // Send the shuffled text
+        message.reply(args.shuffle().join(" "));
 
     }
 };

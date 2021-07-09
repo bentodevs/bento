@@ -71,7 +71,7 @@ module.exports = () => {
         }).join(' ');
     };
 
-    String.prototype.binToClear = function () {
+    String.prototype.binToClear = function() {
         let binString = "";
 
         this.split(" ").map(function (char) {
@@ -79,5 +79,14 @@ module.exports = () => {
         });
 
         return binString;
+    };
+
+    Array.prototype.shuffle = function() {
+        for (let i = this.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [this[i], this[j]] = [this[j], this[i]];
+        }
+
+        return this;
     };
 };
