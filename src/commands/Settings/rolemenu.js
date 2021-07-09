@@ -6,7 +6,6 @@ module.exports = {
     info: {
         name: "rolemenu",
         aliases: [
-            "rm",
             "rmenu",
             "reactmenu"
         ],
