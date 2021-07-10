@@ -3,9 +3,7 @@ const { Client, Collection, Intents } = require("discord.js"),
 { connect } = require("mongoose"),
 { getMongooseURL } = require("./database/mongo"),
 ora = require("ora"),
-Pokedex = require('pokedex-promise-v2'),
-GeniusFetch = require('genius-lyrics');
-const config = require("./config");
+Pokedex = require('pokedex-promise-v2');
 
 // Import handlers
 const commands = require("./modules/handlers/command"),
@@ -44,9 +42,6 @@ const bot = new Client({
 
 // Create pokedex
 bot.pokedex = new Pokedex();
-
-// Create Genius Fetcher
-bot.genius = new GeniusFetch.Client(config.apiKeys.genius);
 
 // Import the config
 bot.config = require("./config");
