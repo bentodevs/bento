@@ -43,7 +43,7 @@ module.exports = async (bot, interaction) => {
             return;
         }
         // If a guildOnly command is run in dms return an error
-        if (cmd.opts.guildOnly && !interaction.inGuild())
+        if (cmd.opts.guildOnly && !interaction.guildId)
             return interaction.error({ content: "This command is unavailable via private messages. Please run this command in a guild.", ephemeral: true });
         // If the command or category is disabled return an error
         if (interaction.inGuild() && (settings.general.disabled_commands?.includes(cmd.info.name) || settings.general.disabled_categories?.includes(cmd.info.category)) && !interaction.channel.permissionsFor(interaction.member).has("ADMINISTRATOR") && !bot.config.general.devs.includes(interaction.user.id)) {
