@@ -1,5 +1,6 @@
 const { default: fetch } = require("node-fetch");
 const path = require("path");
+const { fetchEmote } = require("../../modules/functions/misc");
 
 module.exports = {
     info: {
@@ -69,29 +70,22 @@ module.exports = {
                 message.errorReply(`Failed to create the emote: \`${err}\``);
             });
         } else {
-            // Grab the url and fetch the emoji
+            // Grab the url and fetch the emoji and grab the emote name
             const URL = url?.[0] ? url[0] : message.attachments.first().url,
-            // TODO: [BOT-4] Create proper function to fetch emojis & fetch through a proxy to stop users from getting the backend IP
-            res = await fetch(URL);
-
-            // If the url didn't contain an image return an error
-            if (!res.headers.get("content-type").startsWith("image"))
-                return message.errorReply("The URL or File you specified isn't an image!");
-            // If the size of the file is too big return an error
-            if (res.headers.get("content-length") > 256 * 1024)
-                return message.errorReply("The emoji is too big! It must be 256KB or less.");
-
-            // Convert the emoji to a buffer and grab the name
-            const buffer = await res.buffer(),
             name = args.join(" ").replace(URL, "").trim() ? args.join(" ").replace(URL, "").trim() : path.parse(URL).name;
 
-            // Create the emoji
-            message.guild.emojis.create(buffer, name, {
-                reason: `Issued by ${message.author.tag} using the createemote command.`
-            }).then(emote => {
-                message.confirmationReply(`Successfully created the emote: \`:${emote.name}:\` ${emote}`);
+            // Fetch the emote
+            fetchEmote(URL).then(buffer => {
+                // Create the emoji
+                message.guild.emojis.create(buffer, name, {
+                    reason: `Issued by ${message.author.tag} using the createemote command.`
+                }).then(emote => {
+                    message.confirmationReply(`Successfully created the emote: \`:${emote.name}:\` ${emote}`);
+                }).catch(err => {
+                    message.errorReply(`Failed to create the emote: \`${err.message}\``);
+                });
             }).catch(err => {
-                message.errorReply(`Failed to create the emote: \`${err}\``);
+                return message.errorReply(`Failed to create the emote: \`${err.message}\``);
             });
         }
 

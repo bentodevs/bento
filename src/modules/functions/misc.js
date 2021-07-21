@@ -1,5 +1,6 @@
 const { default: fetch } = require("node-fetch");
 const { xml2json } = require("xml-js");
+const HttpsProxyAgent = require('https-proxy-agent');
 const config = require("../../config");
 
 /**
@@ -511,6 +512,41 @@ exports.getDiscordStatus = () => {
         }).catch(err => {
             console.error(err);
             reject(err);
+        });
+    });
+};
+
+/**
+ * Fetch an image and return the buffer
+ * 
+ * @param {String} url 
+ * 
+ * @returns {Promise.<Buffer>} emote
+ */
+exports.fetchEmote = (url) => {
+    return new Promise((resolve, reject) => {
+        // Create the proxyAgent
+        const proxyAgent = new HttpsProxyAgent(config.general.proxyUrl);
+
+        // Fetch the URL
+        fetch(url, {
+            agent: proxyAgent
+        }).then(async res => {
+            // If the url didn't contain an image return an error
+            if (!res.headers.get("content-type").startsWith("image"))
+                reject(new Error("The URL or File you specified isn't an image!"));
+            // If the size of the file is too big return an error
+            if (res.headers.get("content-length") > 256 * 1024)
+                reject(new Error("The emoji is too big! It must be 256KB or less."));
+
+            // Convert the image to a buffer and resolve it
+            res.buffer().then(buff => {
+                resolve(buff);
+            });
+        }).catch(err => {
+            // Log the error and reject it
+            console.error(err);
+            reject(new Error("Something went wrong while fetching the image!"));
         });
     });
 };
