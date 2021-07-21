@@ -16,9 +16,9 @@ module.exports = {
         options: []
     },
     perms: {
-        permission: "MANAGE_EMOJIS",
+        permission: "MANAGE_EMOJIS_AND_STICKERS",
         type: "discord",
-        self: ["MANAGE_EMOJIS"]
+        self: ["MANAGE_EMOJIS_AND_STICKERS"]
     },
     opts: {
         guildOnly: true,
