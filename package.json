@@ -38,14 +38,13 @@
     "flip": "^1.0.0",
     "https-proxy-agent": "^5.0.0",
     "iso-639-1": "^2.1.9",
-    "mongoose": "^5.13.2",
+    "mongoose": "^5.13.3",
     "node-fetch": "^2.6.1",
     "ora": "^5.4.1",
-    "os": "^0.1.1",
     "pokedex-promise-v2": "^3.3.2",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
-    "eslint": "^7.30.0"
+    "eslint": "^7.31.0"
   }
 }
