@@ -1,5 +1,5 @@
 // Import dependencies
-const { Client, Collection, Intents } = require("discord.js"),
+const { Client, Collection } = require("discord.js"),
 { connect } = require("mongoose"),
 { getMongooseURL } = require("./database/mongo"),
 ora = require("ora"),
@@ -8,20 +8,6 @@ Pokedex = require('pokedex-promise-v2');
 // Import handlers
 const commands = require("./modules/handlers/command"),
 events = require("./modules/handlers/event");
-
-// Define Gateway Intents
-const intents = new Intents().add([
-    "GUILDS",
-    "GUILD_MEMBERS",
-    "GUILD_BANS",
-    "GUILD_EMOJIS",
-    "GUILD_WEBHOOKS",
-    "GUILD_VOICE_STATES",
-    "GUILD_PRESENCES",
-    "GUILD_MESSAGES",
-    "GUILD_MESSAGE_REACTIONS",
-    "DIRECT_MESSAGES"
-]);
 
 // Create the bot client
 const bot = new Client({
@@ -37,7 +23,18 @@ const bot = new Client({
         "REACTION",
         "USER"
     ],
-    intents: intents
+    intents: [
+        "GUILDS",
+        "GUILD_MEMBERS",
+        "GUILD_BANS",
+        "GUILD_EMOJIS_AND_STICKERS",
+        "GUILD_WEBHOOKS",
+        "GUILD_VOICE_STATES",
+        "GUILD_PRESENCES",
+        "GUILD_MESSAGES",
+        "GUILD_MESSAGE_REACTIONS",
+        "DIRECT_MESSAGES"
+    ]
 });
 
 // Create pokedex
