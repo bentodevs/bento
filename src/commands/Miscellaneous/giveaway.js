@@ -156,7 +156,7 @@ module.exports = {
         } else if (option == "start") {
             // Define the filter and message collector options
             const filter = m => m.author.id == message.author.id,
-            options = { max: 1, time: 60000, errors: ["time"] };
+            options = { filter, max: 1, time: 60000, errors: ["time"] };
 
             // Define the option vars
             let channel, time, winners, prize;
@@ -167,7 +167,7 @@ module.exports = {
             \`Please type the name of a channel in this guild.\``);
 
             // Get the channel
-            await message.channel.awaitMessages(filter, options).then(async msgs => {
+            await message.channel.awaitMessages(options).then(async msgs => {
                 const m = msgs.first();
 
                 if (m.content.toLowerCase() == "cancel") {
@@ -183,8 +183,8 @@ module.exports = {
             if (!channel)
                 return message.errorReply("You didn't specify a valid channel! The giveaway has been canceled.");
             // If the channel isn't a news or text channel return an error
-            if (channel.type !== "news" && channel.type !== "text")
-                return message.errorReply("The channel you specified isn't a text or new channel. The giveaway has been canceled.");
+            if (channel.type !== "GUILD_TEXT" && channel.type !== "GUILD_NEWS")
+                return message.errorReply("The channel you specified isn't a text or news channel. The giveaway has been canceled.");
 
             // Send the duration message
             await message.channel.send(stripIndents`🎉 Awesome! The giveaway will be hosted in ${channel}! Now, how long would you like the giveaway to last?
@@ -192,7 +192,7 @@ module.exports = {
             \`Please enter the duration of the giveaway (Example: 1d2h equates to 1 day 2 hours)\``);
 
             // Get the giveaway duration
-            await message.channel.awaitMessages(filter, options).then(async msgs => {
+            await message.channel.awaitMessages(options).then(async msgs => {
                 const m = msgs.first();
 
                 if (m.content.toLowerCase() == "cancel") {
@@ -220,7 +220,7 @@ module.exports = {
             \`Please enter a number of winners, between 1 and 20\``);
 
             // Get the amount of winners
-            await message.channel.awaitMessages(filter, options).then(async msgs => {
+            await message.channel.awaitMessages(options).then(async msgs => {
                 const m = msgs.first();
 
                 if (m.content.toLowerCase() == "cancel") {
@@ -248,7 +248,7 @@ module.exports = {
             \`Please enter the giveaway prize. This aditionally starts the giveaway.\``);
 
             // Get the prize
-            await message.channel.awaitMessages(filter, options).then(async msgs => {
+            await message.channel.awaitMessages(options).then(async msgs => {
                 const m = msgs.first();
 
                 if (m.content.toLowerCase() == "cancel") {
@@ -491,7 +491,7 @@ module.exports = {
             prize = options.get("prize").value;
 
             // Channel Checks
-            if (channel.type !== "news" && channel.type !== "text")
+            if (channel.type !== "GUILD_NEWS" && channel.type !== "GUILD_TEXT")
                 return interaction.error("The channel you specified isn't a text or news channel!");
 
             // Time Checks
