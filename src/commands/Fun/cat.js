@@ -32,7 +32,7 @@ module.exports = {
     run: async (bot, message) => {
 
         // Fetch a random cat image and convert the response into json
-        const req = await fetch("https://aws.random.cat/meow"),
+        const req = await fetch("http://aws.random.cat/meow"),
         res = await req.json();
 
         // Build the embed
