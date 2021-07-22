@@ -2,6 +2,7 @@ const { stripIndents } = require("common-tags");
 const { formatDistance } = require("date-fns");
 const { format, utcToZonedTime } = require("date-fns-tz");
 const { MessageEmbed } = require("discord.js");
+const config = require("../../config");
 
 module.exports = {
     info: {
@@ -47,7 +48,7 @@ module.exports = {
         // Get all the member stats
         const members = guild.memberCount.toLocaleString(),
         bots = guild.members.cache.filter(m => m.user.bot).size.toLocaleString(),
-        online = guild.members.cache.filter(m => m.presence.status !== "offline").size.toLocaleString();
+        online = guild.members.cache.filter(m => m.presence?.status && m.presence?.status !== "offline").size.toLocaleString();
 
         // Get all the other stats
         const channels = guild.channels.cache.size,
@@ -72,40 +73,16 @@ module.exports = {
             "VERY_HIGH": "┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻ [Phone]"
         };
 
-        // Regions
-        const region = {
-            "europe": "Europe :flag_eu:",
-            "eu-west": "EU (West) :flag_eu:",
-            "eu-central": "EU (Central) :flag_eu:",
-            "frankfurt": "Frankfurt :flag_de:",
-            "london": "London :flag_gb:",
-            "amsterdam": "Amsterdam :flag_nl:",
-            "dubai": "Dubai :flag_ae:",
-            "india": "India :flag_in:",
-            "japan": "Japan :flag_jp:",
-            "russia": "Russie :flag_ru:",
-            "hongkong": "Hong Kong :flag_hk:",
-            "brazil": "Brazil :flag_br:",
-            "sydney": "Sydney :flag_au:",
-            "southafrica": "South Africa :flag_za:",
-            "singapore": "Singapore :flag_sg:",
-            "us-south": "US (South) :flag_us:",
-            "us-central": "US (Central) :flag_us:",
-            "us-east": "US (East) :flag_us:",
-            "us-west": "US (West) :flag_us:"
-        };
-
         // Build embed
         const embed = new MessageEmbed()
             .setAuthor(message.guild.name, message.guild.iconURL({ format: "png", dynamic: true }))
             .setColor(owner.displayColor ?? bot.config.general.embedColor)
             .setThumbnail(message.guild.iconURL({ format: "png", dynamic: true }))
-            .setDescription(stripIndents`🧑‍🤝‍🧑 **${members}** ${members > 1 ? "members" : "member"} [${bots} ${(bots > 1) || (bots === 0) ? "bots" : "bot"}] | <:online:774282494593466388> **${online}** online
+            .setDescription(stripIndents`🧑‍🤝‍🧑 **${members}** ${members > 1 ? "members" : "member"} [${bots} ${(bots > 1) || (bots === 0) ? "bots" : "bot"}] | ${config.emojis.online} **${online}** online
             📆 **Created:** ${created} (${timeSince})
             🔒 **Security:** ${security[message.guild.verificationLevel]}
-            🌎 **Region:** ${region[message.guild.region]}
-            <:boost_t2:699573553795956787> **Server Boost Level:** ${boostLevel} (${boosters} ${(boosters > 1) || (boosters === 0) ? "boosters" : "booster"})
-            <:ceo:782583876106059799> **Owner:** ${owner.user.tag}
+            ${config.emojis.nitro} **Server Boost Level:** ${boostLevel} (${boosters} ${(boosters > 1) || (boosters === 0) ? "boosters" : "booster"})
+            ${config.emojis.ceo} **Owner:** ${owner.user.tag}
             
             **Other**
             ${channels} channels | ${emotes} emotes | ${roles} roles`);

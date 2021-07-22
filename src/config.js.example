@@ -60,7 +60,8 @@ const config = {
         users: "",
         chatting: "",
         group: "",
-        level_up: ""
+        level_up: "",
+        ceo: ""
     },
 
     // Mongo Info
