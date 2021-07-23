@@ -142,7 +142,7 @@ exports.getRankCard = async (user, data, guild) => {
     // Create the canvas, get the context and load the images in
     const canvas = Canvas.createCanvas(700, 250),
     ctx = canvas.getContext("2d"),
-    avatar = await Canvas.loadImage(user.displayAvatarURL({ format: "png", dynamic: true })),
+    avatar = await Canvas.loadImage(user.user.displayAvatarURL({ format: "png", dynamic: true })),
     blur = await Canvas.loadImage("https://i.imgur.com/E0We0O9.png");
 
     // Get the XP data
@@ -156,7 +156,7 @@ exports.getRankCard = async (user, data, guild) => {
     rank = sorted.map(a => a._id).indexOf(user.id) + 1;
 
     // Get the dominant color from the users avatar
-    const color = await getColorFromURL(user.displayAvatarURL({ format: "png", dynamic: true }));
+    const color = await getColorFromURL(user.user.displayAvatarURL({ format: "png", dynamic: true }));
     // Define the status colors
     const colors = {
         online: "#3BA55D",
@@ -215,24 +215,24 @@ exports.getRankCard = async (user, data, guild) => {
     }
 
     // If the users username is longer than 18 characters shorten it
-    if (user.username.length > 18)
-        user.username = user.username.slice(0, 18);
+    if (user.user.username.length > 18)
+        user.user.username = user.user.username.slice(0, 18);
 
     // Get the font size
-    const fontSize = this.getFontSize(canvas, user.username, "Whitney Semibold", 200);
+    const fontSize = this.getFontSize(canvas, user.user.username, "Whitney Semibold", 200);
 
     // Draw the username
     ctx.font = `${fontSize}px Whitney Semibold`;
     ctx.fillStyle = "white";
-    ctx.fillText(user.username, 240, 145);
+    ctx.fillText(user.user.username, 240, 145);
 
     // Measure the username size
-    const measured = ctx.measureText(user.username).width;
+    const measured = ctx.measureText(user.user.username).width;
 
     // Draw the descriminator
     ctx.font = `${fontSize - 3}px Whitney Book`;
     ctx.fillStyle = "#cccccc";
-    ctx.fillText("#" + user.discriminator, 248 + measured, 145);
+    ctx.fillText("#" + user.user.discriminator, 248 + measured, 145);
 
     // Draw the users XP / XP needed
     ctx.font = `${fontSize}x Whitney Semibold`;
