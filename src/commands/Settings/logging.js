@@ -1,5 +1,6 @@
 const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
+const config = require("../../config");
 const settings = require("../../database/models/settings");
 
 module.exports = {
@@ -84,7 +85,7 @@ module.exports = {
                 .setThumbnail("https://i.imgur.com/iML7LKF.png")
                 .setDescription(stripIndents`⚒️ Manual moderation logging is ${message.settings.manual_events.moderation ? "**enabled**" : "**disabled**"}
                     🖥️ Guild modification logging is ${message.settings.manual_events.guild ? "**enabled**" : "**disabled**"}
-                    <:channel:843408284010545153> Channel modification logging is ${message.settings.manual_events.channels ? "**enabled**" : "**disabled**"}
+                    ${config.emojis.channel} Channel modification logging is ${message.settings.manual_events.channels ? "**enabled**" : "**disabled**"}
                     📚 Role modification logging is ${message.settings.manual_events.roles ? "**enabled**" : "**disabled**"}
                     🧑‍🤝‍🧑 Member modification logging is ${message.settings.manual_events.members ? "**enabled**" : "**disabled**"}`);
             

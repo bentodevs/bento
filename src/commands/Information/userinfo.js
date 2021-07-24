@@ -5,6 +5,7 @@ const { getMember, getUser } = require("../../modules/functions/getters");
 const { utcToZonedTime, format } = require("date-fns-tz");
 const { getColorFromURL } = require('color-thief-node');
 const { rgbToHex } = require("../../modules/functions/leveling");
+const config = require("../../config");
 
 module.exports = {
     info: {
@@ -144,16 +145,16 @@ module.exports = {
             // Switch between statusses and set the variables accordingly
             switch (member.presence.status) {
                 case "online":
-                    status = "<:online:774282494593466388> **Online**";
+                    status = `${config.emojis.online} **Online**`;
                     break;
                 case "idle":
-                    status = "<:idle:774282494458593310> **Idle**";
+                    status = `${config.emojis.idle} **Idle**`;
                     break;
                 case "offline":
-                    status = "<:offline:774282494223712298> **Offline**";
+                    status = `${config.emojis.offline} **Offline**`;
                     break;
                 case "dnd":
-                    status = "<:dnd:774282494090412073> **Do Not Disturb**";
+                    status = `${config.emojis.dnd} **Do Not Disturb**`;
                     break;
             }
 

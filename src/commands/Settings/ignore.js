@@ -1,3 +1,4 @@
+const config = require("../../config");
 const settings = require("../../database/models/settings");
 const { getChannel, getRole } = require("../../modules/functions/getters");
 
@@ -96,8 +97,8 @@ module.exports = {
             
             // Prepare the ignore message
             if (message.settings.ignore.hierarchicRoleId && hRole) msg += `\n🎖️ Users with the ${hRole} and above are currently being ignored`;
-            if (roles.length > 0) msg += `\n<:team:843408255233687572> The following roles are being ignored: ${roles.join(', ')}`;
-            if (channels.length > 0) msg += `\n<:channel:843408284010545153> The following channels are being ignored: ${channels.join(', ')}`;
+            if (roles.length > 0) msg += `\n${config.emojis.team} The following roles are being ignored: ${roles.join(', ')}`;
+            if (channels.length > 0) msg += `\n${config.emojis.channel} The following channels are being ignored: ${channels.join(', ')}`;
             
             // Send the ignore message
             message.reply(msg);
@@ -178,8 +179,8 @@ module.exports = {
             
             // Prepare the ignore message
             if (interaction.settings.ignore.hierarchicRoleId && hRole) msg += `\n🎖️ Users with the ${hRole} and above are currently being ignored`;
-            if (roles.length > 0) msg += `\n<:team:843408255233687572> The following roles are being ignored: ${roles.join(', ')}`;
-            if (channels.length > 0) msg += `\n<:channel:843408284010545153> The following channels are being ignored: ${channels.join(', ')}`;
+            if (roles.length > 0) msg += `\n${config.emojis.team} The following roles are being ignored: ${roles.join(', ')}`;
+            if (channels.length > 0) msg += `\n${config.emojis.channel} The following channels are being ignored: ${channels.join(', ')}`;
             
             // Send the ignore message
             interaction.reply(msg);

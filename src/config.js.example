@@ -61,7 +61,10 @@ const config = {
         chatting: "",
         group: "",
         level_up: "",
-        ceo: ""
+        ceo: "",
+        bans: "",
+        team: "",
+        pepe_ping: ""
     },
 
     // Mongo Info
