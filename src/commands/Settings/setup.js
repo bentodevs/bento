@@ -62,7 +62,7 @@ module.exports = {
                     // Now add the muted role to every single channel in the discord
                     message.guild.channels.cache.forEach(c => {
                         if (c.type === "text") {
-                            c.updateOverwrite(muteRole, {
+                            c.permissionOverwrites.edit(muteRole, {
                                 SEND_MESSAGES: false
                             });
                         }

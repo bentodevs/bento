@@ -44,7 +44,7 @@ module.exports = {
         // Check if the group has permissions to send messages or not
         if (channel.permissionsFor(message.guild.id).has("SEND_MESSAGES")) {
             // Deny send messages & add reaction perms
-            channel.updateOverwrite(message.guild.id, {
+            channel.permissionOverwrites.edit(message.guild.id, {
                 SEND_MESSAGES: false,
                 ADD_REACTIONS: false
             });
@@ -53,7 +53,7 @@ module.exports = {
             message.confirmationReply(`${channel} has been locked!`);
         } else {
             // Set the send messages & add reaction perms to null
-            channel.updateOverwrite(message.guild.id, {
+            channel.permissionOverwrites.edit(message.guild.id, {
                 SEND_MESSAGES: null,
                 ADD_REACTIONS: null
             });
@@ -74,7 +74,7 @@ module.exports = {
         // Check if the group has permissions to send messages or not
         if (channel.permissionsFor(interaction.guild.id).has("SEND_MESSAGES")) {
             // Deny send messages & add reaction perms
-            channel.updateOverwrite(interaction.guild.id, {
+            channel.permissionOverwrites.edit(interaction.guild.id, {
                 SEND_MESSAGES: false,
                 ADD_REACTIONS: false
             });
@@ -83,11 +83,10 @@ module.exports = {
             interaction.confirmation(`${channel} has been locked!`);
         } else {
             // Set the send messages & add reaction perms to null
-            channel.updateOverwrite(interaction.guild.id, {
+            channel.permissionOverwrites.edit(interaction.guild.id, {
                 SEND_MESSAGES: null,
                 ADD_REACTIONS: null
             });
-
             // Send a confirmation message
             interaction.confirmation(`${channel} has been unlocked!`);
         }
