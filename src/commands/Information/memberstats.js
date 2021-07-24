@@ -71,7 +71,7 @@ module.exports = {
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
             .setFooter(`ID: ${message.guild.id}`)
             .setTimestamp()
-            .setDescription(stripIndents`🧑‍🤝‍🧑 **${message.guild.memberCount.toLocaleString()}** members | **${message.guild.members.cache.filter(m => m.presence?.status !== "offline").size.toLocaleString()}** ${config.emojis.online} Online
+            .setDescription(stripIndents`🧑‍🤝‍🧑 **${message.guild.memberCount.toLocaleString()}** members | **${message.guild.members.cache.filter(m => m.presence?.status && m.presence.status !== "offline").size.toLocaleString()}** ${config.emojis.online} Online
             📅 **${joinedToday.size}** members gained today
             🗓️ **${joinedWeek.size}** members gained this week
             ${config.emojis.bans} ${bans.size <= 0 ? "**0** bans" : `**${bans.size.toLocaleString()}**`} ${bans.size <= 0 ? "" : bans.size > 1 ? "bans" : "ban"} *(${banMessage})*`);
@@ -119,7 +119,7 @@ module.exports = {
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
             .setFooter(`ID: ${interaction.guild.id}`)
             .setTimestamp()
-            .setDescription(stripIndents`🧑‍🤝‍🧑 **${interaction.guild.memberCount.toLocaleString()}** members | **${interaction.guild.members.cache.filter(m => m.presence?.status !== "offline").size.toLocaleString()}** ${config.emojis.online} Online
+            .setDescription(stripIndents`🧑‍🤝‍🧑 **${interaction.guild.memberCount.toLocaleString()}** members | **${interaction.guild.members.cache.filter(m => m.presence?.status && m.presence.status !== "offline").size.toLocaleString()}** ${config.emojis.online} Online
             📅 **${joinedToday.size}** members gained today
             🗓️ **${joinedWeek.size}** members gained this week
             ${config.emojis.bans} ${bans.size <= 0 ? "**0** bans" : `**${bans.size.toLocaleString()}**`} ${bans.size <= 0 ? "" : bans.size > 1 ? "bans" : "ban"} *(${banMessage})*`);
