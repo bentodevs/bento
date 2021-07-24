@@ -77,7 +77,7 @@ module.exports = {
             let statusText;
 
             // Switch between statusses and set the variables accordingly
-            switch (member.presence.status) {
+            switch (member.presence?.status) {
                 case "online":
                     statusEmote = bot.config.emojis.online;
                     statusText = "**Online**";
@@ -94,6 +94,10 @@ module.exports = {
                     statusEmote = bot.config.emojis.dnd;
                     statusText = "**Do Not Disturb**";
                     break;
+                default:
+                    statusEmote = bot.config.emojis.offline;
+                    statusText = "**Offline**";
+                    break;
             }
 
             // Define the description
@@ -105,7 +109,7 @@ module.exports = {
             // If the user has roles add them to the description
             if (member.roles.cache.size > 1) description += `\n\n**Roles (${member.roles.cache.size -1}):** ${roles}`;
             // Check if the user has any activities
-            if (member.presence.activities.length >= 1) {
+            if (member.presence?.activities?.length >= 1) {
                 // Add the presence header to the description
                 description += `\n\n**Presence**`;
 
@@ -143,7 +147,7 @@ module.exports = {
             let status;
 
             // Switch between statusses and set the variables accordingly
-            switch (member.presence.status) {
+            switch (member.presence?.status) {
                 case "online":
                     status = `${config.emojis.online} **Online**`;
                     break;
@@ -156,6 +160,8 @@ module.exports = {
                 case "dnd":
                     status = `${config.emojis.dnd} **Do Not Disturb**`;
                     break;
+                default:
+                    status = `${config.emojis.offline} **Offline**`;
             }
 
             // Prepare the embed
