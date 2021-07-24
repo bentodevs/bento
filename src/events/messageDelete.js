@@ -12,7 +12,7 @@ module.exports = async (bot, message) => {
     if (message.author.bot)
         return;
     // If the message was in dms return
-    if (message.channel.type == "dm")
+    if (message.channel.type == "DM")
         return;
 
     // Create the msg object

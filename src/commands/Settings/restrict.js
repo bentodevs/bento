@@ -67,7 +67,7 @@ module.exports = {
         if (!channel)
             return message.errorReply("You didn't specify a valid channel!");
         // If the specified channel isn't a text or new channel return an error
-        if (channel.type !== "text" && channel.type !== "news")
+        if (channel.type !== "GUILD_TEXT" && channel.type !== "GUILD_NEWS")
             return message.errorReply("The channel you specified isn't a text or news channel!");
 
         if (!args[1]) {
@@ -136,7 +136,7 @@ module.exports = {
         if (!channel)
             return interaction.error("You didn't specify a valid channel!");
         // If the specified channel isn't a text or new channel return an error
-        if (channel.type !== "text" && channel.type !== "news")
+        if (channel.type !== "GUILD_TEXT" && channel.type !== "GUILD_NEWS")
             return interaction.error("The channel you specified isn't a text or news channel!");
 
         if (!interaction.options.get("type")?.value) {

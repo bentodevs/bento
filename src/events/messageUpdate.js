@@ -9,7 +9,7 @@ module.exports = async (bot, oldMsg, newMsg) => {
     if (oldMsg.content == newMsg.content && oldMsg.embeds !== newMsg.embeds) 
         return;
     // If the message is in a dm return
-    if (oldMsg.channel.type === "dm")
+    if (oldMsg.channel.type === "DM")
         return;
 
     // Logging code

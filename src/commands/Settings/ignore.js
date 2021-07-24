@@ -123,7 +123,7 @@ module.exports = {
             message.confirmationReply(`Successfully ${message.settings.ignore.roles.includes(role.id) ? `removed ${role} from` : `added ${role} to`} the list of ignored roles!`);
         } else if (channel) {
             // If the user didn't specify a text channel return an error
-            if (channel.type !== "text" && channel.type !== "news") 
+            if (channel.type !== "GUILD_TEXT" && channel.type !== "GUILD_NEWS") 
                 return message.errorReply("You did not specify a text or news channel!");
 
             // Get the DB query
