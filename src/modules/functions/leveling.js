@@ -191,7 +191,7 @@ exports.getRankCard = async (user, data, guild) => {
     ctx.beginPath();
     ctx.arc(185, 175, 20, 0, Math.PI * 2);
     ctx.lineWidth = 3;
-    ctx.fillStyle = colors[user.presence.status];
+    ctx.fillStyle = colors[user.presence?.status || "offline"];
     ctx.fill();
     ctx.stroke();
     ctx.closePath();
