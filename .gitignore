@@ -4,3 +4,4 @@ start.sh
 src/config.js
 .DS_Store
 .dccache
+src/commands/Dev/test.js
