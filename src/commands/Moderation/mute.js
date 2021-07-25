@@ -44,7 +44,7 @@ module.exports = {
         }, {
             name: "reason",
             type: "STRING",
-            description: "Teh reason for the mute.",
+            description: "The reason for the mute.",
             required: false
         }]
     },
@@ -53,7 +53,7 @@ module.exports = {
 
         // Check that the mute role exists in the DB
         if (!message.settings.roles.mute)
-            return message.errorReply(`There is no mute role configured! Create one using \`${message.settings.general.prefix}setup mute [role]\``);
+            return message.errorReply(`There is no mute role configured! Create one using \`${message.settings.general.prefix}setup muterole [role]\``);
         
         // If the mute role we have doesn't exist, then remove it from the DB & send an error
         if (!message.guild.roles.cache.get(message.settings.roles.mute)) {
