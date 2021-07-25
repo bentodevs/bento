@@ -51,7 +51,7 @@ module.exports = {
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
         
         // Send the embed
-        message.reply(`${member} got hugged`, embed);
+        message.reply({content: `${member} got hugged`, embeds: [embed]});
 
     },
 
@@ -67,7 +67,7 @@ module.exports = {
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor);
         
         // Send the embed
-        interaction.reply(`${member} got hugged`, embed);
+        interaction.reply({content: `${member} got hugged`, embeds: [embed]});
 
     }
 };
