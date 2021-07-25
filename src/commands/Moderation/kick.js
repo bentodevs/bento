@@ -47,7 +47,7 @@ module.exports = {
         // 2. Define the reason, and set a default if none was provided
         // 3. Get the ID of this action
         const member = await getMember(message, args[0], true),
-            reason = args.splice(1, args.legth).join(" ") || "No reason provided",
+            reason = args.slice(1).join(" ") || "No reason provided",
             action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1;
         
         // If the member doesn't exist/isn't part of the guild, then return an error
@@ -60,7 +60,7 @@ module.exports = {
         
         // If the member's highest role is higher than the executors highest role, then return an error
         if (member.roles.highest.position >= message.member.roles.highest.position)
-            return message.errorReply("Questioning authority are we? Sorry, but this isn't a democracy...", { files: ["https://i.imgur.com/K9hmVdA.png"] });
+            return message.errorReply({ content: "Questioning authority are we? Sorry, but this isn't a democracy...", files: ["https://i.imgur.com/K9hmVdA.png"] });
         
         // If the bot cannot kick the user, then return an error
         if (!member.kickable)
@@ -114,7 +114,7 @@ module.exports = {
         
         // If the member's highest role is higher than the executors highest role, then return an error
         if (user.member.roles.highest.position >= interaction.member.roles.highest.position)
-            return interaction.reply("Questioning authority are we? Sorry, but this isn't a democracy...", { files: ["https://i.imgur.com/K9hmVdA.png"] });
+            return interaction.reply({ content: "Questioning authority are we? Sorry, but this isn't a democracy...",  files: ["https://i.imgur.com/K9hmVdA.png"] });
         
         // If the bot cannot kick the user, then return an error
         if (!user.member.kickable)
