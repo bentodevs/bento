@@ -19,7 +19,7 @@ Script | Description
 Link | Permissions | Scopes
 -----|-------------|--------
 [Link](https://discord.com/api/oauth2/authorize?client_id=854758155339038740&permissions=8&scope=bot%20applications.commands) | `ADMINISTRATOR` | `applications.commands`
-[Link](https://discord.com/api/oauth2/authorize?client_id=854758155339038740&permissions=2097671415&scope=bot%20applications.commands) | `MANAGE_CHANNELS`, `MANAGE_ROLES`, `MANAGE_EMOJIS`, `VIEW_AUDIT_LOG`, `MANAGE_WEBHOOKS`, `MANAGE_SERVER`, `CREATE_INSTANT_INVITE`, `CHANGE_NICKNAME`, `MANAGE_NICKNAME`, `KICK_MEMBERS`, `BAN_MEMBERS`, `READ_MESSAGES`, `SEND_MESSAGES`, `EMBED_LINKS`, `ADD_REACTIONS`, `USE_EXTERNAL_EMOJIS`, `MENTION_EVERYONE`, `MANAGE_MESSAGES`, `READ_MESSAGE_HISTORY`, `VIEW_CHANNEL`, `MOVE_MEMBERS` | `applications.commands`
+[Link](https://discord.com/api/oauth2/authorize?client_id=854758155339038740&permissions=2097671415&scope=bot%20applications.commands) | `MANAGE_CHANNELS`, `MANAGE_ROLES`, `MANAGE_EMOJIS_AND_STICKERS`, `VIEW_AUDIT_LOG`, `MANAGE_WEBHOOKS`, `MANAGE_SERVER`, `CREATE_INSTANT_INVITE`, `CHANGE_NICKNAME`, `MANAGE_NICKNAME`, `KICK_MEMBERS`, `BAN_MEMBERS`, `READ_MESSAGES`, `SEND_MESSAGES`, `EMBED_LINKS`, `ADD_REACTIONS`, `USE_EXTERNAL_EMOJIS`, `MENTION_EVERYONE`, `MANAGE_MESSAGES`, `READ_MESSAGE_HISTORY`, `VIEW_CHANNEL`, `MOVE_MEMBERS` | `applications.commands`
 
 # Contributors
 <table>
