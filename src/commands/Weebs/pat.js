@@ -42,6 +42,9 @@ module.exports = {
         const URL = await fetchWaifuApi("pat"),
         member = await getMember(message, args.join(" "), true);
 
+        if (!member)
+            return message.errorReply("It doesn't look like that member exists!");
+
         // Build the embed
         const embed = new MessageEmbed()
             .setImage(URL)
