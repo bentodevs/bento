@@ -63,7 +63,7 @@ module.exports = {
         if (member.guild) {
             // If the member's highest role is higher than the executors highest role, then return an error
             if (member.roles.highest.position >= message.member.roles.highest.position)
-                return message.errorReply("You are unable to ban those of the same or higher rank!");
+                return message.errorReply({ content: "Questioning authority are we? Sorry, but this isn't a democracy...", files: ["https://i.imgur.com/K9hmVdA.png"] });
 
             // If the bot cannot ban the user, then return an error
             if (!member.bannable)
@@ -71,7 +71,7 @@ module.exports = {
 
             try {
                 // Try and send the member a DM stating that they were banned - Catch silently if there is an issue
-                await member.send(`:hammer: You have been banned from ** ${message.guild.name} for \`${reason}\``).catch(() => { });
+                await member.send(`:hammer: You have been banned from **${message.guild.name}** for \`${reason}\``).catch(() => { });
 
                 // Ban the member, remove 1d of messages & set the reason
                 member.ban({ days: 1, reason: `[Case: ${action} | ${message.author.tag} on ${format(utcToZonedTime(Date.now(), message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone })}] ${reason}]` });
@@ -146,7 +146,7 @@ module.exports = {
         if (user.member) {
 
             if (user.member.roles.highest.position >= interaction.member.roles.highest.position)
-                return interaction.reply("Questioning authority are we? Sorry, but this isn't a democracy...", { files: ["https://i.imgur.com/K9hmVdA.png"] });
+                return interaction.reply({ content: "Questioning authority are we? Sorry, but this isn't a democracy...", files: ["https://i.imgur.com/K9hmVdA.png"] });
 
             if (!interaction.guild.members.cache.get(user.user.id).bannable)
                 return interaction.reply("I can't ban that member! *They may have a higher role than me!*");
