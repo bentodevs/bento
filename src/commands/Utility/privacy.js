@@ -6,7 +6,7 @@ module.exports = {
     info: {
         name: "privacy",
         aliases: [],
-        usage: "privacy [reminders | usernames | all] [server id]",
+        usage: "privacy [reminders | usernames | all]",
         examples: [
             "privacy usernames",
             "privacy all"
