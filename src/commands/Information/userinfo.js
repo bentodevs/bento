@@ -117,7 +117,7 @@ module.exports = {
                 member.presence.activities.forEach(a => {
                     if (a.type === "LISTENING") description += `\n${bot.config.emojis.spotify} Listening to: **${a.details}** by **${a.state}**`;
                     if (a.type === "PLAYING") description += `\n${bot.config.emojis.game} Playing: **${a.name}**${a.timestamps ? a.timestamps.start ? ` for **${formatDistance(a.timestamps.start, Date.now())}**` : ` (${formatDistance(Date.now(), a.timestamps.end)} left)` : ""}`;
-                    if (a.type === "CUSTOM_STATUS" && a.state) description += `\n${bot.config.emojis.discord} Custom Status: **${a.state}**`;
+                    if (a.type === "CUSTOM" && a.state) description += `\n${bot.config.emojis.discord} Custom Status: **${a.state}**`;
                     if (a.type === "STREAMING") description += `\n${bot.config.emojis.twitch} Streaming: [${a.state}](${a.url})`;
                     if (a.type === "WATCHING") description += `\n${bot.config.emojis.player} Watching: **${a.name}**`;
                     if (a.type === "COMPETING") description += `\n${bot.config.emojis.trophy} Competing in: **${a.name}**`;
