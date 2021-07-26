@@ -550,3 +550,54 @@ exports.fetchEmote = (url) => {
         });
     });
 };
+
+/**
+ * Fetch a user's LastFM Profile
+ * 
+ * @param {Sring} user The user to fetch
+ * 
+ * @returns {Promise.<Object>} Last.fm user
+ */
+exports.getLastFMUser = async (user) => {
+    return new Promise((resolve, reject) => {
+        const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${user}&api_key=${config.apiKeys.lastfm}&format=json`;
+
+        fetch(URL)
+            .then(res => res.json())
+            .then(d => {
+                if (d?.error == 6) {
+                    reject(new Error("User not found"));
+                } else if (d?.error) {
+                    console.error(d.error.message);
+                    reject(new Error("An unknown error occurred!"));
+                } else {
+                    resolve(d);
+                }
+            })
+            .catch(err => new Error(err));        
+    });
+};
+
+/**
+ * Fetch a user's LastFM listening history
+ * 
+ * @param {Sring} user The user to fetch
+ * 
+ * @returns {Promise.<Object>} Last.fm user play history
+ */
+exports.getLastFMUserHistory = async (user) => {
+    return new Promise((resolve, reject) => {
+        const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${user}&api_key=${config.apiKeys.lastfm}&format=json`;
+
+        const data = fetch(URL).then(res => res.json());
+
+        if (data?.error == 6) {
+            reject(new Error("User not found"));
+        } else if (data?.error) {
+            console.error(data.error.message);
+            reject(new Error("An unknown error occurred!"));
+        } else {
+            resolve(data);
+        }
+    });
+};

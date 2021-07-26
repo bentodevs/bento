@@ -9,5 +9,6 @@ module.exports = model("users", new Schema({
         }
     },
     usernames: Array, // Previous usernames of the user
-    guilds: Array // Array with guilds with the users data for those guilds
+    guilds: Array, // Array with guilds with the users data for those guilds
+    lastfm: String // The user's Last.fm username
 }));
