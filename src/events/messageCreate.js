@@ -92,8 +92,6 @@ module.exports = async (bot, message) => {
             return message.delete();
     }
 
-    // Run the level check
-    await checkLevel(message);
 
     // Import message functions
     require("../modules/functions/messages")(message);
