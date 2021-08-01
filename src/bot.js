@@ -136,11 +136,14 @@ process.on("SIGINT", async () => {
     // Check if there is a mongo connection and if so close it
     if (bot.mongo?.connection) {
         bot.logger.log("Received SIGINT - Terminating MongoDB connection");
-        await bot.mongo.connection.close().catch(err => {
+        await bot.mongo.connection.close().then(() => {
+            // Exit the process after closing the mongo connection
+            process.exit(1);
+        }).catch(err => {
             bot.logger.error(err.stack);
         });
+    } else {
+        // Exit the process
+        process.exit(1);
     }
-
-    // Exit the process
-    process.exit(1);
 });
