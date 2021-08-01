@@ -61,7 +61,7 @@ module.exports = {
 
         if ((!args?.[0] && !message.options?.get("command")?.value) || (args?.[0]?.toLowerCase() == "all" || message.options?.get("command")?.value == "all")) {
             // Grab all the commands
-            let commands = bot.commands.array();
+            let commands = Array.from(bot.commands.values());
             // Define the catery object
             const categories = {};
 
