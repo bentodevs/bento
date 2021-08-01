@@ -41,7 +41,7 @@ exports.getPerms = async (bot, guild) => {
     commandPerms = {};
 
     // Loop through the commands and set the defaults
-    for (const command of bot.commands.array()) {
+    for (const command of Array.from(bot.commands.values())) {
         defaults[command.info.name] = {
             permission: command.perms.permission,
             type: command.perms.type
