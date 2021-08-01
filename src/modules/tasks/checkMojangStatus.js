@@ -26,7 +26,7 @@ exports.init = async bot => {
                 resolve(true);
             }).catch(err => {
                 resolve(false);
-                console.error(err);
+                bot.logger.warn(err.message);
             });
         });
     };
