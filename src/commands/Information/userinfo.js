@@ -3,6 +3,9 @@ const { MessageEmbed } = require("discord.js");
 const { formatDistance } = require("date-fns");
 const { getMember, getUser } = require("../../modules/functions/getters");
 const { utcToZonedTime, format } = require("date-fns-tz");
+const { getColorFromURL } = require('color-thief-node');
+const { rgbToHex } = require("../../modules/functions/leveling");
+const config = require("../../config");
 
 module.exports = {
     info: {
@@ -46,7 +49,7 @@ module.exports = {
     run: async function (bot, message, args) {
 
         // Grab the member or user
-        const member = message.options?.get("user")?.member || await getMember(message, args?.join(" "), true) || await getUser(bot, message, args?.join(" "), true);
+        const member = message.options?.get("user")?.member || message.options?.get("user")?.user || await getMember(message, args?.join(" "), true) || await getUser(bot, message, args?.join(" "), true);
 
         // Return an error if nothing was found
         if (!member) 
@@ -66,12 +69,15 @@ module.exports = {
             const userBoosted = member.premiumSinceTimestamp ? format(utcToZonedTime(member.premiumSinceTimestamp, message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone }) : null; const timeSinceBoost = member.premiumSinceTimestamp ? formatDistance(member.premiumSinceTimestamp, Date.now(), { addSuffix: true }) : null;
             const roles = member.roles.cache.filter(role => role.name !== "@everyone").sort((b, a) => a.position - b.position).map(role => role.toString()).join(", ");
 
+            // Get the dominant color from the users avatar
+            const color = await getColorFromURL(member.user.displayAvatarURL({ format: "png", dynamic: true }));
+
             // Define vars
             let statusEmote;
             let statusText;
 
             // Switch between statusses and set the variables accordingly
-            switch (member.presence.status) {
+            switch (member.presence?.status) {
                 case "online":
                     statusEmote = bot.config.emojis.online;
                     statusText = "**Online**";
@@ -88,6 +94,10 @@ module.exports = {
                     statusEmote = bot.config.emojis.dnd;
                     statusText = "**Do Not Disturb**";
                     break;
+                default:
+                    statusEmote = bot.config.emojis.offline;
+                    statusText = "**Offline**";
+                    break;
             }
 
             // Define the description
@@ -99,7 +109,7 @@ module.exports = {
             // If the user has roles add them to the description
             if (member.roles.cache.size > 1) description += `\n\n**Roles (${member.roles.cache.size -1}):** ${roles}`;
             // Check if the user has any activities
-            if (member.presence.activities.length >= 1) {
+            if (member.presence?.activities?.length >= 1) {
                 // Add the presence header to the description
                 description += `\n\n**Presence**`;
 
@@ -107,7 +117,7 @@ module.exports = {
                 member.presence.activities.forEach(a => {
                     if (a.type === "LISTENING") description += `\n${bot.config.emojis.spotify} Listening to: **${a.details}** by **${a.state}**`;
                     if (a.type === "PLAYING") description += `\n${bot.config.emojis.game} Playing: **${a.name}**${a.timestamps ? a.timestamps.start ? ` for **${formatDistance(a.timestamps.start, Date.now())}**` : ` (${formatDistance(Date.now(), a.timestamps.end)} left)` : ""}`;
-                    if (a.type === "CUSTOM_STATUS" && a.state) description += `\n${bot.config.emojis.discord} Custom Status: **${a.state}**`;
+                    if (a.type === "CUSTOM" && a.state) description += `\n${bot.config.emojis.discord} Custom Status: **${a.state}**`;
                     if (a.type === "STREAMING") description += `\n${bot.config.emojis.twitch} Streaming: [${a.state}](${a.url})`;
                     if (a.type === "WATCHING") description += `\n${bot.config.emojis.player} Watching: **${a.name}**`;
                     if (a.type === "COMPETING") description += `\n${bot.config.emojis.trophy} Competing in: **${a.name}**`;
@@ -124,35 +134,40 @@ module.exports = {
             embed.setAuthor(`${member.user.tag}${member.nickname ? ` ~ ${member.nickname}` : ""}`, member.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 }));
             embed.setThumbnail(member.user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 }));
             embed.setDescription(stripIndents(description));
-            embed.setColor(member.displayColor ?? bot.config.embedColor);
+            embed.setColor(rgbToHex(color));
             embed.setFooter(`Member #${message.guild.members.cache.filter(u => u.joinedTimestamp !== null).sort((a,b) => a.joinedTimestamp - b.joinedTimestamp).map(user => user.id).indexOf(member.id) +1} | ID: ${member.id}`);
         } else {
             // Get the users account creation time and format it
             const userCreated = format(utcToZonedTime(member.createdTimestamp, message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone }); const timeSinceCreated = formatDistance(member.createdTimestamp, Date.now(), { addSuffix: true });
 
+            // Get the dominant color from the users avatar
+            const color = await getColorFromURL(member.displayAvatarURL({ format: "png", dynamic: true }));
+
             // Define status var
             let status;
 
             // Switch between statusses and set the variables accordingly
-            switch (member.presence.status) {
+            switch (member.presence?.status) {
                 case "online":
-                    status = "<:online:774282494593466388> **Online**";
+                    status = `${config.emojis.online} **Online**`;
                     break;
                 case "idle":
-                    status = "<:idle:774282494458593310> **Idle**";
+                    status = `${config.emojis.idle} **Idle**`;
                     break;
                 case "offline":
-                    status = "<:offline:774282494223712298> **Offline**";
+                    status = `${config.emojis.offline} **Offline**`;
                     break;
                 case "dnd":
-                    status = "<:dnd:774282494090412073> **Do Not Disturb**";
+                    status = `${config.emojis.dnd} **Do Not Disturb**`;
                     break;
+                default:
+                    status = `${config.emojis.offline} **Offline**`;
             }
 
             // Prepare the embed
             embed.setAuthor(member.tag, member.displayAvatarURL({ format: "png", dynamic: true, size: 1024 }));
             embed.setThumbnail(member.displayAvatarURL({ format: "png", dynamic: true, size: 1024 }));
-            embed.setColor("#ABCDEF");
+            embed.setColor(rgbToHex(color));
             embed.setDescription(stripIndents`🙍 Human | ${status}
             **Created:** ${userCreated} (${timeSinceCreated})
             

@@ -124,7 +124,7 @@ module.exports = {
                 return message.errorReply("You didn't specify a valid channel!");
 
             // If the channel isn't a text channel return an error
-            if (channel.type !== "text")
+            if (channel.type !== "GUILD_TEXT")
                 return message.errorReply("The channel you specified isn't a text channel!");
 
             // Set the logging channel
@@ -194,7 +194,7 @@ module.exports = {
                 return interaction.error("You didn't specify a valid channel!");
 
             // If the channel isn't a text channel return an error
-            if (channel.type !== "text")
+            if (channel.type !== "GUILD_TEXT")
                 return interaction.error("The channel you specified isn't a text channel!");
 
             // Set the logging channel

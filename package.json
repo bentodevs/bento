@@ -28,20 +28,23 @@
   "homepage": "https://github.com/AmirionStudios/R2-D2-Public#readme",
   "dependencies": {
     "@vitalets/google-translate-api": "^7.0.0",
+    "canvas": "^2.8.0",
     "chalk": "^4.1.0",
+    "color-thief-node": "^1.0.4",
     "common-tags": "^1.8.0",
     "date-fns": "^2.22.1",
     "date-fns-tz": "^1.1.4",
-    "discord.js": "^13.0.0-dev.6d3d00b44577a70e840f0187d6894043677c5329",
+    "discord.js": "^13.0.0-dev.t1627778678.74fc23b",
+    "flip": "^1.0.0",
     "https-proxy-agent": "^5.0.0",
     "iso-639-1": "^2.1.9",
-    "mongoose": "^5.12.13",
+    "mongoose": "^5.13.3",
     "node-fetch": "^2.6.1",
     "ora": "^5.4.1",
-    "os": "^0.1.1",
+    "pokedex-promise-v2": "^3.3.2",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
-    "eslint": "^7.28.0"
+    "eslint": "^7.31.0"
   }
 }

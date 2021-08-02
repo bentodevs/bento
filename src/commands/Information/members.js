@@ -86,7 +86,7 @@ module.exports = {
                 .setAuthor(`Members of ${message.guild.name}`, message.guild.iconURL({format: "png", dynamic: true}))
                 .setFooter(`${message.guild.memberCount} total members | Page ${page + 1} of ${pages.length}`)
                 .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
-                .setDescription(description);
+                .setDescription(description.join("\n"));
             
             // Send the members embed
             message.reply({ embeds: [embed] });

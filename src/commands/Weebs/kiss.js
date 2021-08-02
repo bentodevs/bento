@@ -40,7 +40,10 @@ module.exports = {
 
         // Fetch the image
         const URL = await fetchWaifuApi("kiss"),
-        member = await getMember(message, args.join(" "), true);
+            member = await getMember(message, args.join(" "), true);
+        
+        if (!member)
+            return message.errorReply("It doesn't look like that member exists!");
 
         // Build the embed
         const embed = new MessageEmbed()
@@ -48,7 +51,7 @@ module.exports = {
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
         
         // Send the embed
-        message.reply(`${message.member} kissed ${member}`, embed);
+        message.reply({content: `${message.member} kissed ${member}`, embeds: [embed]});
 
     },
 
@@ -64,7 +67,7 @@ module.exports = {
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor);
         
         // Send the embed
-        interaction.reply(`${interaction.member} kissed ${member}`, embed);
+        interaction.reply({content: `${interaction.member} kissed ${member}`, embeds: [embed]});
 
     }
 };

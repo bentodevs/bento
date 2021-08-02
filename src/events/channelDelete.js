@@ -5,7 +5,7 @@ const settings = require("../database/models/settings");
 module.exports = async (bot, channel) => {
 
     // If channel type is DM, then ignore
-    if (channel.type === "dm")
+    if (channel.type === "DM")
         return;
     
     const sets = await settings.findOne({ _id: channel.guild.id });
@@ -23,7 +23,7 @@ module.exports = async (bot, channel) => {
             .setColor(bot.config.general.embedColor)
             .setDescription(stripIndents`**Channel:** ${channel} (\`${channel.id}\`)
             **Channel Type:** ${channel.type.toTitleCase()}`)
-            .setFooter(`Created at`)
+            .setFooter(`Deleted at`)
             .setTimestamp(channel.createdTimestamp);
         
         log.send({ embeds: [embed] });

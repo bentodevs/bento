@@ -5,8 +5,10 @@ module.exports = model("users", new Schema({
     track: {
         type: Object,
         default: {
-            usernames: false
+            usernames: true // If the bot should track the users usernames
         }
     },
-    usernames: Array // Previous usernames of the user
+    usernames: Array, // Previous usernames of the user
+    guilds: Array, // Array with guilds with the users data for those guilds
+    lastfm: String // The user's Last.fm username
 }));

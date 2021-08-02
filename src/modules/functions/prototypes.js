@@ -55,4 +55,38 @@ module.exports = () => {
         // Remove minecraft colour codes
         return this.replace(/\u00A7[0-9A-FK-OR]/ig, "");
     };
+
+    String.prototype.reverseText = function() {
+        // Reverse the string
+        return this.split("").reverse().join("");
+    };
+
+    String.prototype.cleanEmotes = function() {
+        return this.replace(/<a?:(\w+):(\d+)>/gi, ":$1:");
+    };
+
+    String.prototype.toBinary = function() {
+        return this.split('').map(function (char) {
+            return char.charCodeAt(0).toString(2);
+        }).join(' ');
+    };
+
+    String.prototype.binToClear = function() {
+        let binString = "";
+
+        this.split(" ").map(function (char) {
+            binString += String.fromCharCode(parseInt(char, 2));
+        });
+
+        return binString;
+    };
+
+    Array.prototype.shuffle = function() {
+        for (let i = this.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [this[i], this[j]] = [this[j], this[i]];
+        }
+
+        return this;
+    };
 };

@@ -44,9 +44,9 @@ module.exports = {
             // Get the description and remove html tags and markdown
             let description = data.description.removeHTML().convertMarkdown();
 
-            if (description.length >= 2000) {
+            if (description.length >= 4096) {
                 // Make the description shorter
-                description = description.slice(0, 1975);
+                description = description.slice(0, 4000);
                 
                 // Check how many spoiler tags are in the description
                 const spoilers = description.match(/\|\|/g).length;

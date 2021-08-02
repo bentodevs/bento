@@ -6,13 +6,13 @@ module.exports = {
     info: {
         name: "privacy",
         aliases: [],
-        usage: "privacy [reminders | usernames | all] [server id]",
+        usage: "privacy [reminders | usernames | all]",
         examples: [
             "privacy usernames",
             "privacy all"
         ],
         description: "Allows you to instantly delete your data from R2-D2's database.",
-        category: "Miscellaneous",
+        category: "Utility",
         info: null,
         options: [
             "`reminders` - Clear all your current reminders from the bot's database",

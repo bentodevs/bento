@@ -190,23 +190,29 @@ exports.getRole = async (message, args) => {
  */
 exports.getTag = async (tag, message, args) => {
     // Replace all the placeholders
-    let content = tag.content
+    let tagContent = tag.content
         .replace(/{author}/gi, message.author)
         .replace(/{prefix}/gi, message.settings.general.prefix)
         .replace(/{guild}/gi, message.guild.name)
         .replace(/{mention}/gi, await this.getMember(message, args[0] ? args.join(" ") : false, true).then(member => { return member; }) ?? message.author );
 
     // If the tag includes "-e" convert it to an embed
-    if (content.includes("-e")) {
+    if (tagContent.includes("-e")) {
         const embed = new MessageEmbed()
-            .setDescription(content.replace("-e", ""))
+            .setDescription(tagContent.replace("-e", ""))
             .setColor(message.member?.displayColor ?? config.general.embedColor);
 
-        content = embed;
+        tagContent = embed;
     }
 
-    // Send the tag
-    await message.reply(content);
+    if (tagContent?.type == "rich") {
+        // Send the tag
+        await message.reply({ embeds: [tagContent] });
+    } else {
+        // Send the tag
+        await message.reply({content: tagContent});
+    }
+
 
     // Return true
     return true;

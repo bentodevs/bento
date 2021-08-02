@@ -6,15 +6,24 @@ const config = {
         prefix: ".", // Default Bot Prefix
         version: "1.0.0", // Current Version
         embedColor: "#ABCDEF", // Default Embed Color
+        devs: [
+            "420325176379703298", // Jarno
+            "648882989471891499" // Waitrose
+        ],
+        proxyUrl: "", // The URL to the proxy
+        development: false // Wether the bot is in a development environment or not
+    },
+
+    logging: {
         errors: {
             guild: "", // Guild to log errors in
             channel: "", // Channel to log errors in
             url: "" // Support Discord URL
         },
-        devs: [
-            "420325176379703298", // Jarno
-            "648882989471891499" // Waitrose
-        ]
+        joinleave: {
+            guild: "", // Guild to log bot join/leaves in
+            channel: "" // Channel to log bot join/leaves in
+        }
     },
 
     // API Keys
@@ -24,7 +33,8 @@ const config = {
         riot: "", // Riot Games API Key
         trackerNetwork: "", // TrackerNetwork API Key
         omdb: "", // omdb API Key
-        r2d2: "" // R2-D2 API Key
+        r2d2: "", // R2-D2 API Key
+        lastfm: "" // Last.fm API Key
     },
 
     // Global Emojis
@@ -50,7 +60,12 @@ const config = {
         poll: "",
         users: "",
         chatting: "",
-        group: ""
+        group: "",
+        level_up: "",
+        ceo: "",
+        bans: "",
+        team: "",
+        pepe_ping: ""
     },
 
     // Mongo Info

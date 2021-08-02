@@ -15,7 +15,7 @@ module.exports = {
         options: []
     },
     perms: {
-        permission: "MANAGE_EMOJIS",
+        permission: "MANAGE_EMOJIS_AND_STICKERS",
         type: "discord",
         self: ["EMBED_LINKS"]
     },

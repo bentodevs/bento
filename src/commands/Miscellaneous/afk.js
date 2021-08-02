@@ -57,27 +57,27 @@ module.exports = {
             const data = await afk.findOne({ user: message.author.id, guild: message.guild.id });
 
             if (!args[1]) {
-                if (!data)
+                if (!data?.status)
                     return message.errorReply("You do not currently have an AFK status set!");
                 
                 return message.confirmationReply(`Your AFK status is currently sent to: ${data.status}`);
             } else {
-                const int = args.splice(1).join(" ");
+                const int = args.slice(1).join(" ");
 
                 if (int.toLowerCase() === "disable") {
                     if (!data)
                         return message.errorReply("You do not currently have an AFK status to disable!");
                     
                     await afk.findOneAndUpdate({ user: message.author.id, guild: message.guild.id }, { status: null });
-                    return message.replyConfirmation("Your AFK status has been cleared");
+                    return message.confirmationReply("Your AFK status has been cleared");
                 } else {
                     if (!data) {
-                        await afk.create({ user: message.author.id, guild: message.guild.id, status: int.value, ignored: [] });
+                        await afk.create({ user: message.author.id, guild: message.guild.id, status: int, ignored: [] });
                     } else {
-                        await afk.findOneAndUpdate({ user: message.author.id, guild: message.guild.id }, { status: int.value });
+                        await afk.findOneAndUpdate({ user: message.author.id, guild: message.guild.id }, { status: int });
                     }
                     
-                    return message.confirmationReply(`Your AFK status has been set to: ${int.value}`);
+                    return message.confirmationReply(`Your AFK status has been set to: ${int}`);
                 }
             }
         } else if (args[0].toLowerCase() === "list") {

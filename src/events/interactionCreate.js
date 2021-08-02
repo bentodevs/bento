@@ -43,10 +43,10 @@ module.exports = async (bot, interaction) => {
             return;
         }
         // If a guildOnly command is run in dms return an error
-        if (cmd.opts.guildOnly && !interaction.guild)
+        if (cmd.opts.guildOnly && !interaction.guildId)
             return interaction.error({ content: "This command is unavailable via private messages. Please run this command in a guild.", ephemeral: true });
         // If the command or category is disabled return an error
-        if (interaction.guild && (settings.general.disabled_commands?.includes(cmd.info.name) || settings.general.disabled_categories?.includes(cmd.info.category)) && !interaction.channel.permissionsFor(interaction.member).has("ADMINISTRATOR") && !bot.config.general.devs.includes(interaction.user.id)) {
+        if (interaction.guildId && (settings.general.disabled_commands?.includes(cmd.info.name) || settings.general.disabled_categories?.includes(cmd.info.category)) && !interaction.channel.permissionsFor(interaction.member).has("ADMINISTRATOR") && !bot.config.general.devs.includes(interaction.user.id)) {
             // If disabled messages are enabled send one
             if (interaction.settings.general.disabled_message) {
                 await interaction.error({ content: "This command (or the category the command is in) is currently disabled!", ephemeral: true });
@@ -76,8 +76,8 @@ module.exports = async (bot, interaction) => {
             cmd.run_interaction ? await cmd.run_interaction(bot, interaction) : await cmd.run(bot, interaction);
         } catch (err) {
             // Get the error guild and channel
-            const guild = bot.guilds.cache.get(bot.config.general.errors.guild) || await bot.guilds.fetch(bot.config.general.errors.guild).catch(() => {}),
-            channel = guild?.channels.cache.get(bot.config.general.errors.channel);
+            const guild = bot.guilds.cache.get(bot.config.logging.errors.guild) || await bot.guilds.fetch(bot.config.logging.errors.guild).catch(() => {}),
+            channel = guild?.channels.cache.get(bot.config.logging.errors.channel);
 
             // Build the embed
             const embed = new MessageEmbed()
@@ -97,7 +97,7 @@ module.exports = async (bot, interaction) => {
             // Send the error message to the user
             interaction.error({ content: stripIndents(`An error occurred while running the command: \`${err}\`
             
-            ${bot.config.emojis.url} If this issue persists please report it in our discord: ${bot.config.general.errors.url}`), ephemeral: true });
+            ${bot.config.emojis.url} If this issue persists please report it in our discord: ${bot.config.logging.errors.url}`), ephemeral: true });
         }
     }
 

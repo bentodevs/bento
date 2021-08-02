@@ -1,15 +1,13 @@
 // Import dependencies
-const { Client, Collection, Intents } = require("discord.js"),
+const { Client, Collection } = require("discord.js"),
 { connect } = require("mongoose"),
 { getMongooseURL } = require("./database/mongo"),
-ora = require("ora");
+ora = require("ora"),
+Pokedex = require('pokedex-promise-v2');
 
 // Import handlers
 const commands = require("./modules/handlers/command"),
 events = require("./modules/handlers/event");
-
-// Define Gateway Intents
-const intents = new Intents(Intents.ALL).remove(["DIRECT_MESSAGE_TYPING", "GUILD_MESSAGE_TYPING", "GUILD_INTEGRATIONS", "GUILD_INVITES"]);
 
 // Create the bot client
 const bot = new Client({
@@ -25,8 +23,22 @@ const bot = new Client({
         "REACTION",
         "USER"
     ],
-    intents: intents
+    intents: [
+        "GUILDS",
+        "GUILD_MEMBERS",
+        "GUILD_BANS",
+        "GUILD_EMOJIS_AND_STICKERS",
+        "GUILD_WEBHOOKS",
+        "GUILD_VOICE_STATES",
+        "GUILD_PRESENCES",
+        "GUILD_MESSAGES",
+        "GUILD_MESSAGE_REACTIONS",
+        "DIRECT_MESSAGES"
+    ]
 });
+
+// Create pokedex
+bot.pokedex = new Pokedex();
 
 // Import the config
 bot.config = require("./config");
@@ -39,6 +51,8 @@ require("./modules/functions/prototypes")();
 bot.mojang = {};
 // Create the deletedMsgs collection
 bot.deletedMsgs = new Collection();
+// Create the cooldowns collection
+bot.cooldowns = new Collection();
 
 // Init function
 const init = async () => {
@@ -122,11 +136,14 @@ process.on("SIGINT", async () => {
     // Check if there is a mongo connection and if so close it
     if (bot.mongo?.connection) {
         bot.logger.log("Received SIGINT - Terminating MongoDB connection");
-        await bot.mongo.connection.close().catch(err => {
+        await bot.mongo.connection.close().then(() => {
+            // Exit the process after closing the mongo connection
+            process.exit(1);
+        }).catch(err => {
             bot.logger.error(err.stack);
         });
+    } else {
+        // Exit the process
+        process.exit(1);
     }
-
-    // Exit the process
-    process.exit(1);
 });

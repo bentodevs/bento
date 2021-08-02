@@ -1,5 +1,6 @@
 const { default: fetch } = require("node-fetch");
 const { xml2json } = require("xml-js");
+const HttpsProxyAgent = require('https-proxy-agent');
 const config = require("../../config");
 
 /**
@@ -512,5 +513,91 @@ exports.getDiscordStatus = () => {
             console.error(err);
             reject(err);
         });
+    });
+};
+
+/**
+ * Fetch an image and return the buffer
+ * 
+ * @param {String} url 
+ * 
+ * @returns {Promise.<Buffer>} emote
+ */
+exports.fetchEmote = (url) => {
+    return new Promise((resolve, reject) => {
+        // Create the proxyAgent
+        const proxyAgent = new HttpsProxyAgent(config.general.proxyUrl);
+
+        // Fetch the URL
+        fetch(url, {
+            agent: proxyAgent
+        }).then(async res => {
+            // If the url didn't contain an image return an error
+            if (!res.headers.get("content-type").startsWith("image"))
+                reject(new Error("The URL or File you specified isn't an image!"));
+            // If the size of the file is too big return an error
+            if (res.headers.get("content-length") > 256 * 1024)
+                reject(new Error("The emoji is too big! It must be 256KB or less."));
+
+            // Convert the image to a buffer and resolve it
+            res.buffer().then(buff => {
+                resolve(buff);
+            });
+        }).catch(err => {
+            // Log the error and reject it
+            console.error(err);
+            reject(new Error("Something went wrong while fetching the image!"));
+        });
+    });
+};
+
+/**
+ * Fetch a user's LastFM Profile
+ * 
+ * @param {Sring} user The user to fetch
+ * 
+ * @returns {Promise.<Object>} Last.fm user
+ */
+exports.getLastFMUser = async (user) => {
+    return new Promise((resolve, reject) => {
+        const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${user}&api_key=${config.apiKeys.lastfm}&format=json`;
+
+        fetch(URL)
+            .then(res => res.json())
+            .then(d => {
+                if (d?.error == 6) {
+                    reject(new Error("User not found"));
+                } else if (d?.error) {
+                    console.error(d.error.message);
+                    reject(new Error("An unknown error occurred!"));
+                } else {
+                    resolve(d);
+                }
+            })
+            .catch(err => new Error(err));        
+    });
+};
+
+/**
+ * Fetch a user's LastFM listening history
+ * 
+ * @param {Sring} user The user to fetch
+ * 
+ * @returns {Promise.<Object>} Last.fm user play history
+ */
+exports.getLastFMUserHistory = async (user) => {
+    return new Promise((resolve, reject) => {
+        const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${user}&api_key=${config.apiKeys.lastfm}&format=json`;
+
+        const data = fetch(URL).then(res => res.json());
+
+        if (data?.error == 6) {
+            reject(new Error("User not found"));
+        } else if (data?.error) {
+            console.error(data.error.message);
+            reject(new Error("An unknown error occurred!"));
+        } else {
+            resolve(data);
+        }
     });
 };

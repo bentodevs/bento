@@ -5,7 +5,7 @@ const settings = require("../database/models/settings");
 module.exports = async (bot, channel) => {
     
     // If channel type is DM, then ignore
-    if (channel.type === "dm")
+    if (channel.type === "DM")
         return;
     
     const sets = await settings.findOne({ _id: channel.guild.id });

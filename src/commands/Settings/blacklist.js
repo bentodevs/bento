@@ -210,7 +210,7 @@ module.exports = {
                 message.confirmationReply(`The ${channel} channel has been removed from the blacklist!`);
             } else {
                 // If the channel isn't a text or news channel return an error
-                if (channel.type !== "text" && channel.type !== "news")
+                if (channel.type !== "GUILD_TEXT" && channel.type !== "GUILD_NEWS")
                     return message.errorReply("The channel you specified isn't a text or news channel!");
 
                 // Add the channel to the blacklist

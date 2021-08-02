@@ -184,7 +184,8 @@ exports.register = (bot) => {
     return new Promise((resolve, reject) => {
         const arr = [];
 
-        for (const data of bot.commands.array()) {
+        for (const data of Array.from(bot.commands.values())) {
+
             if (data.slash?.enabled) {
                 arr.push({
                     name: data.info.name,
@@ -193,7 +194,7 @@ exports.register = (bot) => {
                 });
             }
         }
-    
+
         // Set the guild commands
         bot.application.commands.set(arr).then(() => {
             resolve(true);

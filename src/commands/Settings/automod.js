@@ -1,4 +1,5 @@
 const { MessageEmbed } = require("discord.js");
+const config = require("../../config");
 const settings = require("../../database/models/settings");
 
 module.exports = {
@@ -119,7 +120,7 @@ module.exports = {
                 🌐 Link posting is currently ${message.settings.moderation.no_link ? "**disallowed**" : "**allowed**"}
                 
                 🔇 The number of allowed mentions before being muted is ${message.settings.moderation.mentions_mute || "**not set**"}
-                <:PeepoPing:842359606697132073> The number of allowed mentions before being banned is ${message.settings.moderation.mentions_ban || "**not set**"}`)
+                ${config.emojis.pepe_ping} The number of allowed mentions before being banned is ${message.settings.moderation.mentions_ban || "**not set**"}`)
                 .setTimestamp()
                 .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ format: "png", dynamic: true }));
             
@@ -247,7 +248,7 @@ module.exports = {
                 🌐 Link posting is currently ${interaction.settings.moderation.no_link ? "**disallowed**" : "**allowed**"}
                 
                 🔇 The number of allowed mentions before being muted is ${interaction.settings.moderation.mentions_mute || "**not set**"}
-                <:PeepoPing:842359606697132073> The number of allowed mentions before being banned is ${interaction.settings.moderation.mentions_ban || "**not set**"}`)
+                ${config.emojis.pepe_ping} The number of allowed mentions before being banned is ${interaction.settings.moderation.mentions_ban || "**not set**"}`)
                 .setTimestamp()
                 .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ format: "png", dynamic: true }));
             

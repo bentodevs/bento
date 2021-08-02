@@ -1,11 +1,12 @@
 // Import Dependencies
 const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
-const tags = require("../database/models/tags");
 const { getSettings, getPerms } = require("../database/mongo");
-const { checkMesage, checkBlacklist } = require("../modules/functions/moderation");
+const { checkMessage, checkBlacklist } = require("../modules/functions/moderation");
 const { getTag } = require("../modules/functions/getters");
 const { checkSelf, checkPerms } = require("../modules/functions/permissions");
+const { checkLevel } = require("../modules/functions/leveling");
+const tags = require("../database/models/tags");
 const afk = require("../database/models/afk");
 
 module.exports = async (bot, message) => {
@@ -21,7 +22,8 @@ module.exports = async (bot, message) => {
     // Get important options
     const prefixMention = new RegExp(`^<@!?${bot.user.id}>`),
     settings = message.settings = await getSettings(message.guild?.id),
-    prefix = message.content.match(prefixMention) ? message.content.match(prefixMention)[0] : settings.general.prefix;
+    prefix = message.content.match(prefixMention) ? message.content.match(prefixMention)[0] : settings.general.prefix,
+    restricted_channel = settings.general.restricted_channels.find(a => a.id == message.channel.id);
 
     // If the channel is a command channel delete the message after 15 seconds
     if (message.settings.general.command_channel) {
@@ -29,17 +31,34 @@ module.exports = async (bot, message) => {
             setTimeout(() => message.delete().catch(() => {}), 15000);
     }
 
-    // Return if the user is a bot
-    if (message.author.bot)
-        return;
+    // Restricted channels code
+    if (restricted_channel && (restricted_channel.types.includes("images") || restricted_channel.types.includes("videos")) && message.author.id !== bot.user.id) {
+        // If the message has content & isn't a command delete the message
+        if (message.content && (!restricted_channel.types.includes("commands") || message.content.indexOf(prefix) !== 0))
+            return message.delete();
+
+        // Run the restriction checks
+        if (!message.attachments.size && (!restricted_channel.types.includes("commands") || message.content.indexOf(prefix) !== 0)) {
+            return message.delete();
+        } else if (restricted_channel.types.includes("images") && restricted_channel.types.includes("videos")) {
+            if (message.attachments.filter(a => !a.contentType.startsWith("image") && !a.contentType.startsWith("video")).size > 0)
+                message.delete();
+        } else if (restricted_channel.types.includes("images")) {
+            if (message.attachments.filter(a => !a.contentType.startsWith("image") ).size > 0)
+                message.delete();
+        } else if (restricted_channel.types.includes("videos")) {
+            if (message.attachments.filter(a => !a.contentType.startsWith("video") ).size > 0)
+                message.delete();
+        }
+    }
     
     // If the message was sent in a guild, then check it against the automod
-    if (message.guild) {
-        await checkMesage(message, settings);
+    if (message.guild && !message.author.bot) {
+        await checkMessage(message, settings);
     }
 
     // AFK User check
-    if (message.content.indexOf(prefix) !== 0) {
+    if (message.content.indexOf(prefix) !== 0 && !message.author.bot) {
         if (message.mentions.users.size) {
             const first = message.mentions.users.first(),
             afkUser = await afk.findOne({ user: first.id, guild: message.guild.id });
@@ -49,9 +68,15 @@ module.exports = async (bot, message) => {
     }
 
     // Return if the message doesn't start with the prefix
-    if (message.content.indexOf(prefix) !== 0)
+    if (message.content.indexOf(prefix) !== 0) {
+        // If the message is in a guild run the level check first
+        if (message.guild) 
+            await checkLevel(message);
+        
+        // Return
         return;
-    // Cache the guild member if they aren't isn't cached
+    }
+    // Cache the guild member if they aren't cached
     if (message.guild && !message.member) 
         await message.guild.members.fetch(message.author);
 
@@ -60,6 +85,13 @@ module.exports = async (bot, message) => {
     command = args.shift().toLowerCase(),
     cmd = bot.commands.get(command) || bot.commands.get(bot.aliases.get(command)),
     tag = message.guild ? await tags.findOne({ guild: message.guild.id, name: command }) : false;
+
+    // More restricted channel code
+    if (restricted_channel && restricted_channel.types.includes("commands")) {
+        if (!cmd && !tag && message.author.id !== bot.user.id)
+            return message.delete();
+    }
+
 
     // Import message functions
     require("../modules/functions/messages")(message);
@@ -74,7 +106,7 @@ module.exports = async (bot, message) => {
 
     // If its a tag return the getTag function
     if (tag)
-        return getTag(tag, message, args);
+        return await getTag(tag, message, args);
 
     // Get permissions
     const permissions = message.permissions = await getPerms(bot, message.guild?.id);
@@ -128,8 +160,8 @@ module.exports = async (bot, message) => {
         await cmd.run(bot, message, args);
     } catch (err) {
         // Get the error guild and channel
-        const guild = bot.guilds.cache.get(bot.config.general.errors.guild) || await bot.guilds.fetch(bot.config.general.errors.guild).catch(() => {}),
-        channel = guild?.channels.cache.get(bot.config.general.errors.channel);
+        const guild = bot.guilds.cache.get(bot.config.logging.errors.guild) || await bot.guilds.fetch(bot.config.logging.errors.guild).catch(() => {}),
+        channel = guild?.channels.cache.get(bot.config.logging.errors.channel);
 
         // Build the error embed
         const embed = new MessageEmbed()
@@ -147,10 +179,14 @@ module.exports = async (bot, message) => {
         // Send the embed
         channel?.send({ embeds: [embed] });
 
+        // If the bot is in a dev environment log the error as well
+        if (bot.config.general.development)
+            console.error(err);
+
         // Send an error message to the user
         message.errorReply(stripIndents`An error occurred while running the command: \`${err}\`
         
-        ${bot.config.emojis.url} If this issue persists please report it in our discord: ${bot.config.general.errors.url}`);
+        ${bot.config.emojis.url} If this issue persists please report it in our discord: ${bot.config.logging.errors.url}`);
     }
 
     // Log that the command has been run

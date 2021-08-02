@@ -105,7 +105,7 @@ module.exports = {
         }
 
         // If the channel isn't a text or news channel return an error
-        if (channel.type !== "text" && channel.type !== "news")
+        if (channel.type !== "GUILD_TEXT" && channel.type !== "GUILD_NEWS")
             return message.errorReply("The channel you mentioned isn't a text or news channel!");
         // If the user doesn't have MANAGE_MESSAGES permission but specified a different channel return an error
         if (channel.id !== message.channel.id && !message.channel.permissionsFor(message.member).has("MANAGE_CHANNELS"))
@@ -179,7 +179,7 @@ module.exports = {
         const channel = interaction.options.get("channel").channel;
 
         // If the channel isn't a text or news channel return an error
-        if (channel.type !== "text" && channel.type !== "news")
+        if (channel.type !== "GUILD_TEXT" && channel.type !== "GUILD_NEWS")
             return interaction.error("The channel you specified isn't a text or news channel!");
         // If the user doesn't have MANAGE_MESSAGES permission but specified a different channel return an error
         if (channel.id !== interaction.channel.id && !interaction.channel.permissionsFor(interaction.member).has("MANAGE_CHANNELS"))

@@ -14,7 +14,8 @@ module.exports = model("settings", new Schema({
             command_channel: null, // Auto-clearing command channel
             permission_message: true, // Whether the bot sends permission messages or not
             permission_dms: true, // Wether the bot sends permission dms or not
-            disabled_message: true // Wether the bot sends "command/category is disabled" messages or not
+            disabled_message: true, // Wether the bot sends "command/category is disabled" messages or not
+            restricted_channels: [] // An array with restricted channels
         }
     },
     welcome: {
@@ -72,21 +73,28 @@ module.exports = model("settings", new Schema({
     logs: {
         type: Object,
         default: {
-            default: null,
-            commands: null,
-            edited: null,
-            deleted: null,
-            events: null
+            default: null, // Default logging channel
+            commands: null, // Command logging channel
+            edited: null, // Edited messages logging channel
+            deleted: null, // Deleted messages logging channel
+            events: null // Event logging channel
         }
     },
     manual_events: {
         type: Object,
         default: {
-            moderation: false,
-            guild: false,
-            channels: false,
-            roles: false,
-            members: false
+            moderation: false, // Wether or not moderation actions get logged
+            guild: false, // Wether or not guild actions get logged
+            channels: false, // Wether or not channel actions get logged
+            roles: false, // Wether or not role actions get logged
+            members: false // Wether or not member actions get logged
+        }
+    },
+    leveling: {
+        type: Object,
+        default: {
+            messages: true, // Wether the bot should send level up messages or not
+            multiplier: 1.0 // The XP multiplier for levels
         }
     }
 }));

@@ -1,3 +1,4 @@
+const config = require("../../config");
 const settings = require("../../database/models/settings");
 const { getRole, getChannel } = require("../../modules/functions/getters");
 
@@ -53,16 +54,14 @@ module.exports = {
 
                     // Create the muted role, set color and provide creation reason
                     const muteRole = await message.guild.roles.create({
-                        data: {
-                            name: "Muted",
-                            color: "#000000"
-                        },
+                        name: "Muted",
+                        color: "#000000",
                         reason: `[Triggered by ${message.author.tag}] Automatic creation of muted role`
                     });
                     // Now add the muted role to every single channel in the discord
                     message.guild.channels.cache.forEach(c => {
-                        if (c.type === "text") {
-                            c.updateOverwrite(muteRole, {
+                        if (c.type === "GUILD_TEXT") {
+                            c.permissionOverwrites.edit(muteRole, {
                                 SEND_MESSAGES: false
                             });
                         }
@@ -70,7 +69,7 @@ module.exports = {
                     // Set the mute role in the DB
                     await settings.findOneAndUpdate({ _id: message.guild.id }, { "roles.mute": muteRole.id });
                     // Edit the loading message to reflect that all tasks are complete
-                    msg.edit(`:ok_hand: The mute role (${muteRole}) was successfully created and configured on all text channels`);
+                    msg.edit(`${config.emojis.confirmation} The mute role (${muteRole}) was successfully created and configured on all text channels`);
                 }
             } else {
                 if (args[1].toLowerCase() === "disable") {

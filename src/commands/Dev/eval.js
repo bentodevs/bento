@@ -1,3 +1,5 @@
+const { Util } = require("discord.js");
+
 module.exports = {
     info: {
         name: "eval",
@@ -48,8 +50,15 @@ module.exports = {
                 evaled = require("util").inspect(evaled);
             }
 
-            // Return the response
-            message.reply({ content: clean(evaled), code: "xl", split: { maxLength: "1800" } });
+            const msgs = Util.splitMessage(clean(evaled), { maxLength: "1800" });
+
+            for (const data of msgs) {
+                if (data == msgs[0]) {
+                    message.reply(`\`\`\`${data}\`\`\``);
+                } else {
+                    message.channel.send(`\`\`\`${data}\`\`\``);
+                }
+            }
         } catch (err) {
             // Return an error if something went wrong
             message.reply(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);

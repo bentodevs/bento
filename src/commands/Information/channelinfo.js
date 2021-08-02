@@ -52,27 +52,27 @@ module.exports = {
 
         // Define formatting for all the channel types
         const types = {
-            text: {
+            GUILD_TEXT: {
                 type: "Channel",
                 icon: "https://i.imgur.com/6VyvJWL.png"
             },
-            voice: {
+            GUILD_VOICE: {
                 type: "Voice Channel",
                 icon: "https://i.imgur.com/yXE4Yg9.png"
             },
-            category: {
+            GUILD_CATEGORY: {
                 type: "Category",
                 icon: "https://i.imgur.com/Oyl9rvi.png"
             },
-            news: {
+            GUILD_NEWS: {
                 type: "News Channel",
                 icon: "https://i.imgur.com/6VyvJWL.png"
             },
-            store: {
+            GUILD_STORE: {
                 type: "Store Channel",
                 icon: "https://i.imgur.com/6VyvJWL.png"
             },
-            stage: {
+            GUILD_STAGE_VOICE: {
                 type: "Stage Channel",
                 icon: "https://i.imgur.com/yXE4Yg9.png"
             }
@@ -97,7 +97,7 @@ module.exports = {
             desc += `**Category:** ${message.guild.channels.cache.get(channel.parentID).name}\n`;
         if (channel.bitrate)
             desc += `**Bitrate:** ${channel.bitrate}kbps\n`;
-        if (channel.members && channel.type == "voice")
+        if (channel.members && channel.type == "GUILD_VOICE")
             desc += `**Users Connected:** ${channel.members ? channel.members.size : 0}\n`;
         if (channel.topic)
             desc += `**Topic:** ${channel.topic !== "" ? channel.topic : "None"}\n`;

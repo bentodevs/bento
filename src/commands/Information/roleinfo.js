@@ -2,6 +2,7 @@ const { stripIndents } = require("common-tags");
 const { formatDistance } = require("date-fns");
 const { format, utcToZonedTime } = require("date-fns-tz");
 const { MessageEmbed } = require("discord.js");
+const config = require("../../config");
 const { getRole } = require("../../modules/functions/getters");
 
 module.exports = {
@@ -63,7 +64,7 @@ module.exports = {
             .setColor(role.hexColor ?? bot.config.general.embedColor)
             .setDescription(stripIndents`**Position:** ${role.position + 1}/${message.guild.roles.cache.size}
             **Color:** ${!role.color ? "Default" : role.hexColor}
-            **${role.members.size} member(s)** | <:online:774282494593466388> **${role.members.filter(m => m.presence.status !== "offline").size}** online
+            **${role.members.size} member(s)** | ${config.emojis.online} **${role.members.filter(m => m.presence && m.presence.status !== "offline").size}** online
             **Created:** ${created} (${timeSince})
             **Hoisted:** ${role.hoist.toString().toTitleCase()}
             **Mentionable:** ${role.mentionable.toString().toTitleCase()}`);
@@ -90,7 +91,7 @@ module.exports = {
             .setColor(role.hexColor ?? bot.config.general.embedColor)
             .setDescription(stripIndents`**Position:** ${role.position + 1}/${interaction.guild.roles.cache.size}
             **Color:** ${!role.color ? "Default" : role.hexColor}
-            **${role.members.size} member(s)** | <:online:774282494593466388> **${role.members.filter(m => m.presence.status !== "offline").size}** online
+            **${role.members.size} member(s)** | ${config.emojis.online} **${role.members.filter(m => m.presence && m.presence.status !== "offline").size}** online
             **Created:** ${created} (${timeSince})
             **Hoisted:** ${role.hoist.toString().toTitleCase()}
             **Mentionable:** ${role.mentionable.toString().toTitleCase()}`);
