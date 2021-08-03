@@ -3,7 +3,8 @@ const { Client, Collection } = require("discord.js"),
 { connect } = require("mongoose"),
 { getMongooseURL } = require("./database/mongo"),
 ora = require("ora"),
-Pokedex = require('pokedex-promise-v2');
+Pokedex = require('pokedex-promise-v2'),
+mysql = require("mysql");
 
 // Import handlers
 const commands = require("./modules/handlers/command"),
@@ -57,7 +58,7 @@ bot.cooldowns = new Collection();
 // Init function
 const init = async () => {
     // Log R2-D2 ascii art
-    console.log(`     ____  ____       ____ ____  
+    console.log(`     ____  ____       ____ ____
     |  _ \\|___ \\     |  _ \\___ \\
     | |_) | __) |____| | | |__) |
     |  _ < / __/_____| |_| / __/
@@ -68,7 +69,7 @@ const init = async () => {
     // Send the command message and load all the commands
     const commandMessage = ora("Loading commands...").start(),
     cmds = await commands.init(bot);
-    
+
     // Update the command message
     if (bot.commands.filter(a => a.slash?.enabled).size > 100) {
         commandMessage.stopAndPersist({
@@ -108,6 +109,19 @@ const init = async () => {
     mongoMsg.stopAndPersist({
         symbol: "✔️",
         text: " Successfully connected to the Mongo database!"
+    });
+
+    // Send the mysql message
+    const mysqlMsg = ora("Connecting to the MySQL database...").start();
+
+    // Connect to the MySQL DB
+    bot.mclink = await mysql.createPool(bot.config.mclink).catch(err => {
+        throw new Error(err);
+    });
+
+    mysqlMsg.stopAndPersist({
+        symbol: "✔️",
+        text: " Successfully connected to the MySQL database!"
     });
 
     // Send the login message
