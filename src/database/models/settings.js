@@ -96,5 +96,12 @@ module.exports = model("settings", new Schema({
             messages: true, // Wether the bot should send level up messages or not
             multiplier: 1.0 // The XP multiplier for levels
         }
+    },
+    changelogs: {
+        type: Object,
+        default: {
+            channel: null,
+            locations: []
+        }
     }
 }));
