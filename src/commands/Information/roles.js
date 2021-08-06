@@ -43,7 +43,7 @@ module.exports = {
         let page = 0;
 
         // Sort the roles by position
-        const sorted = Array.from(message.guild.roles.cache.sort((a, b) => b.position - a.position));
+        const sorted = Array.from(message.guild.roles.cache.values()).sort((a, b) => b.position - a.position);
 
         // Devide the roles into pages of 10
         for (let i = 0; i < sorted.length; i += 10) {
@@ -79,7 +79,7 @@ module.exports = {
         let page = 0;
 
         // Sort the roles by position
-        const sorted = Array.from(interaction.guild.roles.cache.sort((a, b) => b.position - a.position));
+        const sorted = Array.from(interaction.guild.roles.cache.values()).sort((a, b) => b.position - a.position);
 
         // Devide the roles into pages of 10
         for (let i = 0; i < sorted.length; i += 10) {

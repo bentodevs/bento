@@ -92,7 +92,7 @@ module.exports = {
         desc += `**Position:** ${channel.position}${channel.parent ? " (in category)" : ""} | [Open Channel](https://discord.com/channels/${message.guild.id}/${channel.id})\n`;
 
         if (channel.children)
-            desc += `**Channels:** ${channel.children.array().join(", ")}\n`;
+            desc += `**Channels:** ${Array.from(channel.children.values()).join(", ")}\n`;
         if (channel.parentID)
             desc += `**Category:** ${message.guild.channels.cache.get(channel.parentID).name}\n`;
         if (channel.bitrate)
@@ -129,27 +129,27 @@ module.exports = {
 
         // Define formatting for all the channel types
         const types = {
-            text: {
+            GUILD_TEXT: {
                 type: "Channel",
                 icon: "https://i.imgur.com/6VyvJWL.png"
             },
-            voice: {
+            GUILD_VOICE: {
                 type: "Voice Channel",
                 icon: "https://i.imgur.com/yXE4Yg9.png"
             },
-            category: {
+            GUILD_CATEGORY: {
                 type: "Category",
                 icon: "https://i.imgur.com/Oyl9rvi.png"
             },
-            news: {
+            GUILD_NEWS: {
                 type: "News Channel",
                 icon: "https://i.imgur.com/6VyvJWL.png"
             },
-            store: {
+            GUILD_STORE: {
                 type: "Store Channel",
                 icon: "https://i.imgur.com/6VyvJWL.png"
             },
-            stage: {
+            GUILD_STAGE_VOICE: {
                 type: "Stage Channel",
                 icon: "https://i.imgur.com/yXE4Yg9.png"
             }
@@ -169,7 +169,7 @@ module.exports = {
         desc += `**Position:** ${channel.position}${channel.parent ? " (in category)" : ""} | [Open Channel](https://discord.com/channels/${interaction.guild.id}/${channel.id})\n`;
 
         if (channel.children)
-            desc += `**Channels:** ${channel.children.array().join(", ")}\n`;
+            desc += `**Channels:** ${Array.from(channel.children.values()).join(", ")}\n`;
         if (channel.parentID)
             desc += `**Category:** ${interaction.guild.channels.cache.get(channel.parentID).name}\n`;
         if (channel.bitrate)
