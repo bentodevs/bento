@@ -59,17 +59,17 @@ module.exports = {
         // If no summoner was provided, then throw an error
         if (!args[1])
             return message.errorReply("You didn't provide any summoner name!");
-        
+
         // Send a loading message & assign it to msg
         const msg = await message.loadingReply(`Fetching the League of Legends profile for \`${args.splice(1).join("")}\``);
-        
+
         // Fetch the league summoner data
         const data = await getLeagueSummoner(args[0], args.splice(1).join());
 
         // Catch any errors
         if (data === "NO_REGION")
             return msg.edit(`${bot.config.emojis.error} It looks like you entered an incorrect region!`);
-        
+
         if (data === "NO_USER_FOUND")
             return msg.edit(`${bot.config.emojis.error} It looks like there isn't a Summoner with that name!`);
 
@@ -78,7 +78,7 @@ module.exports = {
 
         // Set the recent matches string
         let matches = "**Recent Matches**\n";
-       
+
         // For the 5 most recent matches in a player's history, fetch the data and add
         // to the recent matches string
         for await (const m of matchList.slice(0, 5)) {
@@ -94,11 +94,11 @@ module.exports = {
             .setDescription(stripIndents`**Summoner Name:** ${data.user}
             **Summoner Level:** ${data.summonerLevel}
             **Games Played:** ${data.matchData.totalGames}
-            
+
             ${matches}`)
             .setTimestamp()
             .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: "png" }));
-        
+
         // Delete the loading message
         msg.delete().catch(() => { });
         // Send the embed
@@ -107,17 +107,17 @@ module.exports = {
     },
 
     run_interaction: async (bot, interaction) => {
-        
+
         // Defer the interaction
-        await interaction.defer();
-        
+        await interaction.deferReply();
+
         // Fetch the league summoner data
         const data = await getLeagueSummoner(interaction.options.get("region").value, interaction.options.get("summoner").value);
 
         // Catch any errors
         if (data === "NO_REGION")
             return interaction.editReply(`${bot.config.emojis.error} It looks like you entered an incorrect region!`);
-        
+
         if (data === "NO_USER_FOUND")
             return interaction.editReply(`${bot.config.emojis.error} It looks like there isn't a Summoner with that name!`);
 
@@ -126,7 +126,7 @@ module.exports = {
 
         // Set the recent matches string
         let matches = "**Recent Matches**\n";
-       
+
         // For the 5 most recent matches in a player's history, fetch the data and add
         // to the recent matches string
         for await (const m of matchList.slice(0, 5)) {
@@ -142,11 +142,11 @@ module.exports = {
             .setDescription(stripIndents`**Summoner Name:** ${data.user}
             **Summoner Level:** ${data.summonerLevel}
             **Games Played:** ${data.matchData.totalGames}
-            
+
             ${matches}`)
             .setTimestamp()
             .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ dynamic: true, format: "png" }));
-        
+
         // Send the embed
         interaction.editReply({ embeds: [embed] });
 

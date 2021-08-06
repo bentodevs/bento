@@ -51,19 +51,19 @@ module.exports = {
 
         // Fetch member
         const member = await getMember(message, args[0], true);
-        
+
         if (!member)
             return message.errorReply("That member doesn't seem to exist in this guild!");
-        
+
         const cases = await punishments.find({ guild: message.guild.id, moderator: member.user.id });
 
         if (cases.length === 0)
             return message.errorReply("That user has not created any punishments!");
-        
+
         // Page variables
         const pages = [];
         let page = 0;
-        
+
         const sorted = cases.sort((a, b) => a.actionTime - b.actionTime);
 
         // Set cases in page array
@@ -77,7 +77,7 @@ module.exports = {
         // Check if the user specified a valid page
         if (!pages[page])
             return message.errorReply("You didn't specify a valid page!");
-        
+
         // Format the cases
         const formatted = Promise.all(pages[page].map(async p => `**#${p.id}** | **${p.type.toTitleCase()}** | **User:** ${await getCaseUser(bot, message, p.user)} | **Reason:** ${p.reason}`));
         const data = await formatted;
@@ -88,7 +88,7 @@ module.exports = {
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
             .setDescription(data.join("\n"))
             .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
-        
+
         // Send the history embed
         message.reply({ embeds: [embed] });
     },
@@ -96,7 +96,7 @@ module.exports = {
     run_interaction: async (bot, interaction) => {
 
         // Defer the interaction
-        await interaction.defer();
+        await interaction.deferReply();
 
         // Make a function for getting case users - less head-work
         async function getCaseUser(bot, interaction, user) {
@@ -110,22 +110,22 @@ module.exports = {
         // Get the member and page number
         const member = interaction.options.get("user"),
         int = interaction.options.get("page");
-        
+
         // If the user doesn't exist, then return an error
         if (!member.user)
             return interaction.error("That user doesn't seem to exist!");
-        
+
         // Fetch all cases in the current guild, by the user
         const cases = await punishments.find({ guild: interaction.guild.id, moderator: member.user.id });
 
         // If there are no cases, return an error
         if (cases.length === 0)
             return interaction.error("That user has not created any punishments!");
-        
+
         // Page variables
         const pages = [];
         let page = 0;
-        
+
         const sorted = cases.sort((a, b) => a.actionTime - b.actionTime);
 
         // Set cases in page array
@@ -134,14 +134,14 @@ module.exports = {
         }
 
         // If args[0] is a number set it as the page
-        if (int) 
+        if (int)
             page = int.value -= 1;
 
 
         // Check if the user specified a valid page
         if (!pages[page])
             return interaction.error("You didn't specify a valid page!");
-        
+
         // Format the cases
         const formatted = Promise.all(pages[page].map(async p => `**#${p.id}** | **${p.type.toTitleCase()}** | **User:** ${await getCaseUser(bot, interaction, p.user)} | **Reason:** ${p.reason}`));
         const data = await formatted;
@@ -152,7 +152,7 @@ module.exports = {
             .setColor(interaction.member.displayColor ?? bot.config.general.embedColor)
             .setDescription(data.join('\n'))
             .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
-        
+
         // Send the history embed
         interaction.editReply({ embeds: [embed] });
     }

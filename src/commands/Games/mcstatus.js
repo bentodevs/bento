@@ -98,7 +98,7 @@ module.exports = {
             .setFooter(`Requested by: ${interaction.user.tag}`);
 
         // Send the embed
-        interaction.reply({ embeds: [embed] });
+        interaction.reply({ embeds: [embed], ephemeral: true });
 
     }
 };

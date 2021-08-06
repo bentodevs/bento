@@ -1,3 +1,5 @@
+const { registerGuild } = require("../../modules/handlers/command");
+
 module.exports = {
     info: {
         name: "register",
@@ -24,22 +26,9 @@ module.exports = {
 
     run: async (bot, message, args) => {
 
-        // Get the command
-        const cmdName = args[0].toLowerCase() == "cmd" ? args[1].toLowerCase() : args[0].toLowerCase(),
-        cmd = bot.commands.get(cmdName) || bot.commands.get(bot.aliases.get(cmdName));
-
-        if (!cmd)
-            return message.errorReply("You didn't specify a valid command!");
-
-        const data = {
-            name: cmd.info.name,
-            description: cmd.info.description,
-            options: cmd.slash?.opts ?? []
-        };
-
-        await message.guild.commands.create(data);
-
-        message.confirmationReply("Successfully registered that command!");
+        await registerGuild(bot, message.guild.id)
+            .then(() => message.confirmationReply("Successfully registered that command!"))
+            .catch((err) => message.errorReply(`\`\`\`x1\n${err}\`\`\``));
 
     }
-}; 
+};

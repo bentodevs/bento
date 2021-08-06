@@ -87,7 +87,7 @@ module.exports = async (bot, interaction) => {
                 **Interaction Author:** ${interaction.user.tag} (${interaction.user.id})
                 **Interaction ID:** ${interaction.id}
                 **Command:** ${cmd.info.name}
-                
+
                 **Error:**\`\`\`${err.stack}\`\`\``)
                 .setColor("#FF2D00");
 
@@ -96,9 +96,12 @@ module.exports = async (bot, interaction) => {
 
             // Send the error message to the user
             interaction.error({ content: stripIndents(`An error occurred while running the command: \`${err}\`
-            
+
             ${bot.config.emojis.url} If this issue persists please report it in our discord: ${bot.config.logging.errors.url}`), ephemeral: true });
         }
+
+        // Log that the command has been run
+        bot.logger.cmd(`${interaction.user.tag} (${interaction.user.id}) ran command ${cmd.info.name}${interaction.guildId ? ` in ${interaction.guild.name} (${interaction.guildId})` : ""}`);
     }
 
 };
