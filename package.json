@@ -10,7 +10,7 @@
     "tracer": "cd src && node --trace-warnings bot.js"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=16.0.0"
   },
   "repository": {
     "type": "git",
@@ -34,11 +34,12 @@
     "common-tags": "^1.8.0",
     "date-fns": "^2.22.1",
     "date-fns-tz": "^1.1.4",
-    "discord.js": "^13.0.0-dev.t1627906063.6e0ea02",
+    "discord.js": "^13.0.0-dev.t1628208261.a56ba09",
     "flip": "^1.0.0",
     "https-proxy-agent": "^5.0.0",
     "iso-639-1": "^2.1.9",
     "mongoose": "^5.13.3",
+    "node-canvas": "^2.7.0",
     "node-fetch": "^2.6.1",
     "ora": "^5.4.1",
     "pokedex-promise-v2": "^3.3.2",
