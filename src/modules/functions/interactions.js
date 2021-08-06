@@ -4,7 +4,7 @@ module.exports = interaction => {
 
     /**
      * Send a interaction reply starting with a error emote
-     * @param {string} option 
+     * @param {string} option
      */
     interaction.error = (option) => {
         return new Promise((resolve, reject) => {
@@ -21,7 +21,7 @@ module.exports = interaction => {
 
     /**
      * Send a interaction reply starting with a loading emote
-     * @param {string} option 
+     * @param {string} option
      */
      interaction.loading = (option) => {
         return new Promise((resolve, reject) => {
@@ -38,7 +38,7 @@ module.exports = interaction => {
 
     /**
      * Send a interaction reply starting with a confirmation emote
-     * @param {string} string 
+     * @param {string} string
      */
      interaction.confirmation = (option) => {
         return new Promise((resolve, reject) => {
@@ -53,4 +53,4 @@ module.exports = interaction => {
         });
     };
 
-}; 
+};
