@@ -4,9 +4,9 @@ const { readdirSync } = require("fs");
 
 /**
  * Start the command handler and load all the commands.
- * 
+ *
  * @param {Object} bot The client which is used to transact between this app & Discord
- * 
+ *
  * @returns {Promise<Number>} The amount of commands loaded
  */
 exports.init = (bot) => {
@@ -32,7 +32,7 @@ exports.init = (bot) => {
                     props.path = `../../commands/${category}/${file}`;
                     // Add the command to the collection
                     bot.commands.set(props.info.name, props);
-                
+
                     // Loop through the aliases and add them to the alias collection
                     if (props.info.aliases) props.info.aliases.forEach(alias => {
                         bot.aliases.set(alias, props.info.name);
@@ -52,10 +52,10 @@ exports.init = (bot) => {
 
 /**
  * Reload a command
- * 
+ *
  * @param {Object} bot The client which is used to transact between this app & Discord
  * @param {String} command An object with all the command data
- * 
+ *
  * @returns {Promise<Boolean>} Returns true if the command was reloaded correctly.
  */
 exports.reload = (bot, command) => {
@@ -90,11 +90,11 @@ exports.reload = (bot, command) => {
 
 /**
  * Load a command
- * 
+ *
  * @param {Object} bot The client which is used to transact between this app & Discord
  * @param {String} command The command name to load
  * @param {String} category The category the command is in
- * 
+ *
  * @returns {Promise<Object>} Returns command data if the command loaded correctly
  */
 exports.load = (bot, category, command) => {
@@ -140,10 +140,10 @@ exports.load = (bot, category, command) => {
 
 /**
  * Unload a command
- * 
+ *
  * @param {Object} bot The client which is used to transact between this app & Discord
  * @param {String} command An object with all the command data
- * 
+ *
  * @returns {Promise<Boolean>} Returns true if the command unloaded correctly
  */
 exports.unload = (bot, command) => {
@@ -174,17 +174,18 @@ exports.unload = (bot, command) => {
 };
 
 /**
- * Register all commands
- * 
+ * Register all global commands
+ *
  * @param {Object} bot The client which is used to transact between this app & Discord
- * 
+ *
  * @returns {Promise.<Boolean>} Returns true if the commands registered successfully
  */
-exports.register = (bot) => {
+exports.registerGlobal = (bot) => {
     return new Promise((resolve, reject) => {
         const arr = [];
+        const commands = Array.from(bot.commands.values()).filter(c => !c.opts.guildOnly);
 
-        for (const data of Array.from(bot.commands.values())) {
+        for (const data of commands) {
 
             if (data.slash?.enabled) {
                 arr.push({
@@ -197,6 +198,39 @@ exports.register = (bot) => {
 
         // Set the guild commands
         bot.application.commands.set(arr).then(() => {
+            resolve(true);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+};
+
+/**
+ * Register all guild commands
+ *
+ * @param {Object} bot The client which is used to transact between this app & Discord
+ * @param {String} guildId The Guild to set the commands in
+ *
+ * @returns {Promise.<Boolean>} Returns true if the commands registered successfully
+ */
+exports.registerGuild = (bot, guildId) => {
+    return new Promise((resolve, reject) => {
+        const arr = [];
+        const commands = Array.from(bot.commands.values()).filter(c => c.opts.guildOnly);
+
+        for (const data of commands) {
+
+            if (data.slash?.enabled) {
+                arr.push({
+                    name: data.info.name,
+                    description: data.info.description,
+                    options: data.slash?.opts ?? []
+                });
+            }
+        }
+
+        // Set the guild commands
+        bot.application.commands.set(arr, guildId).then(() => {
             resolve(true);
         }).catch(err => {
             reject(err);

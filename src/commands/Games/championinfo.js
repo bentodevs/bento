@@ -50,7 +50,7 @@ module.exports = {
             .setThumbnail(`https://ddragon.leagueoflegends.com/cdn/11.9.1/img/champion/${champ.id}.png`)
             .setColor((message.member?.displayColor ?? bot.config.general.embedColor))
             .setDescription(stripIndents`${champ.blurb}
-            
+
             **Tags:** \`${champ.tags.join("`, `")}\`
 
             **__Base Stats:__**
@@ -60,7 +60,7 @@ module.exports = {
             **Attack Damage:** ${champ.stats.attackdamage} (+${champ.stats.attackdamage} per level)`)
             .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: "png" }))
             .setTimestamp();
-        
+
         // Send the embed
         message.reply({ embeds: [embed] });
 
@@ -81,7 +81,7 @@ module.exports = {
             .setThumbnail(`https://ddragon.leagueoflegends.com/cdn/11.9.1/img/champion/${champ.id}.png`)
             .setColor((interaction.member?.displayColor ?? bot.config.general.embedColor))
             .setDescription(stripIndents`${champ.blurb}
-            
+
             **Tags:** \`${champ.tags.join("`, `")}\`
 
             **__Base Stats:__**
@@ -91,9 +91,9 @@ module.exports = {
             **Attack Damage:** ${champ.stats.attackdamage} (+${champ.stats.attackdamage} per level)`)
             .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ dynamic: true, format: "png" }))
             .setTimestamp();
-        
+
         // Send the embed
         interaction.reply({ embeds: [embed] });
 
-    }  
+    }
 };

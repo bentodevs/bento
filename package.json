@@ -1,7 +1,7 @@
 {
-  "name": "r2-d2-public",
+  "name": "r2-d2",
   "version": "1.0.0",
-  "description": "Public version of R2-D2",
+  "description": "A multi-purpose Discord bot",
   "main": "src/bot.js",
   "scripts": {
     "dev": "node .",
@@ -10,11 +10,11 @@
     "tracer": "cd src && node --trace-warnings bot.js"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=16.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AmirionStudios/R2-D2-Public.git"
+    "url": "git+https://github.com/AmirionStudios/R2-D2.git"
   },
   "author": "Amirion Studios LLC (https://amirion.org)",
   "contributors": [
@@ -23,9 +23,9 @@
   ],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/AmirionStudios/R2-D2-Public/issues"
+    "url": "https://github.com/AmirionStudios/R2-D2/issues"
   },
-  "homepage": "https://github.com/AmirionStudios/R2-D2-Public#readme",
+  "homepage": "https://github.com/AmirionStudios/R2-D2#readme",
   "dependencies": {
     "@vitalets/google-translate-api": "^7.0.0",
     "canvas": "^2.8.0",
@@ -34,13 +34,14 @@
     "common-tags": "^1.8.0",
     "date-fns": "^2.22.1",
     "date-fns-tz": "^1.1.4",
-    "discord.js": "^13.0.0-dev.t1627778678.74fc23b",
+    "discord.js": "^13.0.0",
     "flip": "^1.0.0",
     "https-proxy-agent": "^5.0.0",
     "iso-639-1": "^2.1.9",
     "mongoose": "^5.13.3",
     "mysql": "^2.18.1",
     "net": "^1.0.2",
+    "node-canvas": "^2.7.0",
     "node-fetch": "^2.6.1",
     "node-rsa": "^1.1.1",
     "ora": "^5.4.1",

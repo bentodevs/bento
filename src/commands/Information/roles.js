@@ -43,7 +43,7 @@ module.exports = {
         let page = 0;
 
         // Sort the roles by position
-        const sorted = message.guild.roles.cache.sort((a, b) => b.position - a.position).array();
+        const sorted = Array.from(message.guild.roles.cache.values()).sort((a, b) => b.position - a.position);
 
         // Devide the roles into pages of 10
         for (let i = 0; i < sorted.length; i += 10) {
@@ -79,7 +79,7 @@ module.exports = {
         let page = 0;
 
         // Sort the roles by position
-        const sorted = interaction.guild.roles.cache.sort((a, b) => b.position - a.position).array();
+        const sorted = Array.from(interaction.guild.roles.cache.values()).sort((a, b) => b.position - a.position);
 
         // Devide the roles into pages of 10
         for (let i = 0; i < sorted.length; i += 10) {
@@ -87,14 +87,14 @@ module.exports = {
         }
 
         // If the page option is there set it as the page
-        if (interaction.options.get("page")?.value) 
+        if (interaction.options.get("page")?.value)
             page = interaction.options.get("page").value -= 1;
         // Return if the page wasn't found
-        if (!pages[page]) 
+        if (!pages[page])
             return interaction.error("You didn't specify a valid page!");
 
         // Format the description
-        const description = pages[page].map(r => `${r} | **ID:** ${r.id} | **${r.members.size}** member(s)`);
+        const description = pages[page].map(r => `${r} | **ID:** ${r.id} | **${r.members?.size}** member(s)`);
 
         // Build the embed
         const embed = new MessageEmbed()

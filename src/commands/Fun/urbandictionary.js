@@ -61,7 +61,7 @@ module.exports = {
     run_interaction: async (bot, interaction) => {
 
         // Defer the interaction
-        await interaction.defer();
+        await interaction.deferReply();
 
         // Get the definition
         const result = await urban(interaction.options.get("query").value);

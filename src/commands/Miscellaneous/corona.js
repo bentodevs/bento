@@ -99,12 +99,12 @@ module.exports = {
 
         if (!option) {
             // Send a status message
-            const msg = await message.loadingReply("Fetching data..."); 
+            const msg = await message.loadingReply("Fetching data...");
 
             // Get the stats and vaccine data
             const stats = await getGlobalStats(),
             vaccines = await getVaccineData(1, true);
-    
+
             // Build the embed
             const embed = new MessageEmbed()
                 .setTitle("Global COVID-19 Statistics")
@@ -124,8 +124,8 @@ module.exports = {
                     Population: **${stats.population.toLocaleString()}**
                     Active Cases: **${stats.active.toLocaleString()}**
                     Critical Cases: **${stats.critical.toLocaleString()}**`, false);
-    
-            // Delete the status message & send the embed 
+
+            // Delete the status message & send the embed
             msg.delete().catch(() => {});
             message.reply({ embeds: [embed] });
         } else if (option == "top" && (["cases", "deaths"].includes(args[1]?.toLowerCase()) || !args[1])) {
@@ -215,8 +215,8 @@ module.exports = {
                 .addField("Other Stats", stripIndents`Population: **${stats.population.toLocaleString()}**
                     Active Cases: **${stats.active.toLocaleString()}**
                     Critical Cases: **${stats.critical.toLocaleString()}**`, false);
-    
-            // Delete the status message & send the embed 
+
+            // Delete the status message & send the embed
             msg.delete().catch(() => {});
             message.reply({ embeds: [embed] });
         }
@@ -234,12 +234,12 @@ module.exports = {
 
         if (global) {
             // Defer the interaction
-            await interaction.defer();
+            await interaction.deferReply();
 
             // Get the stats and vaccine data
             const stats = await getGlobalStats(),
             vaccines = await getVaccineData(1, true);
-    
+
             // Build the embed
             const embed = new MessageEmbed()
                 .setTitle("Global COVID-19 Statistics")
@@ -259,12 +259,12 @@ module.exports = {
                     Population: **${stats.population.toLocaleString()}**
                     Active Cases: **${stats.active.toLocaleString()}**
                     Critical Cases: **${stats.critical.toLocaleString()}**`, false);
-    
+
             // Send the embed
             interaction.editReply({ embeds: [embed] });
         } else if (top) {
             // Defer the interaction
-            await interaction.defer();
+            await interaction.deferReply();
 
             // Get the sort option
             const opt = top.options.get("option").value;
@@ -286,7 +286,7 @@ module.exports = {
             interaction.editReply({ embeds: [embed] });
         } else if (state || continent) {
             // Defer the interaction
-            await interaction.defer();
+            await interaction.deferReply();
 
             // Send the status message and get the stats
             const stats = state ? await getDataByState(state.options.get("state").value.toLowerCase()) : await getDataByContinent(continent.options.get("continent").value.toLowerCase());
@@ -315,7 +315,7 @@ module.exports = {
             interaction.editReply({ embeds: [embed] });
         } else if (country) {
             // Defer the interaction
-            await interaction.defer();
+            await interaction.deferReply();
 
             // Get the stats
             const stats = await getDataByCountry(country.options.get("country").value.toLowerCase()),

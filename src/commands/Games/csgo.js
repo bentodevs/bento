@@ -56,13 +56,13 @@ module.exports = {
                                 **Accuracy:** ${((user.playerstats.stats.find(a => a.name === "total_shots_hit").value / user.playerstats.stats.find(a => a.name === "total_shots_fired").value) * 100).toFixed(2)}% (${user.playerstats.stats.find(a => a.name === "total_shots_fired").value} **shots fired** | ${user.playerstats.stats.find(a => a.name === "total_shots_hit").value} **shots hit**)
                                 **W/L:** ${(user.playerstats.stats.find(a => a.name === "total_wins").value / user.playerstats.stats.find(a => a.name === "total_rounds_played").value).toFixed(2)} (${user.playerstats.stats.find(a => a.name === "total_wins").value} **wins** | ${user.playerstats.stats.find(a => a.name === "total_rounds_played").value} **matches played**)
                                 **Damage Dealt:** ${user.playerstats.stats.find(a => a.name === "total_damage_done").value}
-                                
+
                                 **Total time played:** ${timePlayed}
                                 ${user.playerstats.stats.find(a => a.name === "total_planted_bombs")?.value || 0} **bombs planted** | ${user.playerstats.stats.find(a => a.name === "total_defused_bombs")?.value || 0} **bombs defused**
                                 **Money Earned:** ${user.playerstats.stats.find(a => a.name === "total_money_earned").value}`)
                                 .setTimestamp()
                                 .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: 'png' }));
-                            
+
                             message.reply({ embeds: [embed] });
                         })
                         .catch(e => message.errorReply(`I encountered an error whilst getting the requested stats: \`${e.message}\``));
@@ -85,13 +85,13 @@ module.exports = {
                                 **Accuracy:** ${((user.playerstats.stats.find(a => a.name === "total_shots_hit").value / user.playerstats.stats.find(a => a.name === "total_shots_fired").value) * 100).toFixed(2)}% (${user.playerstats.stats.find(a => a.name === "total_shots_fired").value} **shots fired** | ${user.playerstats.stats.find(a => a.name === "total_shots_hit").value} **shots hit**)
                                 **W/L:** ${(user.playerstats.stats.find(a => a.name === "total_wins").value / user.playerstats.stats.find(a => a.name === "total_rounds_played").value).toFixed(2)} (${user.playerstats.stats.find(a => a.name === "total_wins").value} **wins** | ${user.playerstats.stats.find(a => a.name === "total_rounds_played").value} **matches played**)
                                 **Damage Dealt:** ${user.playerstats.stats.find(a => a.name === "total_damage_done").value}
-                                
+
                                 **Total time played:** ${timePlayed}
                                 ${user.playerstats.stats.find(a => a.name === "total_planted_bombs")?.value || 0} **bombs planted** | ${user.playerstats.stats.find(a => a.name === "total_defused_bombs")?.value || 0} **bombs defused**
                                 **Money Earned:** ${user.playerstats.stats.find(a => a.name === "total_money_earned").value}`)
                                 .setTimestamp()
                                 .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: 'png' }));
-                            
+
                             message.reply({ embeds: [embed] });
                         })
                         .catch(e => message.errorReply(`I encountered an error whilst getting the requested stats: \`${e.message}\``));
@@ -104,11 +104,11 @@ module.exports = {
     run_interaction: async (bot, interaction) => {
 
         // Defer the interaction
-        await interaction.defer();
+        await interaction.deferReply();
 
         // Get the data from the interaction
         const option = interaction.options.get("steam_name_or_id").value;
-        
+
         if (!isNaN(option) && /^[0-9]{7,}$/.test(option)) {
             await fetchSteamUserByID(option)
                 .then(async data => {
@@ -126,13 +126,13 @@ module.exports = {
                                 **Accuracy:** ${((user.playerstats.stats.find(a => a.name === "total_shots_hit").value / user.playerstats.stats.find(a => a.name === "total_shots_fired").value) * 100).toFixed(2)}% (${user.playerstats.stats.find(a => a.name === "total_shots_fired").value} **shots fired** | ${user.playerstats.stats.find(a => a.name === "total_shots_hit").value} **shots hit**)
                                 **W/L:** ${(user.playerstats.stats.find(a => a.name === "total_wins").value / user.playerstats.stats.find(a => a.name === "total_rounds_played").value).toFixed(2)} (${user.playerstats.stats.find(a => a.name === "total_wins").value} **wins** | ${user.playerstats.stats.find(a => a.name === "total_rounds_played").value} **matches played**)
                                 **Damage Dealt:** ${user.playerstats.stats.find(a => a.name === "total_damage_done").value}
-                                
+
                                 **Total time played:** ${timePlayed}
                                 ${user.playerstats.stats.find(a => a.name === "total_planted_bombs")?.value || 0} **bombs planted** | ${user.playerstats.stats.find(a => a.name === "total_defused_bombs")?.value || 0} **bombs defused**
                                 **Money Earned:** ${user.playerstats.stats.find(a => a.name === "total_money_earned").value}`)
                                 .setTimestamp()
                                 .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ dynamic: true, format: 'png' }));
-                            
+
                             interaction.editReply({ embeds: [embed] });
                         })
                         .catch(e => interaction.editReply(`${bot.config.emojis.error} I encountered an error whilst getting the requested stats: \`${e.message}\``));
@@ -155,13 +155,13 @@ module.exports = {
                                 **Accuracy:** ${((user.playerstats.stats.find(a => a.name === "total_shots_hit").value / user.playerstats.stats.find(a => a.name === "total_shots_fired").value) * 100).toFixed(2)}% (${user.playerstats.stats.find(a => a.name === "total_shots_fired").value} **shots fired** | ${user.playerstats.stats.find(a => a.name === "total_shots_hit").value} **shots hit**)
                                 **W/L:** ${(user.playerstats.stats.find(a => a.name === "total_wins").value / user.playerstats.stats.find(a => a.name === "total_rounds_played").value).toFixed(2)} (${user.playerstats.stats.find(a => a.name === "total_wins").value} **wins** | ${user.playerstats.stats.find(a => a.name === "total_rounds_played").value} **matches played**)
                                 **Damage Dealt:** ${user.playerstats.stats.find(a => a.name === "total_damage_done").value}
-                                
+
                                 **Total time played:** ${timePlayed}
                                 ${user.playerstats.stats.find(a => a.name === "total_planted_bombs")?.value || 0} **bombs planted** | ${user.playerstats.stats.find(a => a.name === "total_defused_bombs")?.value || 0} **bombs defused**
                                 **Money Earned:** ${user.playerstats.stats.find(a => a.name === "total_money_earned").value}`)
                                 .setTimestamp()
                                 .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ dynamic: true, format: 'png' }));
-                            
+
                             interaction.editReply({ embeds: [embed] });
                         })
                         .catch(e => interaction.editReply(`${bot.config.emojis.error} I encountered an error whilst getting the requested stats: \`${e.message}\``));
