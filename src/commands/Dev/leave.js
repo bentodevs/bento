@@ -1,4 +1,5 @@
 const { stripIndents } = require("common-tags");
+const { MessageActionRow, MessageButton } = require("discord.js");
 
 module.exports = {
     info: {
@@ -36,35 +37,53 @@ module.exports = {
         if (!guild)
             return message.errorReply("You didn't specify a valid guild!");
 
+        // Set the customId
+        const customId = `${Date.now()}-${message.author.id}`;
+
+        // Create the yes/no buttons
+        const row = new MessageActionRow()
+            .addComponents(
+                new MessageButton()
+                    .setCustomId(`${customId}-yes`)
+                    .setLabel("Yes")
+                    .setStyle("SUCCESS"),
+                new MessageButton()
+                    .setCustomId(`${customId}-no`)
+                    .setLabel("No")
+                    .setStyle("DANGER")
+            );
+
         // Send a message asking if the user is sure
-        await message.reply(stripIndents`Are you sure you want me to leave \`${guild.name} (${guild.id})\`?
-        
-        Type \`y\` or \`yes\` to continue.`);
+        const msg = await message.reply({ content: stripIndents(`Are you sure you want me to leave \`${guild.name} (${guild.id})\`?`), components: [row] });
 
-        // Define the filter and options
-        const filter = m => m.author.id == message.author.id,
-        options = { time: 60000, max: 1, errors: ["time"] };
+        // Create the filter
+        const filter = i => {
+            i.deferUpdate();
+            return i.user.id === message.author.id;
+        };
 
-        // Await a response
-        await message.channel.awaitMessages(filter, options).then(async msgs => {
-            // Get the first response
-            const m = msgs.first();
-
-            // If the user typed "y" or "yes" leave the discord otherwise send the canceled message
-            if (["y", "yes"].includes(m.content.toLowerCase())) {
-                await guild.leave();
-                
+        // Await a button click
+        message.channel.awaitMessageComponent({ filter, componentType: "BUTTON", time: 30000 }).then(async i => {
+            if (i.customId.endsWith("yes")) {
                 if (guild.id == message.guild.id) {
+                    // Delete the message & leave the guild
+                    await i.message.delete().catch(() => {});
+                    await guild.leave();
+
+                    // Send the author a confirmation message
                     message.author.send(`${bot.config.emojis.confirmation} Successfully left \`${guild.name} (${guild.id})\`!`);
                 } else {
-                    message.confirmationReply(`Successfully left \`${guild.name} (${guild.id})\`!`);
+                    // Leave the guild and update the message
+                    await guild.leave();
+                    await i.message.edit({ content: `${bot.config.emojis.confirmation} Successfully left \`${guild.name} (${guild.id})\`!`, components: [] });
                 }
             } else {
-                message.confirmationReply("The command has been canceled.");
+                // Update the message
+                await i.message.edit({ content: `${bot.config.emojis.confirmation} The command has been canceled.`, components: [] });
             }
-        }).catch(() => {
-            // Send an error message
-            message.errorReply("The command has been canceled.");
+        }).catch(async () => {
+            // Update the message
+            await msg.edit({ content: `${bot.config.emojis.confirmation} The command has been canceled.`, components: [] });
         });
 
     }
