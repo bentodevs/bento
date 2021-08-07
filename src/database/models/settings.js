@@ -77,7 +77,12 @@ module.exports = model("settings", new Schema({
             commands: null, // Command logging channel
             edited: null, // Edited messages logging channel
             deleted: null, // Deleted messages logging channel
-            events: null // Event logging channel
+            events: null, // Event logging channel
+            ban: null, // Ban-action logging channel
+            unban: null, // Unban-action logging channel
+            mute: null, // Mute-action logging channel
+            unmute: null, // Unmute-action logging channel
+            kick: null // Kick-action logging channel
         }
     },
     manual_events: {

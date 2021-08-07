@@ -50,7 +50,8 @@ module.exports = {
             reason = args.splice(1, args.length).join(' ') || "No reason provided",
             muterole = message.settings.roles.mute,
             mute = await mutes.findOne({ guild: message.guild.id, mutedUser: member?.id }),
-            action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1;
+            action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1,
+            publicLog = message.guild.channels.cache.get(message.settings.logs.unmute);
 
         // TODO: [BOT-78] Add case creation in non-slash unmute command
         // If no member was found return an error
@@ -62,7 +63,7 @@ module.exports = {
             await member.roles.remove(muterole);
             // Remove the mute from the DB
             await mutes.findOneAndDelete({ guild: message.guild.id, mutedUser: member.id });
-            
+
             // Create the punishment record in the DB
             await punishments.create({
                 id: action,
@@ -78,6 +79,9 @@ module.exports = {
             punishmentLog(message, member, action, reason, "unmute");
             // Send the user a confirmation message
             member.send(`🔈 You have been unmuted in **${message.guild.name}**`).catch(() => { });
+            // Send the public log message
+            if (publicLog)
+                publicLog.send(`🔉 **${member.user.tag}** has been unmuted for **${reason}**`);
             // Confirm that the command completed
             message.confirmationReply(`**${member.user.tag}** has been unmuted successfully!`);
         } else if (!mute && member.roles.cache.has(muterole)) {
@@ -102,6 +106,9 @@ module.exports = {
 
             // Send punishment log message
             punishmentLog(message, member, action, reason, "unmute");
+            // Send the public log message
+            if (publicLog)
+                publicLog.send(`🔉 **${member.user.tag}** has been unmuted for **${reason}**`);
             // Send the user a confirmation message
             member.send(`🔈 You have been unmuted in **${message.guild.name}**`).catch(() => { });
             // Confirm that the command completed
@@ -121,8 +128,9 @@ module.exports = {
         reason = interaction.options.get("reason")?.value || "No reason specified",
         muterole = interaction.settings.roles.mute,
         mute = await mutes.findOne({ guild: interaction.guild.id, mutedUser: user.user.id }),
-        action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1;
-        
+        action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1,
+        publicLog = interaction.guild.channels.cache.get(interaction.settings.logs.unmute);
+
         if (!user.member)
             return interaction.error("You did not specify a valid server member!");
 
@@ -147,6 +155,9 @@ module.exports = {
             punishmentLog(interaction, user.member, action, reason, "unmute");
             // Send the user a confirmation message
             user.member.send(`🔈 You have been unmuted in **${interaction.guild.name}**`).catch(() => { });
+            // Send the public log message
+            if (publicLog)
+                publicLog.send(`🔉 **${user.user.tag}** has been unmuted for **${reason}**`);
             // Confirm that the command completed
             interaction.confirmation(`**${user.user.tag}** has been unmuted successfully! *(Case #${action})*`);
         } else if (!mute && user.member.roles.cache.has(muterole)) {
@@ -171,8 +182,12 @@ module.exports = {
 
             // Send punishment log message
             punishmentLog(interaction, user.member, action, reason, "unmute");
+
             // Send the user a confirmation message
             user.member.send(`🔈 You have been unmuted in **${interaction.guild.name}**`).catch(() => { });
+            // Send the public log message
+            if (publicLog)
+                publicLog.send(`🔉 **${user.user.tag}** has been unmuted for **${reason}**`);
             // Confirm that the command completed
             interaction.confirmation(`**${user.user.tag}** has been unmuted successfully! *(They did not seem to have the role) (Case #${action})*`);
         } else if (!mute && !user.member.roles.cache.has(muterole)) {

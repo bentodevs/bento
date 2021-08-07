@@ -48,24 +48,25 @@ module.exports = {
         // 3. Get the ID of this action
         const member = await getMember(message, args[0], true),
             reason = args.slice(1).join(" ") || "No reason provided",
-            action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1;
-        
+            action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1,
+            publicLog = message.guild.channels.cache.get(message.settings.logs.kick);
+
         // If the member doesn't exist/isn't part of the guild, then return an error
         if (!member)
             return message.errorReply("That user is not a member of this server!");
-        
+
         // If the member's ID is the author's ID, then return an error
         if (member.id === message.author.id)
             return message.errorReply("You are unable to kick yourself!");
-        
+
         // If the member's highest role is higher than the executors highest role, then return an error
         if (member.roles.highest.position >= message.member.roles.highest.position)
             return message.errorReply({ content: "Questioning authority are we? Sorry, but this isn't a democracy...", files: ["https://i.imgur.com/K9hmVdA.png"] });
-        
+
         // If the bot cannot kick the user, then return an error
         if (!member.kickable)
             return message.errorReply("I am not able to kick this member! *They may have a higher role than me!*");
-        
+
         try {
             // Try and send the member a DM stating that they were kicked - Catch silently if there is an issue
             await member.send(`:hammer: You have been kicked from **${message.guild.name}** for \`${reason}\``).catch(() => { });
@@ -89,37 +90,42 @@ module.exports = {
 
             // Send the punishment to the log channel
             punishmentLog(message, member, action, reason, "kick");
+
+            // Send public kick log message
+            if (publicLog)
+                publicLog.send(`👢 **${member.user.tag}** was kicked for **${reason}**`);
         } catch (e) {
             // Catch any errors during the kick process & send error message
             message.errorReply(`There was an issue kicking \`${member.user.tag}\` - \`${e.message}\``);
         }
     },
-    
+
     run_interaction: async (bot, interaction) => {
 
         // 1. Get the user from the interaction
         // 2. Get the reason from the interaction, or set to a default if wasn't given
         // 3. Get the punishment ID
         const user = interaction.options.get("user"),
-        reason = interaction.options.get("reason")?.value || "No reason specified",
-        action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1;
-        
-        
+            reason = interaction.options.get("reason")?.value || "No reason specified",
+            action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1,
+            publicLog = interaction.guild.channels.cache.get(interaction.settings.logs.kick);
+
+
         if (!user.member)
             return interaction.error("You can only kick server members");
-        
+
         // If the user they want to kick is themselves, then return an error
         if (interaction.member.id === user.user.id)
             return interaction.reply("You are unable kick yourself!");
-        
+
         // If the member's highest role is higher than the executors highest role, then return an error
         if (user.member.roles.highest.position >= interaction.member.roles.highest.position)
             return interaction.reply({ content: "Questioning authority are we? Sorry, but this isn't a democracy...",  files: ["https://i.imgur.com/K9hmVdA.png"] });
-        
+
         // If the bot cannot kick the user, then return an error
         if (!user.member.kickable)
             return interaction.error("I am not able to kick this member! *They may have a higher role than me!*");
-        
+
         try {
             // Try and send the member a DM stating that they were kicked - Catch silently if there is an issue
             await user.member.send(`:hammer: You have been kicked from **${interaction.guild.name}** for \`${reason}\``).catch(() => { });
@@ -143,6 +149,10 @@ module.exports = {
 
             // Send the punishment to the log channel
             punishmentLog(interaction, user, action, reason, "kick");
+
+            // Send public kick log message
+            if (publicLog)
+                publicLog.send(`👢 **${user.user.tag}** was kicked for **${reason}**`);
         } catch (e) {
             // Catch any errors during the kick process & send error message
             interaction.error(`There was an issue kicking \`${user.user.tag}\` - \`${e.message}\``);
