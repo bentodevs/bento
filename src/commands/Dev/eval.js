@@ -50,8 +50,10 @@ module.exports = {
                 evaled = require("util").inspect(evaled);
             }
 
+            // Split the message
             const msgs = Util.splitMessage(clean(evaled), { maxLength: "1800" });
 
+            // Send the messages
             for (const data of msgs) {
                 if (data == msgs[0]) {
                     message.reply(`\`\`\`${data}\`\`\``);

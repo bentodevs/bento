@@ -1,5 +1,6 @@
 const { stripIndents } = require("common-tags");
 const { format, utcToZonedTime } = require("date-fns-tz");
+const config = require("../../config");
 const preban = require("../../database/models/preban");
 const punishments = require("../../database/models/punishments");
 const { getMember, getUser } = require("../../modules/functions/getters");
@@ -49,17 +50,18 @@ module.exports = {
         // 2. Define the reason, and set a default if none was provided
         // 3. Get the ID of this action
         const member = await getMember(message, args[0], true) || await getUser(bot, message, args[0], true),
-        reason = args.splice(1, args.length).join(" ") || "No reason provided",
-        action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1;
-        
+            reason = args.splice(1, args.length).join(" ") || "No reason provided",
+            action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1,
+            publicLog = message.guild.channels.cache.get(message.settings.logs.ban);
+
         // If the member doesn't exist/isn't part of the guild, then return an error
         if (!member)
             return message.errorReply("You did not specify a valid user!");
-        
+
         // If the member's ID is the author's ID, then return an error
         if (member.id === message.author.id)
             return message.errorReply("You are unable to ban yourself!");
-        
+
         if (member.guild) {
             // If the member's highest role is higher than the executors highest role, then return an error
             if (member.roles.highest.position >= message.member.roles.highest.position)
@@ -92,6 +94,10 @@ module.exports = {
 
                 // Send the punishment to the log channel
                 punishmentLog(message, member.user, action, reason, "ban");
+
+                // Send public ban log message, if it exists
+                if (message.guild.channels.cache.has(message.settings.logs.ban))
+                    publicLog.send(`${config.emojis.bans} **${member.tag}** was banned for **${reason}**`);
             } catch (e) {
                 // Catch any errors during the ban process & send error message
                 message.errorReply(`There was an issue banning \`${member.user.tag}\` - \`${e.message}\``);
@@ -101,9 +107,9 @@ module.exports = {
             // This means that if/when they join the guild, they will be banned
             if (await preban.findOne({ user: member.id }))
                 return message.errorReply("That user will already be banned if they join the server!");
-            
+
             // Send chat message stating member was banned
-            message.confirmationReply(stripIndents`${member.tag} was banned for **${reason}** 
+            message.confirmationReply(stripIndents`${member.tag} was banned for **${reason}**
             *The user is not currently in this server, so will be banned upon joining*`);
 
             // Add the ban to the preban database
@@ -127,6 +133,10 @@ module.exports = {
 
             // Send the punishment to the log channel
             punishmentLog(message, member, action, reason, "ban");
+
+            // Send public ban log message, if it exists
+            if (message.guild.channels.cache.has(message.settings.logs.ban))
+                publicLog.send(`${config.emojis.bans} **${member.tag}** was banned for **${reason}**`);
         }
     },
 
@@ -136,13 +146,14 @@ module.exports = {
         // 2. Get the reason from the interaction, or set to a default if wasn't given
         // 3. Get the punishment ID
         const user = interaction.options.get("user"),
-        reason = interaction.options.get("reason")?.value || "No reason specified",
-        action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1;
-        
+            reason = interaction.options.get("reason")?.value || "No reason specified",
+            action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1,
+            publicLog = interaction.guild.channels.cache.get(interaction.settings.logs.ban);
+
         // If the user they want to ban is themselves, then return an error
         if (interaction.member.id === user.user.id)
             return interaction.reply("You are unable ban yourself!");
-        
+
         if (user.member) {
 
             if (user.member.roles.highest.position >= interaction.member.roles.highest.position)
@@ -150,11 +161,11 @@ module.exports = {
 
             if (!interaction.guild.members.cache.get(user.user.id).bannable)
                 return interaction.reply("I can't ban that member! *They may have a higher role than me!*");
-            
+
             await user.member.send(`:hammer: You have been banned from **${interaction.guild.name}** for \`${reason}\``).catch(() => { });
             user.member.ban({ days: 1, reason: `[Case: ${action} | ${interaction.member.user.tag} on ${format(utcToZonedTime(Date.now(), interaction.settings.general.timezone), "PPp (z)", { timeZone: interaction.settings.general.timezone })}] ${reason}]` });
             interaction.confirmation(`\`${user.user.tag}\` was banned for **${reason}** *(Case #${action})*`);
-            
+
             // Create the punishment record in the DB
             await punishments.create({
                 id: action,
@@ -165,17 +176,21 @@ module.exports = {
                 actionTime: Date.now(),
                 reason: reason
             });
-            
+
             // Send the punishment to the log channel
             punishmentLog(interaction, user.user, action, reason, "ban");
+
+            // Send public ban log message, if it exists
+            if (publicLog)
+                publicLog.send(`${config.emojis.bans} **${user.user.tag}** was banned for **${reason}**`);
         } else {
             // If the member is not part of the server, but the ID does exist, then we'll add them to the pre-ban database
             // This means that if/when they join the guild, they will be banned
             if (await preban.findOne({ user: user.user.id }))
                 return interaction.error("That user will already be banned if they join the server!");
-            
+
             // Send chat message stating member was banned
-            interaction.confirmation(stripIndents`${user.user.tag} was banned for **${reason}** 
+            interaction.confirmation(stripIndents`${user.user.tag} was banned for **${reason}**
             *The user is not currently in this server, so will be banned upon joining*`);
 
             // Add the ban to the preban database
@@ -199,6 +214,10 @@ module.exports = {
 
             // Send the punishment to the log channel
             punishmentLog(interaction, user.user, action, reason, "ban");
+
+            // Send public ban log message, if it exists
+            if (publicLog)
+                publicLog.send(`${config.emojis.bans} **${user.user.tag}** was banned for **${reason}**`);
         }
     }
 };

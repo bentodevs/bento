@@ -43,8 +43,10 @@ module.exports = {
                 // Delete the status message
                 msg.delete().catch(() => { });
                 
+                // Split the message
                 const msgs = Util.splitMessage(stdout, { maxLength: "1800" });
 
+                // Send the messages
                 for (const data of msgs) {
                     if (data == msgs[0]) {
                         message.reply(`\`\`\`${data}\`\`\``);

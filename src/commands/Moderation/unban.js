@@ -1,3 +1,4 @@
+const config = require("../../config");
 const preban = require("../../database/models/preban");
 const punishments = require("../../database/models/punishments");
 const { getUser } = require("../../modules/functions/getters");
@@ -46,15 +47,16 @@ module.exports = {
         const bans = await message.guild.bans.fetch(),
             reason = args.slice(1).join(" ") || "No reason provided",
             match = /<@!?(\d{17,19})>/g.exec(args[0]),
-            action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1;
+            action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1,
+            publicLog = message.guild.channels.cache.get(message.settings.logs.unban);
 
         // If the regex matches replace args[0]
         if (match)
             args[0] = match[1];
 
         // Try to find the ban
-        const ban = bans.find(u => u.user.id == args[0]) 
-        || bans.find(u => u.user.username.toLowerCase() == args[0].toLowerCase()) 
+        const ban = bans.find(u => u.user.id == args[0])
+        || bans.find(u => u.user.username.toLowerCase() == args[0].toLowerCase())
         || bans.find(u => u.user.id.includes(args[0]));
 
         if (ban) {
@@ -78,6 +80,9 @@ module.exports = {
 
             // Log the unban
             punishmentLog(message, user, null, reason, "unban");
+            // Send public ban log message, if it exists
+            if (message.guild.channels.cache.has(message.settings.logs.ban))
+                publicLog.send(`${config.emojis.bans} **${ban.user.username}#${ban.user.discriminator}** was unbanned for **${reason}**`);
         } else {
             // Attempt to get the user
             const user = await getUser(bot, message, args[0], false);
@@ -85,7 +90,7 @@ module.exports = {
             // If the user doesn't exist/isn't valid then return an error
             if (!user)
                 message.errorReply("You did not specify a valid user");
-            
+
             // Find the ban in the preban database
             const pban = await preban.findOne({ user: user.id });
 
@@ -93,13 +98,16 @@ module.exports = {
             // then return an error
             if (!pban && !ban)
                 return message.errorReply("You didn't specify a banned user!");
-            
+
             // Find the ban in the preban database
             await preban.findOneAndDelete({ user: user.id });
             // Send a confirmation message
             message.confirmationReply(`Successfully unbanned **${user.tag}**! *(Case #${action})*`);
             // Log the unban
             punishmentLog(message, user, null, reason, "unban");
+            // Send public ban log message, if it exists
+            if (message.guild.channels.cache.has(message.settings.logs.ban))
+                publicLog.send(`${config.emojis.bans} **${user.tag}** was unbanned for **${reason}**`);
         }
     },
 
@@ -112,7 +120,8 @@ module.exports = {
         const bans = await interaction.guild.bans.fetch(),
         user = interaction.options.get("user"),
         reason = interaction.options.get("reason")?.value || "No reason specified",
-        action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1;
+        action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1,
+        publicLog = interaction.guild.channels.cache.get(interaction.settings.logs.unban);
 
         // Try to find the ban
         const ban = bans.find(u => u.user.id == user.user.id);
@@ -136,7 +145,10 @@ module.exports = {
 
             // Log the unban
             punishmentLog(interaction, user, null, reason, "unban");
-        } else {            
+            // Send public ban log message, if it exists
+            if (interaction.guild.channels.cache.has(interaction.settings.logs.ban))
+                publicLog.send(`${config.emojis.unban} **${user.user.tag}** was unbanned for **${reason}**`);
+        } else {
             // Find the ban in the preban database
             const pban = await preban.findOne({ user: user.user.id });
 
@@ -144,13 +156,16 @@ module.exports = {
             // then return an error
             if (!pban && !ban)
                 return interaction.error("You didn't specify a banned user!");
-            
+
             // Find the ban in the preban database
             await preban.findOneAndDelete({ user: user.user.id });
             // Send a confirmation message
             interaction.confirmation(`Successfully unbanned **${user.user.tag}**! *(Case #${action})*`);
             // Log the unban
             punishmentLog(interaction, user, null, reason, "unban");
+            // Send public ban log message, if it exists
+            if (interaction.guild.channels.cache.has(interaction.settings.logs.ban))
+                publicLog.send(`${config.emojis.unban} **${user.user.tag}** was unbanned for **${reason}**`);
         }
     }
 };
