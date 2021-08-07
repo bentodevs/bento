@@ -6,8 +6,8 @@ const { MessageAttachment } = require("discord.js");
 
 /**
  * Check the users level
- * 
- * @param {Message} message 
+ *
+ * @param {Message} message
  */
 exports.checkLevel = async (message) => {
     // Try to find the user in the database
@@ -53,7 +53,7 @@ exports.checkLevel = async (message) => {
         return;
 
     // Get the xp, xp needed for next level and the new xp
-    const stats = gData.leveling,
+    const stats = gData?.leveling,
     xp = Math.floor((Math.random() * (25 - 5) + 5) * message.settings.leveling.multiplier),
     nextLvl = Math.floor(20 * (stats.level ** 2) + (100 * stats.level) + 100),
     newXp = stats.xp + xp;
@@ -94,9 +94,9 @@ exports.checkLevel = async (message) => {
 
 /**
  * Get all the data for a specific guild
- * 
- * @param {String} guild 
- * 
+ *
+ * @param {String} guild
+ *
  * @returns {Array} Array with all the guild data
  */
 exports.getGuildMemberData = async (guild) => {
@@ -131,11 +131,11 @@ exports.getGuildMemberData = async (guild) => {
 
 /**
  * Get the users rank card
- * 
- * @param {Object} user 
- * @param {Object} data 
- * @param {String} guild 
- * 
+ *
+ * @param {Object} user
+ * @param {Object} data
+ * @param {String} guild
+ *
  * @returns {Promise.<MessageAttachment>} The users rank card
  */
 exports.getRankCard = async (user, data, guild) => {
@@ -275,12 +275,12 @@ exports.getRankCard = async (user, data, guild) => {
 
 /**
  * Get the font size for the username and xp count
- * 
+ *
  * @param {Canvas} canvas
  * @param {String} text
  * @param {String} font
  * @param {Number} maxWidth
- * 
+ *
  * @returns {Number} The font size
  */
 exports.getFontSize = (canvas, text, font, maxWidth) => {
@@ -302,9 +302,9 @@ exports.getFontSize = (canvas, text, font, maxWidth) => {
 
 /**
  * Convert RGB to Hex
- * 
+ *
  * @param {Array} array
- * 
+ *
  * @returns {String} Hex Color
  */
 exports.rgbToHex = (array) => {
@@ -318,11 +318,11 @@ exports.rgbToHex = (array) => {
 
 /**
  * Brighten or darken a hex color by a certain percentage
- * 
+ *
  * @param {String} color
  * @param {String} percent
- * 
- * @returns {String} color 
+ *
+ * @returns {String} color
  */
 exports.shadeColor = (color, percent) => {
     let R = parseInt(color.substring(1,3),16);
@@ -333,9 +333,9 @@ exports.shadeColor = (color, percent) => {
     G = parseInt(G * (100 + percent) / 100);
     B = parseInt(B * (100 + percent) / 100);
 
-    R = (R<255)?R:255;  
-    G = (G<255)?G:255;  
-    B = (B<255)?B:255;  
+    R = (R<255)?R:255;
+    G = (G<255)?G:255;
+    B = (B<255)?B:255;
 
     const RR = ((R.toString(16).length==1)?"0"+R.toString(16):R.toString(16));
     const GG = ((G.toString(16).length==1)?"0"+G.toString(16):G.toString(16));
