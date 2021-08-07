@@ -1,5 +1,5 @@
 # Initial Checklist
-- [ ] Has @tigattack / @issy been added as a reviewer?
+- [ ] Has @WaitroseDev / @JarnoPwr been added as a reviewer?
 - [ ] If applicable, have the relevant project(s), milestone(s), and label(s) been applied?
 - [ ] Is this a core change or dependancy change which requires downtime?
 
