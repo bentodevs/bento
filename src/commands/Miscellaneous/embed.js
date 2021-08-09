@@ -40,7 +40,7 @@ module.exports = {
 
             // Build embed
             const embed = new MessageEmbed()
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(text);
         
             // Send the embed

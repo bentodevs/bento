@@ -49,7 +49,7 @@ module.exports = {
             for (const data of content) {
                 const embed = new MessageEmbed()
                     .setAuthor(`${res.title} by ${res.author}`, res.thumbnail?.genius ?? bot.user.displayAvatarURL({dynamic: true, format: "png"}))
-                    .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                    .setColor(message.member?.displayColor || bot.config.general.embedColor)
                     .setDescription(`\`\`\`${data}\`\`\``)
                     .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: "png" }))
                     .setTimestamp();
@@ -75,7 +75,7 @@ module.exports = {
             for (const data of content) {
                 const embed = new MessageEmbed()
                     .setAuthor(`${res.title} by ${res.author}`, res.thumbnail?.genius ?? bot.user.displayAvatarURL({dynamic: true, format: "png"}))
-                    .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                    .setColor(message.member?.displayColor || bot.config.general.embedColor)
                     .setDescription(`\`\`\`${data}\`\`\``)
                     .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: "png" }))
                     .setTimestamp();

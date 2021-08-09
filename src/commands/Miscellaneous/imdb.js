@@ -64,7 +64,7 @@ module.exports = {
         // Build the embed
         const embed = new MessageEmbed()
             .setAuthor(json.Title, (json.Poster ?? "https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png"))
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+            .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setThumbnail((json.Poster ?? "https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png"))
             .setDescription(msg)
             .setTimestamp()

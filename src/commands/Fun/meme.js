@@ -43,7 +43,7 @@ module.exports = {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+            .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setImage(meme.data.url)
             .setDescription(`[${meme.data.title}](https://www.reddit.com/${meme.data.permalink})`)
             .setFooter(meme.data.subreddit_name_prefixed, bot.user.displayAvatarURL({ format: "png", dynamic: true }));

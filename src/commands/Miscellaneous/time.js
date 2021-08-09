@@ -78,7 +78,7 @@ module.exports = {
         // Build the embed
         const embed = new MessageEmbed()
             .setAuthor(`Time information for ${weather.location.name} (${weather.location.country})`)
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+            .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setDescription(stripIndents`${clock} **Local Time:** ${dt.toLocaleTimeString('en-US', { timeZone: weather.location.tz_id })}
             🗺️ **Timezone:** \`${weather.location.tz_id}\``)
             .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: "png" }));

@@ -48,7 +48,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setTitle(`${champ.name}, ${champ.title}`)
             .setThumbnail(`https://ddragon.leagueoflegends.com/cdn/11.9.1/img/champion/${champ.id}.png`)
-            .setColor((message.member?.displayColor ?? bot.config.general.embedColor))
+            .setColor((message.member?.displayColor || bot.config.general.embedColor))
             .setDescription(stripIndents`${champ.blurb}
 
             **Tags:** \`${champ.tags.join("`, `")}\`

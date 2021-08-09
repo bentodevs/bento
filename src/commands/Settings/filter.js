@@ -106,7 +106,7 @@ module.exports = {
             // Build the filter embed
             const embed = new MessageEmbed()
                 .setAuthor(`Filtered words for ${message.guild.name}`, message.guild.iconURL({ format: 'png', dynamic: true }))
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(formatted.join(', '))
                 .setFooter(`The filter is currently ${filter.state ? "enabled" : "disabled"} | Page ${page + 1} of ${pages.length}`);
             

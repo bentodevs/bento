@@ -75,7 +75,7 @@ module.exports = {
             // Build the embed
             const embed = new MessageEmbed()
                 .setAuthor(`Guild Settings for ${message.guild.name}`, message.guild.iconURL({ format: "png", dynamic: true }))
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setFooter(`ID: ${message.guild.id}`)
                 .setDescription(`**Permission Messages:** \`${message.settings.general.permission_message ? "enabled" : "disabled"}\`
                 **Permission DM's:** \`${message.settings.general.permission_dms ? "enabled" : "disabled"}\`

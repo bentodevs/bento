@@ -71,7 +71,7 @@ module.exports = {
             **Clouds:** ${weather.current.cloud}%`)
             .setFooter("Last Updated")
             .setTimestamp(weather.current.last_updated_epoch * 1000)
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
+            .setColor(message.member?.displayColor || bot.config.general.embedColor);
 
         // Send the embed
         message.reply({ embeds: [embed] });

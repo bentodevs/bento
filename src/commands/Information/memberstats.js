@@ -68,7 +68,7 @@ module.exports = {
         // Create the embed
         const embed = new MessageEmbed()
             .setAuthor(`Member Stats for ${message.guild.name}`, message.guild.iconURL({format: "png", dynamic: true}))
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+            .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setFooter(`ID: ${message.guild.id}`)
             .setTimestamp()
             .setDescription(stripIndents`🧑‍🤝‍🧑 **${message.guild.memberCount.toLocaleString()}** members | **${message.guild.members.cache.filter(m => m.presence?.status && m.presence.status !== "offline").size.toLocaleString()}** ${config.emojis.online} Online

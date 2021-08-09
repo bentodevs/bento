@@ -85,7 +85,7 @@ module.exports = {
         // Build the history embed
         const embed = new MessageEmbed()
             .setAuthor(`Punishments by ${member.user.tag}`, member.user.displayAvatarURL({ format: 'png', dynamic: true }))
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+            .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setDescription(data.join("\n"))
             .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
 

@@ -67,7 +67,7 @@ module.exports = {
                 
                 [More Info](${data.siteUrl})`)
                 .setImage(`https://img.anili.st/media/${data.id}`)
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
+                .setColor(message.member?.displayColor || bot.config.general.embedColor);
 
             // Send the embed
             message.reply({ embeds: [embed] });

@@ -100,7 +100,7 @@ module.exports = {
             // Build the history embed
             const embed = new MessageEmbed()
                 .setAuthor(`Punishment History for ${member.user?.tag ?? member.tag}`, (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }))
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(formatted.join("\n"))
                 .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
             
@@ -173,7 +173,7 @@ module.exports = {
             // Build the history embed
             const embed = new MessageEmbed()
                 .setAuthor(`Punishment History for ${member.user?.tag ?? member.tag}`, (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }))
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(formatted.join("\n"))
                 .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
             

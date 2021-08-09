@@ -54,7 +54,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setAuthor(`DuckDuckGo results for: ${args.join(" ")}`, "https://i.imgur.com/Moe5TI0.png")
             .setThumbnail(res.Image ? `https://api.duckduckgo.com/${res.Image}` : "")
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+            .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setDescription(stripIndents`${res.AbstractText ?? ""}
 
             ${descData.join("\n")}`);

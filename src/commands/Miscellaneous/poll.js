@@ -157,7 +157,7 @@ module.exports = {
             .setDescription(msg)
             .setFooter(`Started by: ${message.author.tag}`)
             .setTimestamp()
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
+            .setColor(message.member?.displayColor || bot.config.general.embedColor);
 
         // Send the embed
         const eMsg = await channel.send({ embeds: [embed] });

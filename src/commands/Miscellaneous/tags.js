@@ -117,7 +117,7 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setAuthor(`Custom tags in ${message.guild.name}`, message.guild.iconURL({format: "png", dynamic: true}))
                 .setFooter(`${guildTags.length} total tags | Page ${page + 1} of ${pages.length}`)
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(description.join("\n"));
             
             // Send the embed
@@ -138,7 +138,7 @@ module.exports = {
                 **Last Modified:** ${format(tag.lastModified, "PPp")}
                 
                 Content: \`\`\`${tag.content}\`\`\``)
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setThumbnail("https://i.imgur.com/LCbKsrE.png");
 
             // Send a message with the tag content
