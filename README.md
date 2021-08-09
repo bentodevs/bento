@@ -6,7 +6,7 @@ This bot is designed to be a public facing version of R2-D2. It does not include
 ## Running the bot
 ### Requirements
 - MongoDB
-- Node.JS v14.0 or higher
+- Node.JS v16.0 or higher
 - NPM
 
 ### Run Scripts
