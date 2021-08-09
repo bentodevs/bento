@@ -356,6 +356,7 @@ module.exports = {
     },
 
     run_interaction: async (bot, interaction) => {
+
         // Get all the options
         const data = interaction.options.get("command") || interaction.options.get("category"),
         view = data.options.get("view"),
@@ -567,5 +568,6 @@ module.exports = {
             // Send a confirmation message
             interaction.confirmation(`The permission for the \`${target}\` ${type} has been set to the default permission!`);
         }
+        
     }
 };

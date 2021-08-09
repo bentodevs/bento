@@ -34,6 +34,7 @@ module.exports = {
     },
 
     run: async (bot, message, args) => {
+
         // Grab the channel
         const channel = await getChannel(message, args.join(" "), true);
 
@@ -61,9 +62,11 @@ module.exports = {
             // Send a confirmation message
             message.confirmationReply(`${channel} has been unlocked!`);
         }
+
     },
 
     run_interaction: async (bot, interaction) => {
+
         // Grab the channel
         const channel = interaction.options.get("channel")?.channel || interaction.channel;
 
@@ -90,5 +93,6 @@ module.exports = {
             // Send a confirmation message
             interaction.confirmation(`${channel} has been unlocked!`);
         }
+        
     }
 };

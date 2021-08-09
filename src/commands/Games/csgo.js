@@ -44,9 +44,8 @@ module.exports = {
                 .then(async data => {
                     await fetch(`https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=${bot.config.apiKeys.steam}&steamid=${data.steamID}`)
                         .then(async csUser => {
-                            const user = await csUser.json();
-
-                            const timePlayed = formatDistance(0, new Date(user.playerstats.stats.find(a => a.name === "total_time_played").value * 1000), "PPp");
+                            const user = await csUser.json(),
+                            timePlayed = formatDistance(0, new Date(user.playerstats.stats.find(a => a.name === "total_time_played").value * 1000), "PPp");
 
                             const embed = new MessageEmbed()
                                 .setAuthor(`CS:GO Player Stats: ${data.profileInfo.name}`, "https://i.imgur.com/ekIx2st.png")
@@ -73,9 +72,8 @@ module.exports = {
                 .then(async data => {
                     await fetch(`https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=${bot.config.apiKeys.steam}&steamid=${data.steamID}`)
                         .then(async csUser => {
-                            const user = await csUser.json();
-
-                            const timePlayed = formatDistance(0, new Date(user.playerstats.stats.find(a => a.name === "total_time_played").value * 1000), "PPp");
+                            const user = await csUser.json(),
+                            timePlayed = formatDistance(0, new Date(user.playerstats.stats.find(a => a.name === "total_time_played").value * 1000), "PPp");
 
                             const embed = new MessageEmbed()
                                 .setAuthor(`CS:GO Player Stats: ${data.profileInfo.name}`, "https://i.imgur.com/ekIx2st.png")
@@ -114,9 +112,8 @@ module.exports = {
                 .then(async data => {
                     await fetch(`https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=${bot.config.apiKeys.steam}&steamid=${data.steamID}`)
                         .then(async csUser => {
-                            const user = await csUser.json();
-
-                            const timePlayed = formatDistance(0, new Date(user.playerstats.stats.find(a => a.name === "total_time_played").value * 1000), "PPp");
+                            const user = await csUser.json(),
+                            timePlayed = formatDistance(0, new Date(user.playerstats.stats.find(a => a.name === "total_time_played").value * 1000), "PPp");
 
                             const embed = new MessageEmbed()
                                 .setAuthor(`CS:GO Player Stats: ${data.profileInfo.name}`, "https://i.imgur.com/ekIx2st.png")
@@ -143,9 +140,8 @@ module.exports = {
                 .then(async data => {
                     await fetch(`https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=${bot.config.apiKeys.steam}&steamid=${data.steamID}`)
                         .then(async csUser => {
-                            const user = await csUser.json();
-
-                            const timePlayed = formatDistance(0, new Date(user.playerstats.stats.find(a => a.name === "total_time_played").value * 1000), "PPp");
+                            const user = await csUser.json(),
+                            timePlayed = formatDistance(0, new Date(user.playerstats.stats.find(a => a.name === "total_time_played").value * 1000), "PPp");
 
                             const embed = new MessageEmbed()
                                 .setAuthor(`CS:GO Player Stats: ${data.profileInfo.name}`, "https://i.imgur.com/ekIx2st.png")

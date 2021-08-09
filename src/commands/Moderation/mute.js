@@ -67,10 +67,10 @@ module.exports = {
         // 3. Caclulate the new action ID
         // 4. Get any pre-existing mute for the user which is active
         const member = await getMember(message, args[0], true),
-            muterole = message.guild.roles.cache.get(message.settings.roles.mute),
-            action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1,
-            mute = await mutes.findOne({ guild: message.guild.id, mutedUser: member?.id }),
-            publicLog = message.guild.channels.cache.get(message.settings.logs.mute);
+        muterole = message.guild.roles.cache.get(message.settings.roles.mute),
+        action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1,
+        mute = await mutes.findOne({ guild: message.guild.id, mutedUser: member?.id }),
+        publicLog = message.guild.channels.cache.get(message.settings.logs.mute);
 
         let time, reason = "";
 
@@ -150,9 +150,11 @@ module.exports = {
         // Send public mute log message
         if (publicLog)
             publicLog.send(`🔇 **${member.user.tag}** was muted ${time == "forever" ? "for **forever**" : `for **${formatDistanceToNowStrict(Date.now() + time)}**`} with the reason **${reason}**`);
+            
     },
 
     run_interaction: async (bot, interaction) => {
+
         // Check that the mute role exists in the DB
         if (!interaction.settings.roles.mute)
             return interaction.error(`There is no mute role configured! Create one using \`${interaction.settings.general.prefix}setup\``);
@@ -168,11 +170,11 @@ module.exports = {
         // 3. Get the reason, if specified
         // 4. Calculate the punishment id
         const user = interaction.options.get("user"),
-            reason = interaction.options.get("reason")?.value || "No reason specified",
-            action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1,
-            mute = await mutes.findOne({ guild: interaction.guild.id, mutedUser: user.member?.id }),
-            muterole = interaction.guild.roles.cache.get(interaction.settings.roles?.mute),
-            publicLog = interaction.guild.channels.cache.get(interaction.settings.logs.mute);
+        reason = interaction.options.get("reason")?.value || "No reason specified",
+        action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1,
+        mute = await mutes.findOne({ guild: interaction.guild.id, mutedUser: user.member?.id }),
+        muterole = interaction.guild.roles.cache.get(interaction.settings.roles?.mute),
+        publicLog = interaction.guild.channels.cache.get(interaction.settings.logs.mute);
 
         let time = "";
 
@@ -240,5 +242,6 @@ module.exports = {
         // Send public mute log message
         if (publicLog)
             publicLog.send(`🔇 **${user.user.tag}** was muted ${time == "forever" ? "for **forever**" : `for **${formatDistanceToNowStrict(Date.now() + time)}**`} with the reason **${reason}**`);
+
     }
 };

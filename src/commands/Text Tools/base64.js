@@ -34,6 +34,7 @@ module.exports = {
     },
 
     run: async (bot, message, args) => {
+
         if (args[0].toLowerCase() === "encode") {
             // Get the string and encode it in base64
             const string = args.slice(1).join(" "),
@@ -64,5 +65,6 @@ module.exports = {
             // Send an error
             message.errorReply("You must specify either `encode` or `decode`");
         }
+        
     }
 };

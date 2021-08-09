@@ -29,7 +29,6 @@ module.exports = {
     run: async (bot, message, args) => {
 
         if (args[0].toLowerCase() == "all") {
-
             // Fetch all guilds and map by guild id
             const guilds = await bot.guilds.fetch().then(a => a.map(g => g.id));
 
@@ -64,9 +63,7 @@ module.exports = {
                     return clearInterval(toUpdate);
                 }
             }, 5000);
-
         } else if (parseInt(args[0]) && /^[0-9]{16,}$/.test(args[0])) {
-
             // Set failed variable to false by default
             let failed = false;
 
@@ -93,5 +90,6 @@ module.exports = {
             // Throw error
             message.errorReply(`You must either specify \`all\` or a Guild ID`);
         }
+        
     }
 };

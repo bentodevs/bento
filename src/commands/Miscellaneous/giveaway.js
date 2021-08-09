@@ -659,7 +659,6 @@ module.exports = {
                 }
             }
 
-
             // Send the new winners
             interaction.confirmation(`The giveaway in ${interaction.guild.channels.cache.get(g.guild.channel_id) ? interaction.guild.channels.cache.get(g.guild.channel_id) : "<deleted channel>"} was re-rolled. The new winner(s) are ${arr.join(", ")}!`);
             interaction.guild.channels.cache.get(g.guild.channel_id)?.send(`🎉 The giveaway was re-rolled - The new winner(s) are ${arr.join(", ")}!`);

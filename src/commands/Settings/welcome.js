@@ -50,8 +50,6 @@ module.exports = {
 
     run: async (bot, message, args) => {
 
-        // TODO: Add proper commenting to welcome file
-
         if (!args[0]) {
             // If the welcome channel is no longer in the guild cache, then remove it
             if (message.settings.welcome.channel && !message.guild.channels.cache.get(message.settings.welcome.channel)) {

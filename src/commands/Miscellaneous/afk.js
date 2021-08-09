@@ -81,9 +81,8 @@ module.exports = {
                 }
             }
         } else if (args[0].toLowerCase() === "list") {
-            const data = await afk.find({ guild: message.guild.id });
-
-            const filtered = data.filter(a => message.guild.members.cache.has(a.user)).filter(b => b.status !== null);
+            const data = await afk.find({ guild: message.guild.id }),
+            filtered = data.filter(a => message.guild.members.cache.has(a.user)).filter(b => b.status !== null);
 
             if (data.length === 0 || filtered.length === 0)
                 return message.errorReply("There are no users with an AFK status!");
@@ -153,10 +152,9 @@ module.exports = {
                 }
             }
         } else if (interaction.options.get("list")) {
-            const data = await afk.find({ guild: interaction.guild.id });
-            const int = interaction.options.get("list")?.options?.find(o => o.name === "page");
-
-            const filtered = data.filter(a => interaction.guild.members.cache.has(a.user)).filter(b => b.status !== null);
+            const data = await afk.find({ guild: interaction.guild.id }),
+            int = interaction.options.get("list")?.options?.find(o => o.name === "page"),
+            filtered = data.filter(a => interaction.guild.members.cache.has(a.user)).filter(b => b.status !== null);
 
             if (data.length === 0 || filtered.length === 0)
                 return interaction.error("There are no users with an AFK status!");

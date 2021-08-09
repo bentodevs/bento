@@ -116,7 +116,7 @@ module.exports = {
                 return message.errorReply("A punishment with that ID was not found!");
             
             const usr = await getUser(bot, message, punishment.user),
-                mod = await getUser(bot, message, punishment.moderator);
+            mod = await getUser(bot, message, punishment.moderator);
             
             // Build the embed
             // "mute" is only added when the punishment type is a mute (Semi-obvious tbh...)
@@ -179,6 +179,7 @@ module.exports = {
             
             message.reply({ embeds: [embed] });
         }
+
     },
 
     run_interaction: async (bot, interaction) => {
@@ -241,7 +242,7 @@ module.exports = {
                 return interaction.error("A punishment with that ID was not found!");
             
             const usr = await getUser(bot, interaction, punishment.user),
-                mod = await getUser(bot, interaction, punishment.moderator);
+            mod = await getUser(bot, interaction, punishment.moderator);
             
             // Build the embed
             // "mute" is only added when the punishment type is a mute (Semi-obvious tbh...)
@@ -259,5 +260,6 @@ module.exports = {
             // Send the embed
             interaction.reply({ embeds: [embed] });
         }
+        
     }
 };

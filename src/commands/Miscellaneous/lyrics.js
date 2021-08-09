@@ -55,14 +55,13 @@ module.exports = {
                     .setTimestamp();
 
                 if (data == content[0]) {
-                    message.reply({embeds: [embed]});
+                    message.reply({ embeds: [embed] });
                 } else {
-                    message.channel.send({embeds: [embed]});
+                    message.channel.send({ embeds: [embed] });
                 }
             }
 
         } else if (args[0]) {
-
             const req = await fetch(`https://some-random-api.ml/lyrics?title=${args.join("+")}`),
             res = await req.json();
 
@@ -70,7 +69,6 @@ module.exports = {
                 return message.errorReply("I encountered an error fetching lyics for your current song!");
             
             const content = Util.splitMessage(res.lyrics, { maxLength: "1800", char: `\n` });
-
 
             for (const data of content) {
                 const embed = new MessageEmbed()
@@ -81,9 +79,9 @@ module.exports = {
                     .setTimestamp();
 
                 if (data == content[0]) {
-                    message.reply({embeds: [embed]});
+                    message.reply({ embeds: [embed] });
                 } else {
-                    message.channel.send({embeds: [embed]});
+                    message.channel.send({ embeds: [embed] });
                 }
             }
         } else {

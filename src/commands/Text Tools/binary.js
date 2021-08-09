@@ -34,6 +34,7 @@ module.exports = {
     },
 
     run: async (bot, message, args) => {
+
         if (args[0].toLowerCase() === "encode") {
 
             if (!args[1])
@@ -82,5 +83,6 @@ module.exports = {
         } else {
             message.errorReply("You must specify either `encode` or `decode`");
         }
+        
     }
 };

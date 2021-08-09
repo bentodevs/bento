@@ -143,5 +143,6 @@ module.exports = {
         } else {
             message.errorReply(`It looks like you didn't provide a valid option! Valid options are: \`${options.join("`, `")}\``);
         }
+        
     }
 };

@@ -100,9 +100,11 @@ module.exports = {
             // Send a confirmation message
             message.confirmationReply(`Set **${member.user.username}**'s nickname to ${member}!`);
         }
+
     },
 
     run_interaction: async (bot, interaction) => {
+        
         // Get the member and the nick
         const user = interaction.options.get("user"),
         nick = interaction.options.get("nickname")?.value;
@@ -138,5 +140,6 @@ module.exports = {
             // Send a confirmation message
             interaction.confirmation(`Set **${user.user.username}**'s nickname to ${user.member}!`);
         }
+        
     }
 };

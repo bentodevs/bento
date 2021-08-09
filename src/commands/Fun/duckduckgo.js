@@ -36,12 +36,13 @@ module.exports = {
     },
 
     run: async (bot, message, args) => {
+        
         // Combine the search phrase with + to form the URL part
         const searchTerm = args.join("+");
 
         // Fetch the data & convert json
         const req = await fetch(`https://api.duckduckgo.com/?q=${searchTerm}&format=json&t=R2-D2-Discord-Bot-AmirionStudiosLLC`),
-            res = await req.json();
+        res = await req.json();
         
         // If there is no type associated with the data, throw an error
         if (!res.Type)
@@ -61,18 +62,19 @@ module.exports = {
         
         // Send the embed
         message.reply({ embeds: [embed] });
+
     },
 
     run_interaction: async (bot, interaction) => {
-
+        
         // Fetch the raw search query
         // Combine the search phrase with + to form the URL part
         const rawQuery = interaction.options.get("query").value,
-            searchTerm = rawQuery.split(" ").join("+");
+        searchTerm = rawQuery.split(" ").join("+");
 
         // Fetch the data & convert json
         const req = await fetch(`https://api.duckduckgo.com/?q=${searchTerm}&format=json&t=R2-D2-Discord-Bot-AmirionStudiosLLC`),
-            res = await req.json();
+        res = await req.json();
         
         // If there is no type associated with the data, throw an error
         if (!res.Type)
@@ -92,5 +94,6 @@ module.exports = {
         
         // Send the embed
         interaction.reply({ embeds: [embed] });
+
     }
 };

@@ -74,7 +74,7 @@ module.exports = {
                 return message.errorReply(`You do not have a Last.fm account set! Set one with \`${message.settings.general.prefix}lastfm set <username>\``);
 
             const history = await getLastFMUserHistory(userData.lastfm).catch(err => message.errorReply(`I encountered an error getting your play history: ${err}`)),
-                latestTrack = history.recenttracks.track[0];
+            latestTrack = history.recenttracks.track[0];
 
             if (!latestTrack?.["@attr"].nowplaying)
                 return message.errorReply("It looks like you aren't playing anything right now!");
@@ -105,7 +105,7 @@ module.exports = {
             }
         } else if (args[0].toLowerCase() == "recent") {
             const member = await getMember(message, args[1], true) || await getUser(bot, message, args[1], true),
-                user = await users.findOne({ _id: member.id });
+            user = await users.findOne({ _id: member.id });
 
             if (!member)
                 return message.error("I couldn't find the specified user!");
@@ -116,7 +116,7 @@ module.exports = {
             const lfmUser = await getLastFMUser(user.lastfm).catch(err => message.errorReply(`I ran in to an error fetching play history from Last.fm: \`${err.message}\``));
 
             let history = await getLastFMUserHistory(user.lastfm).catch(err => message.errorReply(`I encountered an error getting your play history: ${err}`));
-                history = history.recenttracks.track.slice(0, 10);
+            history = history.recenttracks.track.slice(0, 10);
 
             const description = history.map(h => `[${h.name} by ${h.artist["#text"]}](${h.url})`);
 
@@ -153,7 +153,7 @@ module.exports = {
             // 1. Get the user's history
             // 2. Get the latest track from the play history
             const history = await getLastFMUserHistory(userData.lastfm).catch(err => interaction.editReply({content: `${config.emojis.error} I encountered an error getting your play history: ${err}`})),
-                latestTrack = history.recenttracks.track[0];
+            latestTrack = history.recenttracks.track[0];
 
             // If the latest track doesn't have the nowplayig attr, then return
             if (!latestTrack["@attr"]?.nowplaying)
@@ -176,7 +176,7 @@ module.exports = {
             // 1. Fetch the option
             // 2. Fetch the user's data
             const newName = interaction.options.get("username"),
-                userData = await users.findOne({ _id: interaction.user.id });
+            userData = await users.findOne({ _id: interaction.user.id });
 
             if (!newName) {
                 // If the user doesn't have a lastfm account set, return an error
@@ -240,7 +240,7 @@ module.exports = {
                 const lfmUser = await getLastFMUser(userData.lastfm).catch(err => interaction.editReply(`${config.emojis.error} I encountered an error getting the Last.fm account for that user: \`${err.message}\``));
 
                 let history = await getLastFMUserHistory(userData.lastfm).catch(err => interaction.editReply(`${config.emojis.error} I encountered an error getting the play history for that user: ${err.message}`));
-                    history = history.recenttracks.track.slice(0, 10);
+                history = history.recenttracks.track.slice(0, 10);
 
 
                 const description = history.map(h => `[${h.name} by ${h.artist["#text"]}](${h.url})`);
@@ -255,8 +255,6 @@ module.exports = {
 
                 // Send the members embed
                 interaction.editReply({ embeds: [embed] });
-
-
             } else {
                 const userData = await users.findOne({ _id: interaction.user.id });
 
@@ -266,8 +264,7 @@ module.exports = {
                 const lfmUser = await getLastFMUser(userData.lastfm).catch(err => interaction.editReply(`${config.emojis.error} I encountered an error getting your Last.fm account: \`${err.message}\``));
 
                 let history = await getLastFMUserHistory(userData.lastfm).catch(err => interaction.editReply(`${config.emojis.error} I encountered an error getting your play history: ${err.message}`));
-                    history = history.recenttracks.track.slice(0, 10);
-
+                history = history.recenttracks.track.slice(0, 10);
 
                 const description = history.map(h => `[${h.name} by ${h.artist["#text"]}](${h.url})`);
 
@@ -281,8 +278,8 @@ module.exports = {
 
                 // Send the members embed
                 interaction.editReply({ embeds: [embed] });
-
             }
         }
+        
     }
 };

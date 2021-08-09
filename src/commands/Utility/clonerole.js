@@ -68,6 +68,7 @@ module.exports = {
             reason: `Role cloned at the request of ${message.author.tag}`
         }).then(r => message.confirmationReply(`Successfully cloned the ${role} role to ${r} (\`${r.id}\`)!`))
         .catch(err => message.errorReply(`I encountered an error whilst cloning the ${role} role: ${err.message}`));
+
     },
 
     run_interaction: async (bot, interaction) => {
@@ -98,5 +99,6 @@ module.exports = {
             reason: `Role cloned at the request of ${interaction.user.tag}`
         }).then(r => interaction.confirmation({content: `Successfully cloned the ${role} role to ${r} (\`${r.id}\`)!`, ephemeral: true}))
         .catch(err => interaction.error({content: `I encountered an error whilst cloning the ${role} role: ${err.message}`, ephemeral: true}));
+        
     }
 };

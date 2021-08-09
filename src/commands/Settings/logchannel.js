@@ -83,10 +83,10 @@ module.exports = {
             deletedLogs = message.guild.channels.cache.get(logs.deleted);
 
             const banLogs = message.guild.channels.cache.get(logs.ban),
-                unbanLogs = message.guild.channels.cache.get(logs.unban),
-                muteLogs = message.guild.channels.cache.get(logs.mute),
-                unmuteLogs = message.guild.channels.cache.get(logs.unmute),
-                kickLogs = message.guild.channels.cache.get(logs.kick);
+            unbanLogs = message.guild.channels.cache.get(logs.unban),
+            muteLogs = message.guild.channels.cache.get(logs.mute),
+            unmuteLogs = message.guild.channels.cache.get(logs.unmute),
+            kickLogs = message.guild.channels.cache.get(logs.kick);
 
             // Define the embed message
             let msg = '';

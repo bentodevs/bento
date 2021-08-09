@@ -45,5 +45,6 @@ module.exports = {
 
         // Delete the command
         message.delete().catch(() => { });
+        
     }
 };

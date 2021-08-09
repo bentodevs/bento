@@ -130,5 +130,6 @@ module.exports = {
         } else {
             return message.channel.send(`You must specify a valid option to manage your stored data! Valid settings are: \`${allowed.join("`, `")}\``);
         }
+        
     }
 };
