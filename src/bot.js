@@ -115,9 +115,7 @@ const init = async () => {
     const mysqlMsg = ora("Connecting to the MySQL database...").start();
 
     // Connect to the MySQL DB
-    bot.mclink = await mysql.createPool(bot.config.mclink).catch(err => {
-        throw new Error(err);
-    });
+    bot.mclink = mysql.createPool(bot.config.mclink);
 
     mysqlMsg.stopAndPersist({
         symbol: "✔️",
