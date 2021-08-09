@@ -36,7 +36,7 @@ module.exports = {
     },
 
     run: async (bot, message, args) => {
-        
+
         // Combine the search phrase with + to form the URL part
         const searchTerm = args.join("+");
 
@@ -78,7 +78,7 @@ module.exports = {
         
         // If there is no type associated with the data, throw an error
         if (!res.Type)
-            return interaction.errorReply("I couldn't find any Instant Answers for that query!");
+            return interaction.error("I couldn't find any Instant Answers for that query!");
         
         // Get all the relatedTopic data, get the first 5 entries and map
         const descData = res.RelatedTopics.slice(0, 5).filter(a => a.FirstURL).map(a => `**${a.Text}**\n[${a.FirstURL}](${a.FirstURL})\n`);
