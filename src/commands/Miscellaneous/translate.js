@@ -60,7 +60,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setAuthor(`Translated From: ${ISO.getName(result.from.language.iso)}`)
             .setThumbnail("https://i.imgur.com/Lg3ZDtn.png")
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+            .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .addField(`Original (${ISO.getName(result.from.language.iso)})`, toTranslate)
             .addField(`Translated (${translate.languages[language] ? ISO.getName(language) : language ?? "English"})`, result.text);
 

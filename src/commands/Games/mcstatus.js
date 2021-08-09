@@ -66,7 +66,7 @@ module.exports = {
             .setThumbnail("attachment://img.png")
             .setDescription(`**Status:** ${bot.config.emojis.online} Online\n**Online Players:** ${status.players.online}/${status.players.max}\n\n**MOTD**\n\`\`\`${status.description.removeMinecraftCodes()}\`\`\``)
             .setTimestamp()
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+            .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setFooter(`Requested by: ${message.author.tag}`);
 
         // Send the embed

@@ -43,7 +43,7 @@ module.exports = {
 
         const embed = new MessageEmbed()
             .setAuthor('ISS Info', 'https://cdn.freelogovectors.net/wp-content/uploads/2016/12/nasa-logo.png')
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+            .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setThumbnail("https://cdn.freelogovectors.net/wp-content/uploads/2016/12/nasa-logo.png")
             .setDescription(stripIndents`**Current Location:** ${iss.iss_position.latitude}, ${iss.iss_position.longitude},
             **Current Astronauts:** ${issPeople.number}`)

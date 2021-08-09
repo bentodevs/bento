@@ -55,7 +55,7 @@ module.exports = {
                 Volumes Read: **${data.statistics.manga.volumesRead}**
                 Mean Score: **${data.statistics.manga.meanScore}**`, true)
                 .setThumbnail(data.avatar.large)
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
+                .setColor(message.member?.displayColor || bot.config.general.embedColor);
 
             // Send the embed
             message.reply({ embeds: [embed] });

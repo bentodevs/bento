@@ -66,7 +66,7 @@ module.exports = {
                 
                 [More Info](${data.siteUrl})`)
                 .setThumbnail(data.image?.large)
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
+                .setColor(message.member?.displayColor || bot.config.general.embedColor);
 
             // Send the embed
             message.reply({ embeds: [embed] });

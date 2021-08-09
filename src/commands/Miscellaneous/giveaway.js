@@ -147,7 +147,7 @@ module.exports = {
             // Build the embed
             const embed = new MessageEmbed()
                 .setAuthor(`Giveaways hosted in ${message.guild.name}`, message.guild.iconURL({ format: "png", dynamic: true }))
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(description.join("\n"))
                 .setFooter(`${g.length} Total Giveaways | Page ${page + 1} of ${pages.length}`);
 

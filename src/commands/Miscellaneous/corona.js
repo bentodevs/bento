@@ -109,7 +109,7 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setTitle("Global COVID-19 Statistics")
                 .setThumbnail("https://i.imgur.com/2K1x0bS.png")
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setFooter("Updated", message.author.displayAvatarURL({ format: "png", dynamic: true }))
                 .setTimestamp(stats.updated)
                 .addField("Overall Statistics", stripIndents`Cases: **${stats.cases.toLocaleString()}**
@@ -149,7 +149,7 @@ module.exports = {
                 .setTitle(`Countries with the most COVID-19 ${opt}`)
                 .setDescription(description.join("\n"))
                 .setTimestamp()
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ format: "png", dynamic: true }));
 
             // Delete the status message and send the embed
@@ -172,7 +172,7 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setTitle(`COVID-19 Statistics for ${stats.continent ?? stats.state}`)
                 .setThumbnail("https://i.imgur.com/2K1x0bS.png")
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setFooter("Updated", message.author.displayAvatarURL({ format: "png", dynamic: true }))
                 .setTimestamp(stats.updated)
                 .addField("Overall Statistics", stripIndents`Totals: **${stats.cases.toLocaleString()}**
@@ -201,7 +201,7 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setTitle(`COVID-19 Statistics for ${stats.country}`)
                 .setThumbnail(stats.countryInfo.flag)
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setFooter("Updated", message.author.displayAvatarURL({ format: "png", dynamic: true }))
                 .setTimestamp(stats.updated)
                 .addField("Overall Statistics", stripIndents`Cases: **${stats.cases.toLocaleString()}**

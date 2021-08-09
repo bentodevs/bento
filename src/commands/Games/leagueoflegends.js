@@ -90,7 +90,7 @@ module.exports = {
         // Build the embed
         const embed = new MessageEmbed()
             .setAuthor(`League of Legends data for ${data.user}`, `https://ddragon.leagueoflegends.com/cdn/11.9.1/img/profileicon/${data.profileIconId}.png`)
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+            .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setDescription(stripIndents`**Summoner Name:** ${data.user}
             **Summoner Level:** ${data.summonerLevel}
             **Games Played:** ${data.matchData.totalGames}
