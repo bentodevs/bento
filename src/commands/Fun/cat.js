@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { MessageEmbed, MessageAttachment } = require("discord.js");
 const { default: fetch } = require("node-fetch");
 
 module.exports = {
@@ -31,17 +31,17 @@ module.exports = {
 
     run: async (bot, message) => {
 
-        // Fetch a random cat image and convert the response into json
-        const req = await fetch("https://aws.random.cat/meow"),
-        res = await req.json();
+        // Fetch a random cat image and convert the response into a buffer
+        const req = await fetch("https://cataas.com/cat"),
+        buffer = await req.buffer();
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setImage(res.file)
+            .setImage("attachment://cat.png")
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
 
         // Send the embed
-        message.reply({ embeds: [embed] });
+        message.reply({ embeds: [embed], files: [new MessageAttachment(buffer, "cat.png")] });
 
     }
 };
