@@ -68,7 +68,7 @@ module.exports = {
         } else {
             message.reply(`I chose **${formatted[botPick]}**, you win!`);
         }
-               
+
     },
 
     run_interaction: async (bot, interaction) => {
