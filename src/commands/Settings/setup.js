@@ -28,6 +28,10 @@ module.exports = {
         noArgsHelp: true,
         disabled: false
     },
+    slash: {
+        enabled: false,
+        opts: []
+    },
 
     run: async (bot, message, args) => {
 
@@ -99,7 +103,7 @@ module.exports = {
                         // If the role is already in use then send an error
                         if (message.settings.roles.mute === role.id)
                             return message.errorReply("That role is already being used for the mute role!");
-                        
+
                         // Set the role in the DB
                         await settings.findOneAndUpdate({ _id: message.guild.id }, { "roles.mute": role.id });
                         // Send a confirmation message with the role
@@ -135,7 +139,7 @@ module.exports = {
 
                     if (!channel)
                         return message.errorReply("I could not find a channel with those details!");
-                    
+
                     await settings.findByIdAndUpdate({ _id: message.guild.id }, { "general.command_channel": channel.id });
                     return message.confirmationReply(`The command channel is now set to ${channel}`);
                 }
@@ -143,6 +147,6 @@ module.exports = {
         } else {
             message.errorReply(`It looks like you didn't provide a valid option! Valid options are: \`${options.join("`, `")}\``);
         }
-        
+
     }
 };

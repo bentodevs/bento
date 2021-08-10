@@ -26,6 +26,10 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: false,
+        opts: []
+    },
 
     run: async (bot, message, args) => {
 
@@ -54,6 +58,6 @@ module.exports = {
 
         // Send the embed
         message.reply({ embeds: [embed] });
-        
+
     }
 };
