@@ -35,9 +35,13 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: false,
+        opts: []
+    },
 
     run: async (bot, message, args) => {
-        
+
         if (args[0]?.toLowerCase() === "moderation") {
             if (message.settings.manual_events.moderation) {
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { "manual_events.moderation": false });
@@ -88,9 +92,9 @@ module.exports = {
                     ${config.emojis.channel} Channel modification logging is ${message.settings.manual_events.channels ? "**enabled**" : "**disabled**"}
                     📚 Role modification logging is ${message.settings.manual_events.roles ? "**enabled**" : "**disabled**"}
                     🧑‍🤝‍🧑 Member modification logging is ${message.settings.manual_events.members ? "**enabled**" : "**disabled**"}`);
-            
+
             message.channel.send({ embeds: [embed] });
         }
-        
+
     }
 };
