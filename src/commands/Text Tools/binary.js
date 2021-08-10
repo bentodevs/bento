@@ -34,6 +34,7 @@ module.exports = {
     },
 
     run: async (bot, message, args) => {
+
         if (args[0].toLowerCase() === "encode") {
 
             if (!args[1])
@@ -46,7 +47,7 @@ module.exports = {
             for (const data of split) {
                 const embed = new MessageEmbed()
                     .setAuthor("Binary encoded string", "https://cdn.discordapp.com/emojis/774154612139622410.gif?v=1")
-                    .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                    .setColor(message.member?.displayColor || bot.config.general.embedColor)
                     .setDescription(`\`\`\`${data}\`\`\``);
 
                 if (data == split[0]) {
@@ -70,7 +71,7 @@ module.exports = {
             for (const data of split) {
                 const embed = new MessageEmbed()
                     .setAuthor("Binary decoded string", "https://cdn.discordapp.com/emojis/774154612139622410.gif?v=1")
-                    .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                    .setColor(message.member?.displayColor || bot.config.general.embedColor)
                     .setDescription(`\`\`\`${data}\`\`\``);
 
                 if (data == split[0]) {
@@ -82,5 +83,6 @@ module.exports = {
         } else {
             message.errorReply("You must specify either `encode` or `decode`");
         }
+        
     }
 };

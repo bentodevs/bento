@@ -92,16 +92,16 @@ module.exports = {
 
         // If no member was found return an error
         if (!member)
-            return interaction.error("You didn't specify a valid member!", { ephemeral: true });
+            return interaction.error({ content: "You didn't specify a valid member!", ephemeral: true });
         // If the member is a bot dev return an error
         if (bot.config.general.devs.includes(member.id))
-            return interaction.error("You cannot use this command on that member!", { ephemeral: true });
+            return interaction.error({ content: "You cannot use this command on that member!", ephemeral: true });
         // If the member is a bot return an error
         if (member.user.bot)
-            return interaction.error("You cannot use this command on bots!", { ephemeral: true });
+            return interaction.error({ content: "You cannot use this command on bots!", ephemeral: true });
         // If the members display name is shorter than 2 characters return an error
         if (member.displayName.length < 2)
-            return interaction.error("The name of the member you specified is shorter than 2 characters!", { ephemeral: true });
+            return interaction.error({ content: "The name of the member you specified is shorter than 2 characters!", ephemeral: true });
 
         // Create the webhook
         interaction.channel.createWebhook(member.displayName, {
@@ -116,11 +116,11 @@ module.exports = {
             // Log the error
             console.error(err);
             // Send an error message
-            interaction.error(`Something went wrong: \`${err.message}\`!`, { ephemeral: true });
+            interaction.error({ content: `Something went wrong: \`${err.message}\`!`, ephemeral: true });
         });
 
         // Send the user a confirmation message
-        interaction.reply(`Successfully sent the fake message as ${member}!`, { ephemeral: true });
+        interaction.reply({ content: `Successfully sent the fake message as ${member}!`, ephemeral: true });
 
     }
 };

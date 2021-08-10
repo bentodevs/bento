@@ -100,7 +100,7 @@ module.exports = {
             // Build the history embed
             const embed = new MessageEmbed()
                 .setAuthor(`Punishment History for ${member.user?.tag ?? member.tag}`, (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }))
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(formatted.join("\n"))
                 .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
             
@@ -116,7 +116,7 @@ module.exports = {
                 return message.errorReply("A punishment with that ID was not found!");
             
             const usr = await getUser(bot, message, punishment.user),
-                mod = await getUser(bot, message, punishment.moderator);
+            mod = await getUser(bot, message, punishment.moderator);
             
             // Build the embed
             // "mute" is only added when the punishment type is a mute (Semi-obvious tbh...)
@@ -173,12 +173,13 @@ module.exports = {
             // Build the history embed
             const embed = new MessageEmbed()
                 .setAuthor(`Punishment History for ${member.user?.tag ?? member.tag}`, (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }))
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(formatted.join("\n"))
                 .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
             
             message.reply({ embeds: [embed] });
         }
+
     },
 
     run_interaction: async (bot, interaction) => {
@@ -241,7 +242,7 @@ module.exports = {
                 return interaction.error("A punishment with that ID was not found!");
             
             const usr = await getUser(bot, interaction, punishment.user),
-                mod = await getUser(bot, interaction, punishment.moderator);
+            mod = await getUser(bot, interaction, punishment.moderator);
             
             // Build the embed
             // "mute" is only added when the punishment type is a mute (Semi-obvious tbh...)
@@ -259,5 +260,6 @@ module.exports = {
             // Send the embed
             interaction.reply({ embeds: [embed] });
         }
+        
     }
 };

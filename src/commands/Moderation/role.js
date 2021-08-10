@@ -81,6 +81,7 @@ module.exports = {
             // Send a confirmation message
             message.confirmationReply(`Added the ${role} role to ${member}!`);
         }
+
     },
 
     run_interaction: async (bot, interaction) => {
@@ -117,5 +118,6 @@ module.exports = {
             // Send a confirmation message
             interaction.confirmation(`Added the ${role.role} role to ${user.member}!`);
         }
+        
     }
 };

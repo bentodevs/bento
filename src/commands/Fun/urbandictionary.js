@@ -50,7 +50,7 @@ module.exports = {
             .setAuthor(`Urban Dictionary: ${result.word}`, "https://i.imgur.com/kwkO5eD.jpg", result.permalink)
             .setThumbnail("https://i.imgur.com/kwkO5eD.jpg")
             .setDescription(`${result.definition.length >= 4000 ? `Definition is too large to display in a message. [Click here](${result.permalink}) to view it on the site.` : result.definition}\n\n${result.example}\n\n👍 ${result.thumbs_up} 👎 ${result.thumbs_down} | [See all results](https://www.urbandictionary.com/define.php?term=${args.join("_")})`)
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
+            .setColor(message.member?.displayColor || bot.config.general.embedColor);
 
         // Send the embed and delete the status message
         message.reply({ embeds: [embed] });

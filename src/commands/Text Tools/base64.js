@@ -34,6 +34,7 @@ module.exports = {
     },
 
     run: async (bot, message, args) => {
+
         if (args[0].toLowerCase() === "encode") {
             // Get the string and encode it in base64
             const string = args.slice(1).join(" "),
@@ -42,7 +43,7 @@ module.exports = {
             // Build the embed
             const embed = new MessageEmbed()
                 .setAuthor("Base64 encoded string", "https://cdn.discordapp.com/emojis/774154612139622410.gif?v=1")
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(`\`\`\`${encoded}\`\`\``);
             
             // Reply with the encoded string
@@ -55,7 +56,7 @@ module.exports = {
             // Build the embed
             const embed = new MessageEmbed()
                 .setAuthor("Base64 decoded string", "https://cdn.discordapp.com/emojis/774154612139622410.gif?v=1")
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(`\`\`\`${encoded}\`\`\``);
             
             // Reply with the decoded string
@@ -64,5 +65,6 @@ module.exports = {
             // Send an error
             message.errorReply("You must specify either `encode` or `decode`");
         }
+        
     }
 };

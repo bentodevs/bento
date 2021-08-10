@@ -47,9 +47,9 @@ module.exports = {
         // 2. Define the reason, and set a default if none was provided
         // 3. Get the ID of this action
         const member = await getMember(message, args[0], true),
-            reason = args.slice(1).join(" ") || "No reason provided",
-            action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1,
-            publicLog = message.guild.channels.cache.get(message.settings.logs.kick);
+        reason = args.slice(1).join(" ") || "No reason provided",
+        action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1,
+        publicLog = message.guild.channels.cache.get(message.settings.logs.kick);
 
         // If the member doesn't exist/isn't part of the guild, then return an error
         if (!member)
@@ -98,6 +98,7 @@ module.exports = {
             // Catch any errors during the kick process & send error message
             message.errorReply(`There was an issue kicking \`${member.user.tag}\` - \`${e.message}\``);
         }
+        
     },
 
     run_interaction: async (bot, interaction) => {
@@ -106,9 +107,9 @@ module.exports = {
         // 2. Get the reason from the interaction, or set to a default if wasn't given
         // 3. Get the punishment ID
         const user = interaction.options.get("user"),
-            reason = interaction.options.get("reason")?.value || "No reason specified",
-            action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1,
-            publicLog = interaction.guild.channels.cache.get(interaction.settings.logs.kick);
+        reason = interaction.options.get("reason")?.value || "No reason specified",
+        action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1,
+        publicLog = interaction.guild.channels.cache.get(interaction.settings.logs.kick);
 
 
         if (!user.member)

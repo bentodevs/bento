@@ -23,6 +23,10 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: false,
+        opts: []
+    },
 
     run: async (bot, message) => {
 

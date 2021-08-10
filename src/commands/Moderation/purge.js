@@ -24,6 +24,10 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: false,
+        opts: []
+    },
 
     run: async (bot, message, args) => {
 
@@ -32,7 +36,7 @@ module.exports = {
         actualCount = 0;
 
         // If no amount of messages were specified return an error
-        if (!deleteCount) 
+        if (!deleteCount)
             return message.errorReply("You didn't specify a number of messages to purge!");
         // If the user specified a number above 100 return an error
         if (deleteCount - 2 > 1000)
@@ -46,7 +50,7 @@ module.exports = {
             // Fetch the messages
             let fetched = await message.channel.messages.fetch({ limit: 100 });
 
-            if (!fetched.filter(m => m.id !== msg.id).size) 
+            if (!fetched.filter(m => m.id !== msg.id).size)
                 return msg.edit(`${bot.config.emojis.confirmation} Deleted \`${actualCount}\` messages!`)
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 10000));
 
@@ -64,20 +68,20 @@ module.exports = {
                 });
 
             // Return if it errored
-            if (!deleteCount) 
+            if (!deleteCount)
                 return;
             // If there's still over 100 messages to delete run this function again
-            if (deleteCount > 100) 
+            if (deleteCount > 100)
                 return bulkDelete();
 
             // Fetch the remaining messages
             fetched = await message.channel.messages.fetch({ limit: deleteCount });
 
-            if (!fetched.filter(m => m.id !== msg.id).size) 
+            if (!fetched.filter(m => m.id !== msg.id).size)
                 return msg.edit(`${bot.config.emojis.confirmation} Deleted \`${actualCount}\` messages!`)
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 10000));
 
-            // Delete the remaining messages 
+            // Delete the remaining messages
             await message.channel.bulkDelete(fetched.filter(m => m.id !== msg.id))
                 .then(msgs => {
                     // Update the status message
@@ -95,7 +99,7 @@ module.exports = {
         }
 
         // If the user wants to delete more than 100 messages run the bulkDelete function
-        if (deleteCount > 100) 
+        if (deleteCount > 100)
             return bulkDelete();
 
         // Fetch the messages

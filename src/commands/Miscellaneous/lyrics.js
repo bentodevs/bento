@@ -49,20 +49,19 @@ module.exports = {
             for (const data of content) {
                 const embed = new MessageEmbed()
                     .setAuthor(`${res.title} by ${res.author}`, res.thumbnail?.genius ?? bot.user.displayAvatarURL({dynamic: true, format: "png"}))
-                    .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                    .setColor(message.member?.displayColor || bot.config.general.embedColor)
                     .setDescription(`\`\`\`${data}\`\`\``)
                     .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: "png" }))
                     .setTimestamp();
 
                 if (data == content[0]) {
-                    message.reply({embeds: [embed]});
+                    message.reply({ embeds: [embed] });
                 } else {
-                    message.channel.send({embeds: [embed]});
+                    message.channel.send({ embeds: [embed] });
                 }
             }
 
         } else if (args[0]) {
-
             const req = await fetch(`https://some-random-api.ml/lyrics?title=${args.join("+")}`),
             res = await req.json();
 
@@ -71,19 +70,18 @@ module.exports = {
             
             const content = Util.splitMessage(res.lyrics, { maxLength: "1800", char: `\n` });
 
-
             for (const data of content) {
                 const embed = new MessageEmbed()
                     .setAuthor(`${res.title} by ${res.author}`, res.thumbnail?.genius ?? bot.user.displayAvatarURL({dynamic: true, format: "png"}))
-                    .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                    .setColor(message.member?.displayColor || bot.config.general.embedColor)
                     .setDescription(`\`\`\`${data}\`\`\``)
                     .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: "png" }))
                     .setTimestamp();
 
                 if (data == content[0]) {
-                    message.reply({embeds: [embed]});
+                    message.reply({ embeds: [embed] });
                 } else {
-                    message.channel.send({embeds: [embed]});
+                    message.channel.send({ embeds: [embed] });
                 }
             }
         } else {

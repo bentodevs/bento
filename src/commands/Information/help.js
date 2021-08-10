@@ -103,11 +103,17 @@ module.exports = {
             // Send the embed to the user
             (message.author?.send({ embeds: [embed] }) ?? message.user.send({ embeds: [embed] }))
                 .then(() => {
+                    // If the "message" is actually an interaction, the use interaction methods
+                    if (message?.isCommand())
+                        return message.confirmation({ content: "I've sent you a DM with a list of my commands!", ephemeral: true });
                     // If the command was ran in a guild send a confirmation message
                     if (message.guild)
-                        message.confirmationReply("Sent you a DM with a list of my commands!");
+                        message.confirmationReply("I've sent you a DM with a list of my commands!");
                 })
                 .catch(() => {
+                    // If the "message" is actually an interaction, the use interaction methods
+                    if (message?.isCommand())
+                        return message.error({ content: "Something went wrong, you most likely have your DM's disabled!", ephemeral: true });
                     // If something went wrong return an error specifying the user most likely has their DM's disabled
                     message.errorReply("Something went wrong, you most likely have your DM's disabled!");
                 });
@@ -239,7 +245,7 @@ module.exports = {
             } else if (permission.type == "discord") {
                 // Add the data to the perm message
                 perm = `the Discord permission \`${permission.permission}\``;
-            } 
+            }
 
             // Build the Embed
             const embed = new MessageEmbed()

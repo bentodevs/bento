@@ -68,17 +68,23 @@ module.exports = {
     run: async (bot, message, args) => {
 
         if (!args[0]) {
+            // Fetch the user from Mongo
             const userData = await users.findOne({ _id: message.author.id });
 
+            // If the user hasn't got a lastfm account present, then return
             if (!userData.lastfm)
                 return message.errorReply(`You do not have a Last.fm account set! Set one with \`${message.settings.general.prefix}lastfm set <username>\``);
 
+            // 1. Fetch the user's listening history
+            // 2. Get the latest track
             const history = await getLastFMUserHistory(userData.lastfm).catch(err => message.errorReply(`I encountered an error getting your play history: ${err}`)),
-                latestTrack = history.recenttracks.track[0];
+            latestTrack = history.recenttracks.track[0];
 
+            // If the latest track doesn't have the nowplaying property, then return an error
             if (!latestTrack?.["@attr"].nowplaying)
                 return message.errorReply("It looks like you aren't playing anything right now!");
 
+            // Build the embed
             const embed = new MessageEmbed()
                 .setAuthor(`${latestTrack.name} by ${latestTrack.artist?.["#text"]}`, latestTrack.image[1]["#text"], latestTrack.url)
                 .setThumbnail(latestTrack.image[3]["#text"])
@@ -89,38 +95,53 @@ module.exports = {
 
                 **Track Link:** [Click Here](${latestTrack.url})`);
 
+            // Send the mebed
             message.channel.send({ embeds: [embed] });
 
         } else if (args[0].toLowerCase() == "set") {
+            // Special chars regex
             const regex = /[!@#$%^&*()+=[\]{};:\\|<>/?~]/;
 
+            // If the username contains a special char, then throw an error
             if (regex.test(args[1]))
                 return message.errorReply("Your Last.fm username cannot have any special characters!");
 
+            // Fetch the user from the LastFM API - Catch any errors
             const lfmUser = await getLastFMUser(args[1]).catch(err => message.errorReply(`I ran in to an error setting your username: \`${err.message}\``));
 
+            // If the user exists
             if (lfmUser) {
+                // Set the username in the DB
                 await users.findOneAndUpdate({ _id: message.author.id }, { lastfm: lfmUser.user.name });
+                // Send a confirmation message
                 return message.confirmationReply(`I have set your Last.fm name to \`${lfmUser.user.name}\``);
             }
         } else if (args[0].toLowerCase() == "recent") {
+            // 1. Fetch the user from Discord
+            // 2. Fetch the user from Mongo
             const member = await getMember(message, args[1], true) || await getUser(bot, message, args[1], true),
-                user = await users.findOne({ _id: member.id });
+            user = await users.findOne({ _id: member.id });
 
+            // If there is no valid Discord user, then return an error
             if (!member)
                 return message.error("I couldn't find the specified user!");
 
+            // If the user doesn't have a LastFM profile set, then return an error
             if (!user?.lastfm)
                 return message.error("That user does not have a Last.fm account linked!");
 
+            // If the user hasn't got a lastfm account present, then return
             const lfmUser = await getLastFMUser(user.lastfm).catch(err => message.errorReply(`I ran in to an error fetching play history from Last.fm: \`${err.message}\``));
 
+            // 1. Fetch the play history from the LastFM API - Catch any errors
+            // 2. Re-assign history to be an array of the 10 most recent tracks
             let history = await getLastFMUserHistory(user.lastfm).catch(err => message.errorReply(`I encountered an error getting your play history: ${err}`));
-                history = history.recenttracks.track.slice(0, 10);
+            history = history.recenttracks.track.slice(0, 10);
 
+            // Map each track
             const description = history.map(h => `[${h.name} by ${h.artist["#text"]}](${h.url})`);
 
-            // Create the members embed
+            // Create the embed
             const embed = new MessageEmbed()
                 .setAuthor(`Listening history for ${user.lastfm}`, lfmUser.user.image[3]?.["#text"])
                 .setThumbnail(lfmUser.user.image[3]?.["#text"])
@@ -128,7 +149,7 @@ module.exports = {
                 .setColor(message?.member.displayColor ?? config.general.embedColor)
                 .setDescription(description.join("\n"));
 
-            // Send the members embed
+            // Send the embed
             message.reply({ embeds: [embed] });
         }
     },
@@ -153,7 +174,7 @@ module.exports = {
             // 1. Get the user's history
             // 2. Get the latest track from the play history
             const history = await getLastFMUserHistory(userData.lastfm).catch(err => interaction.editReply({content: `${config.emojis.error} I encountered an error getting your play history: ${err}`})),
-                latestTrack = history.recenttracks.track[0];
+            latestTrack = history.recenttracks.track[0];
 
             // If the latest track doesn't have the nowplayig attr, then return
             if (!latestTrack["@attr"]?.nowplaying)
@@ -176,7 +197,7 @@ module.exports = {
             // 1. Fetch the option
             // 2. Fetch the user's data
             const newName = interaction.options.get("username"),
-                userData = await users.findOne({ _id: interaction.user.id });
+            userData = await users.findOne({ _id: interaction.user.id });
 
             if (!newName) {
                 // If the user doesn't have a lastfm account set, return an error
@@ -240,7 +261,7 @@ module.exports = {
                 const lfmUser = await getLastFMUser(userData.lastfm).catch(err => interaction.editReply(`${config.emojis.error} I encountered an error getting the Last.fm account for that user: \`${err.message}\``));
 
                 let history = await getLastFMUserHistory(userData.lastfm).catch(err => interaction.editReply(`${config.emojis.error} I encountered an error getting the play history for that user: ${err.message}`));
-                    history = history.recenttracks.track.slice(0, 10);
+                history = history.recenttracks.track.slice(0, 10);
 
 
                 const description = history.map(h => `[${h.name} by ${h.artist["#text"]}](${h.url})`);
@@ -255,8 +276,6 @@ module.exports = {
 
                 // Send the members embed
                 interaction.editReply({ embeds: [embed] });
-
-
             } else {
                 const userData = await users.findOne({ _id: interaction.user.id });
 
@@ -266,12 +285,11 @@ module.exports = {
                 const lfmUser = await getLastFMUser(userData.lastfm).catch(err => interaction.editReply(`${config.emojis.error} I encountered an error getting your Last.fm account: \`${err.message}\``));
 
                 let history = await getLastFMUserHistory(userData.lastfm).catch(err => interaction.editReply(`${config.emojis.error} I encountered an error getting your play history: ${err.message}`));
-                    history = history.recenttracks.track.slice(0, 10);
-
+                history = history.recenttracks.track.slice(0, 10);
 
                 const description = history.map(h => `[${h.name} by ${h.artist["#text"]}](${h.url})`);
 
-                // Create the members embed
+                // Create the embed
                 const embed = new MessageEmbed()
                     .setAuthor(`Listening history for ${interaction.user.tag}`, lfmUser.user.image[3]?.["#text"])
                     .setThumbnail(lfmUser.user.image[3]?.["#text"])
@@ -279,10 +297,10 @@ module.exports = {
                     .setColor(interaction?.member.displayColor ?? config.general.embedColor)
                     .setDescription(description.join("\n"));
 
-                // Send the members embed
+                // Send the embed
                 interaction.editReply({ embeds: [embed] });
-
             }
         }
+
     }
 };

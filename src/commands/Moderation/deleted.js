@@ -26,20 +26,29 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: false,
+        opts: []
+    },
 
     run: async (bot, message, args) => {
 
+        // Grab the channel & the deleted message
         const channel = await getChannel(message, args.join(" "), true),
         deleted = bot.deletedMsgs.get(`${message.guild.id}-${channel?.id}`);
 
+        // If the channel wasn't found return an error
         if (!channel)
             return message.errorReply("You didn't specify a valid channel!");
+        // If the deleted message wasn't found return an error
         if (!deleted)
             return message.errorReply(`I don't remember any deleted messages for ${channel.id == message.channel.id ? "this" : "that"} channel!`);
 
+        // get the user and the member
         const user = await getUser(bot, message, deleted.author.id),
         member = await getMember(message, deleted.author.id);
 
+        // Build the embed
         const embed = new MessageEmbed()
             .setAuthor(user.tag, user.displayAvatarURL({ format: "png", dynamic: true }))
             .setDescription(deleted.content)
@@ -47,7 +56,8 @@ module.exports = {
             .setFooter(deleted.id)
             .setTimestamp(deleted.deletedTimestamp);
 
+        // Send the embed
         message.reply({ embeds: [embed] });
-        
+
     }
 };

@@ -42,16 +42,17 @@ module.exports = {
     },
 
     run: async (bot, message, args) => {
+
         // 1. Get the member requested
         // 2. get unmute reason
         // 3. Assign mute role to a const, cause easy
         // 4. Get mute data for the member
         const member = await getMember(message, args[0]),
-            reason = args.splice(1, args.length).join(' ') || "No reason provided",
-            muterole = message.settings.roles.mute,
-            mute = await mutes.findOne({ guild: message.guild.id, mutedUser: member?.id }),
-            action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1,
-            publicLog = message.guild.channels.cache.get(message.settings.logs.unmute);
+        reason = args.splice(1, args.length).join(' ') || "No reason provided",
+        muterole = message.settings.roles.mute,
+        mute = await mutes.findOne({ guild: message.guild.id, mutedUser: member?.id }),
+        action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1,
+        publicLog = message.guild.channels.cache.get(message.settings.logs.unmute);
 
         // TODO: [BOT-78] Add case creation in non-slash unmute command
         // If no member was found return an error
@@ -117,9 +118,11 @@ module.exports = {
             // If member doesn't have muted role AND is not in the DB, then remove the mute
             message.errorReply("That user is not muted!");
         }
+
     },
 
     run_interaction: async (bot, interaction) => {
+
         // 1. Get the member requested
         // 2. Get unmute reason
         // 3. Assign mute role to a const, cause easy
@@ -194,5 +197,6 @@ module.exports = {
             // If member doesn't have muted role AND is not in the DB, then remove the mute
             interaction.error("That user is not muted!");
         }
+        
     }
 };

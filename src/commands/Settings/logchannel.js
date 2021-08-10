@@ -82,11 +82,12 @@ module.exports = {
             editedLogs = message.guild.channels.cache.get(logs.edited),
             deletedLogs = message.guild.channels.cache.get(logs.deleted);
 
+            // Get the moderation log channels
             const banLogs = message.guild.channels.cache.get(logs.ban),
-                unbanLogs = message.guild.channels.cache.get(logs.unban),
-                muteLogs = message.guild.channels.cache.get(logs.mute),
-                unmuteLogs = message.guild.channels.cache.get(logs.unmute),
-                kickLogs = message.guild.channels.cache.get(logs.kick);
+            unbanLogs = message.guild.channels.cache.get(logs.unban),
+            muteLogs = message.guild.channels.cache.get(logs.mute),
+            unmuteLogs = message.guild.channels.cache.get(logs.unmute),
+            kickLogs = message.guild.channels.cache.get(logs.kick);
 
             // Define the embed message
             let msg = '';
@@ -107,7 +108,7 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setTitle("Logging")
                 .setThumbnail("https://i.imgur.com/iML7LKF.png")
-                .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+                .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(msg);
 
             // Send the embed
@@ -197,6 +198,13 @@ module.exports = {
             editedLogs = interaction.guild.channels.cache.get(logs.edited),
             deletedLogs = interaction.guild.channels.cache.get(logs.deleted);
 
+            // Get the moderation log channels
+            const banLogs = interaction.guild.channels.cache.get(logs.ban),
+            unbanLogs = interaction.guild.channels.cache.get(logs.unban),
+            muteLogs = interaction.guild.channels.cache.get(logs.mute),
+            unmuteLogs = interaction.guild.channels.cache.get(logs.unmute),
+            kickLogs = interaction.guild.channels.cache.get(logs.kick);
+
             // Define the embed message
             let msg = "";
 
@@ -206,6 +214,11 @@ module.exports = {
             if (logs.edited && editedLogs) msg += `📝 Edited message logging is set to ${editedLogs}\n`; else msg += "📝 Edited message logging is **disabled**\n";
             if (logs.deleted && deletedLogs) msg += `:wastebasket: Deleted message logging is set to ${deletedLogs}\n`; else msg += ":wastebasket: Deleted message logging is **disabled**\n";
             if (logs.events && eventLogs) msg += `:bell: Event logging is set to ${eventLogs}\n`; else msg += ":bell: Event logging is **disabled**\n";
+            if (logs.ban && banLogs) msg += `\n**Moderation Logging**\n${config.emojis.bans} Ban logging is set to ${banLogs}\n`; else msg += `\n**Moderation Logging**\n${config.emojis.bans} Ban logging is currently **disabled**\n`;
+            if (logs.unban && unbanLogs) msg += `${config.emojis.unban} Unban logging is set to ${unbanLogs}\n`; else msg += `${config.emojis.unban} Unban logging is currently **disabled**\n`;
+            if (logs.mute && muteLogs) msg += `🔇 Mute logging is set to ${muteLogs}\n`; else msg += `🔇 Mute logging is currently **disabled**\n`;
+            if (logs.unmute && unmuteLogs) msg += `🔉 Unmute logging is set to ${unmuteLogs}\n`; else msg += `🔉 Unmute logging is currently **disabled**\n`;
+            if (logs.kick && kickLogs) msg += `👢 Kick logging is set to ${kickLogs}\n`; else msg += `👢 Kick logging is currently **disabled**\n`;
 
             // Create the embed
             const embed = new MessageEmbed()

@@ -53,6 +53,7 @@ module.exports = {
         await punishments.findOneAndUpdate({ id: args[0], guild: message.guild.id }, { reason: reason })
             .then(() => message.confirmation(`The reason for ${punishment.id} has been updated to ${reason}`))
             .catch((err) => message.error(`I encountered an error whilst updating the reason for ${punishment.id}: \`${err.message}\``));
+
     },
 
     run_interaction: async (bot, interaction) => {
@@ -69,5 +70,6 @@ module.exports = {
         await punishments.findOneAndUpdate({ id: caseID, guild: interaction.guild.id }, { reason: reason })
             .then(() => interaction.confirmation(`The reason for Case ID ${punishment.id} has been updated to ${reason}`))
             .catch((err) => interaction.error(`I encountered an error whilst updating the reason for ${punishment.id}: \`${err.message}\``));
+            
     }
 };

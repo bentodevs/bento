@@ -48,7 +48,7 @@ module.exports = {
         // Build the embed
         const embed = new MessageEmbed()
             .setImage(URL)
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
+            .setColor(message.member?.displayColor || bot.config.general.embedColor);
         
         // Send the embed
         message.reply({content: `${member} got patted`, embeds: [embed]});

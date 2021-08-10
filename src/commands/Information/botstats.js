@@ -39,7 +39,7 @@ module.exports = {
         // Build the embed
         const embed = new MessageEmbed()
             .setAuthor(`R2-D2 v${bot.config.general.version}`, bot.user.displayAvatarURL({ format: "png", dynamic: true }))
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+            .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setDescription(stripIndents`Developed By: ${bot.config.emojis.jarno} \`Jarno#0001\` and ${bot.config.emojis.waitrose} \`Waitrose#0001\`
             Uptime: **${uptime}**
             Database State: ${connection.readyState === 1 ? `${bot.config.emojis.online} Healthy` : `${bot.config.emojis.dnd} Unhealthy`}

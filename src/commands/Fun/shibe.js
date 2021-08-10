@@ -38,7 +38,7 @@ module.exports = {
         // Build the embed
         const embed = new MessageEmbed()
             .setImage(res[0])
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
+            .setColor(message.member?.displayColor || bot.config.general.embedColor);
 
         // Send the embed
         message.reply({ embeds: [embed] });

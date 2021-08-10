@@ -50,9 +50,9 @@ module.exports = {
         // 2. Define the reason, and set a default if none was provided
         // 3. Get the ID of this action
         const member = await getMember(message, args[0], true) || await getUser(bot, message, args[0], true),
-            reason = args.splice(1, args.length).join(" ") || "No reason provided",
-            action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1,
-            publicLog = message.guild.channels.cache.get(message.settings.logs.ban);
+        reason = args.splice(1, args.length).join(" ") || "No reason provided",
+        action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1,
+        publicLog = message.guild.channels.cache.get(message.settings.logs.ban);
 
         // If the member doesn't exist/isn't part of the guild, then return an error
         if (!member)
@@ -146,9 +146,9 @@ module.exports = {
         // 2. Get the reason from the interaction, or set to a default if wasn't given
         // 3. Get the punishment ID
         const user = interaction.options.get("user"),
-            reason = interaction.options.get("reason")?.value || "No reason specified",
-            action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1,
-            publicLog = interaction.guild.channels.cache.get(interaction.settings.logs.ban);
+        reason = interaction.options.get("reason")?.value || "No reason specified",
+        action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1,
+        publicLog = interaction.guild.channels.cache.get(interaction.settings.logs.ban);
 
         // If the user they want to ban is themselves, then return an error
         if (interaction.member.id === user.user.id)
@@ -219,5 +219,6 @@ module.exports = {
             if (publicLog)
                 publicLog.send(`${config.emojis.bans} **${user.user.tag}** was banned for **${reason}**`);
         }
+        
     }
 };

@@ -211,7 +211,7 @@ module.exports = {
             });
 
             // Send the list of reminders
-            interaction.reply(msg, { ephemeral: true });
+            interaction.reply({ content: msg, ephemeral: true });
         } else if (interaction.options.get("remove")) {
             // Get the remind data and the reminder id
             const data = await reminders.findOne({ _id: interaction.user.id }),

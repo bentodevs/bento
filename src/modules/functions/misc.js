@@ -5,13 +5,13 @@ const config = require("../../config");
 
 /**
  * Get a definition from the urbandictionary api
- * 
+ *
  * @param {String} query
- *  
+ *
  * @returns {Promise.<Object>} definition
- * 
+ *
  * @example
- * 
+ *
  * urban("lol").then(data => {
  *      console.log(data);
  * }).catch(err => {
@@ -60,11 +60,11 @@ exports.urban = (query) => {
 
 /**
  * Gets a random meme from reddit
- * 
+ *
  * @returns {Promise.<Object>} Reddit Post
- * 
+ *
  * @example
- * 
+ *
  * getMeme().then(data => {
  *      console.log(data);
  * }).catch(err => {
@@ -117,13 +117,13 @@ exports.getMeme = () => {
 
 /**
  * Get weather data for a certain location
- * 
+ *
  * @param {String} query
- *  
+ *
  * @returns {Promise.<Object>} weather data
- * 
+ *
  * @example
- * 
+ *
  * getWeather("Amsterdam").then(data => {
  *      console.log(data);
  * }).catch(err => {
@@ -164,11 +164,11 @@ exports.getWeather = (query) => {
 
 /**
  * Fetches a random dad joke from the icanhazdadjoke.com api
- * 
+ *
  * @returns {Promise.<Object>} dad joke data
- * 
+ *
  * @example
- * 
+ *
  * getDadjoke().then(data => {
  *      console.log(data);
  * }).catch(err => {
@@ -203,7 +203,7 @@ exports.getDadjoke = () => {
  * @param {string} string
  * @param {string} returnUnit
  * @param {Object} opts
- * 
+ *
  * @returns {number}
  */
 exports.parseTime = (string, returnUnit, opts) => {
@@ -291,13 +291,13 @@ exports.parseTime = (string, returnUnit, opts) => {
 
 /**
  * Fetch a steam user from the profile URL
- * 
+ *
  * @param {String} username
- * 
+ *
  * @returns {Promise.<Object>} Steam user data
- * 
+ *
  * @example
- * 
+ *
  * fetchSteamUserByName("Waitrose").then(data => {
  *      console.log(data);
  * }).catch(err => {
@@ -332,13 +332,13 @@ exports.fetchSteamUserByID = (user) => {
 
 /**
  * Fetch a steam user from the profile URL
- * 
+ *
  * @param {String} username
- * 
+ *
  * @returns {Promise.<Object>} Steam user data
- * 
+ *
  * @example
- * 
+ *
  * fetchSteamUserByName("Waitrose").then(data => {
  *      console.log(data);
  * }).catch(err => {
@@ -374,10 +374,10 @@ exports.fetchSteamUserByID = (user) => {
 
 /**
  * Fetch an image from the waifu.pics API
- * 
- * @param {String} type 
- * 
- * @returns {Promise.<String>} URL to the image 
+ *
+ * @param {String} type
+ *
+ * @returns {Promise.<String>} URL to the image
  */
 exports.fetchWaifuApi = (type) => {
     return new Promise((resolve, reject) => {
@@ -441,11 +441,11 @@ exports.fetchWaifuApi = (type) => {
 
 /**
  * Fetches the status of a minecraft server from the R2-D2 API
- * 
+ *
  * @returns {Promise.<Object>} server status
- * 
+ *
  * @example
- * 
+ *
  * getMinecraftStatus().then(data => {
  *      console.log(data);
  * }).catch(err => {
@@ -481,10 +481,10 @@ exports.fetchWaifuApi = (type) => {
 
 /**
  * Get giveaway winners
- * 
+ *
  * @param {Array} entries Array with giveaway entries
  * @param {Number} winners Amount of giveaway winners
- * 
+ *
  * @returns {Array} Array with giveaway winners
  */
 exports.drawGiveawayWinners = (entries, winners) => {
@@ -493,7 +493,7 @@ exports.drawGiveawayWinners = (entries, winners) => {
 
 /**
  * Get the current Discord status
- * 
+ *
  * @returns {Promise.<Object>} Discord Status API Data
  */
 exports.getDiscordStatus = () => {
@@ -518,9 +518,9 @@ exports.getDiscordStatus = () => {
 
 /**
  * Fetch an image and return the buffer
- * 
- * @param {String} url 
- * 
+ *
+ * @param {String} url
+ *
  * @returns {Promise.<Buffer>} emote
  */
 exports.fetchEmote = (url) => {
@@ -553,36 +553,41 @@ exports.fetchEmote = (url) => {
 
 /**
  * Fetch a user's LastFM Profile
- * 
+ *
  * @param {Sring} user The user to fetch
- * 
+ *
  * @returns {Promise.<Object>} Last.fm user
  */
 exports.getLastFMUser = async (user) => {
     return new Promise((resolve, reject) => {
+        // Define the LastFM API URL
         const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${user}&api_key=${config.apiKeys.lastfm}&format=json`;
 
+        // Fetch the URL
         fetch(URL)
             .then(res => res.json())
             .then(d => {
                 if (d?.error == 6) {
+                    // If the user isn't found, throw an error
                     reject(new Error("User not found"));
                 } else if (d?.error) {
+                    // If there is an unknown error, then throw and log to console
                     console.error(d.error.message);
                     reject(new Error("An unknown error occurred!"));
                 } else {
+                    // Resolve the User
                     resolve(d);
                 }
             })
-            .catch(err => new Error(err));        
+            .catch(err => new Error(err));
     });
 };
 
 /**
  * Fetch a user's LastFM listening history
- * 
+ *
  * @param {Sring} user The user to fetch
- * 
+ *
  * @returns {Promise.<Object>} Last.fm user play history
  */
 exports.getLastFMUserHistory = async (user) => {

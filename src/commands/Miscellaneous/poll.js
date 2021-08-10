@@ -99,9 +99,9 @@ module.exports = {
         let channel = message.channel;
 
         // If a channel was mentioned set it as the channel
-        if (message.mentions?.channels?.size > 0) { 
-            args = args.slice(1); 
-            channel = message.mentions?.channels.first(); 
+        if (message.mentions?.channels?.size > 0) {
+            args = args.slice(1);
+            channel = message.mentions?.channels.first();
         }
 
         // If the channel isn't a text or news channel return an error
@@ -157,7 +157,7 @@ module.exports = {
             .setDescription(msg)
             .setFooter(`Started by: ${message.author.tag}`)
             .setTimestamp()
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
+            .setColor(message.member?.displayColor || bot.config.general.embedColor);
 
         // Send the embed
         const eMsg = await channel.send({ embeds: [embed] });
@@ -170,7 +170,7 @@ module.exports = {
         choices.forEach(async (data, index) => {
             await eMsg.react(emotes[index + 1]);
         });
-        
+
     },
 
     run_interaction: async (bot, interaction) => {
@@ -229,7 +229,7 @@ module.exports = {
         const eMsg = await channel.send({ embeds: [embed] });
 
         // Send a confirmation message
-        interaction.confirmation(`The poll has successfully been started in ${channel}!`, { ephemeral: true });
+        interaction.confirmation({ content: `The poll has successfully been started in ${channel}!`, ephemeral: true });
 
         // Loop through the choices and add the reactions
         choices.forEach(async (data, index) => {

@@ -70,7 +70,7 @@ module.exports = {
         // Build the embed
         const embed = new MessageEmbed()
             .setAuthor(`Nitro Boosters of ${message.guild.name}`, message.guild.iconURL({ format: "png", dynamic: true }))
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+            .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setDescription(formatted.join("\n"))
             .setFooter(`${sorted.size} total boosters | Page ${page + 1} of ${pages.length}`);
 

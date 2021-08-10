@@ -76,6 +76,7 @@ module.exports = {
     },
 
     run_interaction: async (bot, interaction) => {
+
         // Get the channel and the time
         const channel = interaction.options.get("channel")?.channel || interaction.channel;
         let time =  interaction.options.get("time")?.value;
@@ -95,5 +96,6 @@ module.exports = {
         channel.setRateLimitPerUser(time, `[Issued by ${interaction.member.user.tag}]`);
         // Send a confirmation message
         interaction.confirmation(time === 0 ? `Slowmode turned off for ${channel}!` : `Slowmode set for ${channel} to **${formatDuration(intervalToDuration({ start: 0, end: time * 1000 }), { delimiter: ", " })}**!`);
+        
     }
 };

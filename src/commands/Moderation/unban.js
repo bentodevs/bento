@@ -45,10 +45,10 @@ module.exports = {
     run: async (bot, message, args) => {
 
         const bans = await message.guild.bans.fetch(),
-            reason = args.slice(1).join(" ") || "No reason provided",
-            match = /<@!?(\d{17,19})>/g.exec(args[0]),
-            action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1,
-            publicLog = message.guild.channels.cache.get(message.settings.logs.unban);
+        reason = args.slice(1).join(" ") || "No reason provided",
+        match = /<@!?(\d{17,19})>/g.exec(args[0]),
+        action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1,
+        publicLog = message.guild.channels.cache.get(message.settings.logs.unban);
 
         // If the regex matches replace args[0]
         if (match)
@@ -109,6 +109,7 @@ module.exports = {
             if (message.guild.channels.cache.has(message.settings.logs.ban))
                 publicLog.send(`${config.emojis.bans} **${user.tag}** was unbanned for **${reason}**`);
         }
+
     },
 
     run_interaction: async (bot, interaction) => {
@@ -167,5 +168,6 @@ module.exports = {
             if (interaction.guild.channels.cache.has(interaction.settings.logs.ban))
                 publicLog.send(`${config.emojis.unban} **${user.user.tag}** was unbanned for **${reason}**`);
         }
+        
     }
 };

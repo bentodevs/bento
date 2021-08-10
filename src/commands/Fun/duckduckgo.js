@@ -36,12 +36,13 @@ module.exports = {
     },
 
     run: async (bot, message, args) => {
+
         // Combine the search phrase with + to form the URL part
         const searchTerm = args.join("+");
 
         // Fetch the data & convert json
         const req = await fetch(`https://api.duckduckgo.com/?q=${searchTerm}&format=json&t=R2-D2-Discord-Bot-AmirionStudiosLLC`),
-            res = await req.json();
+        res = await req.json();
         
         // If there is no type associated with the data, throw an error
         if (!res.Type)
@@ -54,29 +55,30 @@ module.exports = {
         const embed = new MessageEmbed()
             .setAuthor(`DuckDuckGo results for: ${args.join(" ")}`, "https://i.imgur.com/Moe5TI0.png")
             .setThumbnail(res.Image ? `https://api.duckduckgo.com/${res.Image}` : "")
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+            .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setDescription(stripIndents`${res.AbstractText ?? ""}
 
             ${descData.join("\n")}`);
         
         // Send the embed
         message.reply({ embeds: [embed] });
+
     },
 
     run_interaction: async (bot, interaction) => {
-
+        
         // Fetch the raw search query
         // Combine the search phrase with + to form the URL part
         const rawQuery = interaction.options.get("query").value,
-            searchTerm = rawQuery.split(" ").join("+");
+        searchTerm = rawQuery.split(" ").join("+");
 
         // Fetch the data & convert json
         const req = await fetch(`https://api.duckduckgo.com/?q=${searchTerm}&format=json&t=R2-D2-Discord-Bot-AmirionStudiosLLC`),
-            res = await req.json();
+        res = await req.json();
         
         // If there is no type associated with the data, throw an error
         if (!res.Type)
-            return interaction.errorReply("I couldn't find any Instant Answers for that query!");
+            return interaction.error("I couldn't find any Instant Answers for that query!");
         
         // Get all the relatedTopic data, get the first 5 entries and map
         const descData = res.RelatedTopics.slice(0, 5).filter(a => a.FirstURL).map(a => `**${a.Text}**\n[${a.FirstURL}](${a.FirstURL})\n`);
@@ -92,5 +94,6 @@ module.exports = {
         
         // Send the embed
         interaction.reply({ embeds: [embed] });
+
     }
 };

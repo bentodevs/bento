@@ -23,6 +23,10 @@ module.exports = {
         noArgsHelp: false,
         disabled: false
     },
+    slash: {
+        enabled: false,
+        opts: []
+    },
 
     run: async (bot, message, args) => {
 
@@ -32,11 +36,11 @@ module.exports = {
         // If there were no args provided, then set the member as the bot
         if (!args[0])
             member = bot.user;
-        
+
         // If the member doesn't exist, return an error
         if (!member)
             return message.errorReply("You did not specify a valid user!");
-        
+
         // Fetch the last 100 messages from the user
         const messages = await message.channel.messages.fetch({ limit: 100 });
 
@@ -45,5 +49,6 @@ module.exports = {
 
         // Delete the command
         message.delete().catch(() => { });
+
     }
 };

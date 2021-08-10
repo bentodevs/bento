@@ -71,7 +71,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setAuthor(`Banned user of ${message.guild.name}`, message.guild.iconURL({ format: "png", dynamic: true }))
             .setFooter(`${bans.length} total bans | Page ${page + 1} of ${pages.length}`)
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+            .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setDescription(description.join("\n"));
 
         // Send the embed

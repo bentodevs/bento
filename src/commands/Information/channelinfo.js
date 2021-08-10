@@ -115,7 +115,7 @@ module.exports = {
             .setAuthor(`${types[channel.type].type}: ${channel.name}`, types[channel.type].icon)
             .setDescription(desc)
             .setFooter(`ID: ${channel.id}`)
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor);
+            .setColor(message.member?.displayColor || bot.config.general.embedColor);
 
         // Send the embed
         message.reply({ embeds: [embed] });

@@ -42,12 +42,11 @@ module.exports = {
 
     run: async (bot, message, args) => {
 
-        async function getCaseUser(bot, message, user) {
-
+        const getCaseUser = async (bot, message, user) => {
             const usr = await getUser(bot, message, user, false);
 
             return `${usr.username}#${usr.discriminator}`;
-        }
+        };
 
         // Fetch member
         const member = await getMember(message, args[0], true);
@@ -79,13 +78,13 @@ module.exports = {
             return message.errorReply("You didn't specify a valid page!");
 
         // Format the cases
-        const formatted = Promise.all(pages[page].map(async p => `**#${p.id}** | **${p.type.toTitleCase()}** | **User:** ${await getCaseUser(bot, message, p.user)} | **Reason:** ${p.reason}`));
-        const data = await formatted;
+        const formatted = Promise.all(pages[page].map(async p => `**#${p.id}** | **${p.type.toTitleCase()}** | **User:** ${await getCaseUser(bot, message, p.user)} | **Reason:** ${p.reason}`)),
+        data = await formatted;
 
         // Build the history embed
         const embed = new MessageEmbed()
             .setAuthor(`Punishments by ${member.user.tag}`, member.user.displayAvatarURL({ format: 'png', dynamic: true }))
-            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+            .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setDescription(data.join("\n"))
             .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
 
@@ -99,13 +98,13 @@ module.exports = {
         await interaction.deferReply();
 
         // Make a function for getting case users - less head-work
-        async function getCaseUser(bot, interaction, user) {
+        const getCaseUser = async (bot, interaction, user) => {
             // Fetch the user from the API
             const usr = await getUser(bot, interaction, user, false);
 
             // Return the user in tag-style
             return `${usr.username}#${usr.discriminator}`;
-        }
+        };
 
         // Get the member and page number
         const member = interaction.options.get("user"),
@@ -143,8 +142,8 @@ module.exports = {
             return interaction.error("You didn't specify a valid page!");
 
         // Format the cases
-        const formatted = Promise.all(pages[page].map(async p => `**#${p.id}** | **${p.type.toTitleCase()}** | **User:** ${await getCaseUser(bot, interaction, p.user)} | **Reason:** ${p.reason}`));
-        const data = await formatted;
+        const formatted = Promise.all(pages[page].map(async p => `**#${p.id}** | **${p.type.toTitleCase()}** | **User:** ${await getCaseUser(bot, interaction, p.user)} | **Reason:** ${p.reason}`)),
+        data = await formatted;
 
         // Build the history embed
         const embed = new MessageEmbed()
@@ -156,4 +155,5 @@ module.exports = {
         // Send the history embed
         interaction.editReply({ embeds: [embed] });
     }
+    
 };
