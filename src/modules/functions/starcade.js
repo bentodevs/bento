@@ -31,3 +31,14 @@ exports.getLinkedPlayer = async (bot, userId) => {
         });
     });
 };
+
+/**
+ * Fetch the Vote data for the provided month
+ *
+ * @param {String} month The month to search for
+ *
+ * @returns {Promise.<Object>}
+ */
+exports.getVotes = async (month) => {
+
+};
