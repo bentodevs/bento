@@ -41,7 +41,7 @@ module.exports = {
 
         // If no options were specified or all options are the same return an error
         if (options.every((val, i, arr) => val.trim() === arr[0].trim()))
-            return message.errorReply("You didn't really specify an options there?");
+            return message.errorReply("You didn't really specify any options there?");
 
         // Choose a random option
         const choice = Math.floor((Math.random() * options.length));
@@ -58,7 +58,7 @@ module.exports = {
 
         // If no options were specified or all options are the same return an error
         if (options.every((val, i, arr) => val.trim() === arr[0].trim()))
-            return interaction.error("You didn't really specify an options there?");
+            return interaction.error("You didn't really specify any options there?");
 
         // Choose a random option
         const choice = Math.floor((Math.random() * options.length));
