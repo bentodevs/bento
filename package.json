@@ -38,7 +38,7 @@
     "flip": "^1.0.0",
     "https-proxy-agent": "^5.0.0",
     "iso-639-1": "^2.1.9",
-    "mongoose": "^5.13.3",
+    "mongoose": "^5.13.7",
     "node-canvas": "^2.7.0",
     "node-fetch": "^2.6.1",
     "ora": "^5.4.1",
