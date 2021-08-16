@@ -23,7 +23,7 @@ module.exports = {
         devOnly: true,
         premium: false,
         noArgsHelp: true,
-        disabled: false
+        disabled: true
     },
 
     run: async (bot, message, args) => {
@@ -90,6 +90,6 @@ module.exports = {
             // Throw error
             message.errorReply(`You must either specify \`all\` or a Guild ID`);
         }
-        
+
     }
 };
