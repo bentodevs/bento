@@ -51,7 +51,7 @@ module.exports = {
         let role = await getRole(message, !isNaN(args[args.length - 1]) && !/^[0-9]{16,}$/.test(args[args.length - 1]) ? args.slice(0, args.length -1).join(" ") : args.join(" "));
 
         // If args[0] is a number set role to undefined
-        if (!isNaN(args[0]) && role?.id !== args[0]) 
+        if (!isNaN(args[0]) && role?.id !== args[0])
             role = undefined;
 
         // If the user specified a invalid role return an error
@@ -64,7 +64,7 @@ module.exports = {
             let page = 0;
 
             // Sort members by role position
-            const members = message.guild.members.cache.sort((a,b) => b.roles.highest.position - a.roles.highest.position).array();
+            const members = Array.from(message.guild.members.cache.sort((a,b) => b.roles.highest.position - a.roles.highest.position).values());
 
             // Loop through the members and devide them into pages of 20
             for (let i = 0; i < members.length; i += 20) {
@@ -72,10 +72,10 @@ module.exports = {
             }
 
             // If args[0] is a number set it as the page
-            if (!isNaN(args[0])) 
+            if (!isNaN(args[0]))
                 page = args[0] -= 1;
             // Return if the page wasn't found
-            if (!pages[page]) 
+            if (!pages[page])
                 return message.errorReply("You didn't specify a valid page!");
 
             // Format the description
@@ -87,7 +87,7 @@ module.exports = {
                 .setFooter(`${message.guild.memberCount} total members | Page ${page + 1} of ${pages.length}`)
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(description.join("\n"));
-            
+
             // Send the members embed
             message.reply({ embeds: [embed] });
         } else if (role) {
@@ -100,7 +100,7 @@ module.exports = {
                 return message.errorReply("The role you specified doesn't have any members!");
 
             // Format and map the members
-            const members = role.members.array();
+            const members = Array.from(role.members.values());
 
             // Loop through the members and devide them into pages of 20
             for (let i = 0; i < members.length; i += 20) {
@@ -108,7 +108,7 @@ module.exports = {
             }
 
             // Check if a page was specified and set it as that page
-            if (!isNaN(args[args.length - 1]) && !/^[0-9]{16,}$/.test(args[args.length - 1])) 
+            if (!isNaN(args[args.length - 1]) && !/^[0-9]{16,}$/.test(args[args.length - 1]))
                 page = args[args.length - 1] -= 1;
 
             // If the page specified doesn't exists return
@@ -124,7 +124,7 @@ module.exports = {
                 .setFooter(`${role.members.size} total members | Page ${page + 1} of ${pages.length}`)
                 .setColor(role.hexColor ?? bot.config.general.embedColor)
                 .setDescription(description.join("\n"));
-            
+
             // Send the members embed
             message.reply({ embeds: [embed] });
         }
@@ -141,7 +141,7 @@ module.exports = {
             let page = 0;
 
             // Sort members by role position
-            const members = interaction.guild.members.cache.sort((a,b) => b.roles.highest.position - a.roles.highest.position).array();
+            const members = Array.from(interaction.guild.members.cache.sort((a,b) => b.roles.highest.position - a.roles.highest.position).values());
 
             // Loop through the members and devide them into pages of 20
             for (let i = 0; i < members.length; i += 20) {
@@ -149,10 +149,10 @@ module.exports = {
             }
 
             // If the page option is there set it as the page
-            if (interaction.options.get("page")?.value) 
+            if (interaction.options.get("page")?.value)
                 page = interaction.options.get("page").value -= 1;
             // Return if the page wasn't found
-            if (!pages[page]) 
+            if (!pages[page])
                 return interaction.error("You didn't specify a valid page!");
 
             // Format the description
@@ -164,7 +164,7 @@ module.exports = {
                 .setFooter(`${interaction.guild.memberCount} total members | Page ${page + 1} of ${pages.length}`)
                 .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
                 .setDescription(description.join("\n"));
-            
+
             // Send the members embed
             interaction.reply({ embeds: [embed] });
         } else {
@@ -177,7 +177,7 @@ module.exports = {
                 return interaction.error("The role you specified doesn't have any members!");
 
             // Format and map the members
-            const members = role.members.array();
+            const members = Array.from(role.members.values());
 
             // Loop through the members and devide them into pages of 20
             for (let i = 0; i < members.length; i += 20) {
@@ -185,10 +185,10 @@ module.exports = {
             }
 
             // If the page option is there set it as the page
-            if (interaction.options.get("page")?.value) 
+            if (interaction.options.get("page")?.value)
                 page = interaction.options.get("page").value -= 1;
             // Return if the page wasn't found
-            if (!pages[page]) 
+            if (!pages[page])
                 return interaction.error("You didn't specify a valid page!");
 
             // Format the description
@@ -200,7 +200,7 @@ module.exports = {
                 .setFooter(`${role.members.size} total members | Page ${page + 1} of ${pages.length}`)
                 .setColor(role.hexColor ?? bot.config.general.embedColor)
                 .setDescription(description.join("\n"));
-            
+
             // Send the members embed
             interaction.reply({ embeds: [embed] });
         }

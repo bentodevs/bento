@@ -42,7 +42,7 @@ module.exports = {
     run: async (bot, message, args) => {
 
         // Fetch all the bans
-        const bans = await message.guild.bans.fetch().then(bans => { return bans.array(); }).catch(() => {});
+        const bans = await message.guild.bans.fetch().then(bans => { return Array.from(bans.values()); }).catch(() => {});
 
         // If the guild has no bans return an error
         if (!bans.length || !bans)
@@ -58,7 +58,7 @@ module.exports = {
         }
 
         // If the page option is there set it as the page
-        if (!isNaN(args[0])) 
+        if (!isNaN(args[0]))
             page = args[0] - 1;
         // If the page doesn't exist retrun an error
         if (!pages[page])
@@ -82,7 +82,7 @@ module.exports = {
     run_interaction: async (bot, interaction) => {
 
         // Fetch all the bans
-        const bans = await interaction.guild.bans.fetch().then(bans => { return bans.array(); }).catch(() => {});
+        const bans = await interaction.guild.bans.fetch().then(bans => { return Array.from(bans.values()); }).catch(() => {});
 
         // If the guild has no bans return an error
         if (!bans.length || !bans)
@@ -98,7 +98,7 @@ module.exports = {
         }
 
         // If the page option is there set it as the page
-        if (interaction.options.get("page")?.value) 
+        if (interaction.options.get("page")?.value)
             page = interaction.options.get("page")?.value - 1;
         // If the page doesn't exist retrun an error
         if (!pages[page])
@@ -118,6 +118,6 @@ module.exports = {
 
         // Send the embed
         interaction.reply({ embeds: [embed] });
-        
+
     }
 };

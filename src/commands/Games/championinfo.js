@@ -47,7 +47,7 @@ module.exports = {
         // Build the embed
         const embed = new MessageEmbed()
             .setTitle(`${champ.name}, ${champ.title}`)
-            .setThumbnail(`https://ddragon.leagueoflegends.com/cdn/11.9.1/img/champion/${champ.id}.png`)
+            .setThumbnail(`https://ddragon.leagueoflegends.com/cdn/11.16.1/img/champion/${champ.id}.png`)
             .setColor((message.member?.displayColor || bot.config.general.embedColor))
             .setDescription(stripIndents`${champ.blurb}
 
@@ -78,7 +78,7 @@ module.exports = {
         // Build the embed
         const embed = new MessageEmbed()
             .setTitle(`${champ.name}, ${champ.title}`)
-            .setThumbnail(`https://ddragon.leagueoflegends.com/cdn/11.9.1/img/champion/${champ.id}.png`)
+            .setThumbnail(`https://ddragon.leagueoflegends.com/cdn/11.16.1/img/champion/${champ.id}.png`)
             .setColor((interaction.member?.displayColor ?? bot.config.general.embedColor))
             .setDescription(stripIndents`${champ.blurb}
 

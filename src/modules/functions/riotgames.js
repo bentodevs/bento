@@ -115,7 +115,7 @@ exports.getLeagueChampByID = async (champID) => {
  */
  exports.getLeagueChampByName = async (champName) => {
     // Set the champion data url
-    const championData = `https://ddragon.leagueoflegends.com/cdn/11.9.1/data/en_US/champion.json`;
+    const championData = `https://ddragon.leagueoflegends.com/cdn/11.16.1/data/en_US/champion.json`;
 
     // Fetch the data & convert to json
     const req = await fetch(championData),

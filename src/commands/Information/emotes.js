@@ -44,7 +44,7 @@ module.exports = {
 
         // Grab the emotes and sort them
         const emotes = message.guild.emojis.cache,
-        sorted = emotes.sort((a, b) => b.position - a.position).array();
+        sorted = Array.from(emotes.sort((a, b) => b.position - a.position).values());
 
         // Devide the emotes into pages of 10
         for (let i = 0; i < sorted.length; i += 10) {
@@ -74,14 +74,14 @@ module.exports = {
     },
 
     run_interaction: async (bot, interaction) => {
-        
+
         // Define pages vars
         const pages = [];
         let page = 0;
 
         // Grab the emotes and sort them
         const emotes = interaction.guild.emojis.cache,
-        sorted = emotes.sort((a, b) => b.position - a.position).array();
+        sorted = Array.from(emotes.sort((a, b) => b.position - a.position).values());
 
         // Devide the emotes into pages of 10
         for (let i = 0; i < sorted.length; i += 10) {
