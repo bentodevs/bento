@@ -32,7 +32,7 @@ module.exports = {
         opts: [{
             name: "number",
             type: "INTEGER",
-            description: "A number between 1 and 1,000,000,000,000.",
+            description: "A number.",
             required: false
         }]
     },
@@ -52,8 +52,8 @@ module.exports = {
         if (number <= 0)
             return message.errorReply("Please enter a number above 0!");
         // If the number is above 1 trillion return an error
-        if (number > 1000000000000)
-            return message.errorReply("Please enter a number below **1,000,000,000,000**!");
+        if (number > Number.MAX_SAFE_INTEGER)
+            return message.errorReply(`Please enter a number below **${Number.MAX_SAFE_INTEGER.toLocaleString()}**!`);
 
         // Get the random number
         const result = Math.floor(Math.random() * number + 1);
@@ -72,8 +72,8 @@ module.exports = {
         if (number <= 0)
             return interaction.error("Please enter a number above 0!");
         // If the number is above 1 trillion return an error
-        if (number > 1000000000000)
-            return interaction.error("Please enter a number below **1,000,000,000,000**!");
+        if (number > Number.MAX_SAFE_INTEGER)
+            return interaction.error(`Please enter a number below **${Number.MAX_SAFE_INTEGER.toLocaleString()}**!`);
 
         // Get the random number
         const result = Math.floor(Math.random() * number + 1);
