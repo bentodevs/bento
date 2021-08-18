@@ -13,6 +13,8 @@ exports.checkLevel = async (message) => {
     // Try to find the user in the database
     let user = await users.findOne({ _id: message.author.id });
 
+    console.log(user?.guilds?.find(g => g.id == message.guild.id));
+
     // If the user or the guild doesn't exist create the data
     if (!user) {
         user = await new users({
@@ -31,7 +33,7 @@ exports.checkLevel = async (message) => {
             }]
         }).save();
     } else if (!user.guilds.find(g => g.id == message.guild.id)) {
-        user = await users.findOneAndUpdate({ _id: message.author.id }, {
+        await users.findOneAndUpdate({ _id: message.author.id }, {
             $push: {
                 guilds: {
                     id: message.guild.id,
@@ -43,6 +45,8 @@ exports.checkLevel = async (message) => {
                 }
             }
         });
+
+        user = await users.findOne({ _id: message.author.id });
     }
 
     // Get the guild data
