@@ -183,7 +183,7 @@ exports.unload = (bot, command) => {
 exports.registerGlobal = (bot) => {
     return new Promise((resolve, reject) => {
         const arr = [];
-        const commands = Array.from(bot.commands.values()).filter(c => !c.opts.guildOnly);
+        const commands = Array.from(bot.commands.values());//.filter(c => !c.opts.guildOnly);
 
         for (const data of commands) {
 
