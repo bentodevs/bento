@@ -146,7 +146,7 @@ exports.getRankCard = async (user, data, guild) => {
     blur = await Canvas.loadImage("https://i.imgur.com/E0We0O9.png");
 
     // Get the XP data
-    const xp = data.leveling.xp - Math.floor(20 * ((data.leveling.level - 1) ** 2) + (100 * (data.leveling.level - 1)) + 100),
+    const xp = (data.leveling.xp - Math.floor(20 * ((data.leveling.level - 1) ** 2) + (100 * (data.leveling.level - 1)) + 100)) + (data.leveling.level == 1 ? 100 : 0),
     xpNeeded = Math.floor(20 * (data.leveling.level ** 2) + (100 * data.leveling.level) + 100) - Math.floor(20 * ((data.leveling.level - 1) ** 2) + (100 * (data.leveling.level - 1)) + 100),
     percentage = Math.round(Math.floor((xp / xpNeeded) * 100));
 

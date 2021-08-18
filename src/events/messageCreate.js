@@ -70,7 +70,7 @@ module.exports = async (bot, message) => {
     // Return if the message doesn't start with the prefix
     if (message.content.indexOf(prefix) !== 0) {
         // If the message is in a guild run the level check first
-        if (message.guild) 
+        if (message.guild && !message.author.bot) 
             await checkLevel(message);
         
         // Return
@@ -92,6 +92,12 @@ module.exports = async (bot, message) => {
             return message.delete();
     }
 
+    // Return if the user is a bot
+    if (message.author.bot)
+        return;
+
+    // Run the level check
+    await checkLevel(message);
 
     // Import message functions
     require("../modules/functions/messages")(message);
