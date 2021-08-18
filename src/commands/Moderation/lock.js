@@ -17,7 +17,7 @@ module.exports = {
         self: ["MANAGE_CHANNELS"]
     },
     opts: {
-        guildOnly: false,
+        guildOnly: true,
         devOnly: false,
         premium: false,
         noArgsHelp: false,
