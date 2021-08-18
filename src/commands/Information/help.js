@@ -7,11 +7,13 @@ module.exports = {
     info: {
         name: "help",
         aliases: ["?", "commands"],
-        usage: "help [command]",
+        usage: "help [command | category | \"all\"]",
         examples: [
-            "help ping"
+            "help ping",
+            "help moderation",
+            "help all"
         ],
-        description: "Shows a list of commands or information about a specific command.",
+        description: "Shows a list of commands or information about a specific command or category.",
         category: "Information",
         info: null,
         options: []
@@ -31,9 +33,9 @@ module.exports = {
     slash: {
         enabled: true,
         opts: [{
-            name: "command",
+            name: "command/category",
             type: "STRING",
-            description: "The command you want to view the information of.",
+            description: "The command or category you want to view the information of.",
             required: false
         }]
     },
@@ -69,7 +71,7 @@ module.exports = {
             if (!bot.config.general.devs.includes(message.author?.id ?? message.user.id))
                 commands = commands.filter(c => !c.opts.devOnly || !c.opts.disabled);
             // If the command was run in dms remove all the guild only commands
-            if (!message.guild && (args?.[0]?.toLowerCase() !== "all" || message.options?.get("command")?.value !== "all"))
+            if (!message.guild && !(args?.[0]?.toLowerCase() == "all" || message.options?.get("command")?.value == "all"))
                 commands = commands.filter(c => !c.opts.guildOnly);
 
             // Sort the commands
@@ -104,7 +106,7 @@ module.exports = {
             (message.author?.send({ embeds: [embed] }) ?? message.user.send({ embeds: [embed] }))
                 .then(() => {
                     // If the "message" is actually an interaction, the use interaction methods
-                    if (message?.isCommand())
+                    if (message?.commandId)
                         return message.confirmation({ content: "I've sent you a DM with a list of my commands!", ephemeral: true });
                     // If the command was ran in a guild send a confirmation message
                     if (message.guild)
@@ -112,7 +114,7 @@ module.exports = {
                 })
                 .catch(() => {
                     // If the "message" is actually an interaction, the use interaction methods
-                    if (message?.isCommand())
+                    if (message?.commandId)
                         return message.error({ content: "Something went wrong, you most likely have your DM's disabled!", ephemeral: true });
                     // If something went wrong return an error specifying the user most likely has their DM's disabled
                     message.errorReply("Something went wrong, you most likely have your DM's disabled!");
