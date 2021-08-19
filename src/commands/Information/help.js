@@ -33,7 +33,7 @@ module.exports = {
     slash: {
         enabled: true,
         opts: [{
-            name: "command/category",
+            name: "command_category",
             type: "STRING",
             description: "The command or category you want to view the information of.",
             required: false
