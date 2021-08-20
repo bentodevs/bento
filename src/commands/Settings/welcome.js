@@ -82,7 +82,7 @@ module.exports = {
                 }
             } else {
                 // Grab the Channel the user specifies from Discord
-                const chan = await getChannel(message, args.splice(1).join(""), true);
+                const chan = await getChannel(message, args.slice(1).join(""), true);
                 // Set the channel in the guild's settings
                 await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.channel": chan.id });
                 // Send a confirmation message
@@ -100,7 +100,7 @@ module.exports = {
                 }
             } else {
                 // Ignore args[0] & join any text after the fact - Assign as "msg"
-                const msg = args.splice(1).join(" ");
+                const msg = args.slice(1).join(" ");
                 // Set the new welcome message in the DB
                 await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.joinMessage": msg });
                 // Send a confirmation message
@@ -118,7 +118,7 @@ module.exports = {
                 }
             } else {
                 // Ignore args[0] & join any text after the fact - Assign as "msg"
-                const msg = args.splice(1).join(" ");
+                const msg = args.slice(1).join(" ");
                 // Set the new leave message in the DB
                 await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.leaveMessage": msg });
                 // Send a confirmation message
@@ -136,7 +136,7 @@ module.exports = {
                 }
             } else {
                 // Ignore args[0] & join any text after the fact - Assign as "msg"
-                const msg = args.splice(1).join(" ");
+                const msg = args.slice(1).join(" ");
                 // Set the new welcome dm in the DB
                 await settings.findOneAndUpdate({ "_id": message.guild.id }, { "welcome.userMessage": msg });
                 // Send a confirmation message
