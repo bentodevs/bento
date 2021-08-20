@@ -13,8 +13,6 @@ exports.checkLevel = async (message) => {
     // Try to find the user in the database
     let user = await users.findOne({ _id: message.author.id });
 
-    console.log(user?.guilds?.find(g => g.id == message.guild.id));
-
     // If the user or the guild doesn't exist create the data
     if (!user) {
         user = await new users({
