@@ -3,7 +3,9 @@ const { Client, Collection } = require("discord.js"),
 { connect } = require("mongoose"),
 { getMongooseURL } = require("./database/mongo"),
 ora = require("ora"),
-Pokedex = require('pokedex-promise-v2');
+Pokedex = require('pokedex-promise-v2'),
+Sentry = require('@sentry/node'),
+Tracing = require("@sentry/tracing");
 
 // Import handlers
 const commands = require("./modules/handlers/command"),
@@ -57,7 +59,7 @@ bot.cooldowns = new Collection();
 // Init function
 const init = async () => {
     // Log R2-D2 ascii art
-    console.log(`     ____  ____       ____ ____  
+    console.log(`     ____  ____       ____ ____
     |  _ \\|___ \\     |  _ \\___ \\
     | |_) | __) |____| | | |__) |
     |  _ < / __/_____| |_| / __/
@@ -65,10 +67,24 @@ const init = async () => {
     console.log(" ");
     console.log(" ");
 
+    const sentryMessage = ora("Logging in to Sentry...").start();
+
+    // Setup Sentry
+    Sentry.init({
+        dsn: bot.config.general.sentrydsn,
+        integrations: [new Tracing.Integrations.Mongo()],
+        tracesSampleRate: 1.0,
+    });
+
+    sentryMessage.stopAndPersist({
+        symbol: "✔️",
+        text: ` Signed in to Sentry!`,
+    });
+
     // Send the command message and load all the commands
     const commandMessage = ora("Loading commands...").start(),
     cmds = await commands.init(bot);
-    
+
     // Update the command message
     if (bot.commands.filter(a => a.slash?.enabled).size > 100) {
         commandMessage.stopAndPersist({

@@ -11,7 +11,8 @@ const config = {
             "648882989471891499" // Waitrose
         ],
         proxyUrl: "", // The URL to the proxy
-        development: false // Wether the bot is in a development environment or not
+        development: false, // Wether the bot is in a development environment or not
+        sentrydsn: "" // The Sentry Data Source Name
     },
 
     logging: {
