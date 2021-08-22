@@ -460,14 +460,14 @@ exports.fetchWaifuApi = (type) => {
 
         // Define the API URL
         // TODO: [BOT-76] Update the URL with the actual API URL
-        const URL = `http://localhost:2021/utils/status?ip=${ip}&port=${port ?? 25565}`;
+        const URL = `https://api.mcsrvstat.us/2/${ip}:${port ?? 25565}`;
+        //const URL = `http://localhost:8787/status`;
 
         // Fetch the server status
         fetch(URL, {
             headers: {
                 "content-type": "application/json",
-                "authorization": config.apiKeys.r2d2
-            }
+            },
         }).then(res => res.json()).then(json => {
             // Return the status
             resolve(json);
