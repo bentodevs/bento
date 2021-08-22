@@ -88,7 +88,7 @@ module.exports = {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Server Status - ${interaction.options.get("server_ip")}${`:${interaction.options.get("server_port")?.value}` ?? ""}`, `attachment://img.png`)
+            .setAuthor(`Server Status - ${interaction.options.get("server_ip").value}${interaction.options.get("server_port")?.value ? `:${interaction.options.get("server_port").value}` : ""}`, `attachment://img.png`)
             .setThumbnail("attachment://img.png")
             .setDescription(`**Status:** ${bot.config.emojis.online} Online\n**Online Players:** ${status.players.online}/${status.players.max}\n\n**MOTD**\n\`\`\`${status.motd.clean.join("\n").removeMinecraftCodes()}\`\`\``)
             .setTimestamp()
