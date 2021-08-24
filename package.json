@@ -43,7 +43,7 @@
     "mongoose": "^5.13.8",
     "node-canvas": "^2.7.0",
     "node-fetch": "^2.6.1",
-    "ora": "^5.4.1",
+    "ora": "^6.0.0",
     "pokedex-promise-v2": "^3.3.2",
     "xml-js": "^1.6.11"
   },
