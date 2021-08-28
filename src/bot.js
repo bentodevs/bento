@@ -5,8 +5,7 @@ const { Client, Collection } = require("discord.js"),
 ora = require("ora"),
 Pokedex = require('pokedex-promise-v2'),
 Sentry = require('@sentry/node'),
-Tracing = require("@sentry/tracing"),
-mysql = require("mysql");
+Tracing = require("@sentry/tracing");
 
 // Import handlers
 const commands = require("./modules/handlers/command"),
@@ -124,17 +123,6 @@ const init = async () => {
     mongoMsg.stopAndPersist({
         symbol: "✔️",
         text: " Successfully connected to the Mongo database!"
-    });
-
-    // Send the mysql message
-    const mysqlMsg = ora("Connecting to the MySQL database...").start();
-
-    // Connect to the MySQL DB
-    bot.mclink = mysql.createPool(bot.config.mclink);
-
-    mysqlMsg.stopAndPersist({
-        symbol: "✔️",
-        text: " Successfully connected to the MySQL database!"
     });
 
     // Send the login message
