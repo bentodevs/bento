@@ -31,7 +31,7 @@ exports.checkLevel = async (message) => {
             }]
         }).save();
     } else if (!user.guilds.find(g => g.id == message.guild.id)) {
-        user = await users.findOneAndUpdate({ _id: message.author.id }, {
+        await users.findOneAndUpdate({ _id: message.author.id }, {
             $push: {
                 guilds: {
                     id: message.guild.id,
@@ -43,6 +43,8 @@ exports.checkLevel = async (message) => {
                 }
             }
         });
+
+        user = await users.findOne({ _id: message.author.id });
     }
 
     // Get the guild data
@@ -146,7 +148,7 @@ exports.getRankCard = async (user, data, guild) => {
     blur = await Canvas.loadImage("https://i.imgur.com/E0We0O9.png");
 
     // Get the XP data
-    const xp = data.leveling.xp - Math.floor(20 * ((data.leveling.level - 1) ** 2) + (100 * (data.leveling.level - 1)) + 100),
+    const xp = (data.leveling.xp - Math.floor(20 * ((data.leveling.level - 1) ** 2) + (100 * (data.leveling.level - 1)) + 100)) + (data.leveling.level == 1 ? 100 : 0),
     xpNeeded = Math.floor(20 * (data.leveling.level ** 2) + (100 * data.leveling.level) + 100) - Math.floor(20 * ((data.leveling.level - 1) ** 2) + (100 * (data.leveling.level - 1)) + 100),
     percentage = Math.round(Math.floor((xp / xpNeeded) * 100));
 

@@ -56,21 +56,20 @@ module.exports = {
             return message.errorReply("The requested server isn't online.");
 
         // Get the icon
-        const buf = new Buffer.from(status.favicon.split(",")[1], "base64"),
+        const buf = new Buffer.from(status.icon.split(",")[1], "base64"),
         icon = new MessageAttachment(buf, "img.png");
 
         // Build the embed
         const embed = new MessageEmbed()
-            .attachFiles(icon)
-            .setAuthor(`Server Status - ${args[0]}`, "attachment://img.png")
+            .setAuthor(`Server Status - ${args[0]}`, `attachment://img.png`)
             .setThumbnail("attachment://img.png")
-            .setDescription(`**Status:** ${bot.config.emojis.online} Online\n**Online Players:** ${status.players.online}/${status.players.max}\n\n**MOTD**\n\`\`\`${status.description.removeMinecraftCodes()}\`\`\``)
+            .setDescription(`**Status:** ${bot.config.emojis.online} Online\n**Online Players:** ${status.players.online}/${status.players.max}\n\n**MOTD**\n\`\`\`${status.motd.clean.join("\n").removeMinecraftCodes()}\`\`\``)
             .setTimestamp()
             .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setFooter(`Requested by: ${message.author.tag}`);
 
         // Send the embed
-        message.reply({ embeds: [embed] });
+        message.reply({ embeds: [embed], files: [icon] });
 
     },
 
@@ -84,21 +83,20 @@ module.exports = {
             return interaction.error("The requested server isn't online.");
 
         // Get the icon
-        const buf = new Buffer.from(status.favicon.split(",")[1], "base64"),
+        const buf = new Buffer.from(status.icon.split(",")[1], "base64"),
         icon = new MessageAttachment(buf, "img.png");
 
         // Build the embed
         const embed = new MessageEmbed()
-            .attachFiles(icon)
-            .setAuthor(`Server Status - ${interaction.options.get("server_ip").value}`, "attachment://img.png")
+            .setAuthor(`Server Status - ${interaction.options.get("server_ip").value}${interaction.options.get("server_port")?.value ? `:${interaction.options.get("server_port").value}` : ""}`, `attachment://img.png`)
             .setThumbnail("attachment://img.png")
-            .setDescription(`**Status:** ${bot.config.emojis.online} Online\n**Online Players:** ${status.players.online}/${status.players.max}\n\n**MOTD**\n\`\`\`${status.description.removeMinecraftCodes()}\`\`\``)
+            .setDescription(`**Status:** ${bot.config.emojis.online} Online\n**Online Players:** ${status.players.online}/${status.players.max}\n\n**MOTD**\n\`\`\`${status.motd.clean.join("\n").removeMinecraftCodes()}\`\`\``)
             .setTimestamp()
-            .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
+            .setColor(interaction.member?.displayColor || bot.config.general.embedColor)
             .setFooter(`Requested by: ${interaction.user.tag}`);
 
         // Send the embed
-        interaction.reply({ embeds: [embed], ephemeral: true });
+        interaction.reply({ embeds: [embed], files: [icon], ephemeral: true });
 
     }
 };

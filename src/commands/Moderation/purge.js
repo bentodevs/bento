@@ -18,7 +18,7 @@ module.exports = {
         self: ["MANAGE_MESSAGES"]
     },
     opts: {
-        guildOnly: false,
+        guildOnly: true,
         devOnly: false,
         premium: false,
         noArgsHelp: false,

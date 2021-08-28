@@ -36,7 +36,7 @@ module.exports = {
         self: ["EMBED_LINKS"]
     },
     opts: {
-        guildOnly: false,
+        guildOnly: true,
         devOnly: false,
         premium: false,
         noArgsHelp: true,
