@@ -32,13 +32,17 @@ module.exports = {
 
     run: async (bot, message) => {
 
+        // Find premium guild
         const premiumSearch = await premiumGuild.findOne({ _id: message.guild.id, active: true });
 
+        // If the guild isn't premium, then return
         if (!premiumSearch)
             return message.errorReply("This guild doesn't currently have an active R2-D2 Premium subscription! You can purchase access to R2-D2 premium on our website: https://r2-d2.dev/");
 
+        // Fetch the user who activated premium
         const user = await getUser(bot, message, premiumSearch.activatedBy, false);
 
+        // Send message
         message.confirmationReply(`This server has an active premium subscription provided by **${user.tag}** which ${premiumSearch.expiry == "forever" ? "**does not expire**" : `expires in **${formatDistance(Date.now(), parseInt(premiumSearch.expiry))}**`}!`);
 
     }
