@@ -4,8 +4,7 @@ const { Client, Collection } = require("discord.js"),
 { getMongooseURL } = require("./database/mongo"),
 ora = require("ora"),
 Pokedex = require('pokedex-promise-v2'),
-Sentry = require('@sentry/node'),
-Tracing = require("@sentry/tracing");
+mysql = require("mysql");
 
 // Import handlers
 const commands = require("./modules/handlers/command"),
@@ -67,20 +66,6 @@ const init = async () => {
     console.log(" ");
     console.log(" ");
 
-    const sentryMessage = ora("Logging in to Sentry...").start();
-
-    // Setup Sentry
-    Sentry.init({
-        dsn: bot.config.general.sentrydsn,
-        integrations: [new Tracing.Integrations.Mongo()],
-        tracesSampleRate: 1.0,
-    });
-
-    sentryMessage.stopAndPersist({
-        symbol: "✔️",
-        text: ` Signed in to Sentry!`,
-    });
-
     // Send the command message and load all the commands
     const commandMessage = ora("Loading commands...").start(),
     cmds = await commands.init(bot);
@@ -113,6 +98,7 @@ const init = async () => {
 
     // Connect to the mongo DB
     bot.mongo = await connect(getMongooseURL(bot.config.mongo), {
+        useFindAndModify: false,
         useNewUrlParser: true,
         useUnifiedTopology: true
     }).catch(err => {
@@ -123,6 +109,17 @@ const init = async () => {
     mongoMsg.stopAndPersist({
         symbol: "✔️",
         text: " Successfully connected to the Mongo database!"
+    });
+
+    // Send the mysql message
+    const mysqlMsg = ora("Connecting to the MySQL database...").start();
+
+    // Connect to the MySQL DB
+    bot.mclink = mysql.createPool(bot.config.mclink);
+
+    mysqlMsg.stopAndPersist({
+        symbol: "✔️",
+        text: " Successfully connected to the MySQL database!"
     });
 
     // Send the login message

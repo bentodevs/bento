@@ -76,7 +76,7 @@ exports.init = async bot => {
     // Run the checkReminders function
     await checkGiveaways(bot);
 
-    // Run the checkReminders function every minute
+    // Run the checkReminders function every 30 seconds
     const interval = setInterval(async () => {
         await checkGiveaways(bot);
     }, 60000);

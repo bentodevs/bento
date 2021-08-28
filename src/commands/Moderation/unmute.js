@@ -48,7 +48,7 @@ module.exports = {
         // 3. Assign mute role to a const, cause easy
         // 4. Get mute data for the member
         const member = await getMember(message, args[0]),
-        reason = args.slice(1, args.length).join(' ') || "No reason provided",
+        reason = args.splice(1, args.length).join(' ') || "No reason provided",
         muterole = message.settings.roles.mute,
         mute = await mutes.findOne({ guild: message.guild.id, mutedUser: member?.id }),
         action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1,
