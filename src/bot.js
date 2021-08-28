@@ -113,7 +113,6 @@ const init = async () => {
 
     // Connect to the mongo DB
     bot.mongo = await connect(getMongooseURL(bot.config.mongo), {
-        useFindAndModify: false,
         useNewUrlParser: true,
         useUnifiedTopology: true
     }).catch(err => {
