@@ -49,12 +49,8 @@ module.exports = {
         if (!user)
             return message.errorReply("You didn't specify a valid member!");
 
-        console.log(user.id);
-
         const data = await users.findOne({ _id: user.id, "guilds.id": message.guild.id }),
         gData = data?.guilds.find(g => g.id == message.guild.id);
-
-        console.log(gData.leveling);
 
         if (!data)
             return message.errorReply("I couldn't find any data for the member you specified!");

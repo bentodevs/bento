@@ -11,8 +11,7 @@ const config = {
             "648882989471891499" // Waitrose
         ],
         proxyUrl: "", // The URL to the proxy
-        development: false, // Wether the bot is in a development environment or not
-        sentrydsn: "" // The Sentry Data Source Name
+        development: false // Wether the bot is in a development environment or not
     },
 
     logging: {
@@ -76,6 +75,14 @@ const config = {
         host: "localhost",
         port: "27017",
         database: "R2-D2"
+    },
+
+    // MySQL Info
+    mclink: {
+        host: "",
+        port: 3306,
+        username: "",
+        password: ""
     }
 
 };

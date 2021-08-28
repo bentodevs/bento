@@ -50,7 +50,7 @@ module.exports = {
         // 2. Define the reason, and set a default if none was provided
         // 3. Get the ID of this action
         const member = await getMember(message, args[0], true) || await getUser(bot, message, args[0], true),
-        reason = args.slice(1, args.length).join(" ") || "No reason provided",
+        reason = args.splice(1, args.length).join(" ") || "No reason provided",
         action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1,
         publicLog = message.guild.channels.cache.get(message.settings.logs.ban);
 

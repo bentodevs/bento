@@ -61,10 +61,10 @@ module.exports = {
             return message.errorReply("You didn't provide any summoner name!");
 
         // Send a loading message & assign it to msg
-        const msg = await message.loadingReply(`Fetching the League of Legends profile for \`${args.slice(1).join("")}\``);
+        const msg = await message.loadingReply(`Fetching the League of Legends profile for \`${args.splice(1).join("")}\``);
 
         // Fetch the league summoner data
-        const data = await getLeagueSummoner(args[0], args.slice(1).join(""));
+        const data = await getLeagueSummoner(args[0], args.splice(1).join());
 
         // Catch any errors
         if (data === "NO_REGION")

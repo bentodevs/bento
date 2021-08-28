@@ -48,7 +48,7 @@ module.exports = {
         }, {
             name: "info",
             type: "SUB_COMMAND",
-            description: "Get case specific information.",
+            description: "View all AFK users.",
             options: [{
                 name: "case",
                 type: "INTEGER",
@@ -93,20 +93,20 @@ module.exports = {
             // Check if the user specified a valid page
             if (!pages[page])
                 return message.errorReply("You didn't specify a valid page!");
-
+            
             // Format the cases
-            const formatted = pages[page].map(p => `**#${p.id}** | **${p.type.toTitleCase()}** | **Reason:** ${p.reason} | ${format(utcToZonedTime(p.actionTime, message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone })}`);
-
+            const formatted = pages[page].map(p => `**#${p.id}** | **${p.type.toTitleCase()}** | **Reason:** ${p.reason} | ${format(utcToZonedTime(p.actionTime, message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone })}`); 
+            
             // Build the history embed
             const embed = new MessageEmbed()
                 .setAuthor(`Punishment History for ${member.user?.tag ?? member.tag}`, (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }))
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(formatted.join("\n"))
                 .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
-
+            
             message.reply({ embeds: [embed] });
         } else if (!isNaN(args[0])) {
-
+            
             // We are now presuming the number provided is a Case ID...
             // Lookup the case in the punishments DB
             const punishment = await punishments.findOne({ guild: message.guild.id, id: args[0] });
@@ -114,10 +114,10 @@ module.exports = {
             // If the punishment doesn't exist, then return an error
             if (!punishment)
                 return message.errorReply("A punishment with that ID was not found!");
-
+            
             const usr = await getUser(bot, message, punishment.user),
             mod = await getUser(bot, message, punishment.moderator);
-
+            
             // Build the embed
             // "mute" is only added when the punishment type is a mute (Semi-obvious tbh...)
             const embed = new MessageEmbed()
@@ -130,17 +130,17 @@ module.exports = {
                 .setTimestamp(punishment.actionTime)
                 .setThumbnail(usr.displayAvatarURL({ format: "png", dynamic: true }))
                 .setFooter(`Requested by ${message.author.tag}`);
-
+            
             // Send the embed
             message.reply({ embeds: [embed] });
-
+            
         } else {
             // Try and fetch a guild member from args[0]
             const member = await getMember(message, args[0], false) || await getUser(bot, message, args[0], false);
 
             if (!member)
                 return message.errorReply("You did not specify a valid member!");
-
+            
             // Fetch all punishments from this guild for this user
             const entries = await punishments.find({ guild: message.guild.id, user: member.id });
 
@@ -166,24 +166,24 @@ module.exports = {
             // Check if the user specified a valid page
             if (!pages[page])
                 return message.errorReply("You didn't specify a valid page!");
-
+            
             // Format the cases
             const formatted = pages[page].map(p => `**#${p.id}** | **${p.type.toTitleCase()}** | **Reason:** ${p.reason} | ${format(utcToZonedTime(p.actionTime, message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone })}`);
-
+            
             // Build the history embed
             const embed = new MessageEmbed()
                 .setAuthor(`Punishment History for ${member.user?.tag ?? member.tag}`, (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }))
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(formatted.join("\n"))
                 .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
-
+            
             message.reply({ embeds: [embed] });
         }
 
     },
 
     run_interaction: async (bot, interaction) => {
-
+        
         if (interaction.options.get("list")) {
             // Try and fetch a guild member from args[0]
             const member = interaction.options.get("list").options.find(o => o.name === "user"),
@@ -191,14 +191,14 @@ module.exports = {
 
             // If there was no member returned, then send an error
             if (!member)
-                return interaction.error({ content: "I don't recognise a user with that ID!", ephemeral: true });
+                return interaction.error("I couldn't find a user with that ID!");
 
             // Fetch all punishments from this guild for this user
             const entries = await punishments.find({ guild: interaction.guild.id, user: member.user.id });
 
             // If the returned array is empty, then send an error
             if (entries.length === 0)
-                return interaction.error({ content: "That user doesn't have any punishments!", ephemeral: true });
+                return interaction.error("This user doesn't have any punishments recorded!");
 
             // Page variables
             const pages = [];
@@ -213,37 +213,37 @@ module.exports = {
             }
 
             // If args[0] is a number set it as the page
-            if (int)
+            if (int) 
                 page = int.value -= 1;
 
             // Check if the user specified a valid page
             if (!pages[page])
-                return interaction.error({ content: "You didn't specify a valid page!", ephemeral: true });
-
+                return interaction.error("You didn't specify a valid page!");
+            
             // Format the cases
             const formatted = pages[page].map(p => `**#${p.id}** | **${p.type.toTitleCase()}** | **Reason:** ${p.reason} | ${format(utcToZonedTime(p.actionTime, interaction.settings.general.timezone), "PPp (z)", { timeZone: interaction.settings.general.timezone })}`);
-
+            
             // Build the history embed
             const embed = new MessageEmbed()
                 .setAuthor(`Punishment History for ${member.user.tag}`, member.user.displayAvatarURL({ format: 'png', dynamic: true }))
                 .setColor(member.member?.displayColor ?? bot.config.general.embedColor)
                 .setDescription(formatted.join("\n"))
                 .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
-
+            
             interaction.reply({ embeds: [embed] });
         } else if (interaction.options.get("info")) {
             const int = interaction.options.get("info")?.options?.find(o => o.name === "case");
-
+            
             // Lookup the case in the punishments DB
             const punishment = await punishments.findOne({ guild: interaction.guild.id, id: int.value});
 
             // If the punishment doesn't exist, then return an error
             if (!punishment)
-                return interaction.error({content: "A punishment with that ID was not found!", ephemeral: true});
-
+                return interaction.error("A punishment with that ID was not found!");
+            
             const usr = await getUser(bot, interaction, punishment.user),
             mod = await getUser(bot, interaction, punishment.moderator);
-
+            
             // Build the embed
             // "mute" is only added when the punishment type is a mute (Semi-obvious tbh...)
             const embed = new MessageEmbed()
@@ -256,10 +256,10 @@ module.exports = {
                 .setTimestamp(punishment.actionTime)
                 .setThumbnail(usr.displayAvatarURL({ format: "png", dynamic: true }))
                 .setFooter(`Requested by ${interaction.member.user.tag}`);
-
+            
             // Send the embed
             interaction.reply({ embeds: [embed] });
         }
-
+        
     }
 };
