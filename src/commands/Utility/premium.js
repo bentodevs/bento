@@ -1,3 +1,7 @@
+const { formatDistance } = require("date-fns");
+const premiumGuild = require("../../database/models/premiumGuild");
+const { getUser } = require("../../modules/functions/getters");
+
 module.exports = {
     info: {
         name: "premium",
@@ -28,8 +32,14 @@ module.exports = {
 
     run: async (bot, message) => {
 
-        // Send a message
-        message.reply(`${bot.config.emojis.confirmation} Premium is currently free and enabled for all users during the **beta** of R2-D2. Once the bot is ready to come out of its beta stage, premium will be a paid subscription.`);
+        const premiumSearch = await premiumGuild.findOne({ _id: message.guild.id, active: true });
+
+        if (!premiumSearch)
+            return message.errorReply("This guild doesn't currently have an active R2-D2 Premium subscription! You can purchase access to R2-D2 premium on our website: https://r2-d2.dev/");
+
+        const user = await getUser(bot, message, premiumSearch.activatedBy, false);
+
+        message.confirmationReply(`This server has an active premium subscription provided by **${user.tag}** which ${premiumSearch.expiry == "forever" ? "**does not expire**" : `expires in **${formatDistance(Date.now(), parseInt(premiumSearch.expiry))}**`}!`);
 
     }
 };
