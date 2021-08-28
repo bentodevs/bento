@@ -76,6 +76,14 @@ const config = {
         host: "localhost",
         port: "27017",
         database: "R2-D2"
+    },
+
+    // MySQL Info
+    mclink: {
+        host: "",
+        port: 3306,
+        username: "",
+        password: ""
     }
 
 };
