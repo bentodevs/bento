@@ -40,10 +40,10 @@
     "flip": "^1.0.0",
     "https-proxy-agent": "^5.0.0",
     "iso-639-1": "^2.1.9",
-    "mongoose": "^5.13.8",
+    "mongoose": "^6.0.2",
     "node-canvas": "^2.7.0",
     "node-fetch": "^2.6.1",
-    "ora": "^5.4.1",
+    "ora": "^6.0.0",
     "pokedex-promise-v2": "^3.3.2",
     "xml-js": "^1.6.11"
   },
