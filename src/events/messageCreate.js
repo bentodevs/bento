@@ -51,7 +51,7 @@ module.exports = async (bot, message) => {
                 message.delete();
         }
     }
-    
+
     // If the message was sent in a guild, then check it against the automod
     if (message.guild && !message.author.bot) {
         await checkMessage(message, settings);
@@ -70,14 +70,14 @@ module.exports = async (bot, message) => {
     // Return if the message doesn't start with the prefix
     if (message.content.indexOf(prefix) !== 0) {
         // If the message is in a guild run the level check first
-        if (message.guild) 
+        if (message.guild && !message.author.bot)
             await checkLevel(message);
-        
+
         // Return
         return;
     }
     // Cache the guild member if they aren't cached
-    if (message.guild && !message.member) 
+    if (message.guild && !message.member)
         await message.guild.members.fetch(message.author);
 
     // Get the args and the command/tag.
@@ -92,6 +92,14 @@ module.exports = async (bot, message) => {
             return message.delete();
     }
 
+    // Return if the user is a bot
+    if (message.author.bot)
+        return;
+
+    if (message?.guild) {
+        // Run the level check
+        await checkLevel(message);
+    }
 
     // Import message functions
     require("../modules/functions/messages")(message);
@@ -172,7 +180,7 @@ module.exports = async (bot, message) => {
             **Message ID:** [${message.id}](${message.url})
             **Command:** ${cmd.info.name}
             **Message:** ${message.content}
-            
+
             **Error:**\`\`\`${err.stack}\`\`\``)
             .setColor("#FF2D00");
 
@@ -185,7 +193,7 @@ module.exports = async (bot, message) => {
 
         // Send an error message to the user
         message.errorReply(stripIndents`An error occurred while running the command: \`${err}\`
-        
+
         ${bot.config.emojis.url} If this issue persists please report it in our discord: ${bot.config.logging.errors.url}`);
     }
 
