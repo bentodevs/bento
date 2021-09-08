@@ -177,8 +177,6 @@ exports.getRankCard = async (user, data, guild) => {
     // Create circle for the avatar
     ctx.beginPath();
     ctx.arc(125, 125, 75, 0, Math.PI * 2, true);
-    ctx.lineWidth = 4;
-    ctx.stroke();
     ctx.closePath();
 
     // Save & Clip
@@ -188,6 +186,10 @@ exports.getRankCard = async (user, data, guild) => {
     // Draw the avatar & restore
     ctx.drawImage(avatar, 50, 50, 150, 150);
     ctx.restore();
+
+    // Draw a circle around the avatar
+    ctx.lineWidth = 4;
+    ctx.stroke();
 
     // Draw the users status
     ctx.beginPath();
