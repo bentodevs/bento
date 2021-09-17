@@ -34,7 +34,7 @@
     "chalk": "^4.1.0",
     "color-thief-node": "^1.0.4",
     "common-tags": "^1.8.0",
-    "date-fns": "^2.22.1",
+    "date-fns": "^2.24.0",
     "date-fns-tz": "^1.1.4",
     "discord.js": "^13.1.0",
     "flip": "^1.0.0",
