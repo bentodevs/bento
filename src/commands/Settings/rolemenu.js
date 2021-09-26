@@ -153,7 +153,7 @@ module.exports = {
                 .setDescription(desc);
 
             // Send the embed
-            const msg = await channel.send({ embed: [embed] });
+            const msg = await channel.send({ embeds: [embed] });
 
             // Add the reactions to the embed
             for (const i of array) {
