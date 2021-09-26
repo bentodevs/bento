@@ -17,13 +17,14 @@ module.exports = {
         description: "Configure the messages that are sent when Users join/leave the server",
         category: "Settings",
         info: `Adding \`off\` after any option will clear it's data
-        
+
         **__Values usable in the join, leave & DM messages__**
         \`{id}\` - The member's ID
         \`{tag}\` - The member's Tag (E.g. Waitrose#0001)
         \`{member}\` - Mentions the member who has just joined
         \`{server}\` - The Server's name
-        \`{count}\` - The member's guild member number (E.g. The number in which they joined at)`,
+        \`{formattedCount}\` - The member's guild member number, but formatted to be "1st", "2nd", etc. (E.g. The number in which they joined at)
+        \`{count}\` - The member's guild member number with no formatting (E.g. The number in which they joined at)`,
         options: [
             "`channel <channel>` - Sets the channel the join/leave message should be sent to",
             "`join-msg <message>` - The message to send when a user joins the server",
@@ -58,7 +59,7 @@ module.exports = {
 
             // Build the message content
             const msg = stripIndents`**__Welcome Settings__**
-            
+
             :books: The Welcome channel is ${message.settings.welcome.channel ? `currently set to ${message.guild.channels.cache.get(message.settings.welcome.channel)}` : "not currently set"}
             :wave: The welcome message is ${message.settings.welcome.joinMessage ? `currently set to: ${message.settings.welcome.joinMessage}` : "not currently set"}
             :door: The leave message is ${message.settings.welcome.leaveMessage ? `currently set to: ${message.settings.welcome.leaveMessage}` : "not currently set"}
