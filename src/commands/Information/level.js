@@ -22,7 +22,7 @@ module.exports = {
     },
     perms: {
         permission: ["@everyone"],
-        type: "discord",
+        type: "role",
         self: ["EMBED_LINKS"]
     },
     opts: {

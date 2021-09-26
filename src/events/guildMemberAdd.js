@@ -1,5 +1,6 @@
 const { intervalToDuration, formatDuration } = require("date-fns");
 const { getSettings } = require("../database/mongo");
+const { getOrdinalSuffix } = require("../modules/functions/misc");
 
 module.exports = async (bot, member) => {
     // If the member is a partial fetch it
@@ -30,7 +31,7 @@ module.exports = async (bot, member) => {
     // If bot joining is disabled & the user is a bot then kick them
     if (!settings.moderation.bots && member.user.bots)
         return member.kick("Bot joining is currently disabled!");
-    
+
     // If the user is in a pending state (Membership screening), then return
     if (member.pending)
         return;
@@ -45,11 +46,12 @@ module.exports = async (bot, member) => {
             .replace("{tag}", member.user.tag)
             .replace("{member}", member)
             .replace("{server}", member.guild.name)
+            .replace("{formattedCount}", await member.guild.members.fetch().then(a => a.size + getOrdinalSuffix(a.size)))
             .replace("{count}", await member.guild.members.fetch().then(a => a.size));
-        
+
         welcomeChannel.send(msg);
     }
-    
+
     // If there is a DM message set in the DB, then send it to the user. Silently catch any issues.
     if (settings.welcome.userMessage) {
         const msg = settings.welcome.userMessage
@@ -57,11 +59,12 @@ module.exports = async (bot, member) => {
             .replace("{tag}", member.user.tag)
             .replace("{member}", member)
             .replace("{server}", member.guild.name)
+            .replace("{formattedCount}", await member.guild.members.fetch().then(a => a.size + getOrdinalSuffix(a.size)))
             .replace("{count}", await member.guild.members.fetch().then(a => a.size));
 
         member.send(msg).catch(() => { });
     }
-    
+
     // Check if there are any roles to auto-assign
     if (settings.roles.auto?.length) {
         // Define the roles array
@@ -71,7 +74,7 @@ module.exports = async (bot, member) => {
         for (const data of settings.roles.auto) {
             // Grab the role
             const role = member.guild.roles.cache.get(data);
-                    
+
             // If the role exists push it to the array, if it doesn't exists remove it from the db
             if (role) {
                 roles.push(role);
