@@ -606,3 +606,14 @@ exports.getLastFMUserHistory = async (user) => {
         }
     });
 };
+
+/**
+ * Get the ordinal suffix for a number (E.g. "st", "nd", "rd", "th")
+ *
+ * @param {Number} num The number to get the suffix for
+ *
+ * @returns {String} The ordinal suffix for the supplied number
+ */
+exports.getOrdinalSuffix = function (num) {
+    return ["st", "nd", "rd"][((num + 90) % 100 - 10) % 10 - 1] || "th";
+};
