@@ -83,6 +83,14 @@ const config = {
         port: 3306,
         username: "",
         password: ""
+    },
+
+    // RabbitMQ Info
+    rabbit: {
+        host: "",
+        port: "",
+        username: "",
+        password: ""
     }
 
 };
