@@ -8,7 +8,8 @@ mysql = require("mysql");
 
 // Import handlers
 const commands = require("./modules/handlers/command"),
-events = require("./modules/handlers/event");
+    events = require("./modules/handlers/event"),
+    rabbit = require("./modules/handlers/rabbit");
 
 // Create the bot client
 const bot = new Client({
@@ -98,7 +99,6 @@ const init = async () => {
 
     // Connect to the mongo DB
     bot.mongo = await connect(getMongooseURL(bot.config.mongo), {
-        useFindAndModify: false,
         useNewUrlParser: true,
         useUnifiedTopology: true
     }).catch(err => {
@@ -120,6 +120,17 @@ const init = async () => {
     mysqlMsg.stopAndPersist({
         symbol: "✔️",
         text: " Successfully connected to the MySQL database!"
+    });
+
+    // Send the mysql message
+    const rabbitMsg = ora("Connecting to RabbitMQ...").start();
+
+    // Connect to the MySQL DB
+    bot.rabbit = rabbit.init(bot);
+
+    rabbitMsg.stopAndPersist({
+        symbol: "✔️",
+        text: " Successfully connected to RabbitMQ!"
     });
 
     // Send the login message
