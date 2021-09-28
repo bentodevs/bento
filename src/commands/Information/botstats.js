@@ -44,13 +44,13 @@ module.exports = {
             Uptime: **${uptime}**
             Database State: ${connection.readyState === 1 ? `${bot.config.emojis.online} Healthy` : `${bot.config.emojis.dnd} Unhealthy`}
             Commands: **${bot.commands.size}**
-            
+
             Memory Usage: **${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB / ${(require("os").totalmem() / 1024 / 1024) > 1024 ? `${(require("os").totalmem() / 1024 / 1024 / 1024).toFixed(2)} GB` : `${(require("os").totalmem() / 1024 / 1024).toFixed(2)}`}** | Ping: **${bot.ws.ping}ms**
             **${bot.guilds.cache.size.toLocaleString()}** servers | **${bot.channels.cache.size.toLocaleString()}** channels | **${bot.users.cache.size.toLocaleString()}** users
-            
+
             **Dependencies**
             ${bot.config.emojis.djs} Discord.js **v${version}** | ${bot.config.emojis.nodejs} Node.js **${process.version}**`);
-        
+
         const comps = new MessageActionRow()
             .addComponents(
                 new MessageButton()
@@ -60,9 +60,9 @@ module.exports = {
             )
             .addComponents(
                 new MessageButton()
-                    .setURL(`https://wiki.r2-d2.dev`)
+                    .setURL(bot.config.logging.errors.url)
                     .setStyle("LINK")
-                    .setLabel("Wiki")
+                    .setLabel("Support Server")
             )
             .addComponents(
                 new MessageButton()
@@ -73,6 +73,6 @@ module.exports = {
 
         // Send the embed
         message.reply({ embeds: [embed], components: [comps] });
-        
+
     }
 };
