@@ -40,7 +40,7 @@ module.exports = async (bot, reaction, user) => {
         // If the role wasn't found or the user is on cooldown return
         if (!role)
             return;
-        if (getReactCooldown(user, reaction.message.guild.id))
+        if (getReactCooldown(bot, user, reaction.message.guild.id))
             return;
 
         // If the user has the role remove it, otherwise add it
