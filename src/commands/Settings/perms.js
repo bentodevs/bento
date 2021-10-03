@@ -144,7 +144,7 @@ module.exports = {
                     name: "discord_permission",
                     type: "STRING",
                     description: "Specify a Discord Permission (run help for this category to view a list of permissions).",
-                    required: true 
+                    required: true
                 }]
             }, {
                 name: "default",
@@ -358,11 +358,7 @@ module.exports = {
     run_interaction: async (bot, interaction) => {
 
         // Get all the options
-        const data = interaction.options.get("command") || interaction.options.get("category"),
-        view = data.options.get("view"),
-        rl = data.options.get("role"),
-        discord = data.options.get("discord"),
-        dflt = data.options.get("default");
+        const data = interaction.options.getSubcommand();
 
         // Get all the command categories
         const getCategories = bot.commands.map(c => c.info.category.toLowerCase()),
@@ -371,7 +367,7 @@ module.exports = {
         });
 
         // Get the command or category
-        const opt = data.options.first().options.get("command")?.value || data.options.first().options.get("category")?.value,
+        const opt = interaction.options.get("command")?.value || interaction.options.get("category")?.value,
         command = bot.commands.get(opt) || bot.commands.get(bot.aliases.get(opt)),
         category = categories[categories.indexOf(opt)];
 
@@ -385,9 +381,9 @@ module.exports = {
         if ((!command && !category) || (command?.info.category.toLowerCase() == "dev" || category == "dev"))
             return interaction.error(`You didn't specify a valid ${command ? "command" : "category"} !`);
 
-        if (view) {
+        if (data == "view") {
             // Get the category or command permission
-            const checkCat = interaction.permissions.categories[command.info.category.toLowerCase()]?.permission && JSON.stringify(interaction.permissions.commands[command.info.name]) == JSON.stringify(filterSelfPerms(command?.perms)),
+            const checkCat = interaction.permissions.categories[command?.info.category.toLowerCase()]?.permission && JSON.stringify(interaction.permissions.commands[command.info.name]) == JSON.stringify(filterSelfPerms(command?.perms)),
             permission = checkCat ? interaction.permissions.categories[command.info.category.toLowerCase()] : interaction.permissions.commands[command.info.name];
 
             // Define the perm var
@@ -459,15 +455,15 @@ module.exports = {
 
             // Send the message
             interaction.reply(perm);
-        } else if (rl) {
+        } else if (data == "role") {
             // Get the role
-            const role = rl.options.get("role").role;
+            const role = interaction.options.get("role").role;
 
             // If no role was specified return an error
             if (!role)
                 return interaction.error("You didn't specify a valid role!");
 
-            if (rl.options.get("hierarchic")?.value) {
+            if (interaction.options.get("hierarchic")?.value) {
                 // If the permission is already set to the role specified return an error
                 if (role.id == perm?.permission && perm?.hierarchic)
                     return interaction.error(`The ${type} is already set to the permission you specified!`);
@@ -525,9 +521,9 @@ module.exports = {
                     interaction.confirmation(`Successfully added the ${role} role to the permissions for the \`${target}\` ${type}!`);
                 }
             }
-        } else if (discord) {
+        } else if (data == "discord") {
             // Get the specified permission
-            const permission = discord.options.get("discord_permission").value.toUpperCase();
+            const permission = interaction.options.get("discord_permission").value.toUpperCase();
 
             // Build the button
             const row = new MessageActionRow()
@@ -555,7 +551,7 @@ module.exports = {
 
             // Send a confirmation message
             interaction.confirmation(`The permission for the \`${target}\` ${type} has been set to \`${permission}\`!`);
-        } else if (dflt) {
+        } else if (data == "default") {
             // If the permission is already set to default return an error
             if (!perm?.permission || JSON.stringify(perm) == JSON.stringify(command ? filterSelfPerms(command.perms) : null))
                 return interaction.error(`The ${type} is already set to the default permission!`);
@@ -568,6 +564,6 @@ module.exports = {
             // Send a confirmation message
             interaction.confirmation(`The permission for the \`${target}\` ${type} has been set to the default permission!`);
         }
-        
+
     }
 };
