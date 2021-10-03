@@ -12,7 +12,7 @@ module.exports = async (bot, oldUser, newUser) => {
 
     // Check if the user changed their name
     if (oldUser.username !== newUser.username) {
-        
+
         // Check if the user is already in the database
         if (!await users.findOne({ _id: newUser.id })) {
             // If the user wasn't in the database create a new database object
@@ -30,7 +30,7 @@ module.exports = async (bot, oldUser, newUser) => {
             });
         } else {
             // If the user doesn't want their username tracked, then return
-            if (!await users.findOne({ _id: newUser.id }).track.usernames)
+            if (!await users.findOne({ _id: newUser.id })?.track?.usernames)
                 return;
 
             // If the user was in the database push the new username to the database
