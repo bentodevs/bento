@@ -617,3 +617,39 @@ exports.getLastFMUserHistory = async (user) => {
 exports.getOrdinalSuffix = function (num) {
     return ["st", "nd", "rd"][((num + 90) % 100 - 10) % 10 - 1] || "th";
 };
+
+/**
+ * Get the reaction cooldown
+ * 
+ * @param {Object} bot The client which is used to transact between this app & Discord
+ * @param {User} user The user object
+ * @param {String} guild The guild id strong
+ *  
+ * @returns {Boolean} Returns false if the user isn't on cooldown otherwise returns true
+ */
+exports.getReactCooldown = (bot, user, guild) => {
+    // Check if the user is a bot dev
+    if (config.general.devs.includes(user.id))
+        return false;
+
+    // Check if the user is in the collection
+    if (bot.cooldowns.has(`${guild}-${user.id}-reaction`)) {
+        // Grab the users data
+        const usr = bot.cooldowns.get(`${guild}-${user.id}-reaction`);
+
+        // If the user is on count 10 return true
+        if (usr.count >= 10)
+            return true;
+
+        // Update the users count
+        bot.cooldowns.set(`${guild}-${user.id}-reaction`, { count: usr.count + 1 });
+
+        // Return false
+        return false;
+    } else {
+        // Set the users data
+        bot.cooldowns.set(`${guild}-${user.id}-reaction`, { count: 1 });
+        // Remove the user data after 15 seconds
+        setTimeout(() => { bot.cooldowns.delete(`${guild}-${user.id}-reaction`); }, 15000);
+    }
+};

@@ -134,7 +134,7 @@ module.exports = {
 
                 // Set the timezone to default
                 await settings.findOneAndUpdate({ _id: message.guild.id }, {
-                    "general.timezone": "UTC" 
+                    "general.timezone": "UTC"
                 });
 
                 // Return a confirmation
@@ -175,14 +175,10 @@ module.exports = {
 
     run_interaction: async (bot, interaction) => {
 
-        // Get the options
-        const view = interaction.options.get("view"),
-        perm_msgs = interaction.options.get("perm-msgs"),
-        perm_dms = interaction.options.get("perm-dms"),
-        disabled_msgs = interaction.options.get("disabled-msgs"),
-        tz = interaction.options.get("timezone");
+        // Get the subcommand used
+        const sub = interaction.options.getSubcommand();
 
-        if (view) {
+        if (sub == "view") {
             // Build the embed
             const embed = new MessageEmbed()
                 .setAuthor(`Guild Settings for ${interaction.guild.name}`, interaction.guild.iconURL({ format: "png", dynamic: true }))
@@ -195,7 +191,7 @@ module.exports = {
 
             // Send the embed
             interaction.reply({ embeds: [embed] });
-        } else if (perm_msgs) {
+        } else if (sub == "perm-msgs") {
             // Get the DB query
             const toUpdate = { "general.permission_message": interaction.settings.general.permission_message ? false : true };
 
@@ -204,7 +200,7 @@ module.exports = {
 
             // Send a confirmation message
             interaction.confirmation(`The permission messages have been **${interaction.settings.general.permission_message ? "disabled" : "enabled"}**!`);
-        } else if (perm_dms) {
+        } else if (sub == "perm-dms") {
             // Get the DB query
             const toUpdate = { "general.permission_dms": interaction.settings.general.permission_dms ? false : true };
 
@@ -213,7 +209,7 @@ module.exports = {
 
             // Send a confirmation message
             interaction.confirmation(`The permission dm's have been **${interaction.settings.general.permission_dms ? "disabled" : "enabled"}**!`);
-        } else if (disabled_msgs) {
+        } else if (sub == "disabled-msgs") {
             // Get the DB query
             const toUpdate = { "general.disabled_message": interaction.settings.general.disabled_message ? false : true };
 
@@ -222,16 +218,16 @@ module.exports = {
 
             // Send a confirmation message
             interaction.confirmation(`The disabled messages have been **${interaction.settings.general.disabled_message ? "disabled" : "enabled"}**!`);
-        } else if (tz) {
+        } else if (sub == "timezone") {
             // Set the timezone back to default
-            if (tz.options.get("timezone").value.toLowerCase() == "default") {
+            if (interaction.options.get("timezone").value.toLowerCase() == "default") {
                 // If the timezone is already set to default return an error
                 if (interaction.settings.general.timezone == "UTC")
                     return interaction.error("The timezone of this guild is already set to the default!");
 
                 // Set the timezone to default
                 await settings.findOneAndUpdate({ _id: interaction.guild.id }, {
-                    "general.timezone": "UTC" 
+                    "general.timezone": "UTC"
                 });
 
                 // Return a confirmation
@@ -239,7 +235,7 @@ module.exports = {
             }
 
             // Try to find the specified timezone
-            const timezone = timezones.find(a => a.tzCode.toLowerCase() == tz.options.get("timezone").value.toLowerCase());
+            const timezone = timezones.find(a => a.tzCode.toLowerCase() == interaction.options.get("timezone").value.toLowerCase());
             // Build the button
             const row = new MessageActionRow()
                 .addComponents(

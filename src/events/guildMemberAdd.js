@@ -79,7 +79,7 @@ module.exports = async (bot, member) => {
             if (role) {
                 roles.push(role);
             } else {
-                await bot.data.settings.findOneAndUpdate({ id: member.guild.id }, {
+                await settings.findOneAndUpdate({ id: member.guild.id }, {
                     $pull: {
                         "auto.roles": data
                     }

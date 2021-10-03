@@ -194,7 +194,10 @@ module.exports = {
 
     run_interaction: async (bot, interaction) => {
 
-        if (interaction.options.get("list")) {
+        // Get the subcommand used
+        const sub = interaction.options.getSubcommand();
+
+        if (sub == "list") {
             // Get the remind data
             const data = await reminders.findOne({ _id: interaction.user.id });
 
@@ -212,10 +215,10 @@ module.exports = {
 
             // Send the list of reminders
             interaction.reply({ content: msg, ephemeral: true });
-        } else if (interaction.options.get("remove")) {
+        } else if (sub == "remove") {
             // Get the remind data and the reminder id
             const data = await reminders.findOne({ _id: interaction.user.id }),
-            reminder = interaction.options.get("remove").options.get("id").value;
+            reminder = interaction.options.get("id").value;
 
             // If the user has no reminders return an error
             if (!data?.reminders?.length)
@@ -242,12 +245,11 @@ module.exports = {
             }
 
             interaction.confirmation(`Successfully removed the reminder with the ID: \`${reminder}\`!`);
-        } else if (interaction.options.get("create")) {
-            const options = interaction.options.get("create").options;
+        } else if (sub == "create") {
 
             // Get the time, reminder, current time and remind data
-            const time = parseTime(options.get("time").value, "ms"),
-            reminder = options.get("reminder").value,
+            const time = parseTime(interaction.options.get("time").value, "ms"),
+            reminder = interaction.options.get("reminder").value,
             created = Date.now(),
             data = await reminders.findOne({ _id: interaction.user.id });
 

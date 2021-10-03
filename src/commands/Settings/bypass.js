@@ -116,9 +116,9 @@ module.exports = {
             const hierarchic = args.join(" ").toLowerCase().includes("+") && (role.name.match(/\+/g) || []).length < (args.join("").match(/\+/g) || []).length;
 
             // Get the DB query
-            const toUpdate = hierarchic 
+            const toUpdate = hierarchic
                 ? message.settings.blacklist.bypass.hierarchicRoleId == role.id
-                    ? { "blacklist.bypass.hierarchicRoleId": null } 
+                    ? { "blacklist.bypass.hierarchicRoleId": null }
                     : { "blacklist.bypass.hierarchicRoleId": role.id }
                 : message.settings.blacklist.bypass.roles.includes(role.id)
                     ? { $pull: { "blacklist.bypass.roles": role.id }}
@@ -128,7 +128,7 @@ module.exports = {
             await settings.findOneAndUpdate({ _id: message.guild.id }, toUpdate);
 
             // Send the confirmation message
-            hierarchic 
+            hierarchic
                 ? message.confirmationReply(`The ${role} role and up will ${message.settings.blacklist.bypass.hierarchicRoleId == role.id ? "no longer" : "now"} bypass the command blacklist.`)
                 : message.confirmationReply(`Successfully ${message.settings.blacklist.bypass.roles.includes(role.id) ? "removed" : "added"} the ${role} role ${message.settings.blacklist.bypass.roles.includes(role.id) ? "from" : "to"} the bypass roles.`);
         }
@@ -136,11 +136,11 @@ module.exports = {
     },
 
     run_interaction: async (bot, interaction) => {
-        
-        const view = interaction.options.get("view"),
-        role = interaction.options.get("role");
 
-        if (view) {
+        // Get the subcommand used
+        const sub = interaction.options.getSubcommand();
+
+        if (sub == "view") {
             // If no bypass roles are set return an error
             if (!interaction.settings.blacklist.bypass.hierarchicRoleId && !interaction.settings.blacklist.bypass.roles.length)
                 return interaction.error("Nothing other than users with the Discord Permission `ADMINISTRATOR` currently bypass the command blacklist.");
@@ -188,16 +188,16 @@ module.exports = {
 
             // Send the message
             interaction.reply(msg);
-        } else if (role) {
+        } else if (sub == "role") {
             // Get the role
-            const rl = role.options.get("role").role;
+            const rl = interaction.options.get("role").role;
 
             // If the role is higher than or equal to the users highest role return an error
             if (interaction.member.roles.highest.position <= rl.position)
                 return interaction.error("That role is higher than or equal to your highest role!");
 
             // Get the DB query
-            const toUpdate = role.options.get("hierarchic")?.value 
+            const toUpdate = interaction.options.get("hierarchic")?.value
                 ? interaction.settings.blacklist.bypass.hierarchicRoleId == rl.id
                     ? { "blacklist.bypass.hierarchicRoleId": null }
                     : { "blacklist.bypass.hierarchicRoleId": rl.id }
@@ -209,7 +209,7 @@ module.exports = {
             await settings.findOneAndUpdate({ _id: interaction.guild.id }, toUpdate);
 
             // Send the confirmation message
-            role.options.get("hierarchic")?.value 
+            interaction.options.get("hierarchic")?.value
                 ? interaction.confirmation(`The ${rl} role and up will ${interaction.settings.blacklist.bypass.hierarchicRoleId == rl.id ? "no longer" : "now"} bypass the command blacklist.`)
                 : interaction.confirmation(`Successfully ${interaction.settings.blacklist.bypass.roles.includes(rl.id) ? "removed" : "added"} the ${rl} role ${interaction.settings.blacklist.bypass.roles.includes(rl.id) ? "from" : "to"} the bypass roles.`);
         }

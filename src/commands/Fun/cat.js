@@ -32,16 +32,16 @@ module.exports = {
     run: async (bot, message) => {
 
         // Fetch a random cat image and convert the response into a buffer
-        const req = await fetch("https://cataas.com/cat"),
-        buffer = await req.buffer();
+        const req = await fetch("https://aws.random.cat/meow"),
+        json = await req.json();
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setImage("attachment://cat.png")
+            .setImage(json.file)
             .setColor(message.member?.displayColor || bot.config.general.embedColor);
 
         // Send the embed
-        message.reply({ embeds: [embed], files: [new MessageAttachment(buffer, "cat.png")] });
+        message.reply({ embeds: [embed]});
 
     }
 };

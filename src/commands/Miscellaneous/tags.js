@@ -19,12 +19,12 @@ module.exports = {
         description: "Manage tags for this guild.",
         category: "Miscellaneous",
         info: `Placeholders *(these get replaced with actual values by the bot)*
-        
+
         \`{author}\` - Tags the person who sends the tag.
         \`{mention}\` - Tags the person mentioned.
         \`{prefix}\` - The bots prefix for this guild.
         \`{guild}\` - The name of this guild.
-        
+
         Add \`-e\` to the message to make the output an embed.
         You can set up to 50 tags per guild.`,
         options: []
@@ -93,7 +93,7 @@ module.exports = {
 
             // Sort the tags
             const sorted = guildTags.sort((a, b) => b.lastModified - a.lastModified);
-            
+
             // Page vars
             const pages = [];
             let page = 0;
@@ -119,7 +119,7 @@ module.exports = {
                 .setFooter(`${guildTags.length} total tags | Page ${page + 1} of ${pages.length}`)
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(description.join("\n"));
-            
+
             // Send the embed
             message.reply({ embeds: [embed] });
         } else if (!args[1]) {
@@ -136,7 +136,7 @@ module.exports = {
                 .setTitle(`Tag: ${tag.name}`)
                 .setDescription(`**Tag Name:** \`${tag.name}\`
                 **Last Modified:** ${format(tag.lastModified, "PPp")}
-                
+
                 Content: \`\`\`${tag.content}\`\`\``)
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setThumbnail("https://i.imgur.com/LCbKsrE.png");
@@ -198,17 +198,20 @@ module.exports = {
 
     run_interaction: async (bot, interaction) => {
 
+        // Get the subcommand used
+        const sub = interaction.options.getSubcommand();
+
         // Get all the tags for this guild
         const guildTags = await tags.find({ guild: interaction.guild.id });
 
-        if (interaction.options.get("list")) {
+        if (sub == "list") {
             // If the guild doesn't have any tags return an error
             if (!guildTags.length)
                 return interaction.error("This guild doesn't have any tags!");
 
             // Sort the tags
             const sorted = guildTags.sort((a, b) => b.lastModified - a.lastModified);
-            
+
             // Page vars
             const pages = [];
             let page = 0;
@@ -219,8 +222,8 @@ module.exports = {
             }
 
             // If the page option is there set it as the page
-            if (interaction.options.get("list").options?.get("page")?.value)
-                page = interaction.options.get("list").options.get("page").value -= 1;
+            if (interaction.options?.get("page")?.value)
+                page = interaction.options.get("page").value -= 1;
             // If the page doesn't exist return an error
             if (!pages[page])
                 return interaction.error("You didn't specify a valid page!");
@@ -234,12 +237,12 @@ module.exports = {
                 .setFooter(`${guildTags.length} total tags | Page ${page + 1} of ${pages.length}`)
                 .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
                 .setDescription(description.join("\n"));
-            
+
             // Send the embed
             interaction.reply({ embeds: [embed] });
-        } else if (interaction.options.get("delete")) {
+        } else if (sub == "delete") {
             // Get the tag name and try to find the tag in the database
-            const name = interaction.options.get("delete").options.get("name").value,
+            const name = interaction.options.get("name").value,
             tag = await tags.findOne({ guild: interaction.guild.id, name: name });
 
             // If the tag wasn't found return an error
@@ -251,15 +254,15 @@ module.exports = {
 
             // Send a confirmation message
             interaction.confirmation(`The tag **${name}** was successfully deleted!`);
-        } else if (interaction.options.get("create")) {
+        } else if (sub == "create") {
             // If the guild is at the max of 50 tags return an error
             if (guildTags.size >= 50)
                 return interaction.error("This guild has reached the limit of 50 tags!");
 
             // Grab the tag name, check if a tag with the name already exists and grab the tag content
-            const name = interaction.options.get("create").options.get("name").value,
+            const name = interaction.options.get("name").value,
             tag = await tags.findOne({ guild: interaction.guild.id, name: name}),
-            content = interaction.options.get("create").options.get("content").value;
+            content = interaction.options.get("content").value;
 
             // Check if the tag name has any spaces
             if (/ /g.test(name))
