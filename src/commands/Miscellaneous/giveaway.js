@@ -163,7 +163,7 @@ module.exports = {
 
             // Send the channel message
             await message.channel.send(stripIndents`🎉 Alright! Let's setup a giveaway! First, where would you like the giveaway to start?
-            
+
             \`Please type the name of a channel in this guild.\``);
 
             // Get the channel
@@ -188,7 +188,7 @@ module.exports = {
 
             // Send the duration message
             await message.channel.send(stripIndents`🎉 Awesome! The giveaway will be hosted in ${channel}! Now, how long would you like the giveaway to last?
-            
+
             \`Please enter the duration of the giveaway (Example: 1d2h equates to 1 day 2 hours)\``);
 
             // Get the giveaway duration
@@ -216,7 +216,7 @@ module.exports = {
 
             // Send the winners message
             await message.channel.send(stripIndents`🎉 Cool, the giveaway will run for **${formatDuration(intervalToDuration({ start: 0, end: time }), { delimiter: "," })}**. So, how many winners should there be?
-            
+
             \`Please enter a number of winners, between 1 and 20\``);
 
             // Get the amount of winners
@@ -244,7 +244,7 @@ module.exports = {
 
             // Send the prize message
             await message.channel.send(stripIndents`🎉 Alright, there will be **${winners}** winners. Lastly, what would you like the prize(s) to be?
-            
+
             \`Please enter the giveaway prize. This aditionally starts the giveaway.\``);
 
             // Get the prize
@@ -276,7 +276,7 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setAuthor(`Giveaway: ${prize}`, message.guild.iconURL({ dynamic: true, format: "png" }))
                 .setDescription(stripIndents`React with 🎉 to enter the giveaway!
-                
+
                 **Duration:** ${formatDuration(intervalToDuration({ start: start, end: end }), { delimiter: "," })}
                 **Hosted By:** ${message.author}`)
                 .setTimestamp(end)
@@ -437,10 +437,11 @@ module.exports = {
     },
 
     run_interaction: async (bot, interaction) => {
-        
-        if (interaction.options.get("list")) {
-            // Get the list options
-            const options = interaction.options.get("list").options;
+
+        // Get the subcommand used
+        const sub = interaction.options.getSubcommand();
+
+        if (sub == "list") {
 
             // Get all the giveaways
             const g = await giveaways.find({ "guild.guild_id": interaction.guild.id });
@@ -462,8 +463,8 @@ module.exports = {
             }
 
             // If the page option is there set it as the page
-            if (options?.get("page")?.value) 
-                page = options.get("page")?.value - 1;
+            if (interaction.options?.get("page")?.value)
+                page = interaction.options.get("page")?.value - 1;
             // If the page doesn't exist return an error
             if (!pages[page])
                 return interaction.error("You didn't specify a valid page!");
@@ -480,15 +481,13 @@ module.exports = {
 
             // Send the embed
             interaction.reply({ embeds: [embed] });
-        } else if (interaction.options.get("start")) {
-            // Get the list options
-            const options = interaction.options.get("start").options;
+        } else if (sub == "start") {
 
             // Get all the options
-            const channel = options.get("channel").channel,
-            time = parseTime(options.get("duration").value, "ms"),
-            winners = options.get("winners").value,
-            prize = options.get("prize").value;
+            const channel = interaction.options.get("channel").channel,
+            time = parseTime(interaction.options.get("duration").value, "ms"),
+            winners = interaction.options.get("winners").value,
+            prize = interaction.options.get("prize").value;
 
             // Channel Checks
             if (channel.type !== "GUILD_NEWS" && channel.type !== "GUILD_TEXT")
@@ -521,7 +520,7 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setAuthor(`Giveaway: ${prize}`, interaction.guild.iconURL({ dynamic: true, format: "png" }))
                 .setDescription(stripIndents`React with 🎉 to enter the giveaway!
-                
+
                 **Duration:** ${formatDuration(intervalToDuration({ start: start, end: end }), { delimiter: "," })}
                 **Hosted By:** ${interaction.user}`)
                 .setTimestamp(end)
@@ -553,9 +552,9 @@ module.exports = {
 
             // Send a confirmation message
             interaction.reply(`🎉 Nice, the giveaway for \`${prize}\` is now starting in ${channel}!`);
-        } else if (interaction.options.get("stop")) {
+        } else if (sub == "stop") {
             // Get the giveaway ID
-            const id = interaction.options.get("stop").options.get("id").value;
+            const id = interaction.options.get("id").value;
 
             // Get the giveaway
             const g = await giveaways.findOne({ "guild.guild_id": interaction.guild.id, id: id, active: true });
@@ -573,9 +572,9 @@ module.exports = {
 
             // Send a confirmation
             interaction.confirmation(`The giveaway with the ID \`${g.id}\` has been cancelled!`);
-        } else if (interaction.options.get("end")) {
+        } else if (sub == "end") {
             // Get the giveaway ID
-            const id = interaction.options.get("end").options.get("id").value;
+            const id = interaction.options.get("id").value;
 
             // Get the giveaway
             const g = await giveaways.findOne({ "guild.guild_id": interaction.guild.id, id: id, active: true });
@@ -631,9 +630,9 @@ module.exports = {
 
             // Send a confirmation message
             interaction.confirmation("Successfully ended that giveaway!");
-        } else if (interaction.options.get("reroll")) {
+        } else if (sub == "reroll") {
             // Get the giveaway ID
-            const id = interaction.options.get("reroll").options.get("id").value;
+            const id = interaction.options.get("id").value;
 
             // Get the giveaway
             const g = await giveaways.findOne({ "guild.guild_id": interaction.guild.id, id: id, active: false });

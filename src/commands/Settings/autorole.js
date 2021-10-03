@@ -97,7 +97,7 @@ module.exports = {
                 await settings.findOneAndUpdate({ _id: message.guild.id }, {
                     "roles.auto": []
                 });
-                
+
                 // Send a confirmation message
                 message.confirmationReply("Successfully removed all auto roles!");
             } else {
@@ -143,11 +143,10 @@ module.exports = {
 
     run_interaction: async (bot, interaction) => {
 
-        const view = interaction.options.get("view"),
-        role = interaction.options.get("role"),
-        disable = interaction.options.get("disable");
+        // Get the subcommand used
+        const sub = interaction.options.getSubcommand();
 
-        if (view) {
+        if (sub == "view") {
             // Check if there are any auto roles
             if (interaction.settings.roles.auto.length) {
                 // Define the roles array
@@ -180,9 +179,9 @@ module.exports = {
                 // Send an error message
                 interaction.error("There aren't any auto roles setup!");
             }
-        } else if (role) {
+        } else if (sub == "role") {
                 // Get the role
-                const r = role.options.get("role").role;
+                const r = interaction.options.get("role").role;
 
                 // If the role doesn't exist return an error
                 if (!r)
@@ -200,10 +199,10 @@ module.exports = {
                     interaction.confirmation(`Successfully removed the ${r} role from the auto roles!`);
                 } else {
                     // If the role is higher than or equal to the bots highest role return an error
-                    if (interaction.guild.me.roles.highest.position <= role.position)
+                    if (interaction.guild.me.roles.highest.position <= r.position)
                         return interaction.error("That role is higher than or equal to my highest role!");
                     // If the role is higher than or equal to the users highest role return an error
-                    if (interaction.member.roles.highest.position <= role.position)
+                    if (interaction.member.roles.highest.position <= r.position)
                         return interaction.error("That role is higher than or equal to your highest role!");
 
                     // Add the role to the database
@@ -216,12 +215,12 @@ module.exports = {
                     // Send a confirmation message
                     interaction.confirmation(`Successfully added the ${r} role to the auto roles!`);
                 }
-        } else if (disable) {
+        } else if (sub == "disable") {
             // Remove the roles from the database
             await settings.findOneAndUpdate({ _id: interaction.guild.id }, {
                 "roles.auto": []
             });
-                
+
             // Send a confirmation message
             interaction.confirmation("Successfully removed all auto roles!");
         }

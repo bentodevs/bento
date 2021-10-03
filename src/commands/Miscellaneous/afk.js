@@ -125,15 +125,19 @@ module.exports = {
 
     run_interaction: async (bot, interaction) => {
 
-        if (interaction.options.get("status")) {
+        // Get the Subcommand used
+        const sub = interaction.options.getSubcommand();
+
+        if (sub == "status") {
             const data = await afk.findOne({ user: interaction.user.id, guild: interaction.guild.id });
-            if (!interaction.options.get("status").options) {
-                if (!data)
+
+            if (!interaction.options.get("message")) {
+                if (!data?.status)
                     return interaction.error({ content: "You do not currently have an AFK status set!", ephemeral: true });
 
                 return interaction.confirmation({ content: `Your AFK status is currently set to: ${data.status}`, ephemeral: true });
-            } else if (interaction.options.get("status").options.find(o => o.name === "message")) {
-                const int = interaction.options.get("status").options.find(o => o.name === "message");
+            } else {
+                const int = interaction.options.get("message");
 
                 if (int.value.toLowerCase() === "disable") {
                     if (!data)
@@ -151,9 +155,9 @@ module.exports = {
                     return interaction.confirmation({ content: `Your AFK status has been set to: ${int.value}`, ephemeral: true });
                 }
             }
-        } else if (interaction.options.get("list")) {
+        } else if (sub == "list") {
             const data = await afk.find({ guild: interaction.guild.id }),
-            int = interaction.options.get("list")?.options?.find(o => o.name === "page"),
+            int = interaction.options.get("page").value,
             filtered = data.filter(a => interaction.guild.members.cache.has(a.user)).filter(b => b.status !== null);
 
             if (data.length === 0 || filtered.length === 0)

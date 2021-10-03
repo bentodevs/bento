@@ -184,10 +184,13 @@ module.exports = {
 
     run_interaction: async (bot, interaction) => {
 
-        if (interaction.options.get("list")) {
+        // Get the subcommand used
+        const sub = interaction.options.getSubcommand();
+
+        if (sub == "list") {
             // Try and fetch a guild member from args[0]
-            const member = interaction.options.get("list").options.find(o => o.name === "user"),
-            int = interaction.options.get("list")?.options?.find(o => o.name === "page");
+            const member = interaction.options.get("user"),
+            int = interaction?.options?.get("page");
 
             // If there was no member returned, then send an error
             if (!member)
@@ -231,8 +234,8 @@ module.exports = {
                 .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
 
             interaction.reply({ embeds: [embed] });
-        } else if (interaction.options.get("info")) {
-            const int = interaction.options.get("info")?.options?.find(o => o.name === "case");
+        } else if (sub == "info") {
+            const int = interaction.options.get("case");
 
             // Lookup the case in the punishments DB
             const punishment = await punishments.findOne({ guild: interaction.guild.id, id: int.value});

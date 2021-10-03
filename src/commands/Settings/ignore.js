@@ -65,17 +65,17 @@ module.exports = {
         // Grab the channel, role and settings
         const channel = await getChannel(message, args.join(" "), true),
         role = await getRole(message, args.join(" ")) || await getRole(message, args.join(" ").replace("+", ""));
-        
+
         if (!args[0]) {
             // If there is nothing ignored, then return an error
             if (!message.settings.ignore.hierarchicRoleId && message.settings.ignore.roles.length <= 0 && message.settings.ignore.channels.length <= 0)
                 return message.errorReply(`Nothing other than users with the \`ADMINISTRATOR\` permission are being ignored.`);
-            
+
             // Grab the hierarchicRole & define role/channel arrays
             const hRole = message.guild.roles.cache.get(message.settings.ignore.hierarchicRoleId),
             roles = [],
             channels = [];
-            
+
             // Define base message content
             let msg = "**Ignore Settings:**";
 
@@ -86,7 +86,7 @@ module.exports = {
                     if (role) roles.push(role);
                 }
             }
-            
+
             // Loop through the channels and add them to the array
             if (message.settings.ignore.channels) {
                 for (const data of message.settings.ignore.channels) {
@@ -94,12 +94,12 @@ module.exports = {
                     if (channel) channels.push(channel);
                 }
             }
-            
+
             // Prepare the ignore message
             if (message.settings.ignore.hierarchicRoleId && hRole) msg += `\n🎖️ Users with the ${hRole} and above are currently being ignored`;
             if (roles.length > 0) msg += `\n${config.emojis.team} The following roles are being ignored: ${roles.join(', ')}`;
             if (channels.length > 0) msg += `\n${config.emojis.channel} The following channels are being ignored: ${channels.join(', ')}`;
-            
+
             // Send the ignore message
             message.reply(msg);
         } else if (role && args.join(" ").toLowerCase().includes("+") && (role.name.match(/\+/g) || []).length < (args.join("").match(/\+/g) || []).length) {
@@ -124,7 +124,7 @@ module.exports = {
             message.confirmationReply(`Successfully ${message.settings.ignore.roles.includes(role.id) ? `removed ${role} from` : `added ${role} to`} the list of ignored roles!`);
         } else if (channel) {
             // If the user didn't specify a text channel return an error
-            if (channel.type !== "GUILD_TEXT" && channel.type !== "GUILD_NEWS") 
+            if (channel.type !== "GUILD_TEXT" && channel.type !== "GUILD_NEWS")
                 return message.errorReply("You did not specify a text or news channel!");
 
             // Get the DB query
@@ -143,21 +143,19 @@ module.exports = {
 
     run_interaction: async (bot, interaction) => {
 
-        // Get the options
-        const view = interaction.options.get("view"),
-        role = interaction.options.get("role"),
-        channel = interaction.options.get("channel");
+        // Get the subcommand used
+        const sub = interaction.options.getSubcommand();
 
-        if (view) {
+        if (sub == "view") {
             // If there is nothing ignored, then return an error
             if (!interaction.settings.ignore.hierarchicRoleId && interaction.settings.ignore.roles.length <= 0 && interaction.settings.ignore.channels.length <= 0)
                 return interaction.error(`Nothing other than users with the \`ADMINISTRATOR\` permission are being ignored.`);
-            
+
             // Grab the hierarchicRole & define role/channel arrays
             const hRole = interaction.guild.roles.cache.get(interaction.settings.ignore.hierarchicRoleId),
             roles = [],
             channels = [];
-            
+
             // Define base message content
             let msg = "**Ignore Settings:**";
 
@@ -168,7 +166,7 @@ module.exports = {
                     if (role) roles.push(role);
                 }
             }
-            
+
             // Loop through the channels and add them to the array
             if (interaction.settings.ignore.channels) {
                 for (const data of interaction.settings.ignore.channels) {
@@ -176,20 +174,20 @@ module.exports = {
                     if (channel) channels.push(channel);
                 }
             }
-            
+
             // Prepare the ignore message
             if (interaction.settings.ignore.hierarchicRoleId && hRole) msg += `\n🎖️ Users with the ${hRole} and above are currently being ignored`;
             if (roles.length > 0) msg += `\n${config.emojis.team} The following roles are being ignored: ${roles.join(', ')}`;
             if (channels.length > 0) msg += `\n${config.emojis.channel} The following channels are being ignored: ${channels.join(', ')}`;
-            
+
             // Send the ignore message
             interaction.reply(msg);
-        } else if (role) {
+        } else if (sub == "role") {
             // Get the role
-            const rl = role.options.get("role").role;
+            const rl = interaction.options.get("role").role;
 
             // Get the DB query
-            const toUpdate = role.options.get("hierarchic")?.value
+            const toUpdate = interaction.options.get("hierarchic")?.value
                 ? interaction.settings.ignore.hierarchicRoleId == rl.id
                     ? { "ignore.hierarchicRoleId": null }
                     : { "ignore.hierarchicRoleId": rl.id }
@@ -201,16 +199,16 @@ module.exports = {
             await settings.findOneAndUpdate({ _id: interaction.guild.id }, toUpdate);
 
             // Send a confirmation message
-            if (role.options.get("hierarchic")?.value) {
+            if (interaction.options.get("hierarchic")?.value) {
                 interaction.confirmation(interaction.settings.ignore.hierarchicRoleId == rl.id ? `The bot will no longer ignore ${rl} and up!` : `Added ${rl} and up to the ignore list!`);
             } else {
                 interaction.confirmation(`Successfully ${interaction.settings.ignore.roles.includes(rl.id) ? `removed ${rl} from` : `added ${rl} to`} the list of ignored roles!`);
             }
-        } else if (channel) {
-            const chan = channel.options.get("channel").channel;
+        } else if (sub == "channel") {
+            const chan = interaction.options.get("channel").channel;
 
             // If the user didn't specify a text channel return an error
-            if (chan.type !== "text" && chan.type !== "news") 
+            if (chan.type !== "text" && chan.type !== "news")
                 return interaction.error("You did not specify a text or news channel!");
 
             // Get the DB query

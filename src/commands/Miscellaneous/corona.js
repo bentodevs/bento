@@ -225,14 +225,10 @@ module.exports = {
 
     run_interaction: async (bot, interaction) => {
 
-        // Get all the options
-        const global = interaction.options.get("global"),
-        top = interaction.options.get("top"),
-        state = interaction.options.get("state"),
-        continent = interaction.options.get("continent"),
-        country = interaction.options.get("country");
+        // Get the subcommand used
+        const sub = interaction.options.getSubcommand();
 
-        if (global) {
+        if (sub == "global") {
             // Defer the interaction
             await interaction.deferReply();
 
@@ -262,12 +258,12 @@ module.exports = {
 
             // Send the embed
             interaction.editReply({ embeds: [embed] });
-        } else if (top) {
+        } else if (sub == "top") {
             // Defer the interaction
             await interaction.deferReply();
 
             // Get the sort option
-            const opt = top.options.get("option").value;
+            const opt = interaction.options.get("option").value;
 
             // Get the stats, reduce them to just the top 10 and format them
             const stats = await getAllCountryData(opt),
@@ -284,16 +280,16 @@ module.exports = {
 
             // Delete the status message and send the embed
             interaction.editReply({ embeds: [embed] });
-        } else if (state || continent) {
+        } else if (sub == "state" || sub == "continent") {
             // Defer the interaction
             await interaction.deferReply();
 
             // Send the status message and get the stats
-            const stats = state ? await getDataByState(state.options.get("state").value.toLowerCase()) : await getDataByContinent(continent.options.get("continent").value.toLowerCase());
+            const stats = sub == "state" ? await getDataByState(interaction.options.get("state").value.toLowerCase()) : await getDataByContinent(interaction.options.get("continent").value.toLowerCase());
 
             // If no state/continent was found return an error
             if (!stats || stats.message)
-                return interaction.editReply(`${bot.config.emojis.error} ${stats?.message ? stats.message : `${state? "State" : "Continent"} not found or doesn't have any cases.`}`);
+                return interaction.editReply(`${bot.config.emojis.error} ${stats?.message ? stats.message : `${sub == "state" ? "State" : "Continent"} not found or doesn't have any cases.`}`);
 
             // Build the embed
             const embed = new MessageEmbed()
@@ -313,12 +309,12 @@ module.exports = {
 
             // Delete the status message & send the embed
             interaction.editReply({ embeds: [embed] });
-        } else if (country) {
+        } else if (sub == "country") {
             // Defer the interaction
             await interaction.deferReply();
 
             // Get the stats
-            const stats = await getDataByCountry(country.options.get("country").value.toLowerCase()),
+            const stats = await getDataByCountry(interaction.options.get("country").value.toLowerCase()),
             vaccines = await getVaccineData(1, true, "countries", stats?.country);
 
             // If no country was found return an error

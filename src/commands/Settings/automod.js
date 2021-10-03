@@ -118,12 +118,12 @@ module.exports = {
                 ⌨️ Using [Zalgo Text](https://en.wikipedia.org/wiki/Zalgo_text) is currently ${message.settings.moderation.filter?.zalgo ? "**disallowed**" : "**allowed**"}
                 🖇️ Invite posting is currently ${message.settings.moderation.no_invite ? "**disallowed**" : "**allowed**"}
                 🌐 Link posting is currently ${message.settings.moderation.no_link ? "**disallowed**" : "**allowed**"}
-                
+
                 🔇 The number of allowed mentions before being muted is ${message.settings.moderation.mentions_mute || "**not set**"}
                 ${config.emojis.pepe_ping} The number of allowed mentions before being banned is ${message.settings.moderation.mentions_ban || "**not set**"}`)
                 .setTimestamp()
                 .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ format: "png", dynamic: true }));
-            
+
             // Send embed
             message.reply({ embeds: [embed] });
         } else if (args[0].toLowerCase() === "filter") {
@@ -179,7 +179,7 @@ module.exports = {
                 // If the max mentions is unset already, return an error
                 if (!message.settings.moderation.mentions_mute)
                     return message.errorReply("There is no mute threshold for message mentions currently set!");
-                
+
                 // Disable max mantions in DB & retun confirmation - Catch any errors
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { "moderation.mentions_mute": null })
                     .then(() => message.confirmationReply(`The mute threshold for message mentions has been disabled`))
@@ -202,7 +202,7 @@ module.exports = {
                 // If the max mentions is unset already, return an error
                 if (!message.settings.moderation.mentions_ban)
                     return message.errorReply("There is no ban threshold for message mentions currently set!");
-                
+
                 // Disable max mantions in DB & retun confirmation - Catch any errors
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { "moderation.mentions_ban": null })
                     .then(() => message.confirmationReply(`The ban threshold for message mentions has been disabled`))
@@ -228,16 +228,10 @@ module.exports = {
 
     run_interaction: async (bot, interaction) => {
 
-        // Get all the options
-        const view = interaction.options.get("view"),
-        filter = interaction.options.get("filter"),
-        zalgo = interaction.options.get("zalgo"),
-        no_invite = interaction.options.get("no-invite"),
-        no_link = interaction.options.get("no-link"),
-        mentions_mute = interaction.options.get("mentions-mute"),
-        mentions_ban = interaction.options.get("mentions-ban");
+        // Get the subcommand used
+        const sub = interaction.options.getSubcommand();
 
-        if (view) {
+        if (sub == "view") {
             // Build the embed
             const embed = new MessageEmbed()
                 .setAuthor(`Auto-mod settings for ${interaction.guild.name}`, interaction.guild.iconURL({ format: "png", dynamic: true }))
@@ -246,92 +240,92 @@ module.exports = {
                 ⌨️ Using [Zalgo Text](https://en.wikipedia.org/wiki/Zalgo_text) is currently ${interaction.settings.moderation.filter?.zalgo ? "**disallowed**" : "**allowed**"}
                 🖇️ Invite posting is currently ${interaction.settings.moderation.no_invite ? "**disallowed**" : "**allowed**"}
                 🌐 Link posting is currently ${interaction.settings.moderation.no_link ? "**disallowed**" : "**allowed**"}
-                
+
                 🔇 The number of allowed mentions before being muted is ${interaction.settings.moderation.mentions_mute || "**not set**"}
                 ${config.emojis.pepe_ping} The number of allowed mentions before being banned is ${interaction.settings.moderation.mentions_ban || "**not set**"}`)
                 .setTimestamp()
                 .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ format: "png", dynamic: true }));
-            
+
             // Send embed
             interaction.reply({ embeds: [embed] });
-        } else if (filter) {
-            if (filter.options.get("toggle").value) {
+        } else if (sub == "filter") {
+            if (interaction.options.get("toggle").value) {
                 // Enable filter & send confirmation
                 await settings.findOneAndUpdate({ _id: interaction.guild.id }, { "moderation.filter.state": true });
                 return interaction.confirmation("Message filtering has been **enabled**");
-            } else if (!filter.options.get("toggle").value) {
+            } else if (!interaction.options.get("toggle").value) {
                 // Disable filter & send confirmation
                 await settings.findOneAndUpdate({ _id: interaction.guild.id }, { "moderation.filter.state": false });
                 return interaction.confirmation("Message filtering has been **disabled**");
             }
-        } else if (zalgo) {
-            if (zalgo.options.get("toggle").value) {
+        } else if (sub == "zalgo") {
+            if (interaction.options.get("toggle").value) {
                 // Enable zalgo filter & send confirmation
                 await settings.findOneAndUpdate({ _id: interaction.guild.id }, { "moderation.filter.zalgo": true });
                 return interaction.confirmation("Zalgo text moderation has been **enabled**");
-            } else if (!zalgo.options.get("toggle").value) {
+            } else if (!interaction.options.get("toggle").value) {
                 // Disable filter & send confirmation
                 await settings.findOneAndUpdate({ _id: interaction.guild.id }, { "moderation.filter.zalgo": false });
                 return interaction.confirmation("Zalgo text moderation has been **disabled**");
-            } 
-        } else if (no_invite) {
-            if (no_invite.options.get("toggle").value) {
+            }
+        } else if (sub == "no-invite") {
+            if (interaction.options.get("toggle").value) {
                 // Enable invite filter & send confirmation
                 await settings.findOneAndUpdate({ _id: interaction.guild.id }, { "moderation.no_invite": true });
                 interaction.confirmation("Invite filtering has been **enabled**");
-            } else if (!no_invite.options.get("toggle").value) {
+            } else if (!interaction.options.get("toggle").value) {
                 // Disable filter & send confirmation
                 await settings.findOneAndUpdate({ _id: interaction.guild.id }, { "moderation.no_invite": false });
                 interaction.confirmation("Invite filtering has been **disabled**");
             }
-        } else if (no_link) {
-            if (no_link.options.get("toggle").value) {
+        } else if (sub == "no-link") {
+            if (interaction.options.get("toggle").value) {
                 // Enable link filter & send confirmation
                 await settings.findOneAndUpdate({ _id: interaction.guild.id }, { "moderation.no_link": true });
                 interaction.confirmation("Link filtering has been **enabled**");
-            } else if (!no_link.options.get("toggle").value) {
+            } else if (!interaction.options.get("toggle").value) {
                 // Disable filter & send confirmation
                 await settings.findOneAndUpdate({ _id: interaction.guild.id }, { "moderation.no_link": false });
                 interaction.confirmation("Link filtering has been **disabled**");
             }
-        } else if (mentions_mute) {
-            if (mentions_mute.options.get("amount").value === 0) {
+        } else if (sub == "mentions-mute") {
+            if (interaction.options.get("amount").value === 0) {
                 // If the max mentions is unset already, return an error
                 if (!interaction.settings.moderation.mentions_mute)
                     return interaction.error("There is no mute threshold for message mentions currently set!");
-                
+
                 // Disable max mantions in DB & retun confirmation - Catch any errors
                 await settings.findOneAndUpdate({ _id: interaction.guild.id }, { "moderation.mentions_mute": null })
                     .then(() => interaction.confirmation(`The mute threshold for message mentions has been disabled`))
                     .catch(err => interaction.error(`There was an error whilst disabling the mute threshold: ${err.message}`));
             } else {
                 // If the amount specified is larger than the mentions_ban setting return an error
-                if (interaction.settings.moderation.mentions_ban && mentions_mute.options.get("amount").value > interaction.settings.moderation.mentions_ban)
+                if (interaction.settings.moderation.mentions_ban && interaction.options.get("amount").value > interaction.settings.moderation.mentions_ban)
                     return interaction.error("The mentions-mute amount needs to be lower than the mentions-ban setting!");
 
                 // Set max mantions in DB & retun confirmation - Catch any errors
-                await settings.findOneAndUpdate({ _id: interaction.guild.id }, { "moderation.mentions_mute": mentions_mute.options.get("amount").value })
-                    .then(() => interaction.confirmation(`The mute threshold for message mentions has been set to \`${mentions_mute.options.get("amount").value}\``))
+                await settings.findOneAndUpdate({ _id: interaction.guild.id }, { "moderation.mentions_mute": interaction.options.get("amount").value })
+                    .then(() => interaction.confirmation(`The mute threshold for message mentions has been set to \`${interaction.options.get("amount").value}\``))
                     .catch(err => interaction.error(`There was an error whilst setting the mute threshold: ${err.message}`));
             }
-        } else if (mentions_ban) {
-            if (mentions_ban.options.get("amount").value === 0) {
+        } else if (sub == "mentions-ban") {
+            if (interaction.options.get("amount").value === 0) {
                 // If the max mentions is unset already, return an error
                 if (!interaction.settings.moderation.mentions_ban)
                     return interaction.error("There is no ban threshold for message mentions currently set!");
-                
+
                 // Disable max mantions in DB & retun confirmation - Catch any errors
                 await settings.findOneAndUpdate({ _id: interaction.guild.id }, { "moderation.mentions_ban": null })
                     .then(() => interaction.confirmation(`The ban threshold for message mentions has been disabled`))
                     .catch(err => interaction.error(`There was an error whilst disabling the ban threshold: ${err.message}`));
             } else {
                 // If the amount specified is smaller than the mentions_mute setting return an error
-                if (interaction.settings.moderation.mentions_mute && mentions_ban.options.get("amount").value < interaction.settings.moderation.mentions_mute)
+                if (interaction.settings.moderation.mentions_mute && interaction.options.get("amount").value < interaction.settings.moderation.mentions_mute)
                     return interaction.error("The mentions-ban amount needs to be higher than the mentions-mute setting!");
 
                 // Set max mantions in DB & retun confirmation - Catch any errors
-                await settings.findOneAndUpdate({ _id: interaction.guild.id }, { "moderation.mentions_ban": mentions_ban.options.get("amount").value })
-                    .then(() => interaction.confirmation(`The ban threshold for message mentions has been set to \`${mentions_ban.options.get("amount").value}\``))
+                await settings.findOneAndUpdate({ _id: interaction.guild.id }, { "moderation.mentions_ban": interaction.options.get("amount").value })
+                    .then(() => interaction.confirmation(`The ban threshold for message mentions has been set to \`${interaction.options.get("amount").value}\``))
                     .catch(err => interaction.error(`There was an error whilst setting the ban threshold: ${err.message}`));
             }
         }

@@ -83,7 +83,7 @@ module.exports = {
             // If there are no filter entries, return an error
             if (filter.entries.length === 0)
                 return message.errorReply("There are no entries in the automod filter!");
-            
+
             // Page variables
             const pages = [];
             let page = 0;
@@ -109,22 +109,22 @@ module.exports = {
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(formatted.join(', '))
                 .setFooter(`The filter is currently ${filter.state ? "enabled" : "disabled"} | Page ${page + 1} of ${pages.length}`);
-            
+
             message.reply({ embeds: [embed] });
         } else if (args[0].toLowerCase() === "add") {
             // If nothing was specified to be added, then return an error
             if (!args[1])
                 return message.errorReply("You did not specify a word to add to the filter!");
-            
+
             // 1. Transform word to lowercase
             // 2. Fetch the current filter
             const toAdd = args[1].toLowerCase(),
             filter = message.settings.moderation.filter.entries;
-            
+
             // If the word already exists in the filter, then return an error
             if (filter.includes(toAdd))
                 return message.errorReply("That word already exists in the filter!");
-            
+
             await settings.findOneAndUpdate({ _id: message.guild.id }, {
                 $push: {
                     "moderation.filter.entries": toAdd
@@ -138,16 +138,16 @@ module.exports = {
             // If nothing was specified to be added, then return an error
             if (!args[1])
                 return message.errorReply("You did not specify a word to remove from the filter!");
-            
+
             // 1. Transform word to lowercase
             // 2. Fetch the current filter
             const toRem = args[1].toLowerCase(),
             filter = message.settings.moderation.filter.entries;
-            
+
             // If the word already exists in the filter, then return an error
             if (!filter.includes(toRem))
                 return message.errorReply("That word doesn't exist in the filter!");
-            
+
             await settings.findOneAndUpdate({ _id: message.guild.id }, {
                 $pull: {
                     "moderation.filter.entries": toRem
@@ -173,24 +173,21 @@ module.exports = {
             message.errorReply("You did not specify a valid option!");
         }
 
-    }, 
+    },
 
     run_interaction: async (bot, interaction) => {
 
-        // Get the options
-        const list = interaction.options.get("list"),
-        add = interaction.options.get("add"),
-        remove = interaction.options.get('remove'),
-        toggle = interaction.options.get("toggle");
+        // Get the subcommand used
+        const sub = interaction.options.getSubcommand();
 
-        if (list) {
+        if (sub == "list") {
             // Fetch the filter data
             const filter = interaction.settings.moderation.filter;
 
             // If there are no filter entries, return an error
             if (filter.entries.length === 0)
                 return interaction.error("There are no entries in the automod filter!");
-            
+
             // Page variables
             const pages = [];
             let page = 0;
@@ -201,8 +198,8 @@ module.exports = {
             }
 
             // Get the correct page, if the user provides a page number
-            if (list.options?.get("page")?.value) 
-                page = list.options.get("page").value -= 1;
+            if (interaction.options?.get("page")?.value)
+                page = interaction.options.get("page").value -= 1;
             // Check if the user specified a valid page
             if (!pages[page])
                 return interaction.error("You didn't specify a valid page!");
@@ -216,18 +213,18 @@ module.exports = {
                 .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
                 .setDescription(formatted.join(', '))
                 .setFooter(`The filter is currently ${filter.state ? "enabled" : "disabled"} | Page ${page + 1} of ${pages.length}`);
-            
+
             interaction.reply({ embeds: [embed] });
-        } else if (add) {
+        } else if (sub == "add") {
             // 1. Transform word to lowercase
             // 2. Fetch the current filter
-            const toAdd = add.options.get("value").value.toLowerCase(),
+            const toAdd = interaction.options.get("value").value.toLowerCase(),
             filter = interaction.settings.moderation.filter.entries;
-            
+
             // If the word already exists in the filter, then return an error
             if (filter.includes(toAdd))
                 return interaction.error("That word already exists in the filter!");
-            
+
             await settings.findOneAndUpdate({ _id: interaction.guild.id }, {
                 $push: {
                     "moderation.filter.entries": toAdd
@@ -237,16 +234,16 @@ module.exports = {
             }).catch((err) => {
                 interaction.error(`There was an error adding \`${toAdd}\` to the filter: \`${err.message}\``);
             });
-        } else if (remove) {
+        } else if (sub == "remove") {
             // 1. Transform word to lowercase
             // 2. Fetch the current filter
-            const toRem = remove.options.get("value").value.toLowerCase(),
+            const toRem = interaction.options.get("value").value.toLowerCase(),
             filter = interaction.settings.moderation.filter.entries;
-            
+
             // If the word already exists in the filter, then return an error
             if (!filter.includes(toRem))
                 return interaction.error("That word doesn't exist in the filter!");
-            
+
             await settings.findOneAndUpdate({ _id: interaction.guild.id }, {
                 $pull: {
                     "moderation.filter.entries": toRem
@@ -256,9 +253,9 @@ module.exports = {
             }).catch(err => {
                 interaction.error(`There was an error removing \`${toRem}\` from the filter: \`${err.message}\``);
             });
-        } else if (toggle) {
+        } else if (sub == "toggle") {
             // Get the DB query
-            const toUpdate = toggle.options.get("toggle").value
+            const toUpdate = interaction.options.get("toggle").value
                 ? { "moderation.filter.state": true }
                 : { "moderation.filter.state": false };
 
@@ -266,7 +263,7 @@ module.exports = {
             await settings.findOneAndUpdate({ _id: interaction.guild.id }, toUpdate);
 
             // Send a confirmation message
-            interaction.confirmation(`Message filtering has been **${toggle.options.get("toggle").value ? "enabled" : "disabled"}**!`);
+            interaction.confirmation(`Message filtering has been **${interaction.options.get("toggle").value ? "enabled" : "disabled"}**!`);
         }
 
     }
