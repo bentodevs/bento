@@ -5,7 +5,7 @@ module.exports = {
     info: {
         name: "afk",
         aliases: [],
-        usage: "afk <\"status\"|\"list\"> [\"status to set\"|\"page\"]",
+        usage: "afk <\"status\"|\"list\"> [status to set | \"disable\" |\"page\"]",
         examples: [
             "afk status I'm away for the day!",
             "afk list 2"
@@ -36,7 +36,7 @@ module.exports = {
             options: [{
                 name: "message",
                 type: "STRING",
-                description: "The AFK status you wish to show when you are mentioned. *Use off to disable*",
+                description: "The AFK status you wish to show when you are mentioned. *Use \"disable\" to disable*",
                 required: false
             }]
         }, {
@@ -157,7 +157,7 @@ module.exports = {
             }
         } else if (sub == "list") {
             const data = await afk.find({ guild: interaction.guild.id }),
-            int = interaction.options.get("page").value,
+            int = interaction.options.get("page")?.value,
             filtered = data.filter(a => interaction.guild.members.cache.has(a.user)).filter(b => b.status !== null);
 
             if (data.length === 0 || filtered.length === 0)
