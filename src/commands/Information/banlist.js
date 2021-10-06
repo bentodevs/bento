@@ -45,7 +45,7 @@ module.exports = {
         const bans = await message.guild.bans.fetch().then(bans => { return Array.from(bans.values()); }).catch(() => {});
 
         // If the guild has no bans return an error
-        if (!bans.length || !bans)
+        if (!bans?.length)
             return message.errorReply("This guild doesn't have any bans!");
 
         // Page Vars

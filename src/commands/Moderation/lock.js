@@ -14,7 +14,7 @@ module.exports = {
     perms: {
         permission: "MANAGE_CHANNELS",
         type: "discord",
-        self: ["MANAGE_CHANNELS"]
+        self: ["MANAGE_ROLES"]
     },
     opts: {
         guildOnly: true,
@@ -93,6 +93,6 @@ module.exports = {
             // Send a confirmation message
             interaction.confirmation(`${channel} has been unlocked!`);
         }
-        
+
     }
 };
