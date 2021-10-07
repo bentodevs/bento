@@ -81,7 +81,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
             .setAuthor(`Avatar for ${target.tag}`, target.displayAvatarURL({ format: "png", dynamic: true }))
-            .setImage(usr.bannerURL({ format: "png", dynamic: 2048}));
+            .setImage(usr.bannerURL({ format: "png", dynamic: true, size: 2048}));
 
         // Send the embed
         interaction.reply({ embeds: [embed] });
