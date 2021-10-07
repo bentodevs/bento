@@ -3,12 +3,12 @@ const config = require("../../config");
 
 /**
  * Gets a guild member from the cache/fetches it from the Discord API
- * 
+ *
  * @param {Object} message The message object from which to get certain data (Such as guild ID, etc.)
  * @param {String} args The provided search terms for which to lookup a member
  * @param {Boolean} noArgsAuthor Whether we can return the author, if no other member was found
- * 
- * @returns {Promise.<Object|Boolean>} Either the guild member, or false if no match could be found 
+ *
+ * @returns {Promise.<Object|Boolean>} Either the guild member, or false if no match could be found
  */
 exports.getMember = async (message, args, noArgsAuthor) => {
     // If no args were supplied and noArgsAuthor is true, resolve as the member that sent the msg
@@ -18,8 +18,11 @@ exports.getMember = async (message, args, noArgsAuthor) => {
     // Check the arguments for a mention
     const match = /<@!?(\d{17,19})>/g.exec(args);
 
+    // Clean any non-numeric chars from the string
+    const cleanArgs = args.replace(/\D/g,'');
+
     // Try to grab the member
-    let target = message.guild.members.cache.get(args) ||
+    let target = message.guild.members.cache.get(cleanArgs) ||
         message.guild.members.cache.find(m => m.user.username.toLowerCase() === args.toLowerCase()) ||
         message.guild.members.cache.find(m => m.user.username.toLowerCase().includes(args.toLowerCase())) ||
         message.guild.members.cache.find(m => m.displayName.toLowerCase() === args.toLowerCase()) ||
@@ -60,24 +63,27 @@ exports.getMember = async (message, args, noArgsAuthor) => {
 
 /**
  * Gets a Discord User from the cache/fetches it from the Discord API
- * 
+ *
  * @param {Object} bot The client that instantiated this request
  * @param {Object} message The message object from which to get certain data (Such as guild ID, etc.)
  * @param {String} args The provided search terms for which to lookup a user
  * @param {Boolean} noArgsAuthor Whether we can return the author, if no other member was found
- * 
- * @returns {Promise.<Object|Boolean>} Either the user, or false if no match could be found 
+ *
+ * @returns {Promise.<Object|Boolean>} Either the user, or false if no match could be found
  */
 exports.getUser = async (bot, message, args, noArgsAuthor) => {
     // If no args were specified and noArgsAuthor is true return the author
     if (!args && noArgsAuthor)
         return message.author;
 
+    // Clean any non-numeric chars from the string
+    const cleanArgs = args.replace(/\D/g,'');
+
     // Try to grab the user
     let target = await (bot.users.cache.get(args) ||
         bot.users.cache.find(m => m.username.toLowerCase() === args.toLowerCase()) ||
         bot.users.cache.find(m => m.username.toLowerCase().includes(args.toLowerCase())) ||
-        bot.users.fetch(args).catch(() => { }));
+        await bot.users.fetch(cleanArgs, { force: true }).catch(() => { }));
 
     // Return the user if one was found
     if (target) return target;
@@ -106,12 +112,12 @@ exports.getUser = async (bot, message, args, noArgsAuthor) => {
 
 /**
  * Gets a guild channel from the cache/fetches it from the Discord API
- * 
+ *
  * @param {Object} message The message object from which to get certain data (Such as guild ID, etc.)
  * @param {String} args The provided search terms for which to lookup a channel
  * @param {Boolean} noArgsChannel Whether we can return the author, if no other member was found
- * 
- * @returns {Promise.<Object|Boolean>} Either the guild channel, or false if no match could be found 
+ *
+ * @returns {Promise.<Object|Boolean>} Either the guild channel, or false if no match could be found
  */
 exports.getChannel = async (message, args, noArgsChannel) => {
     // If no args were specified and noArgsChannel is true return the current channel
@@ -147,11 +153,11 @@ exports.getChannel = async (message, args, noArgsChannel) => {
 
 /**
  * Gets a guild role from the cache/fetches it from the Discord API
- * 
+ *
  * @param {Object} message The message object from which to get certain data (Such as guild ID, etc.)
  * @param {String} args The provided search terms for which to lookup a role
- * 
- * @returns {Promise.<Object|Boolean>} Either the role, or false if no match could be found 
+ *
+ * @returns {Promise.<Object|Boolean>} Either the role, or false if no match could be found
  */
 exports.getRole = async (message, args) => {
     // If no args were specified return false
@@ -181,12 +187,12 @@ exports.getRole = async (message, args) => {
 
 /**
  * Formats and executes the tag
- * 
+ *
  * @param {Object} tag The tag data
  * @param {Object} message The message object from which to get certain data (Such as guild ID, etc.)
  * @param {Array} args An array of arguments taken from the message content
- * 
- * @returns {Promise.<Boolean>} true 
+ *
+ * @returns {Promise.<Boolean>} true
  */
 exports.getTag = async (tag, message, args) => {
     // Replace all the placeholders
@@ -220,10 +226,10 @@ exports.getTag = async (tag, message, args) => {
 
 /**
  * Check a string for emojis
- * 
+ *
  * @param {Object} guild The guild object with all the relevant data
  * @param {String} string The string that needs to be checked for emojis
- * 
+ *
  * @returns {Object} Returns an object with the emoji info if it found one, otherwise returns false.
  */
 exports.getEmoji = (guild, string) => {
