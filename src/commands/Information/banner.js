@@ -74,7 +74,7 @@ module.exports = {
         const usr = await bot.users.fetch(target.id, { force: true });
 
         if (!usr.bannerURL()) {
-            return interaction.errorReply({content: "This user doesn't have a custom banner set!", ephemeral: true});
+            return interaction.error({content: "This user doesn't have a custom banner set!", ephemeral: true});
         }
 
         // Build the embed
