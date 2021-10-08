@@ -45,6 +45,9 @@ module.exports = {
             required: false
         }]
     },
+    context: {
+        enabled: true,
+    },
 
     run: async function (bot, message, args) {
 
@@ -52,7 +55,7 @@ module.exports = {
         const member = message.options?.get("user")?.member || message.options?.get("user")?.user || await getMember(message, args?.join(" "), true) || await getUser(bot, message, args?.join(" "), true);
 
         // Return an error if nothing was found
-        if (!member) 
+        if (!member)
             return message.errorReply("You didn't specify a valid user!");
 
         // Create the MessageEmbed object.
@@ -70,7 +73,7 @@ module.exports = {
             const roles = member.roles.cache.filter(role => role.name !== "@everyone").sort((b, a) => a.position - b.position).map(role => role.toString()).join(", ");
 
             // Get the dominant color from the users avatar
-            const color = await getColorFromURL(member.user.displayAvatarURL({ format: "png", dynamic: true }));
+            const color = await getColorFromURL(member.user.displayAvatarURL({ format: "png", dynamic: false }));
 
             // Define vars
             let statusEmote;
@@ -141,7 +144,7 @@ module.exports = {
             const userCreated = format(utcToZonedTime(member.createdTimestamp, message.settings.general.timezone), "PPp (z)", { timeZone: message.settings.general.timezone }); const timeSinceCreated = formatDistance(member.createdTimestamp, Date.now(), { addSuffix: true });
 
             // Get the dominant color from the users avatar
-            const color = await getColorFromURL(member.displayAvatarURL({ format: "png", dynamic: true }));
+            const color = await getColorFromURL(member.displayAvatarURL({ format: "png", dynamic: false }));
 
             // Define status var
             let status;
@@ -170,7 +173,7 @@ module.exports = {
             embed.setColor(rgbToHex(color));
             embed.setDescription(stripIndents`🙍 Human | ${status}
             **Created:** ${userCreated} (${timeSinceCreated})
-            
+
             *This user is not a member of the server. No additional info is available.*`);
             embed.setFooter(`ID: ${member.id}`);
         }

@@ -35,6 +35,9 @@ module.exports = {
             required: false
         }]
     },
+    context: {
+        enabled: true,
+    },
 
     run: async (bot, message, args) => {
 
@@ -54,7 +57,7 @@ module.exports = {
         // Send the embed
         message.reply({ embeds: [embed] });
 
-    }, 
+    },
 
     run_interaction: async (bot, interaction) => {
 

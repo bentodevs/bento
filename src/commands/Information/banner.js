@@ -35,6 +35,9 @@ module.exports = {
             required: false
         }]
     },
+    context: {
+        enabled: true,
+    },
 
     run: async (bot, message, args) => {
 
@@ -57,7 +60,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setAuthor(`Banner for ${target.tag}`, target.displayAvatarURL({ format: "png", dynamic: true }))
-            .setImage(usr.bannerURL({ format: "png", dynamic: true, size: 2048}));
+            .setImage(usr.bannerURL({ format: "png", dynamic: true, size: 2048 }));
 
         // Send the embed
         message.reply({ embeds: [embed] });
@@ -74,7 +77,7 @@ module.exports = {
         const usr = await bot.users.fetch(target.id, { force: true });
 
         if (!usr.bannerURL()) {
-            return interaction.error({content: "This user doesn't have a custom banner set!", ephemeral: true});
+            return interaction.error({ content: "This user doesn't have a custom banner set!", ephemeral: true });
         }
 
         // Build the embed

@@ -191,7 +191,15 @@ exports.registerGlobal = (bot) => {
                 arr.push({
                     name: data.info.name,
                     description: data.info.description,
+                    type: "CHAT_INPUT",
                     options: data.slash?.opts ?? []
+                });
+            }
+
+            if (data.context?.enabled) {
+                arr.push({
+                    name: data.info.name,
+                    type: "USER"
                 });
             }
         }
