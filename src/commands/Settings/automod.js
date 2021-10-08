@@ -1,3 +1,4 @@
+const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
 const config = require("../../config");
 const settings = require("../../database/models/settings");
@@ -114,7 +115,7 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setAuthor(`Auto-mod settings for ${message.guild.name}`, message.guild.iconURL({ format: "png", dynamic: true }))
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
-                .setDescription(`🧮 Message filtering is currently ${message.settings.moderation.filter?.state ? "**enabled**" : "**disabled**"}
+                .setDescription(stripIndents`🧮 Message filtering is currently ${message.settings.moderation.filter?.state ? "**enabled**" : "**disabled**"}
                 ⌨️ Using [Zalgo Text](https://en.wikipedia.org/wiki/Zalgo_text) is currently ${message.settings.moderation.filter?.zalgo ? "**disallowed**" : "**allowed**"}
                 🖇️ Invite posting is currently ${message.settings.moderation.no_invite ? "**disallowed**" : "**allowed**"}
                 🌐 Link posting is currently ${message.settings.moderation.no_link ? "**disallowed**" : "**allowed**"}
@@ -236,7 +237,7 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setAuthor(`Auto-mod settings for ${interaction.guild.name}`, interaction.guild.iconURL({ format: "png", dynamic: true }))
                 .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
-                .setDescription(`🧮 Message filtering is currently ${interaction.settings.moderation.filter?.state ? "**enabled**" : "**disabled**"}
+                .setDescription(stripIndents`🧮 Message filtering is currently ${interaction.settings.moderation.filter?.state ? "**enabled**" : "**disabled**"}
                 ⌨️ Using [Zalgo Text](https://en.wikipedia.org/wiki/Zalgo_text) is currently ${interaction.settings.moderation.filter?.zalgo ? "**disallowed**" : "**allowed**"}
                 🖇️ Invite posting is currently ${interaction.settings.moderation.no_invite ? "**disallowed**" : "**allowed**"}
                 🌐 Link posting is currently ${interaction.settings.moderation.no_link ? "**disallowed**" : "**allowed**"}
