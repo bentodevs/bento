@@ -12,7 +12,7 @@ module.exports = async (bot, oldMember, newMember) => {
             return bot.logger.error(err);
         }
     }
-    
+
     // Fetch guild settings
     const sets = await settings.findOne({ _id: newMember.guild.id });
 
@@ -22,14 +22,14 @@ module.exports = async (bot, oldMember, newMember) => {
         bot.emit("guildMemberAdd", newMember);
     }
 
-    if (sets.manual_events.members) {
+    if (sets.manual_events?.members) {
         // Fetch the manual event log channel™
         const log = newMember.guild.channels.cache.get(sets.logs.events);
 
         // If there is no log channel, return
         if (!log)
             return;
-        
+
         // Define the description string
         let desc = "";
 
@@ -48,7 +48,7 @@ module.exports = async (bot, oldMember, newMember) => {
             .setDescription(stripIndents`${desc}`)
             .setFooter(`ID: ${newMember.user.id}`)
             .setTimestamp();
-    
+
         // Send the emebed to the log channel
         log.send({ embeds: [embed] });
 

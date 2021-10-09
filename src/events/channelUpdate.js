@@ -8,20 +8,20 @@ module.exports = async (bot, oldChannel, newChannel) => {
     // If channel type is DM, then ignore
     if (newChannel.type === "DM")
         return;
-    
+
     const sets = await settings.findOne({ _id: newChannel.guild.id });
 
-    if (sets.manual_events.channels) {
+    if (sets.manual_events?.channels) {
         // Fetch the manual event log channel
         const log = newChannel.guild.channels.cache.get(sets.logs.events);
 
         // If there is no log channel, return
         if (!log)
             return;
-        
+
         // Define the description string
         let desc = "";
-        
+
         // Channel name update
         if (newChannel.name !== oldChannel.name) desc += `__**Channel Name:**__\n**Old Name:** ${oldChannel.name}\n**New Name:** ${newChannel.name}\n\n`;
         // Channel type update
@@ -38,7 +38,7 @@ module.exports = async (bot, oldChannel, newChannel) => {
         // If the description is empty (I.e. we aren't interested in the update), then return
         if (!desc)
             return;
-        
+
         // Build the embed
         const embed = new MessageEmbed()
             .setAuthor(`${newChannel.name} was modified`, newChannel.guild.iconURL({ dynamic: true, format: "png" }))
@@ -46,7 +46,7 @@ module.exports = async (bot, oldChannel, newChannel) => {
             .setDescription(stripIndents`${desc}`)
             .setFooter(`ID: ${newChannel.id}`)
             .setTimestamp();
-        
+
         // Send the emebed to the log channel
         log.send({ embeds: [embed] });
     }
