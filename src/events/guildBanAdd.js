@@ -3,13 +3,13 @@ const settings = require("../database/models/settings");
 const { punishmentLog } = require("../modules/functions/moderation");
 
 module.exports = async (bot, guild, user) => {
-    
+
     // Fetch the guild settings
     const sets = await settings.findOne({ _id: guild.id });
 
     if (sets?.manual_events?.moderation) {
         // Fetch latest Audit Log entry
-        const entry = await guild.fetchAuditLogs({ type: "MEMBER_BAN_REMOVE" }).then(a => a.entries.first());
+        const entry = await guild.fetchAuditLogs({ type: "MEMBER_BAN_ADD" }).then(a => a.entries.first());
 
         // If the executor is us, then return
         if (entry.executor.id === bot.user.id)
@@ -27,7 +27,7 @@ module.exports = async (bot, guild, user) => {
                 settings: sets
             },
             reason = entry.reason || "No reason provided";
-    
+
         // Create the punishment record in the DB
         await punishments.create({
             id: action,
@@ -38,7 +38,7 @@ module.exports = async (bot, guild, user) => {
             actionTime: Date.now(),
             reason: reason
         });
-    
+
         // Log the unban
         punishmentLog(message, entry.target, action, reason, "ban");
     }
