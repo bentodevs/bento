@@ -3,7 +3,7 @@ const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
 const { getSettings, getPerms } = require("../database/mongo");
 const { checkMessage, checkBlacklist } = require("../modules/functions/moderation");
-const { getTag } = require("../modules/functions/getters");
+const { getTag, getChannel } = require("../modules/functions/getters");
 const { checkSelf, checkPerms } = require("../modules/functions/permissions");
 const { checkLevel } = require("../modules/functions/leveling");
 const tags = require("../database/models/tags");
@@ -195,6 +195,26 @@ module.exports = async (bot, message) => {
         message.errorReply(stripIndents`An error occurred while running the command: \`${err}\`
 
         ${bot.config.emojis.url} If this issue persists please report it in our discord: ${bot.config.logging.errors.url}`);
+    }
+
+    if (settings.logs?.commands) {
+
+        // Get the log channel
+        const channel = await getChannel(message, settings.logs.commands, false);
+
+        // Build the log embed
+        const embed = new MessageEmbed()
+            .setAuthor(`${message.author.tag} used a command in #${message.channel.name}`, message.author.displayAvatarURL({ format: "png", dynamic: true }))
+            .setThumbnail(message.author.displayAvatarURL({ format: "png", dynamic: true }))
+            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+            .setDescription(stripIndents`**User:** ${message.author} (\`${message.author.id}\`)
+            **Message ID:** \`${message.id}\`
+
+            **Command:** ${cmd.info.name}
+            **Message:** ${message.content}`)
+            .setTimestamp();
+
+        channel?.send({ embeds: [embed] });
     }
 
     // Log that the command has been run

@@ -1,3 +1,8 @@
+const { stripIndents } = require("common-tags");
+const { MessageEmbed } = require("discord.js");
+const settings = require("../database/models/settings");
+const { getChannel } = require("../modules/functions/getters");
+
 module.exports = async (bot, message) => {
     // If the message is partial try to fetch it before its fully deleted on discords side
     if (message.partial) {
@@ -15,6 +20,13 @@ module.exports = async (bot, message) => {
     if (message.channel.type == "DM")
         return;
 
+    // Get the guild settings
+    const msgSettings = await settings.findOne({ _id: message.guild.id });
+
+    // Get the audit log entry for the deleted message
+    const entry = await message.guild.fetchAuditLogs({ type: "MESSAGE_DELETE" })
+        .then(audit => audit.entries.first());
+
     // Create the msg object
     const msg = {
         channel: message.channel.id,
@@ -29,4 +41,32 @@ module.exports = async (bot, message) => {
 
     // Add the deletedMsg to the collection
     bot.deletedMsgs.set(`${message.guild.id}-${message.channel.id}`, msg);
+
+    // If the log channel exists, then send to the log channel
+    if (msgSettings.logs?.deleted) {
+        // Define user
+        let user;
+
+        // Find who deleted the message
+        if (entry.extra.channel.id === message.channel.id && (entry.target.id === message.author.id) && (entry.createdTimestamp > (Date.now() - 5000)) && (entry.extra.count >= 1)) {
+            user = `**Deleted by:** ${entry.executor.toString()}`;
+        } else {
+            user = "**Deleted by:** The author or a bot";
+        }
+
+        // Get the log channel
+        const channel = await getChannel(message, msgSettings.logs.deleted, false);
+
+        const embed = new MessageEmbed()
+            .setAuthor(`Message by ${message.author.tag} deleted in #${message.channel.name}`, message.author.displayAvatarURL({ format: "png", dynamic: true }))
+            .setThumbnail(message.author.displayAvatarURL({ format: "png", dynamic: true }))
+            .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+            .setDescription(stripIndents`**User:** ${message.author} (\`${message.author.id}\`)
+            **Message ID:** \`${message.id}\`
+            ${user}`)
+            .addField(`Message Content`, message.content)
+            .setTimestamp();
+
+        channel?.send({ embeds: [embed] });
+    }
 };
