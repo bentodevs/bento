@@ -48,6 +48,6 @@
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
-    "eslint": "^7.31.0"
+    "eslint": "^8.0.0"
   }
 }
