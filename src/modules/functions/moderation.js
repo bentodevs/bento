@@ -24,7 +24,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
             .setColor(message.member.displayColor)
             .setTimestamp()
             .setFooter(`User ID: ${member.user.id}`);
-        
+
         // Send the completed embed
         modlog.send({ embeds: [embed] });
     } else if (type.toLowerCase() === "unmute") {
@@ -38,7 +38,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
             .setColor(member.displayColor)
             .setTimestamp()
             .setFooter(`User ID: ${member.user.id}`);
-        
+
         // Send the completed embed
         modlog.send({ embeds: [embed] });
     } else if (type.toLowerCase() === "ban") {
@@ -53,7 +53,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
             .setColor(message.member.displayColor)
             .setTimestamp()
             .setFooter(`User ID: ${member.id}`);
-        
+
         // Send the completed embed
         modlog.send({ embeds: [embed] });
     } else if (type.toLowerCase() === "unban") {
@@ -67,7 +67,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
             .setColor(message.member.displayColor)
             .setTimestamp()
             .setFooter(`User ID: ${member.id}`);
-        
+
         // Send the completed embed
         modlog.send({ embeds: [embed] });
     } else if (type.toLowerCase() === "kick") {
@@ -81,7 +81,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
             .setColor(message.member.displayColor)
             .setTimestamp()
             .setFooter(`User ID: ${member.user.id}`);
-        
+
         // Send the completed embed
         modlog.send({ embeds: [embed] });
     } else {
@@ -96,14 +96,14 @@ exports.checkMessage = async (message, settings) => {
         return;
 
     if (settings.moderation.filter?.state) {
-        for (const data of settings.moderation.filter?.entires) {
+        for (const data of settings.moderation.filter?.entries) {
             if (message.content.toLowerCase().includes(data.toLowerCase())) {
                 message.delete().catch(() => { });
                 await message.reply(`you are unable to say that here!`).then(m => setTimeout(() => m.delete().catch(() => {}), 5000));
             }
         }
     }
-    
+
     if (settings.moderation.filter?.zalgo) {
         const zalgo = new RegExp(/[\xCC\xCD]/);
         if (zalgo.test(message.content)) {
@@ -133,9 +133,9 @@ exports.checkMessage = async (message, settings) => {
 
 /**
  * Check if the user running the command is blacklisted
- * 
+ *
  * @param {Object} message The message (or interaction) object from which to get certain data (Such as guild ID, etc.)
- * 
+ *
  * @returns {Promise.<Boolean>} True if blacklisted, false if not blacklisted.
  */
 exports.checkBlacklist = async (message) => {
