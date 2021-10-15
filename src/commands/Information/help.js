@@ -135,7 +135,7 @@ module.exports = {
 
             // Get the category or command permission
             const checkCat = message.permissions.categories?.[command.info.category.toLowerCase()]?.permission && JSON.stringify(message.permissions.commands[command.info.name]) == JSON.stringify(perms),
-            permission = checkCat ? message.permissions.categories?.[command.info.category.toLowerCase()] : message.permissions.commands[command.info.name];
+            permission = checkCat ? message.permissions.categories?.[command.info.category.toLowerCase()] : message.permissions.commands?.[command.info.name];
 
             // Define the perm var
             let perm = "";
