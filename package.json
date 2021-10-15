@@ -40,7 +40,7 @@
     "flip": "^1.0.0",
     "https-proxy-agent": "^5.0.0",
     "iso-639-1": "^2.1.9",
-    "mongoose": "^6.0.9",
+    "mongoose": "^6.0.11",
     "node-canvas": "^2.7.0",
     "node-fetch": "^2.6.2",
     "ora": "^5.4.1",
