@@ -7,13 +7,11 @@ module.exports = {
     info: {
         name: "help",
         aliases: ["?", "commands"],
-        usage: "help [command | category | \"all\"]",
+        usage: "help [command]",
         examples: [
-            "help ping",
-            "help moderation",
-            "help all"
+            "help ping"
         ],
-        description: "Shows a list of commands or information about a specific command or category.",
+        description: "Shows a list of commands or information about a specific command.",
         category: "Information",
         info: null,
         options: []
@@ -33,9 +31,9 @@ module.exports = {
     slash: {
         enabled: true,
         opts: [{
-            name: "command_category",
+            name: "command",
             type: "STRING",
-            description: "The command or category you want to view the information of.",
+            description: "The command you want to view the information of.",
             required: false
         }]
     },
@@ -71,7 +69,7 @@ module.exports = {
             if (!bot.config.general.devs.includes(message.author?.id ?? message.user.id))
                 commands = commands.filter(c => !c.opts.devOnly || !c.opts.disabled);
             // If the command was run in dms remove all the guild only commands
-            if (!message.guild && !(args?.[0]?.toLowerCase() == "all" || message.options?.get("command")?.value == "all"))
+            if (!message.guild && (args?.[0]?.toLowerCase() !== "all" || message.options?.get("command")?.value !== "all"))
                 commands = commands.filter(c => !c.opts.guildOnly);
 
             // Sort the commands
@@ -106,7 +104,7 @@ module.exports = {
             (message.author?.send({ embeds: [embed] }) ?? message.user.send({ embeds: [embed] }))
                 .then(() => {
                     // If the "message" is actually an interaction, the use interaction methods
-                    if (message?.commandId)
+                    if (message?.isCommand())
                         return message.confirmation({ content: "I've sent you a DM with a list of my commands!", ephemeral: true });
                     // If the command was ran in a guild send a confirmation message
                     if (message.guild)
@@ -114,7 +112,7 @@ module.exports = {
                 })
                 .catch(() => {
                     // If the "message" is actually an interaction, the use interaction methods
-                    if (message?.commandId)
+                    if (message?.isCommand())
                         return message.error({ content: "Something went wrong, you most likely have your DM's disabled!", ephemeral: true });
                     // If something went wrong return an error specifying the user most likely has their DM's disabled
                     message.errorReply("Something went wrong, you most likely have your DM's disabled!");
@@ -133,61 +131,63 @@ module.exports = {
             if (command.info.aliases.length >= 1) desc += `\n**${command.info.aliases.length > 1 ? "Aliases" : "Alias"}:** \`${prefix}${command.info.aliases.join(`\`, \`${prefix}`)}\``;
             if (command.info.category) desc += `\n**Category:** ${command.info.category}`;
 
-            // Get the category or command permission
-            const checkCat = message.permissions.categories?.[command.info.category.toLowerCase()]?.permission && JSON.stringify(message.permissions.commands[command.info.name]) == JSON.stringify(perms),
-            permission = checkCat ? message.permissions.categories?.[command.info.category.toLowerCase()] : message.permissions.commands?.[command.info.name];
+            if (message.guild) {
+                // Get the category or command permission
+                const checkCat = message.permissions.categories[command.info.category.toLowerCase()]?.permission && JSON.stringify(message.permissions.commands[command.info.name]) == JSON.stringify(perms),
+                permission = checkCat ? message.permissions.categories[command.info.category.toLowerCase()] : message.permissions.commands[command.info.name];
 
-            // Define the perm var
-            let perm = "";
+                // Define the perm var
+                let perm = "";
 
-            if (permission.type == "role" && permission.hierarchic) {
-                // Try to get the role
-                const role = await getRole(message, permission.permission);
-
-                // Add the data to the perm message
-                perm = role?.id == message.guild.id ? "open to everyone" : `the ${role ?? "<deleted role>"} role and up`;
-            } else if (permission.type == "role" && !permission.hierarchic) {
-                // Define the roles array
-                const roles = [];
-
-                if (permission.permission.length == 1 && (permission.permission.includes("@everyone") || permission.permission.includes(message.guild.id))) {
-                    // If the only permission in the array is the everyone role set the perm message to "open to everyone"
-                    perm = `open to everyone`;
-                } else {
-                    // Loop through the permissions and add them to the roles array
-                    for (const i of permission.permission) {
-                        if (i == "@everyone" || i == message.guild.id) {
-                            roles.push("@everyone");
-                        } else {
-                            const role = await getRole(message, i);
-                            roles.push(role?.toString() ?? "<deleted role>");
-                        }
-                    }
+                if (permission.type == "role" && permission.hierarchic) {
+                    // Try to get the role
+                    const role = await getRole(message, permission.permission);
 
                     // Add the data to the perm message
-                    perm = `the ${roles.join(", ")} role${roles.length > 1 ? "s" : ""}`;
+                    perm = role?.id == message.guild.id ? "open to everyone" : `the ${role ?? "<deleted role>"} role and up`;
+                } else if (permission.type == "role" && !permission.hierarchic) {
+                    // Define the roles array
+                    const roles = [];
+
+                    if (permission.permission.length == 1 && (permission.permission.includes("@everyone") || permission.permission.includes(message.guild.id))) {
+                        // If the only permission in the array is the everyone role set the perm message to "open to everyone"
+                        perm = `open to everyone`;
+                    } else {
+                        // Loop through the permissions and add them to the roles array
+                        for (const i of permission.permission) {
+                            if (i == "@everyone" || i == message.guild.id) {
+                                roles.push("@everyone");
+                            } else {
+                                const role = await getRole(message, i);
+                                roles.push(role?.toString() ?? "<deleted role>");
+                            }
+                        }
+
+                        // Add the data to the perm message
+                        perm = `the ${roles.join(", ")} role${roles.length > 1 ? "s" : ""}`;
+                    }
+                } else if (permission.type == "discord") {
+                    // Add the data to the perm message
+                    perm = `the Discord permission \`${permission.permission}\``;
+                } else if (command.info.category.toLowerCase() == "dev") {
+                    // Add the data to the perm message
+                    perm = `Only available to bot devs`;
                 }
-            } else if (permission.type == "discord") {
-                // Add the data to the perm message
-                perm = `the Discord permission \`${permission.permission}\``;
-            } else if (command.info.category.toLowerCase() == "dev") {
-                // Add the data to the perm message
-                perm = `Only available to bot devs`;
-            }
 
-            if (checkCat) {
-                // If the perm is set for a category add it to the perm message
-                perm += ` (set for the \`${command.info.category}\` category)`;
-            } else if (JSON.stringify(permission) == JSON.stringify(perms)) {
-                // If the perm is the default perm add it to the perm message
-                perm += " (default)";
-            } else {
-                // Add a dot
-                perm += ".";
-            }
+                if (checkCat) {
+                    // If the perm is set for a category add it to the perm message
+                    perm += ` (set for the \`${command.info.category}\` category)`;
+                } else if (JSON.stringify(permission) == JSON.stringify(perms)) {
+                    // If the perm is the default perm add it to the perm message
+                    perm += " (default)";
+                } else {
+                    // Add a dot
+                    perm += ".";
+                }
 
-            // Add the permissions to the description
-            desc += `\n**Permissions:** ${perm}`;
+                // Add the permissions to the description
+                desc += `\n**Permissions:** ${perm}`;
+            }
 
             if (command.opts.premium) desc += `\n**Premium:** This command requires you to have [premium](https://r2-d2.dev/).`;
 
