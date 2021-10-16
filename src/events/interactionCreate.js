@@ -3,6 +3,7 @@ const { MessageEmbed } = require("discord.js");
 const { getSettings, getPerms } = require("../database/mongo");
 const { checkBlacklist } = require("../modules/functions/moderation");
 const { checkPerms, checkSelf } = require("../modules/functions/permissions");
+const Sentry = require('@sentry/node');
 
 module.exports = async (bot, interaction) => {
 
@@ -75,6 +76,9 @@ module.exports = async (bot, interaction) => {
             // Run the command
             cmd.run_interaction ? await cmd.run_interaction(bot, interaction) : await cmd.run(bot, interaction);
         } catch (err) {
+            // Send the error to Sentry
+            Sentry.captureException(err);
+
             // Get the error guild and channel
             const guild = bot.guilds.cache.get(bot.config.logging.errors.guild) || await bot.guilds.fetch(bot.config.logging.errors.guild).catch(() => {}),
             channel = guild?.channels.cache.get(bot.config.logging.errors.channel);
@@ -96,7 +100,7 @@ module.exports = async (bot, interaction) => {
 
             // If the bot is in a dev environment log the error as well
             if (bot.config.general.development)
-                console.error(err);
+                console.log(err);
 
             // Send the error message to the user
             interaction.error({ content: stripIndents(`An error occurred while running the command: \`${err}\`

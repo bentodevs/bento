@@ -116,6 +116,7 @@ const init = async () => {
         useNewUrlParser: true,
         useUnifiedTopology: true
     }).catch(err => {
+        Sentry.captureException(err);
         throw new Error(err);
     });
 
@@ -140,6 +141,8 @@ const init = async () => {
                 symbol: "❌",
                 text: `Error while logging into discord: ${err}`,
             });
+
+            Sentry.captureException(err.stack);
         });
 };
 

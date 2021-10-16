@@ -8,6 +8,7 @@ const { checkSelf, checkPerms } = require("../modules/functions/permissions");
 const { checkLevel } = require("../modules/functions/leveling");
 const tags = require("../database/models/tags");
 const afk = require("../database/models/afk");
+const Sentry = require('@sentry/node');
 
 module.exports = async (bot, message) => {
     // If a message is partial try to fetch it.
@@ -167,6 +168,9 @@ module.exports = async (bot, message) => {
         // Run the command
         await cmd.run(bot, message, args);
     } catch (err) {
+        // Send the error to Sentry
+        Sentry.captureException(err);
+
         // Get the error guild and channel
         const guild = bot.guilds.cache.get(bot.config.logging.errors.guild) || await bot.guilds.fetch(bot.config.logging.errors.guild).catch(() => {}),
         channel = guild?.channels.cache.get(bot.config.logging.errors.channel);
@@ -189,7 +193,7 @@ module.exports = async (bot, message) => {
 
         // If the bot is in a dev environment log the error as well
         if (bot.config.general.development)
-            console.error(err);
+            console.log(err);
 
         // Send an error message to the user
         message.errorReply(stripIndents`An error occurred while running the command: \`${err}\`
