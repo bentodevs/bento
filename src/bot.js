@@ -49,8 +49,6 @@ bot.logger = require("./modules/functions/logger");
 // Import prototypes
 require("./modules/functions/prototypes")();
 
-// Create the mojang object
-bot.mojang = {};
 // Create the deletedMsgs collection
 bot.deletedMsgs = new Collection();
 // Create the cooldowns collection
