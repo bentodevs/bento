@@ -186,27 +186,27 @@ module.exports = {
 
         if (!args[1]) {
             // Get the category or command permission
-            const checkCat = message.permissions.categories?.[command.info.category.toLowerCase()]?.permission && JSON.stringify(message.permissions.commands[command.info.name]) == JSON.stringify(filterSelfPerms(command?.perms)),
-            permission = checkCat ? message.permissions.categories?.[command.info.category.toLowerCase()] : message.permissions.commands[command.info.name];
+            const checkCat = message.permissions.categories[command?.info.category.toLowerCase() ?? category?.toLowerCase()]?.permission && JSON.stringify(message.permissions.commands[command.info.name]) == JSON.stringify(filterSelfPerms(command?.perms)),
+            permission = checkCat ? message.permissions.categories[command?.info.category.toLowerCase() ?? category?.toLowerCase()] : message.permissions.commands[command.info.name];
 
             // Define the perm var
-            let perm = `🔒 The current permission for the \`${target}\` ${type} is set to `;
+            let permdesc = `🔒 The current permission for the \`${target}\` ${type} is set to `;
 
             if (!perm?.type && category) {
-                perm = "🔒 There is no permission set for that category";
+                permdesc = "🔒 There is no permission set for that category";
             } else if (permission.type == "role" && permission.hierarchic) {
                 // Try to get the role
                 const role = await getRole(message, permission.permission);
 
                 // Add the data to the perm message
-                perm += role?.id == message.guild.id ? "open to everyone" : `the ${role ?? "<deleted role>"} role and up`;
+                permdesc += role?.id == message.guild.id ? "open to everyone" : `the ${role ?? "<deleted role>"} role and up`;
             } else if (permission.type == "role" && !permission.hierarchic) {
                 // Define the roles array
                 const roles = [];
 
                 if (permission.permission.length == 1 && (permission.permission.includes("@everyone") || permission.permission.includes(message.guild.id))) {
                     // If the only permission in the array is the everyone role set the perm message to "open to everyone"
-                    perm += `open to everyone`;
+                    permdesc += `open to everyone`;
                 } else {
                     // Loop through the permissions and add them to the roles array
                     for (const i of permission.permission) {
@@ -235,29 +235,29 @@ module.exports = {
                     }
 
                     // Add the data to the perm message
-                    perm += `the ${roles.join(", ")} role${roles.length > 1 ? "s" : ""}`;
+                    permdesc += `the ${roles.join(", ")} role${roles.length > 1 ? "s" : ""}`;
                 }
             } else if (permission.type == "discord") {
                 // Add the data to the perm message
-                perm += `the Discord permission \`${permission.permission}\``;
+                permdesc += `the Discord permission \`${permission.permission}\``;
             } else if (command.info.category.toLowerCase() == "dev") {
                 // Add the data to the perm message
-                perm += `bot devs only`;
+                permdesc += `bot devs only`;
             }
 
             if (checkCat) {
                 // If the perm is set for a category add it to the perm message
-                perm += ` (set for the \`${command.info.category}\` category)`;
+                permdesc += ` (set for the \`${command.info.category}\` category)`;
             } else if (JSON.stringify(permission) == JSON.stringify(filterSelfPerms(command?.perms))) {
                 // If the perm is the default perm add it to the perm message
-                perm += " (default)";
+                permdesc += " (default)";
             } else {
                 // Add a dot
-                perm += ".";
+                permdesc += ".";
             }
 
             // Send the message
-            message.reply(perm);
+            message.reply(permdesc);
         } else if (Permissions.FLAGS[args[1].toUpperCase()]) {
             // If the permission is already set to the specified permission return an error
             if (args[1].toUpperCase() == perm?.permission)
@@ -383,27 +383,27 @@ module.exports = {
 
         if (data == "view") {
             // Get the category or command permission
-            const checkCat = interaction.permissions.categories?.[command?.info.category.toLowerCase()]?.permission && JSON.stringify(interaction.permissions.commands[command.info.name]) == JSON.stringify(filterSelfPerms(command?.perms)),
-            permission = checkCat ? interaction.permissions.categories?.[command.info.category.toLowerCase()] : interaction.permissions.commands[command.info.name];
+            const checkCat = interaction.permissions.categories[command?.info.category.toLowerCase() ?? category?.toLowerCase()]?.permission && JSON.stringify(interaction.permissions.commands[command.info.name]) == JSON.stringify(filterSelfPerms(command?.perms)),
+            permission = checkCat ? interaction.permissions.categories[command?.info.category.toLowerCase() ?? category?.toLowerCase()] : interaction.permissions.commands[command.info.name];
 
             // Define the perm var
-            let perm = `🔒 The current permission for the \`${target}\` ${type} is set to `;
+            let permdesc = `🔒 The current permission for the \`${target}\` ${type} is set to `;
 
             if (!perm?.type && category) {
-                perm = "🔒 There is no permission set for that category";
+                permdesc = "🔒 There is no permission set for that category";
             } else if (permission.type == "role" && permission.hierarchic) {
                 // Try to get the role
                 const role = await getRole(interaction, permission.permission);
 
                 // Add the data to the perm message
-                perm += role?.id == interaction.guild.id ? "open to everyone" : `the ${role ?? "<deleted role>"} role and up`;
+                permdesc += role?.id == interaction.guild.id ? "open to everyone" : `the ${role ?? "<deleted role>"} role and up`;
             } else if (permission.type == "role" && !permission.hierarchic) {
                 // Define the roles array
                 const roles = [];
 
                 if (permission.permission.length == 1 && (permission.permission.includes("@everyone") || permission.permission.includes(interaction.guild.id))) {
                     // If the only permission in the array is the everyone role set the perm message to "open to everyone"
-                    perm += `open to everyone`;
+                    permdesc += `open to everyone`;
                 } else {
                     // Loop through the permissions and add them to the roles array
                     for (const i of permission.permission) {
@@ -432,29 +432,29 @@ module.exports = {
                     }
 
                     // Add the data to the perm message
-                    perm += `the ${roles.join(", ")} role${roles.length > 1 ? "s" : ""}`;
+                    permdesc += `the ${roles.join(", ")} role${roles.length > 1 ? "s" : ""}`;
                 }
             } else if (permission.type == "discord") {
                 // Add the data to the perm message
-                perm += `the Discord permission \`${permission.permission}\``;
+                permdesc += `the Discord permission \`${permission.permission}\``;
             } else if (command.info.category.toLowerCase() == "dev") {
                 // Add the data to the perm message
-                perm += `bot devs only`;
+                permdesc += `bot devs only`;
             }
 
             if (checkCat) {
                 // If the perm is set for a category add it to the perm message
-                perm += ` (set for the \`${command.info.category}\` category)`;
+                permdesc += ` (set for the \`${command.info.category}\` category)`;
             } else if (JSON.stringify(permission) == JSON.stringify(filterSelfPerms(command?.perms))) {
                 // If the perm is the default perm add it to the perm message
-                perm += " (default)";
+                permdesc += " (default)";
             } else {
                 // Add a dot
-                perm += ".";
+                permdesc += ".";
             }
 
             // Send the message
-            interaction.reply(perm);
+            interaction.reply(permdesc);
         } else if (data == "role") {
             // Get the role
             const role = interaction.options.get("role").role;
