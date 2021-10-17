@@ -248,7 +248,7 @@ module.exports = {
             if (checkCat) {
                 // If the perm is set for a category add it to the perm message
                 permdesc += ` (set for the \`${command.info.category}\` category)`;
-            } else if (JSON.stringify(permission) == JSON.stringify(filterSelfPerms(command?.perms))) {
+            } else if (JSON.stringify(permission) == JSON.stringify(category ? filterSelfPerms(command?.perms) : undefined)) {
                 // If the perm is the default perm add it to the perm message
                 permdesc += " (default)";
             } else {
