@@ -383,8 +383,8 @@ module.exports = {
 
         if (data == "view") {
             // Get the category or command permission
-            const checkCat = interaction.permissions.categories[command?.info.category.toLowerCase()]?.permission && JSON.stringify(interaction.permissions.commands[command.info.name]) == JSON.stringify(filterSelfPerms(command?.perms)),
-            permission = checkCat ? interaction.permissions.categories[command.info.category.toLowerCase()] : interaction.permissions.commands[command.info.name];
+            const checkCat = interaction.permissions.categories?.[command?.info.category.toLowerCase()]?.permission && JSON.stringify(interaction.permissions.commands[command.info.name]) == JSON.stringify(filterSelfPerms(command?.perms)),
+            permission = checkCat ? interaction.permissions.categories?.[command.info.category.toLowerCase()] : interaction.permissions.commands[command.info.name];
 
             // Define the perm var
             let perm = `🔒 The current permission for the \`${target}\` ${type} is set to `;
