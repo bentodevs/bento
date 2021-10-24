@@ -22,17 +22,17 @@ exports.getMember = async (message, args, noArgsAuthor) => {
     const cleanArgs = args.replace(/\D/g,'');
 
     // Try to grab the member
-    let target = message.guild.members.cache.get(cleanArgs) ||
-        message.guild.members.cache.find(m => m.user.username.toLowerCase() === args.toLowerCase()) ||
-        message.guild.members.cache.find(m => m.user.username.toLowerCase().includes(args.toLowerCase())) ||
-        message.guild.members.cache.find(m => m.displayName.toLowerCase() === args.toLowerCase()) ||
-        message.guild.members.cache.find(m => m.displayName.toLowerCase().includes(args.toLowerCase())) ||
-        await message.guild.members.fetch(args).catch(() => {});
+    let target = message.guild?.members.cache.get(cleanArgs) ||
+        message.guild?.members.cache.find(m => m.user.username.toLowerCase() === args.toLowerCase()) ||
+        message.guild?.members.cache.find(m => m.user.username.toLowerCase().includes(args.toLowerCase())) ||
+        message.guild?.members.cache.find(m => m.displayName.toLowerCase() === args.toLowerCase()) ||
+        message.guild?.members.cache.find(m => m.displayName.toLowerCase().includes(args.toLowerCase())) ||
+        await message.guild?.members.fetch(args).catch(() => {});
 
     // Grab the user mention
     if (match) {
-        target = message.guild.members.cache.get(match[1]) ||
-            await message.guild.members.fetch(match[1]).catch(() => {});
+        target = message.guild?.members.cache.get(match[1]) ||
+            await message.guild?.members.fetch(match[1]).catch(() => {});
     }
 
     // Return the member if one was found
