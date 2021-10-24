@@ -128,11 +128,11 @@ module.exports = {
             // Send embed
             message.reply({ embeds: [embed] });
         } else if (args[0].toLowerCase() === "filter") {
-            if (args[1].toLowerCase() === "enable") {
+            if (args[1]?.toLowerCase() === "enable") {
                 // Enable filter & send confirmation
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { "moderation.filter.state": true });
                 return message.confirmationReply("Message filtering has been **enabled**");
-            } else if (args[1].toLowerCase() === "disable") {
+            } else if (args[1]?.toLowerCase() === "disable") {
                 // Disable filter & send confirmation
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { "moderation.filter.state": false });
                 return message.confirmationReply("Message filtering has been **disabled**");
@@ -140,11 +140,11 @@ module.exports = {
                 return message.errorReply(`You did not specify a valid option! Valid options are \`${options.join("`, `")}\``);
             }
         } else if (args[0].toLowerCase() === "zalgo") {
-            if (args[1].toLowerCase() === "enable") {
+            if (args[1]?.toLowerCase() === "enable") {
                 // Enable zalgo filter & send confirmation
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { "moderation.filter.zalgo": true });
                 return message.confirmationReply("Zalgo text moderation has been **enabled**");
-            } else if (args[1].toLowerCase() === "disable") {
+            } else if (args[1]?.toLowerCase() === "disable") {
                 // Disable filter & send confirmation
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { "moderation.filter.zalgo": false });
                 return message.confirmationReply("Zalgo text moderation has been **disabled**");
@@ -152,11 +152,11 @@ module.exports = {
                 return message.errorReply(`You did not specify a valid option! Valid options are \`${options.join("`, `")}\``);
             }
         } else if (args[0].toLowerCase() === "no-invite") {
-            if (args[1].toLowerCase() === "enable") {
+            if (args[1]?.toLowerCase() === "enable") {
                 // Enable invite filter & send confirmation
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { "moderation.no_invite": true });
                 message.confirmationReply("Invite filtering has been **enabled**");
-            } else if (args[1].toLowerCase() === "disable") {
+            } else if (args[1]?.toLowerCase() === "disable") {
                 // Disable filter & send confirmation
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { "moderation.no_invite": false });
                 message.confirmationReply("Invite filtering has been **disabled**");
@@ -164,11 +164,11 @@ module.exports = {
                 return message.errorReply(`You did not specify a valid option! Valid options are \`${options.join("`, `")}\``);
             }
         } else if (args[0].toLowerCase() === "no-link") {
-            if (args[1].toLowerCase() === "enable") {
+            if (args[1]?.toLowerCase() === "enable") {
                 // Enable link filter & send confirmation
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { "moderation.no_link": true });
                 message.confirmationReply("Link filtering has been **enabled**");
-            } else if (args[1].toLowerCase() === "disable") {
+            } else if (args[1]?.toLowerCase() === "disable") {
                 // Disable filter & send confirmation
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { "moderation.no_link": false });
                 message.confirmationReply("Link filtering has been **disabled**");
@@ -176,7 +176,7 @@ module.exports = {
                 return message.errorReply(`You did not specify a valid option! Valid options are \`${options.join("`, `")}\``);
             }
         } else if (args[0].toLowerCase() === "mentions-mute") {
-            if ((args[1].toLowerCase() === "off") || (args[1].toLowerCase() === "0")) {
+            if ((args[1]?.toLowerCase() === "off") || (args[1].toLowerCase() === "0")) {
                 // If the max mentions is unset already, return an error
                 if (!message.settings.moderation.mentions_mute)
                     return message.errorReply("There is no mute threshold for message mentions currently set!");
@@ -199,7 +199,7 @@ module.exports = {
                 return message.errorReply("You did not specify a valid value!");
             }
         } else if (args[0].toLowerCase() === "mentions-ban") {
-            if ((args[1].toLowerCase() === "off") || (args[1].toLowerCase() === "0")) {
+            if ((args[1]?.toLowerCase() === "off") || (args[1]?.toLowerCase() === "0")) {
                 // If the max mentions is unset already, return an error
                 if (!message.settings.moderation.mentions_ban)
                     return message.errorReply("There is no ban threshold for message mentions currently set!");
