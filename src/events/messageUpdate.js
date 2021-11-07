@@ -23,8 +23,6 @@ module.exports = async (bot, oldMsg, newMsg) => {
 
     // Logging code
     if (msgSettings.logs?.deleted) {
-        // Define user
-        let user;
 
         // Get the log channel
         const channel = await getChannel(newMsg, msgSettings.logs.deleted, false);
@@ -34,8 +32,7 @@ module.exports = async (bot, oldMsg, newMsg) => {
             .setThumbnail(newMsg.author.displayAvatarURL({ format: "png", dynamic: true }))
             .setColor(newMsg.member?.displayColor ?? bot.config.general.embedColor)
             .setDescription(stripIndents`**User:** ${newMsg.author} (\`${newMsg.author.id}\`)
-            **Message ID:** \`${newMsg.id}\`
-            ${user}`)
+            **Message ID:** \`${newMsg.id}\``)
             .addField(`Old Message Content`, oldMsg.content, true)
             .addField(`New Message Content`, newMsg.content, true)
             .setTimestamp();
