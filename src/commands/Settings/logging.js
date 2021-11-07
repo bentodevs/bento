@@ -42,47 +42,12 @@ module.exports = {
 
     run: async (bot, message, args) => {
 
-        if (args[0]?.toLowerCase() === "moderation") {
-            if (message.settings.manual_events.moderation) {
-                await settings.findOneAndUpdate({ _id: message.guild.id }, { "manual_events.moderation": false });
-                message.confirmationReply("Manual moderation logging has been **disabled**");
-            } else {
-                await settings.findOneAndUpdate({ _id: message.guild.id }, { "manual_events.moderation": true });
-                message.confirmationReply("Manual moderation logging has been **enabled**");
-            }
-        } else if (args[0]?.toLowerCase() === "guild") {
-            if (message.settings.manual_events.guild) {
-                await settings.findOneAndUpdate({ _id: message.guild.id }, { "manual_events.guild": false });
-                message.confirmationReply("Guild modification logging has been **disabled**");
-            } else {
-                await settings.findOneAndUpdate({ _id: message.guild.id }, { "manual_events.guild": true });
-                message.confirmationReply("Guild modification logging has been ***enabled**");
-            }
-        } else if (args[0]?.toLowerCase() === "channels") {
-            if (message.settings.manual_events.channels) {
-                await settings.findOneAndUpdate({ _id: message.guild.id }, { "manual_events.channels": false });
-                message.confirmationReply("Channel modification logging has been **disabled**");
-            } else {
-                await settings.findOneAndUpdate({ _id: message.guild.id }, { "manual_events.channels": true });
-                message.confirmationReply("Channel modification logging has been **enabled**");
-            }
-        } else if (args[0]?.toLowerCase() === "roles") {
-            if (message.settings.manual_events.roles) {
-                await settings.findOneAndUpdate({ _id: message.guild.id }, { "manual_events.roles": false });
-                message.confirmationReply("Manual role modification event logging has been **disabled**");
-            } else {
-                await settings.findOneAndUpdate({ _id: message.guild.id }, { "manual_events.roles": true });
-                message.confirmationReply("Manual role modification event logging has been **enabled**");
-            }
-        } else if (args[0]?.toLowerCase() === "members") {
-            if (message.settings.manual_events.members) {
-                await settings.findOneAndUpdate({ _id: message.guild.id }, { "manual_events.members": false });
-                message.confirmationReply("Member modification logging has been **disabled**");
-            } else {
-                await settings.findOneAndUpdate({ _id: message.guild.id }, { "manual_events.members": true });
-                message.confirmationReply("Member modification logging has been **enabled**");
-            }
-        } else {
+        const eventLogType = args[0]?.toLowerCase(),
+            options = ["moderation", "guild", "channels", "roles", "members"];
+
+        if (!options.includes(eventLogType)) {
+
+            // Build the state embed
             const embed = new MessageEmbed()
                 .setTitle(`Event logging`)
                 .setColor(message.member.displayColor ?? bot.config.general.embedColor)
@@ -93,8 +58,26 @@ module.exports = {
                     📚 Role modification logging is ${message.settings.manual_events.roles ? "**enabled**" : "**disabled**"}
                     🧑‍🤝‍🧑 Member modification logging is ${message.settings.manual_events.members ? "**enabled**" : "**disabled**"}`);
 
-            message.channel.send({ embeds: [embed] });
+            // Send the state embed
+            message.reply({ embeds: [embed] });
         }
 
+        await settings.findOneAndUpdate({ _id: message.guild.id }, {
+            [`manual_events.${eventLogType}`]: !message.settings.manual_events[eventLogType]
+        });
+
+        switch (eventLogType) {
+            case "moderation":
+                message.confirmationReply(`${eventLogType.toTitleCase()} logging has been **${!message.settings.manual_events[eventLogType] ? "enabled" : "disabled"}**`);
+                break;
+            case "guild":
+            case "roles":
+            case "members":
+            case "channels":
+                message.confirmationReply(`${eventLogType.toTitleCase()} modification logging has been **${!message.settings.manual_events[eventLogType] ? "enabled" : "disabled"}**`);
+                break;
+            default:
+                break;
+        }
     }
 };
