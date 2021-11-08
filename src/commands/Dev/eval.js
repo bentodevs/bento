@@ -1,61 +1,62 @@
-const { Util } = require("discord.js");
+const { Util } = require('discord.js');
 
 module.exports = {
     info: {
-        name: "eval",
-        aliases: ["e"],
-        usage: "eval <code>",
+        name: 'eval',
+        aliases: ['e'],
+        usage: 'eval <code>',
         examples: [
-            "eval 1+1"
+            'eval 1+1',
         ],
-        description: "Runs code.",
-        category: "Dev",
+        description: 'Runs code.',
+        category: 'Dev',
         info: null,
-        options: []
+        options: [],
     },
     perms: {
-        type: "dev",
-        self: []
+        type: 'dev',
+        self: [],
     },
     opts: {
         guildOnly: false,
         devOnly: true,
         premium: false,
         noArgsHelp: true,
-        disabled: false
+        disabled: false,
     },
 
     run: async (bot, message, args) => {
-
         // Clean the eval from any confidential data
         const clean = (text) => {
-            if (typeof (text) === "string") {
+            if (typeof (text) === 'string') {
                 return text
                     .replace(/`/g, `\`${String.fromCharCode(8203)}`)
                     .replace(/@/g, `@${String.fromCharCode(8203)}`)
-                    .replace(bot.config.general.token, "Access Denied");
+                    .replace(bot.config.general.token, 'Access Denied');
             }
-            
+
             return text;
         };
 
         try {
             // Get the code to eval
-            const code = args.join(" ");
+            const code = args.join(' ');
             // Eval the code
+            // eslint-disable-next-line no-eval
             let evaled = await eval(code);
 
             // Inspect the code if it didn't return a string
-            if (typeof (evaled) !== "string") {
-                evaled = require("util").inspect(evaled);
+            if (typeof (evaled) !== 'string') {
+                // eslint-disable-next-line global-require
+                evaled = require('util').inspect(evaled);
             }
 
             // Split the message
-            const msgs = Util.splitMessage(clean(evaled), { maxLength: "1800" });
+            const msgs = Util.splitMessage(clean(evaled), { maxLength: '1800' });
 
             // Send the messages
             for (const data of msgs) {
-                if (data == msgs[0]) {
+                if (data === msgs[0]) {
                     message.reply(`\`\`\`${data}\`\`\``);
                 } else {
                     message.channel.send(`\`\`\`${data}\`\`\``);
@@ -65,6 +66,5 @@ module.exports = {
             // Return an error if something went wrong
             message.reply(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
         }
-
-    }
+    },
 };
