@@ -1,5 +1,5 @@
 {
-    "extends": "eslint:recommended",
+    "extends": ["eslint:recommended", "airbnb-base"],
     "env": {
         "node": true,
         "es6": true
@@ -17,6 +17,11 @@
         "prefer-const": "warn",
         "require-atomic-updates": "off",
         "no-extra-semi": "warn",
-        "semi": [2, "always"]
+        "semi": [2, "always"],
+        "indent": ["warn", 4],
+        "consistent-return": "off",
+        "max-len": "off",
+        "no-restricted-syntax": "off",
+        "no-await-in-loop": "off"
     }
 }
