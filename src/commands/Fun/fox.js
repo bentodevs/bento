@@ -1,39 +1,38 @@
-const { MessageEmbed } = require("discord.js");
-const { default: fetch } = require("node-fetch");
+const { MessageEmbed } = require('discord.js');
+const { default: fetch } = require('node-fetch');
 
 module.exports = {
     info: {
-        name: "fox",
+        name: 'fox',
         aliases: [],
-        usage: "",
+        usage: '',
         examples: [],
-        description: "Get a random image of a fox.",
-        category: "Fun",
+        description: 'Get a random image of a fox.',
+        category: 'Fun',
         info: null,
-        options: []
+        options: [],
     },
     perms: {
-        permission: ["@everyone"],
-        type: "role",
-        self: ["EMBED_LINKS"]
+        permission: ['@everyone'],
+        type: 'role',
+        self: ['EMBED_LINKS'],
     },
     opts: {
         guildOnly: false,
         devOnly: false,
         premium: false,
         noArgsHelp: false,
-        disabled: false
+        disabled: false,
     },
     slash: {
         enabled: true,
-        opts: []
+        opts: [],
     },
 
     run: async (bot, message) => {
-
         // Fetch a random fox image and convert the response into json
-        const req = await fetch("https://randomfox.ca/floof/"),
-        res = await req.json();
+        const req = await fetch('https://randomfox.ca/floof/');
+        const res = await req.json();
 
         // Build the embed
         const embed = new MessageEmbed()
@@ -42,6 +41,5 @@ module.exports = {
 
         // Send the embed
         message.reply({ embeds: [embed] });
-
-    }
+    },
 };

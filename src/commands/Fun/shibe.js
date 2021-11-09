@@ -1,39 +1,38 @@
-const { MessageEmbed } = require("discord.js");
-const { default: fetch } = require("node-fetch");
+const { MessageEmbed } = require('discord.js');
+const { default: fetch } = require('node-fetch');
 
 module.exports = {
     info: {
-        name: "shibe",
+        name: 'shibe',
         aliases: [],
-        usage: "",
+        usage: '',
         examples: [],
-        description: "Get a random image of a shibe (dog).",
-        category: "Fun",
+        description: 'Get a random image of a shibe (dog).',
+        category: 'Fun',
         info: null,
-        options: []
+        options: [],
     },
     perms: {
-        permission: ["@everyone"],
-        type: "role",
-        self: ["EMBED_LINKS"]
+        permission: ['@everyone'],
+        type: 'role',
+        self: ['EMBED_LINKS'],
     },
     opts: {
         guildOnly: false,
         devOnly: false,
         premium: false,
         noArgsHelp: false,
-        disabled: false
+        disabled: false,
     },
     slash: {
         enabled: true,
-        opts: []
+        opts: [],
     },
 
     run: async (bot, message) => {
-
         // Fetch a random shibe image and convert the response into json
-        const req = await fetch("http://shibe.online/api/shibes"),
-        res = await req.json();
+        const req = await fetch('http://shibe.online/api/shibes');
+        const res = await req.json();
 
         // Build the embed
         const embed = new MessageEmbed()
@@ -42,6 +41,5 @@ module.exports = {
 
         // Send the embed
         message.reply({ embeds: [embed] });
-
-    }
+    },
 };
