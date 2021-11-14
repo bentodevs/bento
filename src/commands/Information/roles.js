@@ -1,43 +1,42 @@
-const { MessageEmbed } = require("discord.js");
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
     info: {
-        name: "roles",
+        name: 'roles',
         aliases: [],
-        usage: "roles [page]",
+        usage: 'roles [page]',
         examples: [
-            "roles 2",
-            "roles 10"
+            'roles 2',
+            'roles 10',
         ],
-        description: "List all the roles from this guild.",
-        category: "Information",
+        description: 'List all the roles from this guild.',
+        category: 'Information',
         info: null,
-        options: []
+        options: [],
     },
     perms: {
-        permission: "MANAGE_ROLES",
-        type: "discord",
-        self: ["EMBED_LINKS"]
+        permission: 'MANAGE_ROLES',
+        type: 'discord',
+        self: ['EMBED_LINKS'],
     },
     opts: {
         guildOnly: true,
         devOnly: false,
         premium: false,
         noArgsHelp: false,
-        disabled: false
+        disabled: false,
     },
     slash: {
         enabled: true,
         opts: [{
-            name: "page",
-            type: "INTEGER",
-            description: "The page you want to view.",
-            required: false
-        }]
+            name: 'page',
+            type: 'INTEGER',
+            description: 'The page you want to view.',
+            required: false,
+        }],
     },
 
     run: async (bot, message, args) => {
-
         // Define page vars
         const pages = [];
         let page = 0;
@@ -51,29 +50,26 @@ module.exports = {
         }
 
         // If args[0] is a number set it as the page
-        if (!isNaN(args[0]))
-            page = args[0] -= 1;
+        // eslint-disable-next-line no-param-reassign, no-multi-assign
+        if (!Number.isNaN(args[0])) page = args[0] -= 1;
         // If the page doesn't exist return an error
-        if (!pages[page])
-            return message.errorReply("You didn't specify a valid page!");
+        if (!pages[page]) return message.errorReply("You didn't specify a valid page!");
 
         // Format the description
-        const description = pages[page].map(r => `${r} | **ID:** ${r.id} | **${r.members.size}** member(s)`);
+        const description = pages[page].map((r) => `${r} | **ID:** ${r.id} | **${r.members.size}** member(s)`);
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Roles of ${message.guild.name}`, message.guild.iconURL({ format: "png", dynamic: true }))
+            .setAuthor(`Roles of ${message.guild.name}`, message.guild.iconURL({ format: 'png', dynamic: true }))
             .setFooter(`${sorted.length} total roles | Page ${page + 1} of ${pages.length}`)
             .setColor(message.member?.displayColor || bot.config.general.embedColor)
-            .setDescription(description.join("\n"));
+            .setDescription(description.join('\n'));
 
         // Send the embed
         message.reply({ embeds: [embed] });
-
     },
 
     run_interaction: async (bot, interaction) => {
-
         // Define page vars
         const pages = [];
         let page = 0;
@@ -87,24 +83,22 @@ module.exports = {
         }
 
         // If the page option is there set it as the page
-        if (interaction.options.get("page")?.value)
-            page = interaction.options.get("page").value -= 1;
+        // eslint-disable-next-line no-param-reassign, no-multi-assign
+        if (interaction.options.get('page')?.value) page = interaction.options.get('page').value -= 1;
         // Return if the page wasn't found
-        if (!pages[page])
-            return interaction.error("You didn't specify a valid page!");
+        if (!pages[page]) return interaction.error("You didn't specify a valid page!");
 
         // Format the description
-        const description = pages[page].map(r => `${r} | **ID:** ${r.id} | **${r.members?.size}** member(s)`);
+        const description = pages[page].map((r) => `${r} | **ID:** ${r.id} | **${r.members?.size}** member(s)`);
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Roles of ${interaction.guild.name}`, interaction.guild.iconURL({ format: "png", dynamic: true }))
+            .setAuthor(`Roles of ${interaction.guild.name}`, interaction.guild.iconURL({ format: 'png', dynamic: true }))
             .setFooter(`${sorted.length} total roles | Page ${page + 1} of ${pages.length}`)
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
-            .setDescription(description.join("\n"));
+            .setDescription(description.join('\n'));
 
         // Send the embed
         interaction.reply({ embeds: [embed] });
-
-    }
+    },
 };
