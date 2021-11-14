@@ -1,19 +1,20 @@
-const { format } = require("date-fns");
-const { MessageEmbed } = require("discord.js");
-const config = require("../../config");
-const reminders = require("../../database/models/reminders");
+const { format } = require('date-fns');
+const { MessageEmbed } = require('discord.js');
+const config = require('../../config');
+const reminders = require('../../database/models/reminders');
 
 /**
  * Initialize the checkReminders task
- * 
- * @param {Object} bot 
+ *
+ * @param {Object} bot
  */
-exports.init = async bot => {
+exports.init = async (bot) => {
     /**
      * Fetch all the users in the reminder DB and send them their reminders if they are due
-     * 
+     *
      * @param {Object} bot
      */
+    // eslint-disable-next-line no-shadow
     const checkReminders = async (bot) => {
         // Get all users that have active reminders
         const users = await reminders.find({});
@@ -30,10 +31,10 @@ exports.init = async bot => {
                     if (Date.now() >= rmdData.remindTime) {
                         // Build the embed
                         const embed = new MessageEmbed()
-                            .setThumbnail("https://i.imgur.com/gOJ0Cuj.png")
+                            .setThumbnail('https://i.imgur.com/gOJ0Cuj.png')
                             .setColor(config.general.embedColor)
-                            .addField("Reminder", rmdData.reminder)
-                            .addField("Set at", format(rmdData.timeCreated, "PPp"));
+                            .addField('Reminder', rmdData.reminder)
+                            .addField('Set at', format(rmdData.timeCreated, 'PPp'));
 
                         // Send the embed to the user
                         user.send({ embeds: [embed] })
@@ -48,9 +49,9 @@ exports.init = async bot => {
                             await reminders.findOneAndUpdate({ _id: user.id }, {
                                 $pull: {
                                     reminders: {
-                                        id: rmdData.id
-                                    }
-                                }
+                                        id: rmdData.id,
+                                    },
+                                },
                             });
                         }
                     }

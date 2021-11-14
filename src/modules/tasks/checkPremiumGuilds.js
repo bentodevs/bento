@@ -1,11 +1,11 @@
-const premiumGuild = require("../../database/models/premiumGuild");
+const premiumGuild = require('../../database/models/premiumGuild');
 
 /**
  * Initialize the checkPremiumGuilds task
  *
  * @param {Object} bot
  */
-exports.init = async bot => {
+exports.init = async (bot) => {
     /**
      * Fetch all premium servers in the DB and action if the subscription has expired
      *
@@ -15,14 +15,17 @@ exports.init = async bot => {
      */
     const getPremiumServers = async () => {
         // Fetch all active premium servers
-        const premiumData = await premiumGuild.find({active: true});
+        const premiumData = await premiumGuild.find({ active: true });
 
         for await (const data of premiumData) {
             // If the expiry timestamp has passed, then remove premium access
-            if (data.expiry !== "forever") {
-                if (Date.now() > data.expiry)
+            if (data.expiry !== 'forever') {
+                if (Date.now() > data.expiry) {
                     // Return a removal of premium
-                    return await premiumGuild.findOneAndDelete({ _id: data._id });
+                    // eslint-disable-next-line no-underscore-dangle
+                    await premiumGuild.findOneAndDelete({ _id: data._id });
+                    return;
+                }
             }
         }
 

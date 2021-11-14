@@ -1,17 +1,17 @@
-const { MessageEmbed } = require("discord.js");
-const giveaways = require("../../database/models/giveaways");
-const { getUser } = require("../functions/getters");
-const { drawGiveawayWinners } = require("../functions/misc");
+const { MessageEmbed } = require('discord.js');
+const giveaways = require('../../database/models/giveaways');
+const { getUser } = require('../functions/getters');
+const { drawGiveawayWinners } = require('../functions/misc');
 
 /**
  * Initialize the checkGiveaways task
- * 
- * @param {Object} bot 
+ *
+ * @param {Object} bot
  */
-exports.init = async bot => {
+exports.init = async (bot) => {
     /**
      * Fetch all giveaways in the giveaways DB and send the winners if the giveaway is due
-     * 
+     *
      * @param {Object} bot
      */
     const checkGiveaways = async (bot) => {
@@ -20,8 +20,8 @@ exports.init = async bot => {
         for (const data of g) {
             if (Date.now() >= data.timestamps.ends) {
                 // Get the winners and define the array
-                const winners = drawGiveawayWinners(data.entries, data.winners),
-                arr = [];
+                const winners = drawGiveawayWinners(data.entries, data.winners);
+                const arr = [];
 
                 // Loop through the winners
                 for (const data of (winners)) {
@@ -32,23 +32,22 @@ exports.init = async bot => {
                     if (user) {
                         arr.push(user);
                     } else {
-                        arr.push("<deleted user>");
+                        arr.push('<deleted user>');
                     }
                 }
 
                 // Get the guild, channel, message and giveaway creator
-                const guild = bot.guilds.cache.get(data.guild.guild_id) || await bot.guilds.fetch(data.guild.guild_id).catch(() => {}),
-                channel = guild?.channels.cache.get(data.guild.channel_id),
-                msg = await channel?.messages.fetch(data.guild.message_id).catch(() => {}),
-                creator = guild?.members.cache.get(data.creator);
+                const guild = bot.guilds.cache.get(data.guild.guild_id) || await bot.guilds.fetch(data.guild.guild_id).catch(() => {});
+                const channel = guild?.channels.cache.get(data.guild.channel_id);
+                const msg = await channel?.messages.fetch(data.guild.message_id).catch(() => {});
+                const creator = guild?.members.cache.get(data.creator);
 
-                if (!guild)
-                    return;
+                if (!guild) return;
 
                 // Build the embed
                 const embed = new MessageEmbed()
-                    .setAuthor(`Giveaway: ${data.prize}`, guild.iconURL({ dynamic: true, format: "png" }))
-                    .setDescription(`${arr.length ? arr.length > 1 ? `**Winners:**\n${arr.join("\n")}` : `**Winner:** ${arr.join("\n")}`  : "Could not determine a winner!"}\n**Hosted By:** ${creator}`)
+                    .setAuthor(`Giveaway: ${data.prize}`, guild.iconURL({ dynamic: true, format: 'png' }))
+                    .setDescription(`${arr.length ? arr.length > 1 ? `**Winners:**\n${arr.join('\n')}` : `**Winner:** ${arr.join('\n')}` : 'Could not determine a winner!'}\n**Hosted By:** ${creator}`)
                     .setTimestamp(Date.now())
                     .setColor(bot.config.general.embedColor)
                     .setFooter(`${data.winners} winners | Ended at`);
@@ -57,15 +56,15 @@ exports.init = async bot => {
                 msg?.edit({ embeds: [embed] });
 
                 // Set the giveaway to inactive in the db
-                await giveaways.findOneAndUpdate({ "guild.guild_id": guild.id, id: data.id }, {
-                    active: false
+                await giveaways.findOneAndUpdate({ 'guild.guild_id': guild.id, id: data.id }, {
+                    active: false,
                 });
 
                 // If no winners were selected return an error otherwise announce the winners
                 if (!arr.length) {
                     channel?.send(`${bot.config.emojis.error} A winner could not be determined!`);
                 } else {
-                    channel?.send(`🎉 Congratulations to ${arr.join(", ")} on winning the giveaway for \`${data.prize}\`!`);
+                    channel?.send(`🎉 Congratulations to ${arr.join(', ')} on winning the giveaway for \`${data.prize}\`!`);
                 }
             }
         }
