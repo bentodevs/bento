@@ -91,6 +91,7 @@ module.exports = {
         }
 
         // If the page option is there set it as the page
+        // eslint-disable-next-line no-unsafe-optional-chaining
         if (interaction.options.get('page')?.value) page = interaction.options.get('page')?.value - 1;
         // If the page doesn't exist retrun an error
         if (!pages[page]) return interaction.error("You didn't specify a valid page!");
