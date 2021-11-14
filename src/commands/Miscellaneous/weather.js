@@ -1,62 +1,60 @@
-const { stripIndents } = require("common-tags");
-const { MessageEmbed } = require("discord.js");
-const { getWeather } = require("../../modules/functions/misc");
+const { stripIndents } = require('common-tags');
+const { MessageEmbed } = require('discord.js');
+const { getWeather } = require('../../modules/functions/misc');
 
 module.exports = {
     info: {
-        name: "weather",
+        name: 'weather',
         aliases: [],
-        usage: "weather <city>",
+        usage: 'weather <city>',
         examples: [
-            "weather Amsterdam",
-            "weather London"
+            'weather Amsterdam',
+            'weather London',
         ],
-        description: "Displays the current weather in a specific location.",
-        category: "Miscellaneous",
+        description: 'Displays the current weather in a specific location.',
+        category: 'Miscellaneous',
         info: null,
-        options: []
+        options: [],
     },
     perms: {
-        permission: ["@everyone"],
-        type: "role",
-        self: ["EMBED_LINKS"]
+        permission: ['@everyone'],
+        type: 'role',
+        self: ['EMBED_LINKS'],
     },
     opts: {
         guildOnly: false,
         devOnly: false,
         premium: false,
         noArgsHelp: true,
-        disabled: false
+        disabled: false,
     },
     slash: {
         enabled: true,
         opts: [{
-            name: "city",
-            type: "STRING",
-            description: "The city you want to view the weather of.",
-            required: true
-        }]
+            name: 'city',
+            type: 'STRING',
+            description: 'The city you want to view the weather of.',
+            required: true,
+        }],
     },
 
     run: async (bot, message, args) => {
-
         // Special characters regex
         const specialChrs = /[!@#$%^&*()+=[\]{};:\\|<>/?~]/;
 
         // Check if the user used any special characters
-        if (specialChrs.test(args.join(" ")))
-            return message.errorReply("Please don't include any special characters in your search query!");
+        if (specialChrs.test(args.join(' '))) return message.errorReply("Please don't include any special characters in your search query!");
 
         // Fetch the weather from the API
-        const weather = await getWeather(args.join(" "));
+        const weather = await getWeather(args.join(' '));
 
         // If no data was returned, return an error
-        if (!weather)
-            return message.errorReply("You didn't specify a valid city!");
+        if (!weather) return message.errorReply("You didn't specify a valid city!");
 
         // Get the wind directions
-        const directions = ["North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West"],
-        index = Math.round(((weather.current.wind_degree %= 360) < 0 ? weather.current.wind_degree + 360 : weather.current.wind_degree) / 45) % 8;
+        const directions = ['North', 'North-East', 'East', 'South-East', 'South', 'South-West', 'West', 'North-West'];
+        // eslint-disable-next-line no-cond-assign
+        const index = Math.round(((weather.current.wind_degree %= 360) < 0 ? weather.current.wind_degree + 360 : weather.current.wind_degree) / 45) % 8;
 
         // Build the embed
         const embed = new MessageEmbed()
@@ -69,34 +67,31 @@ module.exports = {
             **Wind:** ${weather.current.wind_kph} km/h / ${weather.current.wind_mph} mi/h ${directions[index]}
             **Visibility:** ${weather.current.vis_km} km / ${weather.current.vis_miles} miles
             **Clouds:** ${weather.current.cloud}%`)
-            .setFooter("Last Updated")
+            .setFooter('Last Updated')
             .setTimestamp(weather.current.last_updated_epoch * 1000)
             .setColor(message.member?.displayColor || bot.config.general.embedColor);
 
         // Send the embed
         message.reply({ embeds: [embed] });
-
     },
 
     run_interaction: async (bot, interaction) => {
-
         // Special characters regex
         const specialChrs = /[!@#$%^&*()+=[\]{};:\\|<>/?~]/;
 
         // Check if the user used any special characters
-        if (specialChrs.test(interaction.options.get("city").value))
-            return interaction.error("Please don't include any special characters in your search query!");
+        if (specialChrs.test(interaction.options.get('city').value)) return interaction.error("Please don't include any special characters in your search query!");
 
         // Fetch the weather from the API
-        const weather = await getWeather(interaction.options.get("city").value);
+        const weather = await getWeather(interaction.options.get('city').value);
 
         // If no data was returned, return an error
-        if (!weather)
-            return interaction.error("You didn't specify a valid city!");
+        if (!weather) return interaction.error("You didn't specify a valid city!");
 
         // Get the wind directions
-        const directions = ["North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West"],
-        index = Math.round(((weather.current.wind_degree %= 360) < 0 ? weather.current.wind_degree + 360 : weather.current.wind_degree) / 45) % 8;
+        const directions = ['North', 'North-East', 'East', 'South-East', 'South', 'South-West', 'West', 'North-West'];
+        // eslint-disable-next-line no-cond-assign
+        const index = Math.round(((weather.current.wind_degree %= 360) < 0 ? weather.current.wind_degree + 360 : weather.current.wind_degree) / 45) % 8;
 
         // Build the embed
         const embed = new MessageEmbed()
@@ -109,12 +104,11 @@ module.exports = {
             **Wind:** ${weather.current.wind_kph} km/h / ${weather.current.wind_mph} mi/h ${directions[index]}
             **Visibility:** ${weather.current.vis_km} km / ${weather.current.vis_miles} miles
             **Clouds:** ${weather.current.cloud}%`)
-            .setFooter("Last Updated")
+            .setFooter('Last Updated')
             .setTimestamp(weather.current.last_updated_epoch * 1000)
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor);
 
         // Send the embed
         interaction.reply({ embeds: [embed] });
-
-    }
+    },
 };
