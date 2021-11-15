@@ -1,49 +1,46 @@
-const { formatDistance } = require("date-fns");
-const premiumGuild = require("../../database/models/premiumGuild");
-const { getUser } = require("../../modules/functions/getters");
+const { formatDistance } = require('date-fns');
+const premiumGuild = require('../../database/models/premiumGuild');
+const { getUser } = require('../../modules/functions/getters');
 
 module.exports = {
     info: {
-        name: "premium",
-        aliases: ["pro", "subscription"],
-        usage: "",
+        name: 'premium',
+        aliases: ['pro', 'subscription'],
+        usage: '',
         examples: [],
-        description: "Check your premium status.",
-        category: "Utility",
+        description: 'Check your premium status.',
+        category: 'Utility',
         info: null,
-        options: []
+        options: [],
     },
     perms: {
-        permission: ["@everyone"],
-        type: "role",
-        self: []
+        permission: ['@everyone'],
+        type: 'role',
+        self: [],
     },
     opts: {
         guildOnly: false,
         devOnly: false,
         premium: false,
         noArgsHelp: false,
-        disabled: false
+        disabled: false,
     },
     slash: {
         enabled: true,
-        opts: []
+        opts: [],
     },
 
     run: async (bot, message) => {
-
         // Find premium guild
         const premiumSearch = await premiumGuild.findOne({ _id: message.guild.id, active: true });
 
         // If the guild isn't premium, then return
-        if (!premiumSearch)
-            return message.errorReply("This guild doesn't currently have an active R2-D2 Premium subscription! You can purchase access to R2-D2 premium on our website: https://r2-d2.dev/");
+        if (!premiumSearch) return message.errorReply("This guild doesn't currently have an active R2-D2 Premium subscription! You can purchase access to R2-D2 premium on our website: https://r2-d2.dev/");
 
         // Fetch the user who activated premium
         const user = await getUser(bot, message, premiumSearch.activatedBy, false);
 
         // Send message
-        message.confirmationReply(`This server has an active premium subscription provided by **${user.tag}** which ${premiumSearch.expiry == "forever" ? "**does not expire**" : `expires in **${formatDistance(Date.now(), parseInt(premiumSearch.expiry))}**`}!`);
-
-    }
+        message.confirmationReply(`This server has an active premium subscription provided by **${user.tag}** which ${premiumSearch.expiry === 'forever' ? '**does not expire**' : `expires in **${formatDistance(Date.now(), parseInt(premiumSearch.expiry, 10))}**`}!`);
+    },
 };
