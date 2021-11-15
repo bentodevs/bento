@@ -42,7 +42,7 @@ exports.reload = (bot, task) => new Promise((resolve, reject) => {
     const file = files.find((e) => e.toLowerCase() === `${task.toLowerCase()}.js`);
 
     // If no file was found return an error
-    if (!file) return reject(new Error('Task not found'));
+    if (!file) reject(new Error('Task not found'));
 
     try {
         // Get the task name
@@ -71,7 +71,7 @@ exports.reload = (bot, task) => new Promise((resolve, reject) => {
         bot.logger.error(`Failed to reload ${file}`);
         bot.logger.error(err.stack);
         // Reject with the error
-        return reject(err);
+        reject(err);
     }
 });
 
@@ -89,14 +89,14 @@ exports.load = (bot, task) => new Promise((resolve, reject) => {
     const file = files.find((e) => e.toLowerCase() === `${task.toLowerCase()}.js`);
 
     // If the task wasn't found return an error
-    if (!file) return reject(new Error('Task not found'));
+    if (!file) reject(new Error('Task not found'));
 
     try {
         // Get the task name
         const taskName = file.split('.')[0];
 
         // If the task is already loaded return an error
-        if (bot.tasks.get(taskName)) return reject(new Error('Task is already loaded'));
+        if (bot.tasks.get(taskName)) reject(new Error('Task is already loaded'));
 
         // Import the task
         // eslint-disable-next-line import/no-dynamic-require, global-require
@@ -114,7 +114,7 @@ exports.load = (bot, task) => new Promise((resolve, reject) => {
         bot.logger.error(`Failed to load ${file}`);
         bot.logger.error(err.stack);
         // Reject with the error
-        return reject(err);
+        reject(err);
     }
 });
 
@@ -132,14 +132,14 @@ exports.unload = (bot, task) => new Promise((resolve, reject) => {
     const file = files.find((e) => e.toLowerCase() === `${task.toLowerCase()}.js`);
 
     // If the task wasn't found return an error
-    if (!file) return reject(new Error('Task not found'));
+    if (!file) reject(new Error('Task not found'));
 
     try {
         // Get the task name
         const taskName = file.split('.')[0];
 
         // If the task is already loaded return an error
-        if (!bot.tasks.get(taskName)) return reject(new Error("Task isn't loaded"));
+        if (!bot.tasks.get(taskName)) reject(new Error("Task isn't loaded"));
 
         // Stop the setInterval function
         clearInterval(bot.tasks.get(taskName));
@@ -155,6 +155,6 @@ exports.unload = (bot, task) => new Promise((resolve, reject) => {
         bot.logger.error(`Failed to unload ${file}`);
         bot.logger.error(err.stack);
         // Reject with the error
-        return reject(err);
+        reject(err);
     }
 });

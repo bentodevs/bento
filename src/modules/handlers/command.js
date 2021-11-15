@@ -81,12 +81,13 @@ exports.reload = (bot, command) => new Promise((resolve, reject) => {
         bot.commands.set(command.info.name, file);
 
         // Resolve
-        return resolve(true);
+        resolve(true);
+        return;
     } catch (err) {
         // Log the error
         bot.logger.error(err.stack);
         // Reject with the error
-        return reject(err);
+        reject(err);
     }
 });
 
@@ -101,7 +102,7 @@ exports.reload = (bot, command) => new Promise((resolve, reject) => {
  */
 exports.load = (bot, category, command) => new Promise((resolve, reject) => {
     // If no args were specified return an error
-    if (!bot || !category || !command) return reject(new Error('Missing Args'));
+    if (!bot || !category || !command) reject(new Error('Missing Args'));
 
     try {
         // get the commands in the category
@@ -134,7 +135,7 @@ exports.load = (bot, category, command) => new Promise((resolve, reject) => {
         // Log the error
         bot.logger.error(err.stack);
         // Reject with the error
-        return reject(err);
+        reject(err);
     }
 });
 
@@ -169,7 +170,7 @@ exports.unload = (bot, command) => new Promise((resolve, reject) => {
         // Log the error
         bot.logger.error(err.stack);
         // Reject with the error
-        return reject(err);
+        reject(err);
     }
 });
 

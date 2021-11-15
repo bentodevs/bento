@@ -51,9 +51,9 @@ exports.reload = (bot, event) => new Promise((resolve, reject) => {
     const file = files.find((e) => e.toLowerCase() === `${event.toLowerCase()}.js`);
 
     // If the event doesn't exist return an error
-    if (!file) return reject(new Error('Event not found'));
+    if (!file) reject(new Error('Event not found'));
     // If the user specified the ready event return an error
-    if (file === 'ready.js') return reject(new Error("The ready event can't be reloaded"));
+    if (file === 'ready.js') reject(new Error("The ready event can't be reloaded"));
 
     try {
         // Get the event name
@@ -77,7 +77,7 @@ exports.reload = (bot, event) => new Promise((resolve, reject) => {
         bot.logger.error(`Failed to reload ${file}`);
         bot.logger.error(err.stack);
         // Reject with the error
-        return reject(err);
+        reject(err);
     }
 });
 
@@ -95,16 +95,16 @@ exports.load = (bot, event) => new Promise((resolve, reject) => {
     const file = files.find((e) => e.toLowerCase() === `${event.toLowerCase()}.js`);
 
     // If the event doesn't exist return an error
-    if (!file) return reject(new Error('Event not found'));
+    if (!file) reject(new Error('Event not found'));
     // If the user specified the ready event return an error
-    if (file === 'ready.js') return reject(new Error("The ready event can't be loaded"));
+    if (file === 'ready.js') reject(new Error("The ready event can't be loaded"));
 
     try {
         // Get the event name
         const eventName = file.split('.')[0];
 
         // If the event already has listeners return an error
-        if (bot.listeners(eventName).length) return reject(new Error('Event is already loaded'));
+        if (bot.listeners(eventName).length) reject(new Error('Event is already loaded'));
 
         // Get the event
         // eslint-disable-next-line import/no-dynamic-require, global-require
@@ -119,7 +119,7 @@ exports.load = (bot, event) => new Promise((resolve, reject) => {
         bot.logger.error(`Failed to load ${file}`);
         bot.logger.error(err.stack);
         // Reject with the error
-        return reject(err);
+        reject(err);
     }
 });
 
@@ -137,16 +137,16 @@ exports.unload = (bot, event) => new Promise((resolve, reject) => {
     const file = files.find((e) => e.toLowerCase() === `${event.toLowerCase()}.js`);
 
     // If the event doesn't exist return an error
-    if (!file) return reject(new Error('Event not found'));
+    if (!file) reject(new Error('Event not found'));
     // If the user specified the ready event return an error
-    if (file === 'ready.js') return reject(new Error("The ready event can't be unloaded"));
+    if (file === 'ready.js') reject(new Error("The ready event can't be unloaded"));
 
     try {
         // Get the event name
         const eventName = file.split('.')[0];
 
         // If the event doesn't have any listeners return an error
-        if (!bot.listeners(eventName).length) return reject(new Error("Event isn't loaded"));
+        if (!bot.listeners(eventName).length) reject(new Error("Event isn't loaded"));
 
         // Delete the command from cache
         delete require.cache[require.resolve(`../../events/${file}`)];
@@ -160,6 +160,6 @@ exports.unload = (bot, event) => new Promise((resolve, reject) => {
         bot.logger.error(`Failed to load ${file}`);
         bot.logger.error(err.stack);
         // Reject with the error
-        return reject(err);
+        reject(err);
     }
 });
