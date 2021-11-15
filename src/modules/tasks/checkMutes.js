@@ -15,6 +15,7 @@ exports.init = async (bot) => {
      *
      * @returns {Promise<Boolean>} Success/Failure
      */
+    // eslint-disable-next-line no-shadow
     const getMutes = async (bot) => {
         const muteData = await mutes.find({});
 
@@ -24,9 +25,10 @@ exports.init = async (bot) => {
                 const mutedUser = guild?.members.cache.get(data.mutedUser);
                 const settings = await getSettings(guild.id);
                 const muteRole = guild?.roles.cache.get(settings.roles.mute);
-                const dateCalc = data.timeMuted + parseInt(data.muteTime);
+                const dateCalc = data.timeMuted + parseInt(data.muteTime, 10);
                 const message = {};
 
+                // eslint-disable-next-line no-return-await
                 if (!guild) return await mutes.findOneAndDelete({ guild: data.guild, mutedUser: data.mutedUser });
 
                 message.author = 'system';
@@ -40,9 +42,11 @@ exports.init = async (bot) => {
                 } if (!mutedUser && dateCalc <= Date.now()) {
                     const member = await guild.members.fetch(data.mutedUser).catch(() => { });
 
+                    // eslint-disable-next-line no-return-await
                     if (!member) return await mutes.findOneAndDelete({ guild: data.guild, mutedUser: data.mutedUser });
 
                     await member.roles.remove(muteRole, ['Mute Expired']);
+                    // eslint-disable-next-line no-return-await
                     return await mutes.findOneAndDelete({ guild: data.guild, mutedUser: data.mutedUser });
                 }
             }

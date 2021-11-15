@@ -14,6 +14,7 @@ exports.init = async (bot) => {
      *
      * @param {Object} bot
      */
+    // eslint-disable-next-line no-shadow
     const checkGiveaways = async (bot) => {
         const g = await giveaways.find({ active: true });
 
@@ -24,9 +25,9 @@ exports.init = async (bot) => {
                 const arr = [];
 
                 // Loop through the winners
-                for (const data of (winners)) {
+                for (const i of (winners)) {
                     // Get the user
-                    const user = await getUser(bot, null, data);
+                    const user = await getUser(bot, null, i);
 
                     // If the user exists add it to the array otherwise add <deleted user>
                     if (user) {
@@ -47,6 +48,7 @@ exports.init = async (bot) => {
                 // Build the embed
                 const embed = new MessageEmbed()
                     .setAuthor(`Giveaway: ${data.prize}`, guild.iconURL({ dynamic: true, format: 'png' }))
+                    // eslint-disable-next-line no-nested-ternary
                     .setDescription(`${arr.length ? arr.length > 1 ? `**Winners:**\n${arr.join('\n')}` : `**Winner:** ${arr.join('\n')}` : 'Could not determine a winner!'}\n**Hosted By:** ${creator}`)
                     .setTimestamp(Date.now())
                     .setColor(bot.config.general.embedColor)
