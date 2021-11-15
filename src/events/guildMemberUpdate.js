@@ -1,6 +1,6 @@
-const { stripIndents } = require("common-tags");
-const { MessageEmbed } = require("discord.js");
-const settings = require("../database/models/settings");
+const { stripIndents } = require('common-tags');
+const { MessageEmbed } = require('discord.js');
+const settings = require('../database/models/settings');
 
 module.exports = async (bot, oldMember, newMember) => {
     // Fetch full user if partial
@@ -19,7 +19,7 @@ module.exports = async (bot, oldMember, newMember) => {
     // If the user was pending, and is now, then run the guildMemberAdd event
     // Yes, this is super lazy but it's also efficient, so :pepeshrug:
     if (oldMember.pending !== newMember.pending) {
-        bot.emit("guildMemberAdd", newMember);
+        bot.emit('guildMemberAdd', newMember);
     }
 
     if (sets.manual_events?.members) {
@@ -27,23 +27,22 @@ module.exports = async (bot, oldMember, newMember) => {
         const log = newMember.guild.channels.cache.get(sets.logs.events);
 
         // If there is no log channel, return
-        if (!log)
-            return;
+        if (!log) return;
 
         // Define the description string
-        let desc = "";
+        let desc = '';
 
-        if (newMember.nickname !== oldMember.nickname) desc += `**__Nickname Updated__**\n**Old Nickname:** ${oldMember.nickname ?? "None"}\n**New Nickname:** ${newMember.nickname ?? "None"}\n\n`;
-        if (JSON.stringify(newMember._roles) !== JSON.stringify(oldMember._roles)) desc += `**__Roles Updated__**\n**Old Roles:** ${oldMember.roles.cache.filter(role => role.name !== "@everyone").sort((b, a) => a.position - b.position).map(role => role.toString()).join(", ")}\n**New Roles:** ${newMember.roles.cache.filter(role => role.name !== "@everyone").sort((b, a) => a.position - b.position).map(role => role.toString()).join(", ")}`;
+        if (newMember.nickname !== oldMember.nickname) desc += `**__Nickname Updated__**\n**Old Nickname:** ${oldMember.nickname ?? 'None'}\n**New Nickname:** ${newMember.nickname ?? 'None'}\n\n`;
+        // eslint-disable-next-line no-underscore-dangle
+        if (JSON.stringify(newMember._roles) !== JSON.stringify(oldMember._roles)) desc += `**__Roles Updated__**\n**Old Roles:** ${oldMember.roles.cache.filter((role) => role.name !== '@everyone').sort((b, a) => a.position - b.position).map((role) => role.toString()).join(', ')}\n**New Roles:** ${newMember.roles.cache.filter((role) => role.name !== '@everyone').sort((b, a) => a.position - b.position).map((role) => role.toString()).join(', ')}`;
         if (newMember.user.tag !== oldMember.user.tag) desc += `**__Username Updated__**\n**Old Username:**${oldMember.user.tag}\n**New Username:**${newMember.user.tag}\n\n`;
-        if (newMember.user.displayAvatarURL({format: "png", dynamic:true}) !== oldMember.user.displayAvatarURL({format: "png", dynamic:true})) desc += `**__Avatar Updated__**\n**Old Avatar:**[${oldMember.user.displayAvatarURL({format: "png", dynamic:true})}](Click here!)\n**New Avatar:**[${newMember.user.displayAvatarURL({format: "png", dynamic:true})}](Click here!)\n\n`;
+        if (newMember.user.displayAvatarURL({ format: 'png', dynamic: true }) !== oldMember.user.displayAvatarURL({ format: 'png', dynamic: true })) desc += `**__Avatar Updated__**\n**Old Avatar:**[${oldMember.user.displayAvatarURL({ format: 'png', dynamic: true })}](Click here!)\n**New Avatar:**[${newMember.user.displayAvatarURL({ format: 'png', dynamic: true })}](Click here!)\n\n`;
 
-        if (!desc)
-            return;
+        if (!desc) return;
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`${newMember.user.tag} was modified`, newMember.user.displayAvatarURL({ dynamic: true, format: "png" }))
+            .setAuthor(`${newMember.user.tag} was modified`, newMember.user.displayAvatarURL({ dynamic: true, format: 'png' }))
             .setColor(newMember.displayColor ?? bot.config.general.embedColor)
             .setDescription(stripIndents`${desc}`)
             .setFooter(`ID: ${newMember.user.id}`)
@@ -51,6 +50,5 @@ module.exports = async (bot, oldMember, newMember) => {
 
         // Send the emebed to the log channel
         log.send({ embeds: [embed] });
-
     }
 };

@@ -1,6 +1,6 @@
-const { intervalToDuration, formatDuration } = require("date-fns");
-const { getSettings } = require("../database/mongo");
-const { getOrdinalSuffix } = require("../modules/functions/misc");
+const { intervalToDuration, formatDuration } = require('date-fns');
+const { getSettings } = require('../database/mongo');
+const { getOrdinalSuffix } = require('../modules/functions/misc');
 
 module.exports = async (bot, member) => {
     // If the member is a partial fetch it
@@ -29,12 +29,10 @@ module.exports = async (bot, member) => {
     }
 
     // If bot joining is disabled & the user is a bot then kick them
-    if (!settings.moderation.bots && member.user.bots)
-        return member.kick("Bot joining is currently disabled!");
+    if (!settings.moderation.bots && member.user.bots) return member.kick('Bot joining is currently disabled!');
 
     // If the user is in a pending state (Membership screening), then return
-    if (member.pending)
-        return;
+    if (member.pending) return;
 
     // Get the welcome channel
     const welcomeChannel = member.guild.channels.cache.get(settings.welcome.channel);
@@ -42,12 +40,12 @@ module.exports = async (bot, member) => {
     // If the welcome channel exists and there is a message set in the DB, then send it
     if (welcomeChannel && settings.welcome.joinMessage) {
         const msg = settings.welcome.joinMessage
-            .replace("{id}", member.user.id)
-            .replace("{tag}", member.user.tag)
-            .replace("{member}", member)
-            .replace("{server}", member.guild.name)
-            .replace("{formattedCount}", await member.guild.members.fetch().then(a => a.size + getOrdinalSuffix(a.size)))
-            .replace("{count}", await member.guild.members.fetch().then(a => a.size));
+            .replace('{id}', member.user.id)
+            .replace('{tag}', member.user.tag)
+            .replace('{member}', member)
+            .replace('{server}', member.guild.name)
+            .replace('{formattedCount}', await member.guild.members.fetch().then((a) => a.size + getOrdinalSuffix(a.size)))
+            .replace('{count}', await member.guild.members.fetch().then((a) => a.size));
 
         welcomeChannel.send(msg);
     }
@@ -55,12 +53,12 @@ module.exports = async (bot, member) => {
     // If there is a DM message set in the DB, then send it to the user. Silently catch any issues.
     if (settings.welcome.userMessage) {
         const msg = settings.welcome.userMessage
-            .replace("{id}", member.user.id)
-            .replace("{tag}", member.user.tag)
-            .replace("{member}", member)
-            .replace("{server}", member.guild.name)
-            .replace("{formattedCount}", await member.guild.members.fetch().then(a => a.size + getOrdinalSuffix(a.size)))
-            .replace("{count}", await member.guild.members.fetch().then(a => a.size));
+            .replace('{id}', member.user.id)
+            .replace('{tag}', member.user.tag)
+            .replace('{member}', member)
+            .replace('{server}', member.guild.name)
+            .replace('{formattedCount}', await member.guild.members.fetch().then((a) => a.size + getOrdinalSuffix(a.size)))
+            .replace('{count}', await member.guild.members.fetch().then((a) => a.size));
 
         member.send(msg).catch(() => { });
     }
@@ -81,13 +79,13 @@ module.exports = async (bot, member) => {
             } else {
                 await settings.findOneAndUpdate({ id: member.guild.id }, {
                     $pull: {
-                        "auto.roles": data
-                    }
+                        'auto.roles': data,
+                    },
                 });
             }
         }
 
         // Add the roles to the user
-        member.roles.add(roles, "Auto Role");
+        member.roles.add(roles, 'Auto Role');
     }
 };
