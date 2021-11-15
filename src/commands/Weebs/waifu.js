@@ -1,38 +1,37 @@
-const { MessageEmbed } = require("discord.js");
-const { fetchWaifuApi } = require("../../modules/functions/misc");
+const { MessageEmbed } = require('discord.js');
+const { fetchWaifuApi } = require('../../modules/functions/misc');
 
 module.exports = {
     info: {
-        name: "waifu",
+        name: 'waifu',
         aliases: [],
-        usage: "",
+        usage: '',
         examples: [],
-        description: "Fetches a random waifu image from the waifu.pics API.",
-        category: "Weebs",
+        description: 'Fetches a random waifu image from the waifu.pics API.',
+        category: 'Weebs',
         info: null,
-        options: []
+        options: [],
     },
     perms: {
-        permission: ["@everyone"],
-        type: "role",
-        self: ["EMBED_LINKS"]
+        permission: ['@everyone'],
+        type: 'role',
+        self: ['EMBED_LINKS'],
     },
     opts: {
         guildOnly: false,
         devOnly: false,
         premium: false,
         noArgsHelp: false,
-        disabled: false
+        disabled: true,
     },
     slash: {
         enabled: true,
-        opts: []
+        opts: [],
     },
 
     run: async (bot, message) => {
-
         // Fetch the image
-        const URL = await fetchWaifuApi("waifu");
+        const URL = await fetchWaifuApi('waifu');
 
         // Build the embed
         const embed = new MessageEmbed()
@@ -41,6 +40,5 @@ module.exports = {
 
         // Send the embed
         message.reply({ embeds: [embed] });
-
-    }
+    },
 };
