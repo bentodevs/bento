@@ -32,6 +32,8 @@
             "array": false,
             "object": true
         }
-        }]
+        }],
+        "import/no-unresolved": "off",
+        "import/extensions": "off"
     }
 }
