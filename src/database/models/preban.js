@@ -1,8 +1,8 @@
-const { model, Schema } = require("mongoose");
+const { model, Schema } = require('mongoose');
 
-module.exports = model("preban", new Schema({
+module.exports = model('preban', new Schema({
     user: String,
     guild: String,
     reason: String,
-    executor: String
+    executor: String,
 }));
