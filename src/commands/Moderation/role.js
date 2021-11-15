@@ -1,73 +1,66 @@
-const { getMember, getRole } = require("../../modules/functions/getters");
+const { getMember, getRole } = require('../../modules/functions/getters');
 
 module.exports = {
     info: {
-        name: "role",
+        name: 'role',
         aliases: [
-            "r"
+            'r',
         ],
-        usage: "role <member> <role>",
+        usage: 'role <member> <role>',
         examples: [
-            "role me staff",
-            "role Jarno owner"
+            'role me staff',
+            'role Jarno owner',
         ],
-        description: "Add or remove a role from a user.",
-        category: "Moderation",
+        description: 'Add or remove a role from a user.',
+        category: 'Moderation',
         info: null,
-        options: []
+        options: [],
     },
     perms: {
-        permission: "MANAGE_ROLES",
-        type: "discord",
-        self: ["MANAGE_ROLES"]
+        permission: 'MANAGE_ROLES',
+        type: 'discord',
+        self: ['MANAGE_ROLES'],
     },
     opts: {
         guildOnly: true,
         devOnly: false,
         premium: false,
         noArgsHelp: true,
-        disabled: false
+        disabled: false,
     },
     slash: {
         enabled: true,
         opts: [{
-            name: "user",
-            type: "USER",
-            description: "The user to add a role to/remove a role from.",
-            required: true
+            name: 'user',
+            type: 'USER',
+            description: 'The user to add a role to/remove a role from.',
+            required: true,
         }, {
-            name: "role",
-            type: "ROLE",
-            description: "The role you want to add to/remove from the user",
-            required: true
-        }]
+            name: 'role',
+            type: 'ROLE',
+            description: 'The role you want to add to/remove from the user',
+            required: true,
+        }],
     },
 
     run: async (bot, message, args) => {
-
         // If the user didn't specify a role return an error
-        if (!args[1])
-            return message.errorReply("You didn't specify a role!");
+        if (!args[1]) return message.errorReply("You didn't specify a role!");
 
         // Get the member and the role
-        const member = args[0].toLowerCase() == "me" ? message.member : await getMember(message, args[0]),
-        role = await getRole(message, args.slice(1).join(" "));
+        const member = args[0].toLowerCase() === 'me' ? message.member : await getMember(message, args[0]);
+        const role = await getRole(message, args.slice(1).join(' '));
 
         // If an invalid member was specified return an error
-        if (!member)
-            return message.errorReply("You didn't specify a valid member!");
+        if (!member) return message.errorReply("You didn't specify a valid member!");
         // If an invalid role was specified return an error
-        if (!role)
-            return message.errorReply("You didn't specify a valid role!");
+        if (!role) return message.errorReply("You didn't specify a valid role!");
         // If the roles position is higher than or equal to the users highest role return an error
-        if (message.member.roles.highest.position <= role.position)
-            return message.errorReply("That role is higher than or equal to your highest role!");
+        if (message.member.roles.highest.position <= role.position) return message.errorReply('That role is higher than or equal to your highest role!');
         // If the roles position is higher than or equal to the bots highest role return an error
-        if (message.guild.me.roles.highest.position <= role.position)
-            return message.errorReply("That role is higher than or equal to my highest role!");
+        if (message.guild.me.roles.highest.position <= role.position) return message.errorReply('That role is higher than or equal to my highest role!');
         // If the role is managed return an error
-        if (role.managed)
-            return message.errorReply("The role you specified cannot be given to users! The role is either managed by an external service or is the Nitro Booster role!");
+        if (role.managed) return message.errorReply('The role you specified cannot be given to users! The role is either managed by an external service or is the Nitro Booster role!');
 
         // If the use has the role remove it, if the user doesn't have it add it
         if (member.roles.cache.get(role.id)) {
@@ -81,30 +74,23 @@ module.exports = {
             // Send a confirmation message
             message.confirmationReply(`Added the ${role} role to ${member}!`);
         }
-
     },
 
     run_interaction: async (bot, interaction) => {
-
         // Get the member and the nick
-        const user = interaction.options.get("user"),
-        role = interaction.options.get("role");
+        const user = interaction.options.get('user');
+        const role = interaction.options.get('role');
 
         // If an invalid member was specified return an error
-        if (!user.member)
-            return interaction.error("You didn't specify a valid member!");
+        if (!user.member) return interaction.error("You didn't specify a valid member!");
         // If an invalid role was specified return an error
-        if (!role.role || role.role.id === interaction.guild.id)
-            return interaction.error("You didn't specify a valid role!");
+        if (!role.role || role.role.id === interaction.guild.id) return interaction.error("You didn't specify a valid role!");
         // If the roles position is higher than or equal to the users highest role return an error
-        if (interaction.member.roles.highest.position <= role.role.position)
-            return interaction.error("That role is higher than or equal to your highest role!");
+        if (interaction.member.roles.highest.position <= role.role.position) return interaction.error('That role is higher than or equal to your highest role!');
         // If the roles position is higher than or equal to the bots highest role return an error
-        if (interaction.guild.me.roles.highest.position <= role.role.position)
-            return interaction.error("That role is higher than or equal to my highest role!");
+        if (interaction.guild.me.roles.highest.position <= role.role.position) return interaction.error('That role is higher than or equal to my highest role!');
         // If the role is managed return an error
-        if (role.role.managed)
-            return interaction.error("The role you specified cannot be given to users! The role is either managed by an external service or is the Nitro Booster role!");
+        if (role.role.managed) return interaction.error('The role you specified cannot be given to users! The role is either managed by an external service or is the Nitro Booster role!');
 
         // If the use has the role remove it, if the user doesn't have it add it
         if (user.member.roles.cache.get(role.role.id)) {
@@ -118,6 +104,5 @@ module.exports = {
             // Send a confirmation message
             interaction.confirmation(`Added the ${role.role} role to ${user.member}!`);
         }
-        
-    }
+    },
 };

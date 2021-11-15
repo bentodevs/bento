@@ -1,94 +1,86 @@
-const { Permissions } = require("discord.js");
-const { getMember } = require("../../modules/functions/getters");
-const { checkPerms } = require("../../modules/functions/permissions");
+const { Permissions } = require('discord.js');
+const { getMember } = require('../../modules/functions/getters');
+const { checkPerms } = require('../../modules/functions/permissions');
 
 module.exports = {
     info: {
-        name: "nick",
+        name: 'nick',
         aliases: [
-            "n"
+            'n',
         ],
-        usage: "nick <member> [nickname]",
+        usage: 'nick <member> [nickname]',
         examples: [
-            "nick me Jarno",
-            "nick me",
-            "nick Waitrose nerd",
+            'nick me Jarno',
+            'nick me',
+            'nick Waitrose nerd',
         ],
-        description: "Change or reset the nickname of a member.",
-        category: "Moderation",
+        description: 'Change or reset the nickname of a member.',
+        category: 'Moderation',
         info: null,
-        options: []
+        options: [],
     },
     perms: {
-        permission: "MANAGE_NICKNAMES",
-        type: "discord",
-        self: ["MANAGE_NICKNAMES"]
+        permission: 'MANAGE_NICKNAMES',
+        type: 'discord',
+        self: ['MANAGE_NICKNAMES'],
     },
     opts: {
         guildOnly: true,
         devOnly: false,
         premium: false,
         noArgsHelp: true,
-        disabled: false
+        disabled: false,
     },
     slash: {
         enabled: true,
         opts: [{
-            name: "user",
-            type: "USER",
-            description: "The user you wish to mute.",
-            required: true
+            name: 'user',
+            type: 'USER',
+            description: 'The user you wish to mute.',
+            required: true,
         }, {
-            name: "nickname",
-            type: "STRING",
-            description: "Nickname you wish to set (Do not enter anything to remove the nickname)",
-            required: false
-        }]
+            name: 'nickname',
+            type: 'STRING',
+            description: 'Nickname you wish to set (Do not enter anything to remove the nickname)',
+            required: false,
+        }],
     },
 
     run: async (bot, message, args) => {
-
         // Get the member and the nick
-        const member = args[0].toLowerCase() == "me" ? message.member : await getMember(message, args[0]),
-        nick = args.slice(1).join(" ");
+        const member = args[0].toLowerCase() === 'me' ? message.member : await getMember(message, args[0]);
+        const nick = args.slice(1).join(' ');
 
         // If an invalid member was specified return an error
-        if (!member)
-            return message.errorReply("You didn't specify a valid member!");
+        if (!member) return message.errorReply("You didn't specify a valid member!");
 
         // Check the users permissions
-        if (member.id == message.author.id) {
-            if (!message.member.permissions.has(Permissions.FLAGS.CHANGE_NICKNAME) && await checkPerms(bot, message, message.permissions, bot.commands.get("nick"))) {
+        if (member.id === message.author.id) {
+            if (!message.member.permissions.has(Permissions.FLAGS.CHANGE_NICKNAME) && await checkPerms(bot, message, message.permissions, bot.commands.get('nick'))) {
                 if (message.settings.general.permission_message) {
-                    return message.errorReply(`You don't have permissions to change your own nickname!`);
+                    return message.errorReply('You don\'t have permissions to change your own nickname!');
                 }
 
                 return;
             }
-        } else {
-            if (await checkPerms(bot, message, message.permissions, bot.commands.get("nick"))) {
-                if (message.settings.general.permission_message) {
-                    return message.errorReply("You don't have permissions to run that command!");
-                }
-
-                return;
+        } else if (await checkPerms(bot, message, message.permissions, bot.commands.get('nick'))) {
+            if (message.settings.general.permission_message) {
+                return message.errorReply("You don't have permissions to run that command!");
             }
+
+            return;
         }
 
         // If the members role is higher than or equal to the user running the command return an error
-        if (member.roles.highest.position >= message.member.roles.highest.position && member.id !== message.author.id)
-            return message.errorReply("You don't have permissions to change that users nickname!");
+        if (member.roles.highest.position >= message.member.roles.highest.position && member.id !== message.author.id) return message.errorReply("You don't have permissions to change that users nickname!");
         // If the bot can't manage the user return an error
-        if (!member.manageable)
-            return message.errorReply(`I don't have permissions to set ${member}'s nickname!`);
+        if (!member.manageable) return message.errorReply(`I don't have permissions to set ${member}'s nickname!`);
         // If the nickname is longer than 32 characters return an error
-        if (nick?.length > 32)
-            return message.errorReply("Nicknames cannot be longer than 32 characters!");
+        if (nick?.length > 32) return message.errorReply('Nicknames cannot be longer than 32 characters!');
 
         if (!nick) {
             // If the user doesn't have a nickname return an error
-            if (!member.nickname)
-                return message.errorReply("This user doesn't have a nickname to remove!");
+            if (!member.nickname) return message.errorReply("This user doesn't have a nickname to remove!");
 
             // Remove the users nickname
             await member.setNickname(member.user.username);
@@ -100,35 +92,28 @@ module.exports = {
             // Send a confirmation message
             message.confirmationReply(`Set **${member.user.username}**'s nickname to ${member}!`);
         }
-
     },
 
     run_interaction: async (bot, interaction) => {
-        
         // Get the member and the nick
-        const user = interaction.options.get("user"),
-        nick = interaction.options.get("nickname")?.value;
+        const user = interaction.options.get('user');
+        const nick = interaction.options.get('nickname')?.value;
 
         // If an invalid member was specified return an error
-        if (!user.member)
-            return interaction.error("You didn't specify a valid member!");
+        if (!user.member) return interaction.error("You didn't specify a valid member!");
 
         // TODO: [BOT-35] Nickname permission check
 
         // If the members role is higher than or equal to the user running the command return an error
-        if (user.member.roles.highest.position >= interaction.member.roles.highest.position && user.member.id !== interaction.member.id)
-            return interaction.error("You don't have permissions to change that users nickname!");
+        if (user.member.roles.highest.position >= interaction.member.roles.highest.position && user.member.id !== interaction.member.id) return interaction.error("You don't have permissions to change that users nickname!");
         // If the bot can't manage the user return an error
-        if (!user.member.manageable)
-            return interaction.error(`I don't have permissions to set ${user.member}'s nickname!`);
+        if (!user.member.manageable) return interaction.error(`I don't have permissions to set ${user.member}'s nickname!`);
         // If the nickname is longer than 32 characters return an error
-        if (nick?.length > 32)
-            return interaction.error("Nicknames cannot be longer than 32 characters!");
+        if (nick?.length > 32) return interaction.error('Nicknames cannot be longer than 32 characters!');
 
         if (!nick) {
             // If the user doesn't have a nickname return an error
-            if (!user.member.nickname)
-                return interaction.error("This user doesn't have a nickname to remove!");
+            if (!user.member.nickname) return interaction.error("This user doesn't have a nickname to remove!");
 
             // Remove the users nickname
             await user.member.setNickname(user.user.username);
@@ -140,6 +125,5 @@ module.exports = {
             // Send a confirmation message
             interaction.confirmation(`Set **${user.user.username}**'s nickname to ${user.member}!`);
         }
-        
-    }
+    },
 };
