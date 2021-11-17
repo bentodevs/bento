@@ -1,43 +1,41 @@
-const { default: fetch } = require("node-fetch");
+const { default: fetch } = require('node-fetch');
 
-const endpoint = "https://graphql.anilist.co";
+const endpoint = 'https://graphql.anilist.co';
 
 /**
  * Get anime or manga data from Anilist
- * 
+ *
  * @param {String} title
  * @param {String} type
- * 
+ *
  * @returns {Promise.<Object>}
- * 
+ *
  * @example
- * 
+ *
  * getMedia("Sword Art Online", "ANIME").then(data => {
  *      console.log(data);
  * }).catch(err => {
  *      console.log(err);
  * })
  */
-exports.getMedia = (title, type) => {
-    return new Promise((resolve, reject) => {
-        // Check if a type was specified otherwise set it to "ANIME"
-        type = type || "ANIME";
+exports.getMedia = (title, type) => new Promise((resolve, reject) => {
+    // Check if a type was specified otherwise set it to "ANIME"
+    // eslint-disable-next-line no-param-reassign
+    type = type || 'ANIME';
 
-        // Array with the available types
-        const types = [
-            "ANIME",
-            "MANGA"
-        ];
-    
-        // If no arguments were specified return an error
-        if (!title || !type)
-            return reject(new Error("Missing Args!"));
-        // If an invalid type was specified return an error
-        if (!types.includes(type.toUpperCase()))
-            return reject(new Error("Invalid Type!"));
-    
-        // Prepare the query
-        const query = `query ($search: String, $type: MediaType) {
+    // Array with the available types
+    const types = [
+        'ANIME',
+        'MANGA',
+    ];
+
+    // If no arguments were specified return an error
+    if (!title || !type) reject(new Error('Missing Args!'));
+    // If an invalid type was specified return an error
+    if (!types.includes(type.toUpperCase())) reject(new Error('Invalid Type!'));
+
+    // Prepare the query
+    const query = `query ($search: String, $type: MediaType) {
             Media(search: $search, type: $type, isAdult: false) {
                 id
                 siteUrl
@@ -50,51 +48,46 @@ exports.getMedia = (title, type) => {
                 description(asHtml: false)
             }
         }`;
-    
-        // Get the variables
-        const variables = {
-            search: title,
-            type: type
-        };
 
-    
-        // Fetch the data
-        fetch(endpoint, {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({ query, variables })
-        }).then(res => res.json()).then(json => {
-            if (json.errors) 
-                return reject(new Error("Not Found!"));
-            
-            resolve(json.data.Media);
-        }).catch(err => {
-            reject(err);
-        });
+    // Get the variables
+    const variables = {
+        search: title,
+        type,
+    };
+
+    // Fetch the data
+    fetch(endpoint, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ query, variables }),
+    }).then((res) => res.json()).then((json) => {
+        if (json.errors) return reject(new Error('Not Found!'));
+
+        resolve(json.data.Media);
+    }).catch((err) => {
+        reject(err);
     });
-};
+});
 
 /**
  * Get character data from Anilist
- * 
- * @param {String} name 
- * 
+ *
+ * @param {String} name
+ *
  * @returns {Promise.<Object>}
- * 
+ *
  * @example
- * 
+ *
  * getCharacter("Elaina").then(data => {
  *      console.log(data);
  * }).catch(err => {
  *      console.log(err);
  * })
  */
-exports.getCharacter = name => {
-        return new Promise((resolve, reject) => {
-            if (!name)
-                return reject(new Error("Missing Args!"));
+exports.getCharacter = (name) => new Promise((resolve, reject) => {
+    if (!name) reject(new Error('Missing Args!'));
 
-        const query = `query ($search: String) {
+    const query = `query ($search: String) {
             Character(search: $search) {
                 id
                 siteUrl
@@ -109,46 +102,42 @@ exports.getCharacter = name => {
             }
         }`;
 
-        const variables = {
-            search: name
-        };
+    const variables = {
+        search: name,
+    };
 
-        fetch(endpoint, {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({ query, variables })
-        }).then(res => res.json()).then(json => {
-            if (json.errors) 
-                return reject(new Error("Not Found!"));
-        
-            resolve(json.data.Character);
-        }).catch(err => {
-            reject(err);
-        });
+    fetch(endpoint, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ query, variables }),
+    }).then((res) => res.json()).then((json) => {
+        if (json.errors) return reject(new Error('Not Found!'));
+
+        resolve(json.data.Character);
+    }).catch((err) => {
+        reject(err);
     });
-};
+});
 
 /**
  * Get profile data from Anilist
- * 
- * @param {String} username 
- * 
+ *
+ * @param {String} username
+ *
  * @returns {Promise.<Object>}
- * 
+ *
  * @example
- * 
+ *
  * getProfile("Jarnoo").then(data => {
  *      console.log(data);
  * }).catch(err => {
  *      console.log(err);
  * })
  */
-exports.getProfile = username => {
-    return new Promise((resolve, reject) => {
-        if (!username)
-            return reject(new Error("Missing Args!"));
+exports.getProfile = (username) => new Promise((resolve, reject) => {
+    if (!username) reject(new Error('Missing Args!'));
 
-        const query = `query ($search: String) {
+    const query = `query ($search: String) {
             User(name: $search) {
                 id
                 name
@@ -178,21 +167,19 @@ exports.getProfile = username => {
             }
         }`;
 
-        const variables = {
-            search: username
-        };
+    const variables = {
+        search: username,
+    };
 
-        fetch(endpoint, {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({ query, variables })
-        }).then(res => res.json()).then(json => {
-            if (json.errors) 
-                return reject(new Error("Not Found!"));
-        
-            resolve(json.data.User);
-        }).catch(err => {
-            reject(err);
-        });
+    fetch(endpoint, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ query, variables }),
+    }).then((res) => res.json()).then((json) => {
+        if (json.errors) return reject(new Error('Not Found!'));
+
+        resolve(json.data.User);
+    }).catch((err) => {
+        reject(err);
     });
-};
+});

@@ -1,8 +1,8 @@
-const config = require("../../config");
-const users = require("../../database/models/users");
-const Canvas = require("canvas");
+const Canvas = require('canvas');
 const { getColorFromURL } = require('color-thief-node');
-const { MessageAttachment } = require("discord.js");
+const { MessageAttachment } = require('discord.js');
+const users = require('../../database/models/users');
+const config = require('../../config');
 
 /**
  * Check the users level
@@ -15,22 +15,23 @@ exports.checkLevel = async (message) => {
 
     // If the user or the guild doesn't exist create the data
     if (!user) {
+        // eslint-disable-next-line new-cap
         user = await new users({
             _id: message.author.id,
             usernames: [{
                 username: message.author.username,
-                time: Date.now()
+                time: Date.now(),
             }],
             guilds: [{
                 id: message.guild.id,
                 leveling: {
                     xp: 0,
                     level: 1,
-                    lastGained: 0
-                }
-            }]
+                    lastGained: 0,
+                },
+            }],
         }).save();
-    } else if (!user.guilds.find(g => g.id == message.guild.id)) {
+    } else if (!user.guilds.find((g) => g.id === message.guild.id)) {
         await users.findOneAndUpdate({ _id: message.author.id }, {
             $push: {
                 guilds: {
@@ -38,33 +39,33 @@ exports.checkLevel = async (message) => {
                     leveling: {
                         xp: 0,
                         level: 1,
-                        lastGained: 0
-                    }
-                }
-            }
+                        lastGained: 0,
+                    },
+                },
+            },
         });
 
         user = await users.findOne({ _id: message.author.id });
     }
 
     // Get the guild data
-    const gData = user.guilds.find(g => g.id == message.guild.id);
+    const gData = user.guilds.find((g) => g.id === message.guild.id);
 
     // If the user is on cooldown return
-    if (gData?.leveling.lastGained && (gData?.leveling.lastGained + 60000) > Date.now())
-        return;
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    if (gData?.leveling.lastGained && (gData?.leveling.lastGained + 60000) > Date.now()) return;
 
     // Get the xp, xp needed for next level and the new xp
-    const stats = gData?.leveling,
-    xp = Math.floor((Math.random() * (25 - 5) + 5) * message.settings.leveling.multiplier),
-    nextLvl = Math.floor(20 * (stats.level ** 2) + (100 * stats.level) + 100),
-    newXp = stats.xp + xp;
+    const stats = gData?.leveling;
+    const xp = Math.floor((Math.random() * (25 - 5) + 5) * message.settings.leveling.multiplier);
+    const nextLvl = Math.floor(20 * (stats.level ** 2) + (100 * stats.level) + 100);
+    const newXp = stats.xp + xp;
 
     if (nextLvl <= newXp) {
         // If lvl up messages are enabled
         if (stats.messages) {
             // Send the level up message
-            message.reply(`${config.emojis.level_up} ${message.author} just reached level **${stats.level + 1}**!`).then(msg => {
+            message.reply(`${config.emojis.level_up} ${message.author} just reached level **${stats.level + 1}**!`).then((msg) => {
                 setTimeout(() => {
                     msg.delete().catch(() => {});
                 }, 30000);
@@ -72,24 +73,24 @@ exports.checkLevel = async (message) => {
         }
 
         // Update the DB
-        await users.findOneAndUpdate({ _id: message.author.id, "guilds.id": message.guild.id }, {
+        await users.findOneAndUpdate({ _id: message.author.id, 'guilds.id': message.guild.id }, {
             $inc: {
-                "guilds.$.leveling.level": 1,
-                "guilds.$.leveling.xp": xp
+                'guilds.$.leveling.level': 1,
+                'guilds.$.leveling.xp': xp,
             },
             $set: {
-                "guilds.$.leveling.lastGained": Date.now()
-            }
+                'guilds.$.leveling.lastGained': Date.now(),
+            },
         });
     } else {
         // Update the DB
-        await users.findOneAndUpdate({ _id: message.author.id, "guilds.id": message.guild.id }, {
+        await users.findOneAndUpdate({ _id: message.author.id, 'guilds.id': message.guild.id }, {
             $inc: {
-                "guilds.$.leveling.xp": xp
+                'guilds.$.leveling.xp': xp,
             },
             $set: {
-                "guilds.$.leveling.lastGained": Date.now()
-            }
+                'guilds.$.leveling.lastGained': Date.now(),
+            },
         });
     }
 };
@@ -107,25 +108,25 @@ exports.getGuildMemberData = async (guild) => {
             $match: {
                 guilds: {
                     $elemMatch: {
-                        id: guild
-                    }
-                }
-            }
+                        id: guild,
+                    },
+                },
+            },
         },
         {
             $project: {
                 _id: 1,
                 guilds: {
                     $filter: {
-                        input: "$guilds",
-                        as: "guilds",
+                        input: '$guilds',
+                        as: 'guilds',
                         cond: {
-                            $eq: ["$$guilds.id", guild]
-                        }
-                    }
-                }
-            }
-        }
+                            $eq: ['$$guilds.id', guild],
+                        },
+                    },
+                },
+            },
+        },
     ]);
 
     return data;
@@ -142,29 +143,30 @@ exports.getGuildMemberData = async (guild) => {
  */
 exports.getRankCard = async (user, data, guild) => {
     // Create the canvas, get the context and load the images in
-    const canvas = Canvas.createCanvas(700, 250),
-    ctx = canvas.getContext("2d"),
-    avatar = await Canvas.loadImage(user.user.displayAvatarURL({ format: "png", dynamic: true })),
-    blur = await Canvas.loadImage("https://i.imgur.com/E0We0O9.png");
+    const canvas = Canvas.createCanvas(700, 250);
+    const ctx = canvas.getContext('2d');
+    const avatar = await Canvas.loadImage(user.user.displayAvatarURL({ format: 'png', dynamic: true }));
+    const blur = await Canvas.loadImage('https://i.imgur.com/E0We0O9.png');
 
     // Get the XP data
-    const xp = (data.leveling.xp - Math.floor(20 * ((data.leveling.level - 1) ** 2) + (100 * (data.leveling.level - 1)) + 100)) + (data.leveling.level == 1 ? 100 : 0),
-    xpNeeded = Math.floor(20 * (data.leveling.level ** 2) + (100 * data.leveling.level) + 100) - Math.floor(20 * ((data.leveling.level - 1) ** 2) + (100 * (data.leveling.level - 1)) + 100),
-    percentage = Math.round(Math.floor((xp / xpNeeded) * 100));
+    const xp = (data.leveling.xp - Math.floor(20 * ((data.leveling.level - 1) ** 2) + (100 * (data.leveling.level - 1)) + 100)) + (data.leveling.level === 1 ? 100 : 0);
+    const xpNeeded = Math.floor(20 * (data.leveling.level ** 2) + (100 * data.leveling.level) + 100) - Math.floor(20 * ((data.leveling.level - 1) ** 2) + (100 * (data.leveling.level - 1)) + 100);
+    const percentage = Math.round(Math.floor((xp / xpNeeded) * 100));
 
     // Get the users rank
-    const gData = await this.getGuildMemberData(guild),
-    sorted = gData.sort((a, b) => b.guilds[0].leveling.xp - a.guilds[0].leveling.xp),
-    rank = sorted.map(a => a._id).indexOf(user.id) + 1;
+    const gData = await this.getGuildMemberData(guild);
+    const sorted = gData.sort((a, b) => b.guilds[0].leveling.xp - a.guilds[0].leveling.xp);
+    // eslint-disable-next-line no-underscore-dangle
+    const rank = sorted.map((a) => a._id).indexOf(user.id) + 1;
 
     // Get the dominant color from the users avatar
-    const color = await getColorFromURL(user.user.displayAvatarURL({ format: "png", dynamic: true }));
+    const color = await getColorFromURL(user.user.displayAvatarURL({ format: 'png', dynamic: true }));
     // Define the status colors
     const colors = {
-        online: "#3BA55D",
-        idle: "#FBA91A",
-        offline: "#747E8C",
-        dnd: "#ED4344"
+        online: '#3BA55D',
+        idle: '#FBA91A',
+        offline: '#747E8C',
+        dnd: '#ED4344',
     };
 
     // Draw the background
@@ -195,13 +197,13 @@ exports.getRankCard = async (user, data, guild) => {
     ctx.beginPath();
     ctx.arc(185, 175, 20, 0, Math.PI * 2);
     ctx.lineWidth = 3;
-    ctx.fillStyle = colors[user.presence?.status || "offline"];
+    ctx.fillStyle = colors[user.presence?.status || 'offline'];
     ctx.fill();
     ctx.stroke();
     ctx.closePath();
 
     // Create the progress bar
-    for (let i = 0; i < 100; i ++) {
+    for (let i = 0; i < 100; i += 1) {
         ctx.beginPath();
         ctx.lineWidth = 15;
         ctx.arc(250 + (i * 3.95), 178, 8, 0, Math.PI * 2, true);
@@ -210,7 +212,7 @@ exports.getRankCard = async (user, data, guild) => {
     }
 
     // Fill the progress bar with the current percentage
-    for (let i = 0; i < percentage; i ++) {
+    for (let i = 0; i < percentage; i += 1) {
         ctx.beginPath();
         ctx.fillStyle = this.rgbToHex(color);
         ctx.arc(250 + (i * 3.95), 178, 8, 0, Math.PI * 2, true);
@@ -219,15 +221,15 @@ exports.getRankCard = async (user, data, guild) => {
     }
 
     // If the users username is longer than 18 characters shorten it
-    if (user.user.username.length > 18)
-        user.user.username = user.user.username.slice(0, 18);
+    // eslint-disable-next-line no-param-reassign
+    if (user.user.username.length > 18) user.user.username = user.user.username.slice(0, 18);
 
     // Get the font size
-    const fontSize = this.getFontSize(canvas, user.user.username, "Whitney Semibold", 200);
+    const fontSize = this.getFontSize(canvas, user.user.username, 'Whitney Semibold', 200);
 
     // Draw the username
     ctx.font = `${fontSize}px Whitney Semibold`;
-    ctx.fillStyle = "white";
+    ctx.fillStyle = 'white';
     ctx.fillText(user.user.username, 240, 145);
 
     // Measure the username size
@@ -235,17 +237,17 @@ exports.getRankCard = async (user, data, guild) => {
 
     // Draw the descriminator
     ctx.font = `${fontSize - 3}px Whitney Book`;
-    ctx.fillStyle = "#cccccc";
-    ctx.fillText("#" + user.user.discriminator, 248 + measured, 145);
+    ctx.fillStyle = '#cccccc';
+    ctx.fillText(`#${user.user.discriminator}`, 248 + measured, 145);
 
     // Draw the users XP / XP needed
     ctx.font = `${fontSize}x Whitney Semibold`;
-    ctx.fillStyle = "#cccccc";
-    ctx.textAlign = "right";
+    ctx.fillStyle = '#cccccc';
+    ctx.textAlign = 'right';
     ctx.fillText(`${xp} / ${xpNeeded} XP`, 650, 145);
 
     // Draw the users level
-    ctx.font = `40px Whitney Semibold`;
+    ctx.font = '40px Whitney Semibold';
     ctx.fillStyle = this.rgbToHex(color);
     ctx.fillText(data.leveling.level, 675, 50);
 
@@ -253,28 +255,28 @@ exports.getRankCard = async (user, data, guild) => {
     const levelWidth = ctx.measureText(data.leveling.level).width;
 
     // Draw the level text
-    ctx.font = `20px Whitney Semibold`;
+    ctx.font = '20px Whitney Semibold';
     ctx.fillStyle = this.shadeColor(this.rgbToHex(color), -5);
-    ctx.fillText("LEVEL", 670 - levelWidth, 50);
+    ctx.fillText('LEVEL', 670 - levelWidth, 50);
 
     // Get the width of the level text
-    const lvlTextWidth = ctx.measureText("LEVEL").width;
+    const lvlTextWidth = ctx.measureText('LEVEL').width;
 
     // Draw the users rank
-    ctx.font = `40px Whitney Semibold`;
-    ctx.fillStyle = "white";
+    ctx.font = '40px Whitney Semibold';
+    ctx.fillStyle = 'white';
     ctx.fillText(`#${rank}`, 660 - levelWidth - lvlTextWidth, 50);
 
     // Get the width of the rank
     const rankWidth = ctx.measureText(`#${rank}`).width;
 
     // Draw the rank text
-    ctx.font = `20px Whitney Semibold`;
-    ctx.fillStyle = "#e5e5e5";
-    ctx.fillText("RANK", 650 - levelWidth - lvlTextWidth - rankWidth, 50);
+    ctx.font = '20px Whitney Semibold';
+    ctx.fillStyle = '#e5e5e5';
+    ctx.fillText('RANK', 650 - levelWidth - lvlTextWidth - rankWidth, 50);
 
     // Create & return the attachment
-    return new MessageAttachment(canvas.toBuffer(), "rank-card.png");
+    return new MessageAttachment(canvas.toBuffer(), 'rank-card.png');
 };
 
 /**
@@ -289,19 +291,19 @@ exports.getRankCard = async (user, data, guild) => {
  */
 exports.getFontSize = (canvas, text, font, maxWidth) => {
     // Get the canvas context
-	const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d');
 
-	// Declare a base size of the font
-	let fontSize = 40;
+    // Declare a base size of the font
+    let fontSize = 40;
 
-	do {
-		// Assign the font to the context and decrement it so it can be measured again
-		context.font = `${fontSize -= 10}px ${font}`;
-		// Compare pixel width of the text to the canvas minus the approximate avatar size
-	} while (context.measureText(text).width > maxWidth);
+    do {
+        // Assign the font to the context and decrement it so it can be measured again
+        context.font = `${fontSize -= 10}px ${font}`;
+        // Compare pixel width of the text to the canvas minus the approximate avatar size
+    } while (context.measureText(text).width > maxWidth);
 
-	// Return the result to use in the actual canvas
-	return fontSize;
+    // Return the result to use in the actual canvas
+    return fontSize;
 };
 
 /**
@@ -314,10 +316,10 @@ exports.getFontSize = (canvas, text, font, maxWidth) => {
 exports.rgbToHex = (array) => {
     const componentToHex = (a) => {
         const hex = a.toString(16);
-        return hex.length == 1 ? "0" + hex : hex;
+        return hex.length === 1 ? `0${hex}` : hex;
     };
 
-    return "#" + componentToHex(array[0]) + componentToHex(array[1]) + componentToHex(array[2]);
+    return `#${componentToHex(array[0])}${componentToHex(array[1])}${componentToHex(array[2])}`;
 };
 
 /**
@@ -329,21 +331,24 @@ exports.rgbToHex = (array) => {
  * @returns {String} color
  */
 exports.shadeColor = (color, percent) => {
-    let R = parseInt(color.substring(1,3),16);
-    let G = parseInt(color.substring(3,5),16);
-    let B = parseInt(color.substring(5,7),16);
+    let R = parseInt(color.substring(1, 3), 16);
+    let G = parseInt(color.substring(3, 5), 16);
+    let B = parseInt(color.substring(5, 7), 16);
 
-    R = parseInt(R * (100 + percent) / 100);
-    G = parseInt(G * (100 + percent) / 100);
-    B = parseInt(B * (100 + percent) / 100);
+    // eslint-disable-next-line no-mixed-operators
+    R = parseInt(R * (100 + percent) / 100, 10);
+    // eslint-disable-next-line no-mixed-operators
+    G = parseInt(G * (100 + percent) / 100, 10);
+    // eslint-disable-next-line no-mixed-operators
+    B = parseInt(B * (100 + percent) / 100, 10);
 
-    R = (R<255)?R:255;
-    G = (G<255)?G:255;
-    B = (B<255)?B:255;
+    R = (R < 255) ? R : 255;
+    G = (G < 255) ? G : 255;
+    B = (B < 255) ? B : 255;
 
-    const RR = ((R.toString(16).length==1)?"0"+R.toString(16):R.toString(16));
-    const GG = ((G.toString(16).length==1)?"0"+G.toString(16):G.toString(16));
-    const BB = ((B.toString(16).length==1)?"0"+B.toString(16):B.toString(16));
+    const RR = ((R.toString(16).length === 1) ? `0${R.toString(16)}` : R.toString(16));
+    const GG = ((G.toString(16).length === 1) ? `0${G.toString(16)}` : G.toString(16));
+    const BB = ((B.toString(16).length === 1) ? `0${B.toString(16)}` : B.toString(16));
 
-    return "#"+RR+GG+BB;
+    return `#${RR}${GG}${BB}`;
 };

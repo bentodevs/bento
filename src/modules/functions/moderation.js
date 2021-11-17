@@ -1,18 +1,17 @@
-const { stripIndents } = require("common-tags");
-const { MessageEmbed, Permissions } = require("discord.js");
-const config = require("../../config");
-const settings = require("../../database/models/settings");
-const { log } = require("./logger");
+const { stripIndents } = require('common-tags');
+const { MessageEmbed, Permissions } = require('discord.js');
+const config = require('../../config');
+const settings = require('../../database/models/settings');
+const { log } = require('./logger');
 
 exports.punishmentLog = async (message, member, pID, reason, type, length) => {
-
     // Fetch the default logger channel
     const modlog = message.guild.channels.cache.get(message.settings.logs.default);
 
     // If the log channel doesn't exist, then return
     if (!modlog) return;
 
-    if (type.toLowerCase() === "mute") {
+    if (type.toLowerCase() === 'mute') {
         // Built the embed
         const embed = new MessageEmbed()
             .setAuthor(`Case #${pID} | User Muted`, member.user.displayAvatarURL({ dynamic: true, format: 'png' }))
@@ -27,7 +26,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
 
         // Send the completed embed
         modlog.send({ embeds: [embed] });
-    } else if (type.toLowerCase() === "unmute") {
+    } else if (type.toLowerCase() === 'unmute') {
         // Built the embed
         const embed = new MessageEmbed()
             .setAuthor(`Case #${pID} | User Unmuted`, member.user.displayAvatarURL({ dynamic: true, format: 'png' }))
@@ -41,7 +40,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
 
         // Send the completed embed
         modlog.send({ embeds: [embed] });
-    } else if (type.toLowerCase() === "ban") {
+    } else if (type.toLowerCase() === 'ban') {
         // Built the embed
         const embed = new MessageEmbed()
             .setAuthor(`Case #${pID} | User Banned`, member.user?.displayAvatarURL({ dynamic: true, format: 'png' }) ?? member.displayAvatarURL({ dynamic: true, format: 'png' }))
@@ -56,7 +55,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
 
         // Send the completed embed
         modlog.send({ embeds: [embed] });
-    } else if (type.toLowerCase() === "unban") {
+    } else if (type.toLowerCase() === 'unban') {
         // Built the embed
         const embed = new MessageEmbed()
             .setAuthor(`Case #${pID} | User Unbanned`, member.displayAvatarURL({ dynamic: true, format: 'png' }))
@@ -70,7 +69,7 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
 
         // Send the completed embed
         modlog.send({ embeds: [embed] });
-    } else if (type.toLowerCase() === "kick") {
+    } else if (type.toLowerCase() === 'kick') {
         // Built the embed
         const embed = new MessageEmbed()
             .setAuthor(`Case #${pID} | User Kicked`, member.user.displayAvatarURL({ dynamic: true, format: 'png' }))
@@ -89,44 +88,44 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
     }
 };
 
+// eslint-disable-next-line no-shadow
 exports.checkMessage = async (message, settings) => {
-    if (settings.ignore?.hierarchicRoleId && message.guild.roles.cache.get(settings.ignore?.hierarchicRoleId).position <= message.member.roles.highest.position)
-        return;
-    if (settings.ignore?.channels.includes(message.channel.id) || settings.ignore?.roles.includes(message.member.roles.cache) || message.member.permissions.has("ADMINISTRATOR"))
-        return;
+    if (settings.ignore?.hierarchicRoleId && message.guild.roles.cache.get(settings.ignore?.hierarchicRoleId).position <= message.member.roles.highest.position) return;
+    if (settings.ignore?.channels.includes(message.channel.id) || settings.ignore?.roles.includes(message.member.roles.cache) || message.member.permissions.has('ADMINISTRATOR')) return;
 
     if (settings.moderation.filter?.state) {
+        // eslint-disable-next-line no-unsafe-optional-chaining
         for (const data of settings.moderation.filter?.entries) {
             if (message.content.toLowerCase().includes(data.toLowerCase())) {
                 message.delete().catch(() => { });
-                await message.reply(`you are unable to say that here!`).then(m => setTimeout(() => m.delete().catch(() => {}), 5000));
+                await message.reply('you are unable to say that here!').then((m) => setTimeout(() => m.delete().catch(() => {}), 5000));
             }
         }
     }
 
     if (settings.moderation.filter?.zalgo) {
-        const zalgo = new RegExp(/[\xCC\xCD]/);
+        const zalgo = /[\xCC\xCD]/;
         if (zalgo.test(message.content)) {
             message.delete().catch(() => { });
-            await message.reply(`you are unable to use Zalgo text here!`).then(m => setTimeout(() => m.delete().catch(() => {}), 5000));
+            await message.reply('you are unable to use Zalgo text here!').then((m) => setTimeout(() => m.delete().catch(() => {}), 5000));
         }
     }
 
     if (settings.moderation.no_invite) {
-        const invite = new RegExp(/(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]/g);
+        const invite = /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]/g;
 
         if (invite.test(message.content)) {
             message.delete().catch(() => { });
-            await message.reply(`you are unable to send invite links here!`).then(m => setTimeout(() => m.delete().catch(() => {}), 5000));
+            await message.reply('you are unable to send invite links here!').then((m) => setTimeout(() => m.delete().catch(() => {}), 5000));
         }
     }
 
     if (settings.moderation.no_link) {
-        const link = new RegExp(/[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)?/gi);
+        const link = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)?/gi;
 
         if (link.test(message.content)) {
             message.delete().catch(() => { });
-            await message.reply(`you are unable to send URLs here!`).then(m => setTimeout(() => m.delete().catch(() => {}), 5000));
+            await message.reply('you are unable to send URLs here!').then((m) => setTimeout(() => m.delete().catch(() => {}), 5000));
         }
     }
 };
@@ -142,7 +141,7 @@ exports.checkBlacklist = async (message) => {
     // Get the author (to support interactions)
     const author = message.author ?? message.user;
 
-    if (message.settings.blacklist.users.includes(author.id) || message.settings.blacklist.channels.includes(author.id) || message.settings.blacklist.roles.filter(a => message.member.roles.cache.has(a)).length) {
+    if (message.settings.blacklist.users.includes(author.id) || message.settings.blacklist.channels.includes(author.id) || message.settings.blacklist.roles.filter((a) => message.member.roles.cache.has(a)).length) {
         // Define the blacklisted var
         let blacklisted = true;
 
@@ -151,31 +150,27 @@ exports.checkBlacklist = async (message) => {
 
         // If the hierarchic role doesn't exist anymore remove it from the settings db
         if (!hierarchicRole && message.settings.blacklist.bypass.hierarchicRoleId) {
-            await settings.findOneAndUpdate({ _id: message.guild.id }, { "blacklist.bypass.hierarchicRoleId": null });
+            await settings.findOneAndUpdate({ _id: message.guild.id }, { 'blacklist.bypass.hierarchicRoleId': null });
 
             blacklisted = false;
         }
 
         // If the users role is higher or equal to the hierarchic role set blacklisted to false
-        if (hierarchicRole && message.member.roles.highest.position >= hierarchicRole.position)
-            blacklisted = false;
+        if (hierarchicRole && message.member.roles.highest.position >= hierarchicRole.position) blacklisted = false;
 
         // If the user has a bypass role set blacklisted to false
         if (message.settings.blacklist.bypass.roles.length) {
             for (const data of message.settings.blacklist.bypass.roles) {
-                if (message.member.roles.cache.has(data))
-                    blacklisted = false;
+                if (message.member.roles.cache.has(data)) blacklisted = false;
             }
         }
 
         // If the user has ADMINISTRATOR permissions or is a bot dev set blacklisted to false
-        if (message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR) || config.general.devs.includes(author.id))
-            blacklisted = false;
+        if (message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR) || config.general.devs.includes(author.id)) blacklisted = false;
 
         // Return the blacklisted variable
         return blacklisted;
-    } else {
-        // Return false
-        return false;
     }
+    // Return false
+    return false;
 };
