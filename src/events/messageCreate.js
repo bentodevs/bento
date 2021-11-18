@@ -208,5 +208,5 @@ module.exports = async (bot, message) => {
     }
 
     // Log that the command has been run
-    bot.logger.cmd(`${message.author.username} (${message.author.id}) ran command ${cmd.info.name}${message.guild ? ` in ${message.guild.name} (${message.guild.id})` : ''}`);
+    bot.logger.cmd(`${message.author.username} (${message.author.id}) ran command ${cmd.info.name}${message?.guild ? ` in ${message.guild.name} (${message.guild.id})` : ''}`);
 };
