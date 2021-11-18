@@ -23,7 +23,7 @@ module.exports = {
         devOnly: false,
         premium: false,
         noArgsHelp: true,
-        disabled: false,
+        disabled: true,
     },
     slash: {
         enabled: false,
