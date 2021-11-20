@@ -1,6 +1,6 @@
 {
   "name": "r2-d2",
-  "version": "1.0.0",
+  "version": "2021.11.1",
   "description": "A multi-purpose Discord bot",
   "main": "src/bot.js",
   "scripts": {

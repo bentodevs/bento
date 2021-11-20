@@ -4,7 +4,7 @@ const config = {
     general: {
         token: "", // Token to login to the Discord API
         prefix: ".", // Default Bot Prefix
-        version: "1.0.0", // Current Version
+        version: "2021.1.1", // Current Version
         embedColor: "#ABCDEF", // Default Embed Color
         devs: [
             "420325176379703298", // Jarno
