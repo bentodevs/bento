@@ -93,7 +93,7 @@ exports.checkMessage = async (message, settings) => {
     if (settings.ignore?.hierarchicRoleId && message.guild.roles.cache.get(settings.ignore?.hierarchicRoleId).position <= message.member.roles.highest.position) return;
     if (settings.ignore?.channels.includes(message.channel.id) || settings.ignore?.roles.includes(message.member.roles.cache) || message.member.permissions.has('ADMINISTRATOR')) return;
 
-    if (settings.moderation.filter?.state) {
+    if (settings.moderation?.filter?.state) {
         // eslint-disable-next-line no-unsafe-optional-chaining
         for (const data of settings.moderation.filter?.entries) {
             if (message.content.toLowerCase().includes(data.toLowerCase())) {
@@ -103,7 +103,7 @@ exports.checkMessage = async (message, settings) => {
         }
     }
 
-    if (settings.moderation.filter?.zalgo) {
+    if (settings.moderation?.filter?.zalgo) {
         const zalgo = /[\xCC\xCD]/;
         if (zalgo.test(message.content)) {
             message.delete().catch(() => { });
@@ -111,7 +111,7 @@ exports.checkMessage = async (message, settings) => {
         }
     }
 
-    if (settings.moderation.no_invite) {
+    if (settings.moderation?.no_invite) {
         const invite = /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]/g;
 
         if (invite.test(message.content)) {
@@ -120,7 +120,7 @@ exports.checkMessage = async (message, settings) => {
         }
     }
 
-    if (settings.moderation.no_link) {
+    if (settings.moderation?.no_link) {
         const link = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)?/gi;
 
         if (link.test(message.content)) {
