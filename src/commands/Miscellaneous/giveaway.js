@@ -137,7 +137,7 @@ module.exports = {
 
             // Get the page
             // eslint-disable-next-line no-param-reassign, no-multi-assign
-            if (!Number.isNaN(args[1])) page = args[1] -= 1;
+            if (!isNaN(args[1])) page = args[1] -= 1;
 
             // Format the description
             const description = pages[page].map((a) => `${a.active ? bot.config.emojis.online : bot.config.emojis.dnd} | **ID:** ${a.id} | **Duration:** ${formatDuration(intervalToDuration({ start: a.timestamps.start, end: a.timestamps.ends }), { delimiter: ',' })} | **Winners:** ${a.winners} | **Prize:** ${a.prize}`);

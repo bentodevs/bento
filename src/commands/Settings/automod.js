@@ -181,7 +181,7 @@ module.exports = {
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { 'moderation.mentions_mute': null })
                     .then(() => message.confirmationReply('The mute threshold for message mentions has been disabled'))
                     .catch((err) => message.errorReply(`There was an error whilst disabling the mute threshold: ${err.message}`));
-            } else if (!Number.isNaN(args[1])) {
+            } else if (!isNaN(args[1])) {
                 // If the amount specified is larger than the mentions_ban setting return an error
                 if (message.settings.moderation.mentions_ban && args[1] > message.settings.moderation.mentions_ban) return message.errorReply('Te mentions-mute amount needs to be lower than the mentions-ban setting!');
 
@@ -202,7 +202,7 @@ module.exports = {
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { 'moderation.mentions_ban': null })
                     .then(() => message.confirmationReply('The ban threshold for message mentions has been disabled'))
                     .catch((err) => message.errorReply(`There was an error whilst disabling the ban threshold: ${err.message}`));
-            } else if (!Number.isNaN(args[1])) {
+            } else if (!isNaN(args[1])) {
                 // If the amount specified is smaller than the mentions_mute setting return an error
                 if (message.settings.moderation.mentions_mute && args[1] < message.settings.moderation.mentions_mute) return message.errorReply('Te mentions-ban amount needs to be higher than the mentions-mute setting!');
 

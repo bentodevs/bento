@@ -38,7 +38,7 @@ module.exports = {
     },
 
     run: async (bot, message, args) => {
-        if (!Number.isNaN(args[0]) && /^[0-9]{7,}$/.test(args[0])) {
+        if (!isNaN(args[0]) && /^[0-9]{7,}$/.test(args[0])) {
             await fetchSteamUserByID(args[0])
                 .then(async (data) => {
                     await fetch(`https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=${bot.config.apiKeys.steam}&steamid=${data.steamID}`)
@@ -104,7 +104,7 @@ module.exports = {
         // Get the data from the interaction
         const option = interaction.options.get('steam_name_or_id').value;
 
-        if (!Number.isNaN(option) && /^[0-9]{7,}$/.test(option)) {
+        if (!isNaN(option) && /^[0-9]{7,}$/.test(option)) {
             await fetchSteamUserByID(option)
                 .then(async (data) => {
                     await fetch(`https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=${bot.config.apiKeys.steam}&steamid=${data.steamID}`)

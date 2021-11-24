@@ -70,7 +70,7 @@ module.exports = {
 
         // Get the correct page, if the user provides a page number
         // eslint-disable-next-line no-multi-assign, no-param-reassign
-        if (!Number.isNaN(args[1])) page = args[1] -= 1;
+        if (!isNaN(args[1])) page = args[1] -= 1;
 
         // Check if the user specified a valid page
         if (!pages[page]) return message.errorReply("You didn't specify a valid page!");

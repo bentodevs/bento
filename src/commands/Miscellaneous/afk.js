@@ -98,7 +98,7 @@ module.exports = {
 
             // If args[0] is a number set it as the page
             // eslint-disable-next-line no-multi-assign, no-param-reassign
-            if (!Number.isNaN()) page = args[1].value -= 1;
+            if (!isNaN(args[0])) page = args[1].value -= 1;
             // Return if the page wasn't found
             if (!pages[page]) return message.errorReply("You didn't specify a valid page!");
 
@@ -169,7 +169,7 @@ module.exports = {
 
             // If args[0] is a number set it as the page
             // eslint-disable-next-line no-multi-assign
-            if (!Number.isNaN()) page = int.value -= 1;
+            if (!isNaN(int)) page = int.value -= 1;
             // Return if the page wasn't found
             if (!pages[page]) return interaction.error("You didn't specify a valid page!");
 

@@ -59,7 +59,7 @@ module.exports = {
     },
 
     run: async (bot, message, args) => {
-        if (!Number.isNaN(args[0]) && /^[0-9]{16,}$/.test(args[0])) {
+        if (!isNaN(args[0]) && /^[0-9]{16,}$/.test(args[0])) {
             // Try and fetch a guild member from args[0]
             const member = await getMember(message, args[0], false) || await getUser(bot, message, args[0], false);
 
@@ -86,7 +86,7 @@ module.exports = {
 
             // Get the correct page, if the user provides a page number
             // eslint-disable-next-line no-multi-assign, no-param-reassign
-            if (!Number.isNaN(args[1])) page = args[1] -= 1;
+            if (!isNaN(args[1])) page = args[1] -= 1;
 
             // Check if the user specified a valid page
             if (!pages[page]) return message.errorReply("You didn't specify a valid page!");
@@ -102,7 +102,7 @@ module.exports = {
                 .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
 
             message.reply({ embeds: [embed] });
-        } else if (!Number.isNaN(args[0])) {
+        } else if (!isNaN(args[0])) {
             // We are now presuming the number provided is a Case ID...
             // Lookup the case in the punishments DB
             const punishment = await punishments.findOne({ guild: message.guild.id, id: args[0] });
@@ -154,7 +154,7 @@ module.exports = {
 
             // Get the correct page, if the user provides a page number
             // eslint-disable-next-line no-multi-assign, no-param-reassign
-            if (!Number.isNaN(args[1])) page = args[1] -= 1;
+            if (!isNaN(args[1])) page = args[1] -= 1;
 
             // Check if the user specified a valid page
             if (!pages[page]) return message.errorReply("You didn't specify a valid page!");

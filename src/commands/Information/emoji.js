@@ -23,7 +23,7 @@ module.exports = {
         devOnly: false,
         premium: false,
         noArgsHelp: true,
-        disabled: true,
+        disabled: false,
     },
     slash: {
         enabled: false,
@@ -45,7 +45,7 @@ module.exports = {
                 .setThumbnail(URL)
                 .setDescription(stripIndents`**Emoji Name:** ${customEmote[1]}
                 **Emoji ID:** ${customEmote[2]}
-                **API Format:** \`${customEmote[0]}\``);
+                **API Format:** \`${customEmote[0].normalize()}\``);
 
             message.reply({ embeds: [embed] });
             message.channel.send(`\`\`\`${customEmote[0]}\`\`\``);

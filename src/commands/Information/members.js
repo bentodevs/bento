@@ -47,10 +47,10 @@ module.exports = {
 
     async run(bot, message, args) {
         // Get the specified role (if any)
-        let role = await getRole(message, !Number.isNaN(args[args.length - 1]) && !/^[0-9]{16,}$/.test(args[args.length - 1]) ? args.slice(0, args.length - 1).join(' ') : args.join(' '));
+        let role = await getRole(message, !isNaN(args[args.length - 1]) && !/^[0-9]{16,}$/.test(args[args.length - 1]) ? args.slice(0, args.length - 1).join(' ') : args.join(' '));
 
         // If args[0] is a number set role to undefined
-        if (!Number.isNaN(args[0]) && role?.id !== args[0]) role = undefined;
+        if (!isNaN(args[0]) && role?.id !== args[0]) role = undefined;
 
         // If the user specified a invalid role return an error
         if (!role && args[0]) return message.errorReply("You didn't specify a valid role!");
@@ -70,7 +70,7 @@ module.exports = {
 
             // If args[0] is a number set it as the page
             // eslint-disable-next-line no-multi-assign, no-param-reassign
-            if (!Number.isNaN(args[0])) page = args[0] -= 1;
+            if (!isNaN(args[0])) page = args[0] -= 1;
             // Return if the page wasn't found
             if (!pages[page]) return message.errorReply("You didn't specify a valid page!");
 
@@ -104,7 +104,7 @@ module.exports = {
 
             // Check if a page was specified and set it as that page
             // eslint-disable-next-line no-multi-assign, no-param-reassign
-            if (!Number.isNaN(args[args.length - 1]) && !/^[0-9]{16,}$/.test(args[args.length - 1])) page = args[args.length - 1] -= 1;
+            if (!isNaN(args[args.length - 1]) && !/^[0-9]{16,}$/.test(args[args.length - 1])) page = args[args.length - 1] -= 1;
 
             // If the page specified doesn't exists return
             if (!pages[page]) return message.errorReply("You didn't specify a valid page!");

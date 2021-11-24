@@ -56,7 +56,7 @@ module.exports = {
         }
 
         // If the page option is there set it as the page
-        if (!Number.isNaN(args[0])) page = args[0] - 1;
+        if (!isNaN(args[0])) page = args[0] - 1;
         // If the page doesn't exist retrun an error
         if (!pages[page]) return message.errorReply("You didn't specify a valid page!");
 
