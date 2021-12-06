@@ -48,7 +48,7 @@ module.exports = {
         const getCategories = bot.commands.map((c) => c.info.category.toLowerCase());
         const categories = getCategories.filter((item, index) => getCategories.indexOf(item) >= index);
 
-        const find = message.options?.get('command')?.value || args?.[0]?.toLowerCase();
+        const find = message.options?.get('command_category')?.value || args?.[0]?.toLowerCase();
 
         // Get the command or category
         const command = bot.commands.get(find) || bot.commands.get(bot.aliases.get(find));
@@ -57,7 +57,7 @@ module.exports = {
         // If the command or category is dev only return an error
         if ((command?.info.category.toLowerCase() === 'dev' || category === 'dev') && !bot.config.general.devs.includes(message.author.id)) return message.errorReply("You didn't specify a valid command or category!");
 
-        if ((!args?.[0] && !message.options?.get('command')?.value) || (args?.[0]?.toLowerCase() === 'all' || message.options?.get('command')?.value === 'all')) {
+        if ((!args?.[0] && !message.options?.get('command_category')?.value) || (args?.[0]?.toLowerCase() === 'all' || message.options?.get('command_category')?.value === 'all')) {
             // Grab all the commands
             let commands = Array.from(bot.commands.values());
             // Define the catery object
@@ -204,7 +204,7 @@ module.exports = {
             const commands = bot.commands.filter((c) => c.info.category.toLowerCase() === category).map((c) => `\`${prefix}${c.info.name}\``);
 
             // Get the category or command permission
-            const permission = message.permissions.categories[category];
+            const permission = message?.guild ? message.permissions?.categories[category] : null;
 
             // Define the perm var
             let perm = '';
