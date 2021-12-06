@@ -1,6 +1,6 @@
 /* eslint-disable no-extend-native */
 /* eslint-disable func-names */
-module.exports = () => {
+export default function () {
     String.prototype.toTitleCase = function () {
         let i;
         let j;
@@ -102,4 +102,4 @@ module.exports = () => {
 
         return this;
     };
-};
+}

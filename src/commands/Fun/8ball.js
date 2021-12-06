@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     info: {
         name: '8ball',
         aliases: ['8'],

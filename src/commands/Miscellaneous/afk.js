@@ -1,7 +1,7 @@
-const { MessageEmbed } = require('discord.js');
-const afk = require('../../database/models/afk');
+import { MessageEmbed } from 'discord.js';
+import afk from '../../database/models/afk.js';
 
-module.exports = {
+export default {
     info: {
         name: 'afk',
         aliases: [],

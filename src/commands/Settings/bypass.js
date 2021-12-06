@@ -1,7 +1,7 @@
-const settings = require('../../database/models/settings');
-const { getRole } = require('../../modules/functions/getters');
+import settings from '../../database/models/settings.js';
+import { getRole } from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'bypass',
         aliases: [],

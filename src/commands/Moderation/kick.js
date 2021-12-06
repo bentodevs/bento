@@ -1,9 +1,12 @@
-const { utcToZonedTime, format } = require('date-fns-tz');
-const punishments = require('../../database/models/punishments');
-const { punishmentLog } = require('../../modules/functions/moderation');
-const { getMember } = require('../../modules/functions/getters');
+import dateFnsTz from 'date-fns-tz';
+import { format } from 'date-fns';
+import punishments from '../../database/models/punishments.js';
+import { punishmentLog } from '../../modules/functions/moderation.js';
+import { getMember } from '../../modules/functions/getters.js';
 
-module.exports = {
+const { utcToZonedTime } = dateFnsTz;
+
+export default {
     info: {
         name: 'kick',
         aliases: [],
@@ -84,7 +87,7 @@ module.exports = {
             });
 
             // Send the punishment to the log channel
-            punishmentLog(message, member, action, reason, 'kick');
+            punishmentLog(bot, message, member, action, reason, 'kick');
 
             // Send public kick log message
             if (publicLog) publicLog.send(`👢 **${member.user.tag}** was kicked for **${reason}**`);
@@ -136,7 +139,7 @@ module.exports = {
             });
 
             // Send the punishment to the log channel
-            punishmentLog(interaction, user, action, reason, 'kick');
+            punishmentLog(bot, interaction, user, action, reason, 'kick');
 
             // Send public kick log message
             if (publicLog) publicLog.send(`👢 **${user.user.tag}** was kicked for **${reason}**`);

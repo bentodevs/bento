@@ -1,8 +1,8 @@
-const command = require('../../modules/handlers/command');
-const event = require('../../modules/handlers/event');
-const task = require('../../modules/handlers/task');
+import { load as commandLoad } from '../../modules/handlers/command.js';
+import { load as eventLoad } from '../../modules/handlers/event.js';
+import { load as taskLoad } from '../../modules/handlers/task.js';
 
-module.exports = {
+export default {
     info: {
         name: 'load',
         aliases: [],
@@ -37,7 +37,7 @@ module.exports = {
             const msg = await message.loadingReply(`Attempting to load the \`${args[1].toLowerCase()}\` event.`);
 
             // Attempt to load the event
-            event.load(bot, args[1]).then((res) => {
+            eventLoad(bot, args[1]).then((res) => {
                 // Edit the status message
                 msg.edit(`${bot.config.emojis.confirmation} Successfully loaded the \`${res}\` event!`);
                 // Log that the event was loaded
@@ -51,7 +51,7 @@ module.exports = {
             const msg = await message.loadingReply(`Attempting to load the \`${args[1].toLowerCase()}\` task.`);
 
             // Attempt to load the task
-            task.load(bot, args[1]).then((res) => {
+            taskLoad(bot, args[1]).then((res) => {
                 // Edit the status message
                 msg.edit(`${bot.config.emojis.confirmation} Successfully loaded the \`${res}\` task!`);
                 // Log that the task was loaded
@@ -74,7 +74,9 @@ module.exports = {
             const msg = await message.loadingReply(`Attempting to load \`${cmd}\`!`);
 
             // Attempt to load the command
-            command.load(bot, cmd, category).then((props) => {
+            commandLoad(bot, category, cmd).then((props) => {
+                console.log(props);
+
                 // Edit the status message
                 msg.edit(`${bot.config.emojis.confirmation} Successfully loaded \`${props.info.name}\`!`);
                 // Log that the command has been loaded

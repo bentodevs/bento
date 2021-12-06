@@ -1,9 +1,9 @@
-const { stripIndents } = require('common-tags');
-const { MessageEmbed } = require('discord.js');
-const config = require('../../config');
-const settings = require('../../database/models/settings');
+import { stripIndents } from 'common-tags';
+import { MessageEmbed } from 'discord.js';
+import config from '../../config.js';
+import settings from '../../database/models/settings.js';
 
-module.exports = {
+export default {
     info: {
         name: 'automod',
         aliases: [],

@@ -1,12 +1,15 @@
-const { stripIndents } = require('common-tags');
-const { format, utcToZonedTime } = require('date-fns-tz');
-const config = require('../../config');
-const preban = require('../../database/models/preban');
-const punishments = require('../../database/models/punishments');
-const { getMember, getUser } = require('../../modules/functions/getters');
-const { punishmentLog } = require('../../modules/functions/moderation');
+import { stripIndents } from 'common-tags';
+import { format } from 'date-fns';
+import dateFnsTz from 'date-fns-tz';
+import config from '../../config.js';
+import preban from '../../database/models/preban.js';
+import punishments from '../../database/models/punishments.js';
+import { getMember, getUser } from '../../modules/functions/getters.js';
+import { punishmentLog } from '../../modules/functions/moderation.js';
 
-module.exports = {
+const { utcToZonedTime } = dateFnsTz;
+
+export default {
     info: {
         name: 'ban',
         aliases: [],
@@ -88,7 +91,7 @@ module.exports = {
                 });
 
                 // Send the punishment to the log channel
-                punishmentLog(message, member.user, action, reason, 'ban');
+                punishmentLog(bot, message, member.user, action, reason, 'ban');
 
                 // Send public ban log message, if it exists
                 if (message.guild.channels.cache.has(message.settings.logs.ban)) publicLog.send(`${config.emojis.bans} **${member.tag}** was banned for **${reason}**`);
@@ -125,7 +128,7 @@ module.exports = {
             });
 
             // Send the punishment to the log channel
-            punishmentLog(message, member, action, reason, 'ban');
+            punishmentLog(bot, message, member, action, reason, 'ban');
 
             // Send public ban log message, if it exists
             if (message.guild.channels.cache.has(message.settings.logs.ban)) publicLog.send(`${config.emojis.bans} **${member.tag}** was banned for **${reason}**`);
@@ -165,7 +168,7 @@ module.exports = {
             });
 
             // Send the punishment to the log channel
-            punishmentLog(interaction, user.user, action, reason, 'ban');
+            punishmentLog(bot, interaction, user.user, action, reason, 'ban');
 
             // Send public ban log message, if it exists
             if (publicLog) publicLog.send(`${config.emojis.bans} **${user.user.tag}** was banned for **${reason}**`);
@@ -198,7 +201,7 @@ module.exports = {
             });
 
             // Send the punishment to the log channel
-            punishmentLog(interaction, user.user, action, reason, 'ban');
+            punishmentLog(bot, interaction, user.user, action, reason, 'ban');
 
             // Send public ban log message, if it exists
             if (publicLog) publicLog.send(`${config.emojis.bans} **${user.user.tag}** was banned for **${reason}**`);

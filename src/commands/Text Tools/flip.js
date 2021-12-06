@@ -1,6 +1,6 @@
-const flip = require('flip');
+import flip from 'flip';
 
-module.exports = {
+export default {
     info: {
         name: 'flip',
         aliases: [],

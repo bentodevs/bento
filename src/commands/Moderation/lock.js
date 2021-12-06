@@ -1,6 +1,6 @@
-const { getChannel } = require('../../modules/functions/getters');
+import { getChannel } from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'lock',
         aliases: [],

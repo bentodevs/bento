@@ -1,9 +1,9 @@
-const { MessageEmbed } = require('discord.js');
-const config = require('../../config');
-const settings = require('../../database/models/settings');
-const { getChannel } = require('../../modules/functions/getters');
+import { MessageEmbed } from 'discord.js';
+import config from '../../config.js';
+import settings from '../../database/models/settings.js';
+import { getChannel } from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'logchannel',
         aliases: ['logs', 'log'],

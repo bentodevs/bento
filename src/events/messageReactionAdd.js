@@ -1,8 +1,8 @@
-const giveaways = require('../database/models/giveaways');
-const reactroles = require('../database/models/reactroles');
-const { getReactCooldown } = require('../modules/functions/misc');
+import giveaways from '../database/models/giveaways.js';
+import reactroles from '../database/models/reactroles.js';
+import { getReactCooldown } from '../modules/functions/misc.js';
 
-module.exports = async (bot, reaction, user) => {
+export default async (bot, reaction, user) => {
     // If the reaction or user are partial try to fetch them
     if (reaction.partial || user.partial) {
         try {

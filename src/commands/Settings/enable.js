@@ -1,6 +1,6 @@
-const settings = require('../../database/models/settings');
+import settings from '../../database/models/settings.js';
 
-module.exports = {
+export default {
     info: {
         name: 'enable',
         aliases: [],

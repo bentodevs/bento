@@ -1,7 +1,7 @@
-const { stripIndents } = require('common-tags');
-const { MessageActionRow, MessageButton } = require('discord.js');
+import { stripIndents } from 'common-tags';
+import { MessageActionRow, MessageButton } from 'discord.js';
 
-module.exports = {
+export default {
     info: {
         name: 'leave',
         aliases: [

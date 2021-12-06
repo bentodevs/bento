@@ -1,7 +1,7 @@
-const { MessageEmbed } = require('discord.js');
-const { urban } = require('../../modules/functions/misc');
+import { MessageEmbed } from 'discord.js';
+import { urban } from '../../modules/functions/misc.js';
 
-module.exports = {
+export default {
     info: {
         name: 'urbandictionary',
         aliases: [

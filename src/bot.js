@@ -1,15 +1,17 @@
 // Import dependencies
-const { Client, Collection } = require('discord.js');
-const { connect } = require('mongoose');
-const ora = require('ora');
-const Pokedex = require('pokedex-promise-v2');
-const Sentry = require('@sentry/node');
-const Tracing = require('@sentry/tracing');
-const { getMongooseURL } = require('./database/mongo');
+import { Client, Collection } from 'discord.js';
+import mongoose from 'mongoose';
+import ora from 'ora';
+import Pokedex from 'pokedex-promise-v2';
+import Sentry from '@sentry/node';
+import Tracing from '@sentry/tracing';
+import { getMongooseURL } from './database/mongo.js';
+import winston from 'winston';
 
 // Import handlers
-const commands = require('./modules/handlers/command');
-const events = require('./modules/handlers/event');
+import { init as commandInit } from './modules/handlers/command.js';
+import { init as eventInit } from './modules/handlers/event.js';
+import config from "./config.js";
 
 // Create the bot client
 const bot = new Client({
@@ -43,11 +45,44 @@ const bot = new Client({
 bot.pokedex = new Pokedex();
 
 // Import the config
-bot.config = require('./config');
-// Import the logger
-bot.logger = require('./modules/functions/logger');
+bot.config = config;
 // Import prototypes
-require('./modules/functions/prototypes')();
+;(await import("./modules/functions/prototypes.js")).default();
+
+// Log format
+const logFormat = winston.format.printf(({ level, message, timestamp }) => {
+  return `${timestamp} ${level}: ${message}`;
+});
+
+// Logging levels
+const logLevels = {
+    levels: {
+        error: 0,
+        warn: 1,
+        debug: 2,
+        ready: 3,
+        cmd: 4
+    },
+    colors: {
+        error: 'red',
+        warn: 'yellow',
+        debug: 'blue',
+        ready: 'green',
+        cmd: 'cyan'
+    }
+}
+
+bot.logger = winston.createLogger({
+    format: winston.format.combine(
+        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+        logFormat
+    ),
+    transports: [new winston.transports.Console()],
+    levels: logLevels.levels,
+    level: 'debug',
+})
+
+winston.addColors(logLevels.colors);
 
 // Create the deletedMsgs collection
 bot.deletedMsgs = new Collection();
@@ -81,7 +116,7 @@ const init = async () => {
 
     // Send the command message and load all the commands
     const commandMessage = ora('Loading commands...').start();
-    const cmds = await commands.init(bot);
+    const cmds = await commandInit(bot);
 
     // Update the command message
     if (bot.commands.filter((a) => a.slash?.enabled).size > 100) {
@@ -92,13 +127,13 @@ const init = async () => {
     } else {
         commandMessage.stopAndPersist({
             symbol: '✔️',
-            text: ` Loaded ${cmds} commands.`,
+            text: ` Loaded ${bot.commands.size} commands.`,
         });
     }
 
     // Send the event message and load the events
     const eventMessage = ora('Loading events...').start();
-    const evts = await events.init(bot);
+    const evts = await eventInit(bot);
 
     // Update the event message
     eventMessage.stopAndPersist({
@@ -110,7 +145,7 @@ const init = async () => {
     const mongoMsg = ora('Connecting to the Mongo database...').start();
 
     // Connect to the mongo DB
-    bot.mongo = await connect(getMongooseURL(bot.config.mongo), {
+    bot.mongo = await mongoose.connect(getMongooseURL(bot.config.mongo), {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     }).catch((err) => {
@@ -151,7 +186,7 @@ init();
 process.on('SIGINT', async () => {
     // Check if there is a mongo connection and if so close it
     if (bot.mongo?.connection) {
-        bot.logger.log('Received SIGINT - Terminating MongoDB connection');
+        bot.logger.debug('Received SIGINT - Terminating MongoDB connection');
         await bot.mongo.connection.close().then(() => {
             // Exit the process after closing the mongo connection
             process.exit(1);

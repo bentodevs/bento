@@ -1,9 +1,9 @@
-const settings = require('../../database/models/settings');
-const {
+import settings from '../../database/models/settings.js';
+import {
     getMember, getUser, getChannel, getRole,
-} = require('../../modules/functions/getters');
+} from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'blacklist',
         aliases: [

@@ -1,10 +1,10 @@
-const { stripIndents } = require('common-tags');
-const { MessageEmbed } = require('discord.js');
-const {
+import { stripIndents } from 'common-tags';
+import { MessageEmbed } from 'discord.js';
+import {
     getGlobalStats, getVaccineData, getAllCountryData, getDataByState, getDataByContinent, getDataByCountry,
-} = require('../../modules/functions/corona');
+} from '../../modules/functions/corona.js';
 
-module.exports = {
+export default {
     info: {
         name: 'corona',
         aliases: [

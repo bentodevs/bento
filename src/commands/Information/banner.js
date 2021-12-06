@@ -1,7 +1,7 @@
-const { MessageEmbed } = require('discord.js');
-const { getMember, getUser } = require('../../modules/functions/getters');
+import { MessageEmbed } from 'discord.js';
+import { getMember, getUser } from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'banner',
         aliases: ['background'],

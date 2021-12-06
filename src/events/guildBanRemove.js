@@ -1,8 +1,8 @@
-const punishments = require('../database/models/punishments');
-const settings = require('../database/models/settings');
-const { punishmentLog } = require('../modules/functions/moderation');
+import punishments from '../database/models/punishments.js';
+import settings from '../database/models/settings.js';
+import { punishmentLog } from '../modules/functions/moderation.js';
 
-module.exports = async (bot, guild) => {
+export default async (bot, guild) => {
     // Fetch the guild settings
     const sets = await settings.findOne({ _id: guild.id });
 
@@ -38,6 +38,6 @@ module.exports = async (bot, guild) => {
         });
 
         // Log the unban
-        punishmentLog(message, entry.target, action, 'Manual unban', 'unban');
+        punishmentLog(bot, message, entry.target, action, 'Manual unban', 'unban');
     }
 };

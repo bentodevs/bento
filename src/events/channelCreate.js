@@ -1,8 +1,8 @@
-const { stripIndents } = require('common-tags');
-const { MessageEmbed } = require('discord.js');
-const settings = require('../database/models/settings');
+import { stripIndents } from 'common-tags';
+import { MessageEmbed } from 'discord.js';
+import settings from '../database/models/settings.js';
 
-module.exports = async (bot, channel) => {
+export default async (bot, channel) => {
     // If channel type is DM, then ignore
     if (channel.type === 'DM') return;
 

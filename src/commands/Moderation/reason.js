@@ -1,6 +1,6 @@
-const punishments = require('../../database/models/punishments');
+import punishments from '../../database/models/punishments.js';
 
-module.exports = {
+export default {
     info: {
         name: 'reason',
         aliases: [],

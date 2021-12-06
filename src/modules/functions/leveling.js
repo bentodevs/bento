@@ -1,15 +1,15 @@
-const Canvas = require('canvas');
-const { getColorFromURL } = require('color-thief-node');
-const { MessageAttachment } = require('discord.js');
-const users = require('../../database/models/users');
-const config = require('../../config');
+import Canvas from 'canvas';
+import { getColorFromURL } from 'color-thief-node';
+import { MessageAttachment } from 'discord.js';
+import users from '../../database/models/users.js';
+import config from '../../config.js';
 
 /**
  * Check the users level
  *
  * @param {Message} message
  */
-exports.checkLevel = async (message) => {
+export async function checkLevel(message) {
     // Try to find the user in the database
     let user = await users.findOne({ _id: message.author.id });
 
@@ -93,7 +93,7 @@ exports.checkLevel = async (message) => {
             },
         });
     }
-};
+}
 
 /**
  * Get all the data for a specific guild
@@ -102,7 +102,7 @@ exports.checkLevel = async (message) => {
  *
  * @returns {Array} Array with all the guild data
  */
-exports.getGuildMemberData = async (guild) => {
+export async function getGuildMemberData(guild) {
     const data = await users.aggregate([
         {
             $match: {
@@ -130,7 +130,7 @@ exports.getGuildMemberData = async (guild) => {
     ]);
 
     return data;
-};
+}
 
 /**
  * Get the users rank card
@@ -141,7 +141,7 @@ exports.getGuildMemberData = async (guild) => {
  *
  * @returns {Promise.<MessageAttachment>} The users rank card
  */
-exports.getRankCard = async (user, data, guild) => {
+export async function getRankCard(user, data, guild) {
     // Create the canvas, get the context and load the images in
     const canvas = Canvas.createCanvas(700, 250);
     const ctx = canvas.getContext('2d');
@@ -277,7 +277,7 @@ exports.getRankCard = async (user, data, guild) => {
 
     // Create & return the attachment
     return new MessageAttachment(canvas.toBuffer(), 'rank-card.png');
-};
+}
 
 /**
  * Get the font size for the username and xp count
@@ -289,7 +289,7 @@ exports.getRankCard = async (user, data, guild) => {
  *
  * @returns {Number} The font size
  */
-exports.getFontSize = (canvas, text, font, maxWidth) => {
+export function getFontSize(canvas, text, font, maxWidth) {
     // Get the canvas context
     const context = canvas.getContext('2d');
 
@@ -304,7 +304,7 @@ exports.getFontSize = (canvas, text, font, maxWidth) => {
 
     // Return the result to use in the actual canvas
     return fontSize;
-};
+}
 
 /**
  * Convert RGB to Hex
@@ -313,14 +313,14 @@ exports.getFontSize = (canvas, text, font, maxWidth) => {
  *
  * @returns {String} Hex Color
  */
-exports.rgbToHex = (array) => {
+export function rgbToHex(array) {
     const componentToHex = (a) => {
         const hex = a.toString(16);
         return hex.length === 1 ? `0${hex}` : hex;
     };
 
     return `#${componentToHex(array[0])}${componentToHex(array[1])}${componentToHex(array[2])}`;
-};
+}
 
 /**
  * Brighten or darken a hex color by a certain percentage
@@ -330,7 +330,7 @@ exports.rgbToHex = (array) => {
  *
  * @returns {String} color
  */
-exports.shadeColor = (color, percent) => {
+export function shadeColor(color, percent) {
     let R = parseInt(color.substring(1, 3), 16);
     let G = parseInt(color.substring(3, 5), 16);
     let B = parseInt(color.substring(5, 7), 16);
@@ -351,4 +351,4 @@ exports.shadeColor = (color, percent) => {
     const BB = ((B.toString(16).length === 1) ? `0${B.toString(16)}` : B.toString(16));
 
     return `#${RR}${GG}${BB}`;
-};
+}

@@ -1,12 +1,12 @@
-const { stripIndents } = require('common-tags');
-const { formatDistance } = require('date-fns');
-const {
+import { stripIndents } from 'common-tags';
+import { formatDistance } from 'date-fns';
+import {
     MessageEmbed, version, MessageActionRow, MessageButton,
-} = require('discord.js');
-const { connection } = require('mongoose');
-const os = require('os');
+} from 'discord.js';
+import mongoose from 'mongoose';
+import os from 'os';
 
-module.exports = {
+export default {
     info: {
         name: 'botstats',
         aliases: ['bstats'],
@@ -44,7 +44,7 @@ module.exports = {
             .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setDescription(stripIndents`Developed By: ${bot.config.emojis.jarno} \`Jarno#0001\` and ${bot.config.emojis.waitrose} \`Waitrose#0001\`
             Uptime: **${uptime}**
-            Database State: ${connection.readyState === 1 ? `${bot.config.emojis.online} Healthy` : `${bot.config.emojis.dnd} Unhealthy`}
+            Database State: ${mongoose.connection.readyState === 1 ? `${bot.config.emojis.online} Healthy` : `${bot.config.emojis.dnd} Unhealthy`}
             Commands: **${bot.commands.size}**
 
             Memory Usage: **${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB / ${(os.totalmem() / 1024 / 1024) > 1024 ? `${(os.totalmem() / 1024 / 1024 / 1024).toFixed(2)} GB` : `${(os.totalmem() / 1024 / 1024).toFixed(2)}`}** | Ping: **${bot.ws.ping}ms**

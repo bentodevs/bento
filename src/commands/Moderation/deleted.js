@@ -1,7 +1,7 @@
-const { MessageEmbed } = require('discord.js');
-const { getChannel, getUser, getMember } = require('../../modules/functions/getters');
+import { MessageEmbed } from 'discord.js';
+import { getChannel, getUser, getMember } from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'deleted',
         aliases: [],

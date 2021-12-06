@@ -1,8 +1,8 @@
-const { stripIndents } = require('common-tags');
-const { MessageEmbed } = require('discord.js');
-const { getCharacter } = require('../../modules/functions/anilist');
+import { stripIndents } from 'common-tags';
+import { MessageEmbed } from 'discord.js';
+import { getCharacter } from '../../modules/functions/anilist.js';
 
-module.exports = {
+export default {
     info: {
         name: 'character',
         aliases: [],

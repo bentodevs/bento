@@ -1,8 +1,8 @@
-const { formatDuration, intervalToDuration } = require('date-fns');
-const { getChannel } = require('../../modules/functions/getters');
-const { parseTime } = require('../../modules/functions/misc');
+import { formatDuration, intervalToDuration } from 'date-fns';
+import { getChannel } from '../../modules/functions/getters.js';
+import { parseTime } from '../../modules/functions/misc.js';
 
-module.exports = {
+export default {
     info: {
         name: 'slowmode',
         aliases: [

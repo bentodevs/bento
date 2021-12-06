@@ -1,8 +1,8 @@
-const users = require('../../database/models/users');
-const { getMember } = require('../../modules/functions/getters');
-const { getRankCard } = require('../../modules/functions/leveling');
+import users from '../../database/models/users.js';
+import { getMember } from '../../modules/functions/getters.js';
+import { getRankCard } from '../../modules/functions/leveling.js';
 
-module.exports = {
+export default {
     info: {
         name: 'level',
         aliases: [

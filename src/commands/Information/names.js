@@ -1,7 +1,7 @@
-const users = require('../../database/models/users');
-const { getMember, getUser } = require('../../modules/functions/getters');
+import users from '../../database/models/users.js';
+import { getMember, getUser } from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'names',
         aliases: [

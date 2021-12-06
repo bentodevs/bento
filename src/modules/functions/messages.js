@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
-const config = require('../../config');
+import config from '../../config.js';
 
-module.exports = (message) => {
+export default function (message) {
     /**
      * Send a message starting with a error emote
      * @param {option} option
@@ -85,4 +85,4 @@ module.exports = (message) => {
             .then((msg) => { resolve(msg); })
             .catch((err) => { reject(err); });
     });
-};
+}

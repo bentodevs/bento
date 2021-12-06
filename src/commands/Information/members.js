@@ -1,7 +1,7 @@
-const { MessageEmbed } = require('discord.js');
-const { getRole } = require('../../modules/functions/getters');
+import { MessageEmbed } from 'discord.js';
+import { getRole } from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'members',
         aliases: [

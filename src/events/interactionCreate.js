@@ -1,12 +1,12 @@
 /* eslint-disable no-multi-assign, no-param-reassign */
-const { stripIndents } = require('common-tags');
-const { MessageEmbed } = require('discord.js');
-const Sentry = require('@sentry/node');
-const { getSettings, getPerms } = require('../database/mongo');
-const { checkBlacklist } = require('../modules/functions/moderation');
-const { checkPerms, checkSelf } = require('../modules/functions/permissions');
+import { stripIndents } from 'common-tags';
+import { MessageEmbed } from 'discord.js';
+import Sentry from '@sentry/node';
+import { getSettings, getPerms } from '../database/mongo.js';
+import { checkBlacklist } from '../modules/functions/moderation.js';
+import { checkPerms, checkSelf } from '../modules/functions/permissions.js';
 
-module.exports = async (bot, interaction) => {
+export default async (bot, interaction) => {
     if (interaction.isCommand() || interaction.isContextMenu()) {
         // Return if the user is a bot
         if (interaction.user.bot) return;

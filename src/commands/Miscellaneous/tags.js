@@ -1,9 +1,11 @@
-const { formatDistance } = require('date-fns');
-const { format, utcToZonedTime } = require('date-fns-tz');
-const { MessageEmbed } = require('discord.js');
-const tags = require('../../database/models/tags');
+import { format, formatDistance } from 'date-fns';
+import dateFnsTz from 'date-fns-tz';
+import { MessageEmbed } from 'discord.js';
+import tags from '../../database/models/tags.js';
 
-module.exports = {
+const { utcToZonedTime } = dateFnsTz;
+
+export default {
     info: {
         name: 'tags',
         aliases: [

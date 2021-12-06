@@ -1,8 +1,8 @@
-const { formatDuration, intervalToDuration } = require('date-fns');
-const settings = require('../../database/models/settings');
-const { parseTime } = require('../../modules/functions/misc');
+import { formatDuration, intervalToDuration } from 'date-fns';
+import settings from '../../database/models/settings.js';
+import { parseTime } from '../../modules/functions/misc.js';
 
-module.exports = {
+export default {
     info: {
         name: 'minage',
         aliases: [],

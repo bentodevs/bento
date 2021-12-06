@@ -1,10 +1,9 @@
-const { stripIndents } = require('common-tags');
-const { MessageEmbed, Permissions } = require('discord.js');
-const config = require('../../config');
-const settings = require('../../database/models/settings');
-const { log } = require('./logger');
+import { stripIndents } from 'common-tags';
+import { MessageEmbed, Permissions } from 'discord.js';
+import config from '../../config.js';
+import settings from '../../database/models/settings.js';
 
-exports.punishmentLog = async (message, member, pID, reason, type, length) => {
+export async function punishmentLog(bot, message, member, pID, reason, type, length) {
     // Fetch the default logger channel
     const modlog = message.guild.channels.cache.get(message.settings.logs.default);
 
@@ -84,12 +83,12 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
         // Send the completed embed
         modlog.send({ embeds: [embed] });
     } else {
-        return log.error(`Received invalid punishment type: ${type.toLowerCase()}`);
+        return bot.logger.error(`Received invalid punishment type: ${type.toLowerCase()}`);
     }
-};
+}
 
 // eslint-disable-next-line no-shadow
-exports.checkMessage = async (message, settings) => {
+export async function checkMessage(message, settings) {
     if (settings.ignore?.hierarchicRoleId && message.guild.roles.cache.get(settings.ignore?.hierarchicRoleId).position <= message.member.roles.highest.position) return;
     if (settings.ignore?.channels.includes(message.channel.id) || settings.ignore?.roles.includes(message.member.roles.cache) || message.member.permissions.has('ADMINISTRATOR')) return;
 
@@ -128,7 +127,7 @@ exports.checkMessage = async (message, settings) => {
             await message.reply('you are unable to send URLs here!').then((m) => setTimeout(() => m.delete().catch(() => {}), 5000));
         }
     }
-};
+}
 
 /**
  * Check if the user running the command is blacklisted
@@ -137,7 +136,7 @@ exports.checkMessage = async (message, settings) => {
  *
  * @returns {Promise.<Boolean>} True if blacklisted, false if not blacklisted.
  */
-exports.checkBlacklist = async (message) => {
+export async function checkBlacklist(message) {
     // Get the author (to support interactions)
     const author = message.author ?? message.user;
 
@@ -173,4 +172,4 @@ exports.checkBlacklist = async (message) => {
     }
     // Return false
     return false;
-};
+}

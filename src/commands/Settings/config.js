@@ -1,8 +1,8 @@
-const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
-const settings = require('../../database/models/settings');
-const { timezones } = require('../../modules/functions/timezones');
+import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import settings from '../../database/models/settings.js';
+import timezones from '../../modules/functions/timezones.js';
 
-module.exports = {
+export default {
     info: {
         name: 'config',
         aliases: [],

@@ -1,10 +1,10 @@
-const { stripIndents } = require('common-tags');
-const { MessageEmbed } = require('discord.js');
-const settings = require('../database/models/settings');
-const { getChannel } = require('../modules/functions/getters');
-const { checkMessage } = require('../modules/functions/moderation');
+import { stripIndents } from 'common-tags';
+import { MessageEmbed } from 'discord.js';
+import settings from '../database/models/settings.js';
+import { getChannel } from '../modules/functions/getters.js';
+import { checkMessage } from '../modules/functions/moderation.js';
 
-module.exports = async (bot, oldMsg, newMsg) => {
+export default async (bot, oldMsg, newMsg) => {
     // If the message is partial return
     if (newMsg.partial) return;
     // If the author is a bot return

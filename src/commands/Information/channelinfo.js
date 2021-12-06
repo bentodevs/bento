@@ -1,9 +1,13 @@
-const { formatDistance, formatDuration, intervalToDuration } = require('date-fns');
-const { format, utcToZonedTime } = require('date-fns-tz');
-const { MessageEmbed } = require('discord.js');
-const { getChannel } = require('../../modules/functions/getters');
+import {
+    format, formatDistance, formatDuration, intervalToDuration,
+} from 'date-fns';
+import dateFnsTz from 'date-fns-tz';
+import { MessageEmbed } from 'discord.js';
+import { getChannel } from '../../modules/functions/getters.js';
 
-module.exports = {
+const { utcToZonedTime } = dateFnsTz;
+
+export default {
     info: {
         name: 'channelinfo',
         aliases: [

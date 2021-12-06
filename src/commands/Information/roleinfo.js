@@ -1,11 +1,13 @@
-const { stripIndents } = require('common-tags');
-const { formatDistance } = require('date-fns');
-const { format, utcToZonedTime } = require('date-fns-tz');
-const { MessageEmbed } = require('discord.js');
-const config = require('../../config');
-const { getRole } = require('../../modules/functions/getters');
+import { stripIndents } from 'common-tags';
+import { formatDistance, format } from 'date-fns';
+import dateFnsTz from 'date-fns-tz';
+import { MessageEmbed } from 'discord.js';
+import config from '../../config.js';
+import { getRole } from '../../modules/functions/getters.js';
 
-module.exports = {
+const { utcToZonedTime } = dateFnsTz;
+
+export default {
     info: {
         name: 'roleinfo',
         aliases: [

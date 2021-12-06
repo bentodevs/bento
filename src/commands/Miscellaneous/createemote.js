@@ -1,8 +1,8 @@
-const { default: fetch } = require('node-fetch');
-const path = require('path');
-const { fetchEmote } = require('../../modules/functions/misc');
+import fetch from 'node-fetch';
+import path from 'path';
+import { fetchEmote } from '../../modules/functions/misc.js';
 
-module.exports = {
+export default {
     info: {
         name: 'createemote',
         aliases: ['em', 'ce', 'createemoji'],

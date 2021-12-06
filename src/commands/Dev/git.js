@@ -1,7 +1,7 @@
-const { exec } = require('child_process');
-const { Util } = require('discord.js');
+import { exec } from 'child_process';
+import { Util } from 'discord.js';
 
-module.exports = {
+export default {
     info: {
         name: 'git',
         aliases: [],

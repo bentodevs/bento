@@ -1,9 +1,9 @@
-const { readdirSync } = require('fs');
-const command = require('../../modules/handlers/command');
-const event = require('../../modules/handlers/event');
-const task = require('../../modules/handlers/task');
+import { readdirSync } from 'fs';
+import { reload as commandReload } from '../../modules/handlers/command.js';
+import { reload as eventReload } from '../../modules/handlers/event.js';
+import { reload as taskReload } from '../../modules/handlers/task.js';
 
-module.exports = {
+export default {
     info: {
         name: 'reload',
         aliases: [],
@@ -47,7 +47,7 @@ module.exports = {
             const msg = await message.loadingReply(`Attempting to reload \`${cmd.info.name}\``);
 
             // Attempt to reload the command
-            command.reload(bot, cmd).then(() => {
+            commandReload(bot, cmd).then(() => {
                 // Edit the status message
                 msg.edit(`${bot.config.emojis.confirmation} Successfully reloaded \`${cmd.info.name}\`!`);
                 // Log that the command was reloaded
@@ -61,7 +61,7 @@ module.exports = {
             const msg = await message.loadingReply(`Attempting to reload the \`${args[1].toLowerCase()}\` event.`);
 
             // Attempt to reload the event
-            event.reload(bot, args[1]).then((res) => {
+            eventReload(bot, args[1]).then((res) => {
                 // Edit the status message
                 msg.edit(`${bot.config.emojis.confirmation} Successfully reloaded the \`${res}\` event!`);
                 // Log that the event was reloaded
@@ -75,7 +75,7 @@ module.exports = {
             const msg = await message.loadingReply(`Attempting to reload the \`${args[1].toLowerCase()}\` task.`);
 
             // Attempt to reload the task
-            task.reload(bot, args[1]).then((res) => {
+            taskReload(bot, args[1]).then((res) => {
                 // Edit the status message
                 msg.edit(`${bot.config.emojis.confirmation} Successfully reloaded the \`${res}\` task!`);
                 // Log that the task was reloaded

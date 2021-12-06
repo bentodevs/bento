@@ -1,9 +1,9 @@
-const { stripIndents } = require('common-tags');
-const { MessageEmbed } = require('discord.js');
-const { getRole } = require('../../modules/functions/getters');
-const { filterSelfPerms } = require('../../modules/functions/permissions');
+import { stripIndents } from 'common-tags';
+import { MessageEmbed } from 'discord.js';
+import { getRole } from '../../modules/functions/getters.js';
+import { filterSelfPerms } from '../../modules/functions/permissions.js';
 
-module.exports = {
+export default {
     info: {
         name: 'help',
         aliases: ['?', 'commands'],

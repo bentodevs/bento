@@ -1,19 +1,20 @@
-const { MessageEmbed } = require('discord.js');
-const giveaways = require('../../database/models/giveaways');
-const { getUser } = require('../functions/getters');
-const { drawGiveawayWinners } = require('../functions/misc');
+import { MessageEmbed } from 'discord.js';
+import giveaways from '../../database/models/giveaways.js';
+import { getUser } from '../functions/getters.js';
+import { drawGiveawayWinners } from '../functions/misc.js';
 
 /**
  * Initialize the checkGiveaways task
  *
  * @param {Object} bot
  */
-exports.init = async (bot) => {
+export default async function init(bot) {
     /**
      * Fetch all giveaways in the giveaways DB and send the winners if the giveaway is due
      *
      * @param {Object} bot
      */
+
     // eslint-disable-next-line no-shadow
     const checkGiveaways = async (bot) => {
         const g = await giveaways.find({ active: true });
@@ -84,4 +85,4 @@ exports.init = async (bot) => {
 
     // Return the interval info
     return interval;
-};
+}

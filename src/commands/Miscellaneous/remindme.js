@@ -1,9 +1,11 @@
-const { formatDuration, intervalToDuration } = require('date-fns');
-const { format, utcToZonedTime } = require('date-fns-tz');
-const reminders = require('../../database/models/reminders');
-const { parseTime } = require('../../modules/functions/misc');
+import dateFnsTz from 'date-fns-tz';
+import { format, formatDuration, intervalToDuration } from 'date-fns';
+import reminders from '../../database/models/reminders.js';
+import { parseTime } from '../../modules/functions/misc.js';
 
-module.exports = {
+const { utcToZonedTime } = dateFnsTz;
+
+export default {
     info: {
         name: 'remindme',
         aliases: [

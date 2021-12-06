@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     info: {
         name: 'roll',
         aliases: [

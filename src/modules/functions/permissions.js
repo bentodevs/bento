@@ -1,5 +1,5 @@
-const config = require('../../config');
-const { getRole } = require('./getters');
+import config from '../../config.js';
+import { getRole } from './getters.js';
 
 /**
  * Check if the user has permissions to run the command
@@ -11,7 +11,7 @@ const { getRole } = require('./getters');
  *
  * @returns {Promise.<Boolean>} true if the user doesn't have permissions, false if the user does have permissions
  */
-exports.checkPerms = async (bot, message, permissions, cmd) => {
+export async function checkPerms(bot, message, permissions, cmd) {
     // If the user is a bot owner return false
     if (bot.config.general.devs.includes(message.author?.id ?? message.user.id)) return false;
 
@@ -25,7 +25,7 @@ exports.checkPerms = async (bot, message, permissions, cmd) => {
     if (message.guild) {
         if (permission.type === 'role' && permission.hierarchic) {
             // Get the role position
-            const position = await message.guild.roles.fetch(permission.permission).then((r) => r.position).catch(() => {});
+            const position = await message.guild.roles.fetch(permission.permission).then((r) => r.position).catch(() => { });
 
             if (!position) {
                 // Update the permission in the database
@@ -81,7 +81,7 @@ exports.checkPerms = async (bot, message, permissions, cmd) => {
         // Return false
         return false;
     }
-};
+}
 
 /**
  * Check if the bot has permissions to run the command
@@ -91,7 +91,7 @@ exports.checkPerms = async (bot, message, permissions, cmd) => {
  *
  * @returns {Promise.<Boolean>}
  */
-exports.checkSelf = async (message, cmd) => {
+export async function checkSelf(message, cmd) {
     // If the command was run in dms return false
     if (!message.guild) return false;
 
@@ -99,7 +99,7 @@ exports.checkSelf = async (message, cmd) => {
     if (!message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) {
         // If DM messages are on send a message
         if (message.settings.general.permission_dms) {
-            await (message.author ?? message.user).send(`${config.emojis.error} I don't have permissions to send messages in the channel you ran your command in!`).catch(() => {});
+            await (message.author ?? message.user).send(`${config.emojis.error} I don't have permissions to send messages in the channel you ran your command in!`).catch(() => { });
         }
 
         return true;
@@ -113,10 +113,10 @@ exports.checkSelf = async (message, cmd) => {
             if (!message.channel.permissionsFor(message.guild.me).has(data)) {
                 if (message.errorReply) {
                     await message.errorReply(`I am lacking the permission \`${data}\`!`)
-                        .catch(() => {});
+                        .catch(() => { });
                 } else {
                     await message.error(`I am lacking the permission \`${data}\`!`)
-                        .catch(() => {});
+                        .catch(() => { });
                 }
 
                 return true;
@@ -126,7 +126,7 @@ exports.checkSelf = async (message, cmd) => {
 
     // Return false if all the checks passed
     return false;
-};
+}
 
 /**
  * Filter the Self Perms from the command object without completely deleting it from the commands collection
@@ -135,5 +135,7 @@ exports.checkSelf = async (message, cmd) => {
  *
  * @returns {Object} Filtered Object
  */
-exports.filterSelfPerms = (obj) => Object.fromEntries(Object.entries(obj)
-    .filter(([key]) => key !== 'self'));
+export function filterSelfPerms(obj) {
+    Object.fromEntries(Object.entries(obj)
+        .filter(([key]) => key !== 'self'));
+}

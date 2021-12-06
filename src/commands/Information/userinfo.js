@@ -1,13 +1,15 @@
-const { stripIndents } = require('common-tags');
-const { MessageEmbed } = require('discord.js');
-const { formatDistance } = require('date-fns');
-const { utcToZonedTime, format } = require('date-fns-tz');
-const { getColorFromURL } = require('color-thief-node');
-const { getMember, getUser } = require('../../modules/functions/getters');
-const { rgbToHex } = require('../../modules/functions/leveling');
-const config = require('../../config');
+import { stripIndents } from 'common-tags';
+import { MessageEmbed } from 'discord.js';
+import { format, formatDistance } from 'date-fns';
+import dateFnsTz from 'date-fns-tz';
+import { getColorFromURL } from 'color-thief-node';
+import { getMember, getUser } from '../../modules/functions/getters.js';
+import { rgbToHex } from '../../modules/functions/leveling.js';
+import config from '../../config.js';
 
-module.exports = {
+const { utcToZonedTime } = dateFnsTz;
+
+export default {
     info: {
         name: 'userinfo',
         aliases: [

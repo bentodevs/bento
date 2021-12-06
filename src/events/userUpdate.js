@@ -1,6 +1,6 @@
-const users = require('../database/models/users');
+import users from '../database/models/users.js';
 
-module.exports = async (bot, oldUser, newUser) => {
+export default async (bot, oldUser, newUser) => {
     // Check if the user is a partial and try to fetch it
     if (newUser.partial) {
         try {

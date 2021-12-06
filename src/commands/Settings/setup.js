@@ -1,8 +1,8 @@
-const config = require('../../config');
-const settings = require('../../database/models/settings');
-const { getRole, getChannel } = require('../../modules/functions/getters');
+import config from '../../config.js';
+import settings from '../../database/models/settings.js';
+import { getRole, getChannel } from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'setup',
         aliases: [],

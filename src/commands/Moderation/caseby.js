@@ -1,8 +1,8 @@
-const { MessageEmbed } = require('discord.js');
-const punishments = require('../../database/models/punishments');
-const { getMember, getUser } = require('../../modules/functions/getters');
+import { MessageEmbed } from 'discord.js';
+import punishments from '../../database/models/punishments.js';
+import { getMember, getUser } from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'caseby',
         aliases: ['modactions'],

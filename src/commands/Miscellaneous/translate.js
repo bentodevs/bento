@@ -1,8 +1,8 @@
-const translate = require('@vitalets/google-translate-api');
-const ISO = require('iso-639-1');
-const { MessageEmbed } = require('discord.js');
+import translate from '@vitalets/google-translate-api';
+import ISO from 'iso-639-1';
+import { MessageEmbed } from 'discord.js';
 
-module.exports = {
+export default {
     info: {
         name: 'translate',
         aliases: [

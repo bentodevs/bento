@@ -1,8 +1,8 @@
-const { stripIndents } = require('common-tags');
-const reminders = require('../../database/models/reminders');
-const users = require('../../database/models/users');
+import { stripIndents } from 'common-tags';
+import reminders from '../../database/models/reminders.js';
+import users from '../../database/models/users.js';
 
-module.exports = {
+export default {
     info: {
         name: 'privacy',
         aliases: [],

@@ -1,7 +1,7 @@
-const { MessageEmbed } = require('discord.js');
-const { default: fetch } = require('node-fetch');
+import { MessageEmbed } from 'discord.js';
+import fetch from 'node-fetch';
 
-module.exports = {
+export default {
     info: {
         name: 'cat',
         aliases: ['cate'],

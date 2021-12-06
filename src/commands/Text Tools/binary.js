@@ -1,6 +1,6 @@
-const { MessageEmbed, Util } = require('discord.js');
+import { MessageEmbed, Util } from 'discord.js';
 
-module.exports = {
+export default {
     info: {
         name: 'binary',
         aliases: ['bin'],

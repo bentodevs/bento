@@ -1,6 +1,6 @@
-const { getSettings } = require('../database/mongo');
+import { getSettings } from '../database/mongo.js';
 
-module.exports = async (bot, member) => {
+export default async (bot, member) => {
     // If the member is a partial fetch it
     if (member.partial) {
         try {

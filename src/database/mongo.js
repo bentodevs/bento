@@ -1,6 +1,6 @@
 // Import Models
-const permissions = require('./models/permissions');
-const settings = require('./models/settings');
+import permissions from './models/permissions.js';
+import settings from './models/settings.js';
 
 /**
  * Returns the settings of the specified Guild (or creates them if they don't exist)
@@ -9,7 +9,7 @@ const settings = require('./models/settings');
  *
  * @returns {Promise<Object>} Guild Data
  */
-exports.getSettings = async (guild) => {
+export async function getSettings(guild) {
     // If the command is run in dms return default settings
     // eslint-disable-next-line new-cap
     if (!guild) return new settings();
@@ -27,7 +27,7 @@ exports.getSettings = async (guild) => {
     }).save();
 
     return sets;
-};
+}
 
 /**
  * Get the permissions for the specified Guild
@@ -37,7 +37,7 @@ exports.getSettings = async (guild) => {
  *
  * @returns {Promise<Object>} Permission Data
  */
-exports.getPerms = async (bot, guild) => {
+export async function getPerms(bot, guild) {
     // Define the defaults and return objects
     const defaults = {};
     const commandPerms = {};
@@ -74,7 +74,7 @@ exports.getPerms = async (bot, guild) => {
         commands: commandPerms,
         categories: guildData.permissions?.categories ?? {},
     };
-};
+}
 
 /**
  * Generate the Mongoose URL
@@ -83,7 +83,7 @@ exports.getPerms = async (bot, guild) => {
  *
  * @returns {String} Mongoose URL
  */
-exports.getMongooseURL = (options) => {
+export function getMongooseURL(options) {
     // If there are no options replace set it as an empty object
     // eslint-disable-next-line no-param-reassign
     options = options || {};
@@ -99,4 +99,4 @@ exports.getMongooseURL = (options) => {
 
     // Return the URL
     return URL;
-};
+}

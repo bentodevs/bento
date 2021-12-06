@@ -1,20 +1,21 @@
-const mutes = require('../../database/models/mutes');
-const { getSettings } = require('../../database/mongo');
-const { punishmentLog } = require('../functions/moderation');
+import mutes from '../../database/models/mutes.js';
+import { getSettings } from '../../database/mongo.js';
+import { punishmentLog } from '../functions/moderation.js';
 
 /**
  * Initialize the checkMutes task
  *
  * @param {Object} bot
  */
-exports.init = async (bot) => {
+export default async function init(bot) {
     /**
      * Fetch all mutes in the DB and action if the mute has expired
      *
      * @param {Object} bot
      *
      * @returns {Promise<Boolean>} Success/Failure
-     */
+    */
+
     // eslint-disable-next-line no-shadow
     const getMutes = async (bot) => {
         const muteData = await mutes.find({});
@@ -38,7 +39,7 @@ exports.init = async (bot) => {
                 if (mutedUser && dateCalc <= Date.now()) {
                     await mutedUser.roles.remove(muteRole, ['Mute Expired']);
                     await mutes.findOneAndDelete({ guild: data.guild, mutedUser: data.mutedUser });
-                    return punishmentLog(message, mutedUser, data.caseID, 'Mute Expired', 'unmute');
+                    return punishmentLog(bot, message, mutedUser, data.caseID, 'Mute Expired', 'unmute');
                 } if (!mutedUser && dateCalc <= Date.now()) {
                     const member = await guild.members.fetch(data.mutedUser).catch(() => { });
 
@@ -65,4 +66,4 @@ exports.init = async (bot) => {
 
     // Return the interval info
     return interval;
-};
+}

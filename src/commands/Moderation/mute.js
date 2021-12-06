@@ -1,12 +1,12 @@
-const { formatDistanceToNowStrict } = require('date-fns');
-const mutes = require('../../database/models/mutes');
-const settings = require('../../database/models/settings');
-const punishments = require('../../database/models/punishments');
-const { getMember } = require('../../modules/functions/getters');
-const { punishmentLog } = require('../../modules/functions/moderation');
-const { parseTime } = require('../../modules/functions/misc');
+import { formatDistanceToNowStrict } from 'date-fns';
+import mutes from '../../database/models/mutes.js';
+import settings from '../../database/models/settings.js';
+import punishments from '../../database/models/punishments.js';
+import { getMember } from '../../modules/functions/getters.js';
+import { punishmentLog } from '../../modules/functions/moderation.js';
+import { parseTime } from '../../modules/functions/misc.js';
 
-module.exports = {
+export default {
     info: {
         name: 'mute',
         aliases: ['shut'],
@@ -140,7 +140,7 @@ module.exports = {
         });
 
         // Send punishment log
-        punishmentLog(message, member, action, reason, 'mute', (time === 'forever' ? 'Forever' : `${formatDistanceToNowStrict(Date.now() + time)}`));
+        punishmentLog(bot, message, member, action, reason, 'mute', (time === 'forever' ? 'Forever' : `${formatDistanceToNowStrict(Date.now() + time)}`));
 
         // Send public mute log message
         if (publicLog) publicLog.send(`🔇 **${member.user.tag}** was muted ${time === 'forever' ? 'for **forever**' : `for **${formatDistanceToNowStrict(Date.now() + time)}**`} with the reason **${reason}**`);
@@ -223,7 +223,7 @@ module.exports = {
         });
 
         // Send punishment log
-        punishmentLog(interaction, user, action, reason, 'mute', (time === 'forever' ? 'Forever' : `${formatDistanceToNowStrict(Date.now() + time)}`));
+        punishmentLog(bot, interaction, user, action, reason, 'mute', (time === 'forever' ? 'Forever' : `${formatDistanceToNowStrict(Date.now() + time)}`));
 
         // Send public mute log message
         if (publicLog) publicLog.send(`🔇 **${user.user.tag}** was muted ${time === 'forever' ? 'for **forever**' : `for **${formatDistanceToNowStrict(Date.now() + time)}**`} with the reason **${reason}**`);

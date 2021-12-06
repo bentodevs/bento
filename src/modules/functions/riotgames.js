@@ -1,5 +1,5 @@
-const { default: fetch } = require('node-fetch');
-const config = require('../../config');
+import fetch from 'node-fetch';
+import config from '../../config.js';
 
 /**
  * Fetch data from the Riot API about a League player
@@ -14,7 +14,7 @@ const config = require('../../config');
  * const summoner = await getLeagueSummoner("euw", "WaitroseOnTop")
  * console.log(summoner)
  */
-exports.getLeagueSummoner = async (region, summoner) => {
+export async function getLeagueSummoner(region, summoner) {
     // Define the list of allowed regions
     const regions = ['br', 'jp', 'kr', 'na', 'oc', 'tr', 'ru', 'eun', 'euw', 'lan', 'las'];
     // Set the region to lowercase - is let to allow re-assignment later
@@ -60,7 +60,7 @@ exports.getLeagueSummoner = async (region, summoner) => {
 
     // Return the returnable object
     return returnable;
-};
+}
 
 /**
  *
@@ -76,7 +76,7 @@ exports.getLeagueSummoner = async (region, summoner) => {
  *      console.log(err);
  * })
  */
-exports.getLeagueChampByID = async (champID) => {
+export async function getLeagueChampByID(champID) {
     // Set the champion data url
     const championData = 'https://ddragon.leagueoflegends.com/cdn/11.9.1/data/en_US/champion.json';
 
@@ -95,7 +95,7 @@ exports.getLeagueChampByID = async (champID) => {
 
     // If the champ was found, return it
     return find;
-};
+}
 
 /**
  *
@@ -111,7 +111,7 @@ exports.getLeagueChampByID = async (champID) => {
  *      console.log(err);
  * })
  */
-exports.getLeagueChampByName = async (champName) => {
+export async function getLeagueChampByName(champName) {
     // Set the champion data url
     const championData = 'https://ddragon.leagueoflegends.com/cdn/11.16.1/data/en_US/champion.json';
 
@@ -130,4 +130,4 @@ exports.getLeagueChampByName = async (champName) => {
 
     // If the champ was found, return it
     return find;
-};
+}

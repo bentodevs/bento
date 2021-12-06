@@ -1,9 +1,12 @@
-const { stripIndents } = require('common-tags');
-const { format, utcToZonedTime } = require('date-fns-tz');
-const { MessageEmbed } = require('discord.js');
-const { getLeagueSummoner, getLeagueChampByID } = require('../../modules/functions/riotgames');
+import { stripIndents } from 'common-tags';
+import dateFnsTz from 'date-fns-tz';
+import { format } from 'date-fns';
+import { MessageEmbed } from 'discord.js';
+import { getLeagueSummoner, getLeagueChampByID } from '../../modules/functions/riotgames.js';
 
-module.exports = {
+const { utcToZonedTime } = dateFnsTz;
+
+export default {
     info: {
         name: 'leagueoflegends',
         aliases: ['lol'],

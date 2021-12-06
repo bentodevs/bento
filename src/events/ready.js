@@ -1,9 +1,9 @@
 // Import Dependencies
-const ora = require('ora');
-const { registerGlobal } = require('../modules/handlers/command');
-const { init } = require('../modules/handlers/task');
+import ora from 'ora';
+import { registerGlobal } from '../modules/handlers/command.js';
+import { init } from '../modules/handlers/task.js';
 
-module.exports = async (bot) => {
+export default async (bot) => {
     // Send task message and load the tasks
     const taskMsg = ora('Loading Tasks...').start();
     const loadedTasks = await init(bot);

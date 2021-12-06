@@ -1,7 +1,7 @@
-const { Util, MessageEmbed } = require('discord.js');
-const { default: fetch } = require('node-fetch');
+import { Util, MessageEmbed } from 'discord.js';
+import fetch from 'node-fetch';
 
-module.exports = {
+export default {
     info: {
         name: 'lyrics',
         aliases: [],

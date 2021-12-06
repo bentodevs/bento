@@ -1,8 +1,8 @@
-const { formatDistance } = require('date-fns');
-const premiumGuild = require('../../database/models/premiumGuild');
-const { getUser } = require('../../modules/functions/getters');
+import { formatDistance } from 'date-fns';
+import premiumGuild from '../../database/models/premiumGuild.js';
+import { getUser } from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'premium',
         aliases: ['pro', 'subscription'],

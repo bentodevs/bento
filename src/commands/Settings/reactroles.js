@@ -1,7 +1,7 @@
-const reactroles = require('../../database/models/reactroles');
-const { getRole, getEmoji } = require('../../modules/functions/getters');
+import reactroles from '../../database/models/reactroles.js';
+import { getRole, getEmoji } from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'reactroles',
         aliases: [

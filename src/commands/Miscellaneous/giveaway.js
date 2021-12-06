@@ -1,11 +1,11 @@
-const { stripIndents } = require('common-tags');
-const { formatDuration, intervalToDuration } = require('date-fns');
-const { MessageEmbed } = require('discord.js');
-const giveaways = require('../../database/models/giveaways');
-const { getChannel, getUser } = require('../../modules/functions/getters');
-const { parseTime, drawGiveawayWinners } = require('../../modules/functions/misc');
+import { stripIndents } from 'common-tags';
+import { formatDuration, intervalToDuration } from 'date-fns';
+import { MessageEmbed } from 'discord.js';
+import giveaways from '../../database/models/giveaways.js';
+import { getChannel, getUser } from '../../modules/functions/getters.js';
+import { parseTime, drawGiveawayWinners } from '../../modules/functions/misc.js';
 
-module.exports = {
+export default {
     info: {
         name: 'giveaway',
         aliases: [

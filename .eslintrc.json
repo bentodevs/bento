@@ -5,7 +5,8 @@
         "es6": true
     },
     "parserOptions": {
-        "ecmaVersion": 11
+        "ecmaVersion": 11,
+        "sourceType": "module"
     },
     "rules": {
         "no-console": "off",
@@ -35,6 +36,7 @@
         }],
         "import/no-unresolved": "off",
         "import/extensions": "off",
-        "no-restricted-globals": "off"
+        "no-restricted-globals": "off",
+        "no-new": "off"
     }
 }

@@ -1,11 +1,11 @@
-const { stripIndents } = require('common-tags');
-const { MessageEmbed } = require('discord.js');
-const config = require('../../config');
-const users = require('../../database/models/users');
-const { getMember, getUser } = require('../../modules/functions/getters');
-const { getLastFMUser, getLastFMUserHistory } = require('../../modules/functions/misc');
+import { stripIndents } from 'common-tags';
+import { MessageEmbed } from 'discord.js';
+import config from '../../config.js';
+import users from '../../database/models/users.js';
+import { getMember, getUser } from '../../modules/functions/getters.js';
+import { getLastFMUser, getLastFMUserHistory } from '../../modules/functions/misc.js';
 
-module.exports = {
+export default {
     info: {
         name: 'lastfm',
         aliases: ['lfm', 'fmm'],

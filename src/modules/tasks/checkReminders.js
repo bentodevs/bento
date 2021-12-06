@@ -1,19 +1,20 @@
-const { format } = require('date-fns');
-const { MessageEmbed } = require('discord.js');
-const config = require('../../config');
-const reminders = require('../../database/models/reminders');
+import { format } from 'date-fns';
+import { MessageEmbed } from 'discord.js';
+import config from '../../config.js';
+import reminders from '../../database/models/reminders.js';
 
 /**
  * Initialize the checkReminders task
  *
  * @param {Object} bot
  */
-exports.init = async (bot) => {
+export default async function init(bot) {
     /**
      * Fetch all the users in the reminder DB and send them their reminders if they are due
      *
      * @param {Object} bot
-     */
+    */
+
     // eslint-disable-next-line no-shadow
     const checkReminders = async (bot) => {
         // Get all users that have active reminders
@@ -75,4 +76,4 @@ exports.init = async (bot) => {
 
     // Return the interval info
     return interval;
-};
+}

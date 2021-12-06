@@ -1,8 +1,10 @@
-const { model, Schema } = require('mongoose');
+import mongoose from 'mongoose';
 
-module.exports = model('preban', new Schema({
+const preban = mongoose.model('preban', new mongoose.Schema({
     user: String,
     guild: String,
     reason: String,
     executor: String,
 }));
+
+export default preban;

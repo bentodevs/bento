@@ -1,6 +1,6 @@
-const { getDadjoke } = require('../../modules/functions/misc');
+import { getDadjoke } from '../../modules/functions/misc.js';
 
-module.exports = {
+export default {
     info: {
         name: 'dadjoke',
         aliases: ['djoke', 'dj'],
@@ -30,7 +30,9 @@ module.exports = {
 
     run: async (bot, message) => {
         // Fetch a random joke from the api
-        const data = await getDadjoke();
+        const data = await (await getDadjoke());
+
+        console.log(data);
 
         // Send the joke
         message.reply(data.joke);
