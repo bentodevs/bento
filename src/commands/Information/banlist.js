@@ -99,8 +99,6 @@ export default {
         // Format the data
         const description = pages[page].map((b) => `\`${b.user.username}#${b.user.discriminator}\` | **ID:** ${b.user.id}`);
 
-        console.log(description);
-
         // Build the embed
         const embed = new MessageEmbed()
             .setAuthor(`Banned user of ${interaction.guild.name}`, interaction.guild.iconURL({ format: 'png', dynamic: true }))
