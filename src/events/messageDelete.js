@@ -23,7 +23,8 @@ export default async (bot, message) => {
 
     // Get the audit log entry for the deleted message
     const entry = await message.guild.fetchAuditLogs({ type: 'MESSAGE_DELETE' })
-        .then((audit) => audit.entries.first());
+        .then((audit) => audit.entries.first())
+        .catch(() => { });
 
     // Create the msg object
     const msg = {
@@ -46,7 +47,7 @@ export default async (bot, message) => {
         let user;
 
         // Find who deleted the message
-        if (entry.extra.channel.id === message.channel.id && (entry.target.id === message.author.id) && (entry.createdTimestamp > (Date.now() - 5000)) && (entry.extra.count >= 1)) {
+        if (entry?.extra.channel.id === message.channel.id && (entry?.target.id === message.author.id) && (entry?.createdTimestamp > (Date.now() - 5000)) && (entry?.extra.count >= 1)) {
             user = `**Deleted by:** ${entry.executor.toString()}`;
         } else {
             user = '**Deleted by:** The author or a bot';
@@ -55,6 +56,8 @@ export default async (bot, message) => {
         // Get the log channel
         const channel = await getChannel(message, msgSettings.logs.deleted, false);
 
+        console.log(message.attachments);
+
         const embed = new MessageEmbed()
             .setAuthor(`Message by ${message.author.tag} deleted in #${message.channel.name}`, message.author.displayAvatarURL({ format: 'png', dynamic: true }))
             .setThumbnail(message.author.displayAvatarURL({ format: 'png', dynamic: true }))
@@ -62,8 +65,10 @@ export default async (bot, message) => {
             .setDescription(stripIndents`**User:** ${message.author} (\`${message.author.id}\`)
             **Message ID:** \`${message.id}\`
             ${user}`)
-            .addField('Message Content', message.content)
             .setTimestamp();
+
+        if (message.content) embed.addField('Message', message.content);
+        if (message.attachments.size > 0) embed.addField('Attachments', message.attachments.map((a) => a.proxyURL).join('\n'));
 
         channel?.send({ embeds: [embed] });
     }

@@ -144,7 +144,10 @@ export default {
             if (!channel) return message.errorReply("You didn't specify a valid channel!");
 
             // If the channel isn't a text channel return an error
-            if (channel.type !== 'GUILD_TEXT') return message.errorReply("The channel you specified isn't a text channel!");
+            if (channel.type !== 'GUILD_TEXT' && channel.type !== 'GUILD_NEWS') return message.errorReply("The channel you specified isn't a text channel!");
+
+            // If the bot doesn't have permissions to send messages or embed in the channel return an error
+            if (!channel.permissionsFor(message.guild.me).has('EMBED_LINKS') || !channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return message.errorReply("I don't have permissions to send messages or embeds in that channel!");
 
             // Set the logging channel
             await settings.findOneAndUpdate({ _id: message.guild.id }, {
@@ -232,6 +235,9 @@ export default {
 
             // If the channel isn't a text channel return an error
             if (channel.type !== 'GUILD_TEXT' && channel.type !== 'GUILD_NEWS') return interaction.error("The channel you specified isn't a text channel!");
+
+            // If the bot doesn't have permissions to send messages or embed in the channel return an error
+            if (!channel.permissionsFor(interaction.guild.me).has('EMBED_LINKS') || !channel.permissionsFor(interaction.guild.me).has('SEND_MESSAGES')) return interaction.error("I don't have permissions to send messages or embeds in that channel!");
 
             // Set the logging channel
             await settings.findOneAndUpdate({ _id: interaction.guild.id }, {
