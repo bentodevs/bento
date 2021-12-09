@@ -14,7 +14,7 @@ import config from '../../config.js';
  * const summoner = await getLeagueSummoner("euw", "WaitroseOnTop")
  * console.log(summoner)
  */
-export async function getLeagueSummoner(region, summoner) {
+export const getLeagueSummoner = async (region, summoner) => {
     // Define the list of allowed regions
     const regions = ['br', 'jp', 'kr', 'na', 'oc', 'tr', 'ru', 'eun', 'euw', 'lan', 'las'];
     // Set the region to lowercase - is let to allow re-assignment later
@@ -60,7 +60,7 @@ export async function getLeagueSummoner(region, summoner) {
 
     // Return the returnable object
     return returnable;
-}
+};
 
 /**
  *
@@ -76,7 +76,7 @@ export async function getLeagueSummoner(region, summoner) {
  *      console.log(err);
  * })
  */
-export async function getLeagueChampByID(champID) {
+export const getLeagueChampByID = async (champID) => {
     // Set the champion data url
     const championData = 'https://ddragon.leagueoflegends.com/cdn/11.9.1/data/en_US/champion.json';
 
@@ -95,7 +95,7 @@ export async function getLeagueChampByID(champID) {
 
     // If the champ was found, return it
     return find;
-}
+};
 
 /**
  *
@@ -111,7 +111,7 @@ export async function getLeagueChampByID(champID) {
  *      console.log(err);
  * })
  */
-export async function getLeagueChampByName(champName) {
+export const getLeagueChampByName = async (champName) => {
     // Set the champion data url
     const championData = 'https://ddragon.leagueoflegends.com/cdn/11.16.1/data/en_US/champion.json';
 
@@ -130,4 +130,4 @@ export async function getLeagueChampByName(champName) {
 
     // If the champ was found, return it
     return find;
-}
+};

@@ -11,7 +11,7 @@ import { getRole } from './getters.js';
  *
  * @returns {Promise.<Boolean>} true if the user doesn't have permissions, false if the user does have permissions
  */
-export async function checkPerms(bot, message, permissions, cmd) {
+export const checkPerms = async (bot, message, permissions, cmd) => {
     // If the user is a bot owner return false
     if (bot.config.general.devs.includes(message.author?.id ?? message.user.id)) return false;
 
@@ -81,7 +81,7 @@ export async function checkPerms(bot, message, permissions, cmd) {
         // Return false
         return false;
     }
-}
+};
 
 /**
  * Check if the bot has permissions to run the command
@@ -91,7 +91,7 @@ export async function checkPerms(bot, message, permissions, cmd) {
  *
  * @returns {Promise.<Boolean>}
  */
-export async function checkSelf(message, cmd) {
+export const checkSelf = async (message, cmd) => {
     // If the command was run in dms return false
     if (!message.guild) return false;
 
@@ -126,7 +126,7 @@ export async function checkSelf(message, cmd) {
 
     // Return false if all the checks passed
     return false;
-}
+};
 
 /**
  * Filter the Self Perms from the command object without completely deleting it from the commands collection
@@ -135,7 +135,7 @@ export async function checkSelf(message, cmd) {
  *
  * @returns {Object} Filtered Object
  */
-export function filterSelfPerms(obj) {
+export const filterSelfPerms = (obj) => {
     Object.fromEntries(Object.entries(obj)
         .filter(([key]) => key !== 'self'));
-}
+};

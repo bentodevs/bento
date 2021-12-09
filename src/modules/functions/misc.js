@@ -18,42 +18,40 @@ import config from '../../config.js';
  *      console.error(err);
  * })
  */
-export async function urban(query) {
-    new Promise((resolve, reject) => {
-        // If no query was specified return an error
-        if (!query) reject(new Error('Missing Args!'));
+export const urban = (query) => new Promise((resolve, reject) => {
+    // If no query was specified return an error
+    if (!query) reject(new Error('Missing Args!'));
 
-        // Define the API URL
-        const URL = `https://api.urbandictionary.com/v0/define?term=${query}`;
+    // Define the API URL
+    const URL = `https://api.urbandictionary.com/v0/define?term=${query}`;
 
-        // Fetch the urbandictionary API
-        fetch(URL, {
-            headers: {
-                'content-type': 'application/json',
-                accept: 'application/json',
-            },
-        }).then((res) => res.json()).then((json) => {
-            // If something went wrong return null
-            if (json.error) return resolve(null);
-            // If no results were found return null
-            if (!json.list.length) return resolve(null);
+    // Fetch the urbandictionary API
+    fetch(URL, {
+        headers: {
+            'content-type': 'application/json',
+            accept: 'application/json',
+        },
+    }).then((res) => res.json()).then((json) => {
+        // If something went wrong return null
+        if (json.error) return resolve(null);
+        // If no results were found return null
+        if (!json.list.length) return resolve(null);
 
-            // Sort the data by thumps_up and return the result with the most thumps up
-            const result = json.list.sort((a, b) => b.thumps_up - a.thumps_up)[0];
+        // Sort the data by thumps_up and return the result with the most thumps up
+        const result = json.list.sort((a, b) => b.thumps_up - a.thumps_up)[0];
 
-            // Remove urban dictionary formatting
-            result.definition = result.definition.removeUrbanFormatting();
-            result.example = result.example.removeUrbanFormatting();
+        // Remove urban dictionary formatting
+        result.definition = result.definition.removeUrbanFormatting();
+        result.example = result.example.removeUrbanFormatting();
 
-            // Return the result
-            return resolve(result);
-        }).catch((err) => {
-            // Log and reject the error
-            console.error(err);
-            reject(err);
-        });
+        // Return the result
+        return resolve(result);
+    }).catch((err) => {
+        // Log and reject the error
+        console.error(err);
+        reject(err);
     });
-}
+});
 
 /**
  * Gets a random meme from reddit
@@ -68,48 +66,46 @@ export async function urban(query) {
  *      console.error(err);
  * })
  */
-export async function getMeme() {
-    new Promise((resolve, reject) => {
-        // Define all the subreddits
-        const subs = [
-            'memes',
-            'dankmemes',
-            'wholesomememes',
-            'BikiniBottomTwitter',
-            'funny',
-        ];
+export const getMeme = () => new Promise((resolve, reject) => {
+    // Define all the subreddits
+    const subs = [
+        'memes',
+        'dankmemes',
+        'wholesomememes',
+        'BikiniBottomTwitter',
+        'funny',
+    ];
 
-        // Get a random subreddit
-        const sub = subs[Math.floor(Math.random() * subs.length)];
+    // Get a random subreddit
+    const sub = subs[Math.floor(Math.random() * subs.length)];
 
-        // Define the API URL
-        const URL = `https://www.reddit.com/r/${sub}.json?sort=top&t=week&limit=100`;
+    // Define the API URL
+    const URL = `https://www.reddit.com/r/${sub}.json?sort=top&t=week&limit=100`;
 
-        // Fetch the reddit API
-        fetch(URL, {
-            headers: {
-                'content-type': 'application/json',
-                accept: 'application/json',
-            },
-        }).then((res) => res.json()).then((json) => {
-            // Filter out all the bad posts
-            const filtered = json.data.children.filter((p) => !p.data.over_18 && p.data.post_hint !== 'hosted:video' && p.data.post_hint !== 'link' && p.data.post_hint !== 'self' && p.data.post_hint);
+    // Fetch the reddit API
+    fetch(URL, {
+        headers: {
+            'content-type': 'application/json',
+            accept: 'application/json',
+        },
+    }).then((res) => res.json()).then((json) => {
+        // Filter out all the bad posts
+        const filtered = json.data.children.filter((p) => !p.data.over_18 && p.data.post_hint !== 'hosted:video' && p.data.post_hint !== 'link' && p.data.post_hint !== 'self' && p.data.post_hint);
 
-            // If no memes remain return an error
-            if (!filtered.length) return reject(new Error('No Memes Found!'));
+        // If no memes remain return an error
+        if (!filtered.length) return reject(new Error('No Memes Found!'));
 
-            // Get a random post
-            const post = filtered[Math.floor(Math.random() * filtered.length)];
+        // Get a random post
+        const post = filtered[Math.floor(Math.random() * filtered.length)];
 
-            // Return the post
-            resolve(post);
-        }).catch((err) => {
-            // Log and reject the error
-            console.error(err);
-            reject(err);
-        });
+        // Return the post
+        resolve(post);
+    }).catch((err) => {
+        // Log and reject the error
+        console.error(err);
+        reject(err);
     });
-}
+});
 
 /**
  * Get weather data for a certain location
@@ -126,35 +122,33 @@ export async function getMeme() {
  *      console.error(err);
  * })
  */
-export function getWeather(query) {
-    new Promise((resolve, reject) => {
-        // Define the API URL
-        const URL = `https://api.weatherapi.com/v1/current.json?key=${config.apiKeys.weather}&q=${query}`;
+export const getWeather = (query) => new Promise((resolve, reject) => {
+    // Define the API URL
+    const URL = `https://api.weatherapi.com/v1/current.json?key=${config.apiKeys.weather}&q=${query}`;
 
-        // Fetch the weather API
-        fetch(URL, {
-            headers: {
-                'content-type': 'application/json',
-                accept: 'application/json',
-            },
-        }).then((res) => res.json()).then((json) => {
-            if (json.error) {
-                if (json.error.code === 1006) {
-                    // If the error is 1006 return undefined
-                    return resolve(undefined);
-                }
-                // If its any other error return a new error
-                return reject(new Error(json.error.message));
+    // Fetch the weather API
+    fetch(URL, {
+        headers: {
+            'content-type': 'application/json',
+            accept: 'application/json',
+        },
+    }).then((res) => res.json()).then((json) => {
+        if (json.error) {
+            if (json.error.code === 1006) {
+                // If the error is 1006 return undefined
+                return resolve(undefined);
             }
-            // Resolve the weather data
-            resolve(json);
-        }).catch((err) => {
-            // Log and reject the error
-            console.error(err);
-            reject(err);
-        });
+            // If its any other error return a new error
+            return reject(new Error(json.error.message));
+        }
+        // Resolve the weather data
+        resolve(json);
+    }).catch((err) => {
+        // Log and reject the error
+        console.error(err);
+        reject(err);
     });
-}
+});
 
 /**
  * Fetches a random dad joke from the icanhazdadjoke.com api
@@ -169,24 +163,22 @@ export function getWeather(query) {
  *      console.error(data);
  * })
  */
-export const getDadjoke = () => {
-    new Promise((resolve, reject) => {
-        // Define the API URL
-        const URL = 'https://icanhazdadjoke.com/';
+export const getDadjoke = () => new Promise((resolve, reject) => {
+    // Define the API URL
+    const URL = 'https://icanhazdadjoke.com/';
 
-        // Fetch the dadjoke API
-        fetch(URL, {
-            headers: {
-                'content-type': 'application/json',
-                accept: 'application/json',
-            },
-        }).then((res) => res.json()).then((json) => resolve(json)).catch((err) => {
-            // Log and reject the error
-            console.error(err);
-            reject(err);
-        });
+    // Fetch the dadjoke API
+    fetch(URL, {
+        headers: {
+            'content-type': 'application/json',
+            accept: 'application/json',
+        },
+    }).then((res) => res.json()).then((json) => resolve(json)).catch((err) => {
+        // Log and reject the error
+        console.error(err);
+        reject(err);
     });
-}
+});
 
 /**
  * Parse a timestring
@@ -197,7 +189,7 @@ export const getDadjoke = () => {
  *
  * @returns {number}
  */
-export function parseTime(string, returnUnit, opts) {
+export const parseTime = (string, returnUnit, opts) => {
     const DEFAULT_OPTS = {
         hoursPerDay: 24,
         daysPerWeek: 7,
@@ -282,7 +274,7 @@ export function parseTime(string, returnUnit, opts) {
     }
 
     return totalSeconds;
-}
+};
 
 /**
  * Fetch a steam user from the profile URL
@@ -299,30 +291,28 @@ export function parseTime(string, returnUnit, opts) {
  *      console.error(err);
  * })
  */
-export function fetchSteamUserByID(user) {
-    new Promise((resolve, reject) => {
-        // Define the baseURL for fetching a user's profile
-        const baseURL = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${config.apiKeys.steam}&steamids=${user}`;
+export const fetchSteamUserByID = (user) => new Promise((resolve, reject) => {
+    // Define the baseURL for fetching a user's profile
+    const baseURL = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${config.apiKeys.steam}&steamids=${user}`;
 
-        fetch(baseURL)
-            .then((res) => res.json())
-            .then((json) => ({
-                steamID: json.response.players[0].steamid,
-                avatar: {
-                    full: json.response.players[0].avatarfull,
-                    icon: json.response.players[0].avatar,
-                },
-                profileInfo: {
-                    name: json.response.players[0].personaname,
-                },
-            }))
-            .then((obj) => resolve(obj))
-            .catch((err) => {
-                // Reject the error
-                reject(err);
-            });
-    });
-}
+    fetch(baseURL)
+        .then((res) => res.json())
+        .then((json) => ({
+            steamID: json.response.players[0].steamid,
+            avatar: {
+                full: json.response.players[0].avatarfull,
+                icon: json.response.players[0].avatar,
+            },
+            profileInfo: {
+                name: json.response.players[0].personaname,
+            },
+        }))
+        .then((obj) => resolve(obj))
+        .catch((err) => {
+            // Reject the error
+            reject(err);
+        });
+});
 
 /**
  * Fetch a steam user from the profile URL
@@ -339,32 +329,30 @@ export function fetchSteamUserByID(user) {
  *      console.error(err);
  * })
  */
-export function fetchSteamUserByName(user) {
-    new Promise((resolve, reject) => {
-        // Define the baseURL for fetching a user's profile
-        const baseURL = `https://steamcommunity.com/id/${user}?xml=1`;
+export const fetchSteamUserByName = (user) => new Promise((resolve, reject) => {
+    // Define the baseURL for fetching a user's profile
+    const baseURL = `https://steamcommunity.com/id/${user}?xml=1`;
 
-        fetch(baseURL)
-            .then((res) => res.text())
-            .then((res) => JSON.parse(xml2json(res)))
-            // deepcode ignore PromiseNotCaughtNode: No cause for concern, deepcode ignore ObjectConstructor: No cause for concern
-            .then((json) => ({
-                steamID: json.elements[0].elements[0].elements[0].text,
-                avatar: {
-                    full: json.elements[0].elements[8].elements[0].cdata,
-                    icon: json.elements[0].elements[6].elements[0].cdata,
-                },
-                profileInfo: {
-                    name: json.elements[0].elements[1].elements[0].cdata,
-                },
-            }))
-            .then((obj) => resolve(obj))
-            .catch((err) => {
-                // Reject the error
-                reject(err);
-            });
-    });
-}
+    fetch(baseURL)
+        .then((res) => res.text())
+        .then((res) => JSON.parse(xml2json(res)))
+        // deepcode ignore PromiseNotCaughtNode: No cause for concern, deepcode ignore ObjectConstructor: No cause for concern
+        .then((json) => ({
+            steamID: json.elements[0].elements[0].elements[0].text,
+            avatar: {
+                full: json.elements[0].elements[8].elements[0].cdata,
+                icon: json.elements[0].elements[6].elements[0].cdata,
+            },
+            profileInfo: {
+                name: json.elements[0].elements[1].elements[0].cdata,
+            },
+        }))
+        .then((obj) => resolve(obj))
+        .catch((err) => {
+            // Reject the error
+            reject(err);
+        });
+});
 
 /**
  * Fetch an image from the waifu.pics API
@@ -373,64 +361,62 @@ export function fetchSteamUserByName(user) {
  *
  * @returns {Promise.<String>} URL to the image
  */
-export function fetchWaifuApi(type) {
-    new Promise((resolve, reject) => {
-        // Define all the different available types
-        const types = [
-            'waifu',
-            'neko',
-            'shinobu',
-            'megumin',
-            'bully',
-            'cuddle',
-            'cry',
-            'hug',
-            'awoo',
-            'kiss',
-            'lick',
-            'pat',
-            'smug',
-            'bonk',
-            'yeet',
-            'blush',
-            'smile',
-            'wave',
-            'highfive',
-            'handhold',
-            'nom',
-            'bite',
-            'glomp',
-            'slap',
-            'kill',
-            'happy',
-            'wink',
-            'poke',
-            'dance',
-            'cringe',
-        ];
+export const fetchWaifuApi = (type) => new Promise((resolve, reject) => {
+    // Define all the different available types
+    const types = [
+        'waifu',
+        'neko',
+        'shinobu',
+        'megumin',
+        'bully',
+        'cuddle',
+        'cry',
+        'hug',
+        'awoo',
+        'kiss',
+        'lick',
+        'pat',
+        'smug',
+        'bonk',
+        'yeet',
+        'blush',
+        'smile',
+        'wave',
+        'highfive',
+        'handhold',
+        'nom',
+        'bite',
+        'glomp',
+        'slap',
+        'kill',
+        'happy',
+        'wink',
+        'poke',
+        'dance',
+        'cringe',
+    ];
 
-        // If an invalid type was specified return an error
-        if (!types.includes(type.toLowerCase())) reject(new Error('Invalid type'));
+    // If an invalid type was specified return an error
+    if (!types.includes(type.toLowerCase())) reject(new Error('Invalid type'));
 
-        // Define the URL
-        const URL = `https://api.waifu.pics/sfw/${type}`;
+    // Define the URL
+    const URL = `https://api.waifu.pics/sfw/${type}`;
 
-        // Fetch the URL
-        fetch(URL, {
-            headers: {
-                'content-type': 'application/json',
-                accept: 'application/json',
-            },
-        }).then((res) => res.json()).then((json) => {
-            // Resolve the URL
-            resolve(json.url);
-        }).catch((err) => {
-            // Log and reject the error
-            console.error(err);
-            reject(err);
-        });
+    // Fetch the URL
+    fetch(URL, {
+        headers: {
+            'content-type': 'application/json',
+            accept: 'application/json',
+        },
+    }).then((res) => res.json()).then((json) => {
+        // Resolve the URL
+        resolve(json.url);
+    }).catch((err) => {
+        // Log and reject the error
+        console.error(err);
+        reject(err);
     });
-}
+});
 
 /**
  * Fetches the status of a minecraft server from the R2-D2 API
@@ -445,31 +431,29 @@ export function fetchWaifuApi(type) {
  *      console.error(data);
  * })
  */
-export function getMinecraftStatus(ip, port) {
-    new Promise((resolve, reject) => {
-        // If no IP was specified return an error
-        if (!ip) reject(new Error('Missing Arguments'));
+export const getMinecraftStatus = (ip, port) => new Promise((resolve, reject) => {
+    // If no IP was specified return an error
+    if (!ip) reject(new Error('Missing Arguments'));
 
-        // Define the API URL
-        // TODO: [BOT-76] Update the URL with the actual API URL
-        const URL = `https://api.mcsrvstat.us/2/${ip}${port ? `:${port}` : ''}`;
-        // const URL = `http://localhost:8787/status`;
+    // Define the API URL
+    // TODO: [BOT-76] Update the URL with the actual API URL
+    const URL = `https://api.mcsrvstat.us/2/${ip}${port ? `:${port}` : ''}`;
+    // const URL = `http://localhost:8787/status`;
 
-        // Fetch the server status
-        fetch(URL, {
-            headers: {
-                'content-type': 'application/json',
-            },
-        }).then((res) => res.json()).then((json) => {
-            // Return the status
-            resolve(json);
-        }).catch((err) => {
-            // Log and reject the error
-            console.error(err);
-            reject(err);
-        });
+    // Fetch the server status
+    fetch(URL, {
+        headers: {
+            'content-type': 'application/json',
+        },
+    }).then((res) => res.json()).then((json) => {
+        // Return the status
+        resolve(json);
+    }).catch((err) => {
+        // Log and reject the error
+        console.error(err);
+        reject(err);
     });
-}
+});
 
 /**
  * Get giveaway winners
@@ -479,32 +463,30 @@ export function getMinecraftStatus(ip, port) {
  *
  * @returns {Array} Array with giveaway winners
  */
-export function drawGiveawayWinners(entries, winners) { entries.sort(() => 0.5 - Math.random()).slice(0, winners); }
+export const drawGiveawayWinners = (entries, winners) => { entries.sort(() => 0.5 - Math.random()).slice(0, winners); };
 
 /**
  * Get the current Discord status
  *
  * @returns {Promise.<Object>} Discord Status API Data
  */
-export function getDiscordStatus() {
-    new Promise((resolve, reject) => {
-        // Specify the API URL
-        const URL = 'https://discordstatus.com/api/v2/summary.json';
+export const getDiscordStatus = () => new Promise((resolve, reject) => {
+    // Specify the API URL
+    const URL = 'https://discordstatus.com/api/v2/summary.json';
 
-        // Fetch the API
-        fetch(URL, {
-            headers: {
-                'content-type': 'application/json',
-                accept: 'application/json',
-            },
-        }).then((res) => res.json()).then((json) => {
-            resolve(json);
-        }).catch((err) => {
-            console.error(err);
-            reject(err);
-        });
+    // Fetch the API
+    fetch(URL, {
+        headers: {
+            'content-type': 'application/json',
+            accept: 'application/json',
+        },
+    }).then((res) => res.json()).then((json) => {
+        resolve(json);
+    }).catch((err) => {
+        console.error(err);
+        reject(err);
     });
-}
+});
 
 /**
  * Fetch an image and return the buffer
@@ -513,31 +495,29 @@ export function getDiscordStatus() {
  *
  * @returns {Promise.<Buffer>} emote
  */
-export function fetchEmote(url) {
-    new Promise((resolve, reject) => {
-        // Create the proxyAgent
-        const proxyAgent = new HttpsProxyAgent(config.general.proxyUrl);
+export const fetchEmote = (url) => new Promise((resolve, reject) => {
+    // Create the proxyAgent
+    const proxyAgent = new HttpsProxyAgent(config.general.proxyUrl);
 
-        // Fetch the URL
-        fetch(url, {
-            agent: proxyAgent,
-        }).then(async (res) => {
-            // If the url didn't contain an image return an error
-            if (!res.headers.get('content-type').startsWith('image')) reject(new Error("The URL or File you specified isn't an image!"));
-            // If the size of the file is too big return an error
-            if (res.headers.get('content-length') > 256 * 1024) reject(new Error('The emoji is too big! It must be 256KB or less.'));
+    // Fetch the URL
+    fetch(url, {
+        agent: proxyAgent,
+    }).then(async (res) => {
+        // If the url didn't contain an image return an error
+        if (!res.headers.get('content-type').startsWith('image')) reject(new Error("The URL or File you specified isn't an image!"));
+        // If the size of the file is too big return an error
+        if (res.headers.get('content-length') > 256 * 1024) reject(new Error('The emoji is too big! It must be 256KB or less.'));
 
-            // Convert the image to a buffer and resolve it
-            res.buffer().then((buff) => {
-                resolve(buff);
-            });
-        }).catch((err) => {
-            // Log the error and reject it
-            console.error(err);
-            reject(new Error('Something went wrong while fetching the image!'));
+        // Convert the image to a buffer and resolve it
+        res.buffer().then((buff) => {
+            resolve(buff);
         });
+    }).catch((err) => {
+        // Log the error and reject it
+        console.error(err);
+        reject(new Error('Something went wrong while fetching the image!'));
     });
-}
+});
 
 /**
  * Fetch a user's LastFM Profile
@@ -546,30 +526,28 @@ export function fetchEmote(url) {
  *
  * @returns {Promise.<Object>} Last.fm user
  */
-export function getLastFMUser(user) {
-    new Promise((resolve, reject) => {
-        // Define the LastFM API URL
-        const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${user}&api_key=${config.apiKeys.lastfm}&format=json`;
+export const getLastFMUser = (user) => new Promise((resolve, reject) => {
+    // Define the LastFM API URL
+    const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${user}&api_key=${config.apiKeys.lastfm}&format=json`;
 
-        // Fetch the URL
-        fetch(URL)
-            .then((res) => res.json())
-            .then((d) => {
-                if (d?.error === 6) {
-                    // If the user isn't found, throw an error
-                    reject(new Error('User not found'));
-                } else if (d?.error) {
-                    // If there is an unknown error, then throw and log to console
-                    console.error(d.error.message);
-                    reject(new Error('An unknown error occurred!'));
-                } else {
-                    // Resolve the User
-                    resolve(d);
-                }
-            })
-            .catch((err) => new Error(err));
-    });
-}
+    // Fetch the URL
+    fetch(URL)
+        .then((res) => res.json())
+        .then((d) => {
+            if (d?.error === 6) {
+                // If the user isn't found, throw an error
+                reject(new Error('User not found'));
+            } else if (d?.error) {
+                // If there is an unknown error, then throw and log to console
+                console.error(d.error.message);
+                reject(new Error('An unknown error occurred!'));
+            } else {
+                // Resolve the User
+                resolve(d);
+            }
+        })
+        .catch((err) => new Error(err));
+});
 
 /**
  * Fetch a user's LastFM listening history
@@ -578,22 +556,20 @@ export function getLastFMUser(user) {
  *
  * @returns {Promise.<Object>} Last.fm user play history
  */
-export function getLastFMUserHistory(user) {
-    new Promise((resolve, reject) => {
-        const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${user}&api_key=${config.apiKeys.lastfm}&format=json`;
+export const getLastFMUserHistory = (user) => new Promise((resolve, reject) => {
+    const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${user}&api_key=${config.apiKeys.lastfm}&format=json`;
 
-        const data = fetch(URL).then((res) => res.json());
+    const data = fetch(URL).then((res) => res.json());
 
-        if (data?.error === 6) {
-            reject(new Error('User not found'));
-        } else if (data?.error) {
-            console.error(data.error.message);
-            reject(new Error('An unknown error occurred!'));
-        } else {
-            resolve(data);
-        }
-    });
-}
+    if (data?.error === 6) {
+        reject(new Error('User not found'));
+    } else if (data?.error) {
+        console.error(data.error.message);
+        reject(new Error('An unknown error occurred!'));
+    } else {
+        resolve(data);
+    }
+});
 
 /**
  * Get the ordinal suffix for a number (E.g. "st", "nd", "rd", "th")
@@ -602,10 +578,8 @@ export function getLastFMUserHistory(user) {
  *
  * @returns {String} The ordinal suffix for the supplied number
  */
-export function getOrdinalSuffix(num) {
-    // eslint-disable-next-line no-mixed-operators
-    return ['st', 'nd', 'rd'][((num + 90) % 100 - 10) % 10 - 1] || 'th';
-}
+// eslint-disable-next-line no-mixed-operators
+export const getOrdinalSuffix = (num) => ['st', 'nd', 'rd'][((num + 90) % 100 - 10) % 10 - 1] || 'th';
 
 /**
  * Get the reaction cooldown
@@ -616,7 +590,7 @@ export function getOrdinalSuffix(num) {
  *
  * @returns {Boolean} Returns false if the user isn't on cooldown otherwise returns true
  */
-export function getReactCooldown(bot, user, guild) {
+export const getReactCooldown = (bot, user, guild) => {
     // Check if the user is a bot dev
     if (config.general.devs.includes(user.id)) return false;
 
@@ -638,4 +612,4 @@ export function getReactCooldown(bot, user, guild) {
     bot.cooldowns.set(`${guild}-${user.id}-reaction`, { count: 1 });
     // Remove the user data after 15 seconds
     setTimeout(() => { bot.cooldowns.delete(`${guild}-${user.id}-reaction`); }, 15000);
-}
+};

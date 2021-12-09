@@ -3,7 +3,7 @@ import { MessageEmbed, Permissions } from 'discord.js';
 import config from '../../config.js';
 import settings from '../../database/models/settings.js';
 
-export async function punishmentLog(bot, message, member, pID, reason, type, length) {
+export const punishmentLog = (bot, message, member, pID, reason, type, length) => {
     // Fetch the default logger channel
     const modlog = message.guild.channels.cache.get(message.settings.logs.default);
 
@@ -85,10 +85,10 @@ export async function punishmentLog(bot, message, member, pID, reason, type, len
     } else {
         return bot.logger.error(`Received invalid punishment type: ${type.toLowerCase()}`);
     }
-}
+};
 
 // eslint-disable-next-line no-shadow
-export async function checkMessage(message, settings) {
+export const checkMessage = async (message, settings) => {
     if (settings.ignore?.hierarchicRoleId && message.guild.roles.cache.get(settings.ignore?.hierarchicRoleId).position <= message.member.roles.highest.position) return;
     if (settings.ignore?.channels.includes(message.channel.id) || settings.ignore?.roles.includes(message.member.roles.cache) || message.member.permissions.has('ADMINISTRATOR')) return;
 
@@ -97,7 +97,7 @@ export async function checkMessage(message, settings) {
         for (const data of settings.moderation.filter?.entries) {
             if (message.content.toLowerCase().includes(data.toLowerCase())) {
                 message.delete().catch(() => { });
-                await message.reply('you are unable to say that here!').then((m) => setTimeout(() => m.delete().catch(() => {}), 5000));
+                await message.reply('you are unable to say that here!').then((m) => setTimeout(() => m.delete().catch(() => { }), 5000));
             }
         }
     }
@@ -106,7 +106,7 @@ export async function checkMessage(message, settings) {
         const zalgo = /[\xCC\xCD]/;
         if (zalgo.test(message.content)) {
             message.delete().catch(() => { });
-            await message.reply('you are unable to use Zalgo text here!').then((m) => setTimeout(() => m.delete().catch(() => {}), 5000));
+            await message.reply('you are unable to use Zalgo text here!').then((m) => setTimeout(() => m.delete().catch(() => { }), 5000));
         }
     }
 
@@ -115,7 +115,7 @@ export async function checkMessage(message, settings) {
 
         if (invite.test(message.content)) {
             message.delete().catch(() => { });
-            await message.reply('you are unable to send invite links here!').then((m) => setTimeout(() => m.delete().catch(() => {}), 5000));
+            await message.reply('you are unable to send invite links here!').then((m) => setTimeout(() => m.delete().catch(() => { }), 5000));
         }
     }
 
@@ -124,10 +124,10 @@ export async function checkMessage(message, settings) {
 
         if (link.test(message.content)) {
             message.delete().catch(() => { });
-            await message.reply('you are unable to send URLs here!').then((m) => setTimeout(() => m.delete().catch(() => {}), 5000));
+            await message.reply('you are unable to send URLs here!').then((m) => setTimeout(() => m.delete().catch(() => { }), 5000));
         }
     }
-}
+};
 
 /**
  * Check if the user running the command is blacklisted
@@ -136,7 +136,7 @@ export async function checkMessage(message, settings) {
  *
  * @returns {Promise.<Boolean>} True if blacklisted, false if not blacklisted.
  */
-export async function checkBlacklist(message) {
+export const checkBlacklist = async (message) => {
     // Get the author (to support interactions)
     const author = message.author ?? message.user;
 
@@ -172,4 +172,4 @@ export async function checkBlacklist(message) {
     }
     // Return false
     return false;
-}
+};

@@ -7,25 +7,23 @@ const endpoint = 'https://disease.sh';
  *
  * @returns {Promise.<Object>} Global Covid Stats
  */
-export async function getGlobalStats() {
-    new Promise((resolve, reject) => {
-        // Specify the API URL
-        const URL = `${endpoint}/v3/covid-19/all`;
+export const getGlobalStats = () => new Promise((resolve, reject) => {
+    // Specify the API URL
+    const URL = `${endpoint}/v3/covid-19/all`;
 
-        // Fetch the API
-        fetch(URL, {
-            headers: {
-                'content-type': 'application/json',
-                accept: 'application/json',
-            },
-        }).then((res) => res.json()).then((json) => {
-            resolve(json);
-        }).catch((err) => {
-            console.error(err);
-            reject(err);
-        });
+    // Fetch the API
+    fetch(URL, {
+        headers: {
+            'content-type': 'application/json',
+            accept: 'application/json',
+        },
+    }).then((res) => res.json()).then((json) => {
+        resolve(json);
+    }).catch((err) => {
+        console.error(err);
+        reject(err);
     });
-}
+});
 
 /**
  * Fetch covid stats for all countries,
@@ -34,34 +32,32 @@ export async function getGlobalStats() {
  *
  * @returns {Promise.<Array>} An array with covid stats for all countries
  */
-export async function getAllCountryData(sort) {
-    new Promise((resolve, reject) => {
-        // Define the sort options
-        const sortOpts = [
-            'cases',
-            'deaths',
-        ];
+export const getAllCountryData = (sort) => new Promise((resolve, reject) => {
+    // Define the sort options
+    const sortOpts = [
+        'cases',
+        'deaths',
+    ];
 
-        // If an invalid sort option was specified return an error
-        if (!sortOpts.includes(sort)) reject(new Error('Invalid Args!'));
+    // If an invalid sort option was specified return an error
+    if (!sortOpts.includes(sort)) reject(new Error('Invalid Args!'));
 
-        // Define the URL
-        const URL = `${endpoint}/v3/covid-19/countries/?sort=${sort}`;
+    // Define the URL
+    const URL = `${endpoint}/v3/covid-19/countries/?sort=${sort}`;
 
-        // Fetch the API
-        fetch(URL, {
-            headers: {
-                'content-type': 'application/json',
-                accept: 'application/json',
-            },
-        }).then((res) => res.json()).then((json) => {
-            resolve(json);
-        }).catch((err) => {
-            console.error(err);
-            reject(err);
-        });
+    // Fetch the API
+    fetch(URL, {
+        headers: {
+            'content-type': 'application/json',
+            accept: 'application/json',
+        },
+    }).then((res) => res.json()).then((json) => {
+        resolve(json);
+    }).catch((err) => {
+        console.error(err);
+        reject(err);
     });
-}
+});
 
 /**
  * Get covid stats for a specific country
@@ -70,32 +66,30 @@ export async function getAllCountryData(sort) {
  *
  * @returns {Promise.<Object>} Covid stats for the specified country
  */
-export async function getDataByCountry(country) {
-    new Promise((resolve, reject) => {
-        // Return an error if no country was specified
-        if (!country) reject(new Error('Missing Args!'));
+export const getDataByCountry = (country) => new Promise((resolve, reject) => {
+    // Return an error if no country was specified
+    if (!country) reject(new Error('Missing Args!'));
 
-        // Define the URL
-        const URL = `${endpoint}/v3/covid-19/countries/${country}`;
+    // Define the URL
+    const URL = `${endpoint}/v3/covid-19/countries/${country}`;
 
-        // Fetch the API
-        fetch(URL, {
-            headers: {
-                'content-type': 'application/json',
-                accept: 'application/json',
-            },
-        }).then((res) => {
-            if (!res || res.status !== 200) resolve(undefined);
+    // Fetch the API
+    fetch(URL, {
+        headers: {
+            'content-type': 'application/json',
+            accept: 'application/json',
+        },
+    }).then((res) => {
+        if (!res || res.status !== 200) resolve(undefined);
 
-            res.json().then((json) => {
-                resolve(json);
-            });
-        }).catch((err) => {
-            console.error(err);
-            reject(err);
+        res.json().then((json) => {
+            resolve(json);
         });
+    }).catch((err) => {
+        console.error(err);
+        reject(err);
     });
-}
+});
 
 /**
  * Get covid stats for a specific continent
@@ -104,32 +98,30 @@ export async function getDataByCountry(country) {
  *
  * @returns {Promise.<Object>} Covid stats for the specified continent
  */
-export async function getDataByContinent(continent) {
-    new Promise((resolve, reject) => {
-        // Return an error if no continent was specified
-        if (!continent) reject(new Error('Missing Args!'));
+export const getDataByContinent = (continent) => new Promise((resolve, reject) => {
+    // Return an error if no continent was specified
+    if (!continent) reject(new Error('Missing Args!'));
 
-        // Define the URL
-        const URL = `${endpoint}/v3/covid-19/continents/${continent}`;
+    // Define the URL
+    const URL = `${endpoint}/v3/covid-19/continents/${continent}`;
 
-        // Fetch the API
-        fetch(URL, {
-            headers: {
-                'content-type': 'application/json',
-                accept: 'application/json',
-            },
-        }).then((res) => {
-            if (!res || res.status !== 200) resolve(undefined);
+    // Fetch the API
+    fetch(URL, {
+        headers: {
+            'content-type': 'application/json',
+            accept: 'application/json',
+        },
+    }).then((res) => {
+        if (!res || res.status !== 200) resolve(undefined);
 
-            res.json().then((json) => {
-                resolve(json);
-            });
-        }).catch((err) => {
-            console.error(err);
-            reject(err);
+        res.json().then((json) => {
+            resolve(json);
         });
+    }).catch((err) => {
+        console.error(err);
+        reject(err);
     });
-}
+});
 
 /**
  * Get covid stats for a specific US state
@@ -138,32 +130,30 @@ export async function getDataByContinent(continent) {
  *
  * @returns {Promise.<Object>} Covid stats for the specified US state
  */
-export async function getDataByState(state) {
-    new Promise((resolve, reject) => {
-        // Return an error if no state was specified
-        if (!state) reject(new Error('Missing Args!'));
+export const getDataByState = (state) => new Promise((resolve, reject) => {
+    // Return an error if no state was specified
+    if (!state) reject(new Error('Missing Args!'));
 
-        // Define the URL
-        const URL = `${endpoint}/v3/covid-19/states/${state}`;
+    // Define the URL
+    const URL = `${endpoint}/v3/covid-19/states/${state}`;
 
-        // Fetch the API
-        fetch(URL, {
-            headers: {
-                'content-type': 'application/json',
-                accept: 'application/json',
-            },
-        }).then((res) => {
-            if (!res || res.status !== 200) resolve(undefined);
+    // Fetch the API
+    fetch(URL, {
+        headers: {
+            'content-type': 'application/json',
+            accept: 'application/json',
+        },
+    }).then((res) => {
+        if (!res || res.status !== 200) resolve(undefined);
 
-            res.json().then((json) => {
-                resolve(json);
-            });
-        }).catch((err) => {
-            console.error(err);
-            reject(err);
+        res.json().then((json) => {
+            resolve(json);
         });
+    }).catch((err) => {
+        console.error(err);
+        reject(err);
     });
-}
+});
 
 /**
  * Get Covid-19 vaccination data
@@ -175,31 +165,29 @@ export async function getDataByState(state) {
  *
  * @returns {Promise.<Object>} Vaccination Data
  */
-export async function getVaccineData(days, full, type, data) {
-    new Promise((resolve, reject) => {
-        // If an invalid type is specified return an error
-        if (type && !['countries', 'states'].includes(type)) reject(new Error('Invalid Args!'));
-        // If a type is specified but no data return an error
-        if (type && !data) reject(new Error('Missing Args!'));
+export const getVaccineData = (days, full, type, data) => new Promise((resolve, reject) => {
+    // If an invalid type is specified return an error
+    if (type && !['countries', 'states'].includes(type)) reject(new Error('Invalid Args!'));
+    // If a type is specified but no data return an error
+    if (type && !data) reject(new Error('Missing Args!'));
 
-        // Specify the API URL
-        const URL = `${endpoint}/v3/covid-19/vaccine/coverage${type ? `/${type}/${data}` : ''}?lastdays=${days}&fullData=${full ? 'true' : 'false'}`;
+    // Specify the API URL
+    const URL = `${endpoint}/v3/covid-19/vaccine/coverage${type ? `/${type}/${data}` : ''}?lastdays=${days}&fullData=${full ? 'true' : 'false'}`;
 
-        // Fetch the API
-        fetch(URL, {
-            headers: {
-                'content-type': 'application/json',
-                accept: 'application/json',
-            },
-        }).then((res) => {
-            if (!res || res.status !== 200) resolve(undefined);
+    // Fetch the API
+    fetch(URL, {
+        headers: {
+            'content-type': 'application/json',
+            accept: 'application/json',
+        },
+    }).then((res) => {
+        if (!res || res.status !== 200) resolve(undefined);
 
-            res.json().then((json) => {
-                resolve(json);
-            });
-        }).catch((err) => {
-            console.error(err);
-            reject(err);
+        res.json().then((json) => {
+            resolve(json);
         });
+    }).catch((err) => {
+        console.error(err);
+        reject(err);
     });
-}
+});
