@@ -56,8 +56,6 @@ export default async (bot, message) => {
         // Get the log channel
         const channel = await getChannel(message, msgSettings.logs.deleted, false);
 
-        console.log(message.attachments);
-
         const embed = new MessageEmbed()
             .setAuthor(`Message by ${message.author.tag} deleted in #${message.channel.name}`, message.author.displayAvatarURL({ format: 'png', dynamic: true }))
             .setThumbnail(message.author.displayAvatarURL({ format: 'png', dynamic: true }))

@@ -54,6 +54,8 @@ export default {
             return message.errorReply("This user doesn't have a custom banner set!");
         }
 
+        console.log(usr.bannerURL({ format: 'png', dynamic: true, size: 2048 }));
+
         // Build the embed
         const embed = new MessageEmbed()
             .setColor(message.member?.displayColor || bot.config.general.embedColor)

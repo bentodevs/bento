@@ -154,7 +154,6 @@ export default async (bot, message) => {
     // Try to run the command
     try {
         // Run the command
-        console.log(cmd);
         await cmd.run(bot, message, args);
     } catch (err) {
         // Send the error to Sentry

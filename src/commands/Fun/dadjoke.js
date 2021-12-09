@@ -32,8 +32,6 @@ export default {
         // Fetch a random joke from the api
         const data = await (await getDadjoke());
 
-        console.log(data);
-
         // Send the joke
         message.reply(data.joke);
     },
