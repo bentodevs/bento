@@ -39,6 +39,10 @@ export default {
             type: 'CHANNEL',
             description: 'Specify a text or news channel.',
             required: true,
+            channel_types: [
+                'GUILD_TEXT',
+                'GUILD_NEWS',
+            ],
         }, {
             name: 'type',
             type: 'STRING',

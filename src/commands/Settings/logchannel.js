@@ -63,6 +63,10 @@ export default {
             type: 'CHANNEL',
             description: 'Select the channel you want to use.',
             required: false,
+            channel_types: [
+                'GUILD_TEXT',
+                'GUILD_NEWS',
+            ],
         }],
     },
 

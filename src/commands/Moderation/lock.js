@@ -30,6 +30,10 @@ export default {
             type: 'CHANNEL',
             description: 'Specify a channel.',
             required: false,
+            channel_types: [
+                'GUILD_TEXT',
+                'GUILD_NEWS',
+            ],
         }],
     },
 
