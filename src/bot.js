@@ -5,13 +5,13 @@ import ora from 'ora';
 import Pokedex from 'pokedex-promise-v2';
 import Sentry from '@sentry/node';
 import Tracing from '@sentry/tracing';
-import { getMongooseURL } from './database/mongo.js';
 import winston from 'winston';
+import { getMongooseURL } from './database/mongo.js';
 
 // Import handlers
 import { init as commandInit } from './modules/handlers/command.js';
 import { init as eventInit } from './modules/handlers/event.js';
-import config from "./config.js";
+import config from './config.js';
 
 // Create the bot client
 const bot = new Client({
@@ -46,13 +46,9 @@ bot.pokedex = new Pokedex();
 
 // Import the config
 bot.config = config;
-// Import prototypes
-;(await import("./modules/functions/prototypes.js")).default();
 
 // Log format
-const logFormat = winston.format.printf(({ level, message, timestamp }) => {
-  return `${timestamp} ${level}: ${message}`;
-});
+const logFormat = winston.format.printf(({ level, message, timestamp }) => `${timestamp} ${level.toUpperCase()}: ${message}`);
 
 // Logging levels
 const logLevels = {
@@ -61,28 +57,28 @@ const logLevels = {
         warn: 1,
         debug: 2,
         ready: 3,
-        cmd: 4
+        cmd: 4,
     },
     colors: {
         error: 'red',
         warn: 'yellow',
-        debug: 'blue',
+        debug: 'whiteBG blue',
         ready: 'green',
-        cmd: 'cyan'
-    }
-}
+        cmd: 'cyan',
+    },
+};
+
+winston.addColors(logLevels.colors);
 
 bot.logger = winston.createLogger({
     format: winston.format.combine(
         winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-        logFormat
+        logFormat,
     ),
-    transports: [new winston.transports.Console()],
+    transports: [new winston.transports.Console({ colorize: true })],
     levels: logLevels.levels,
     level: 'debug',
-})
-
-winston.addColors(logLevels.colors);
+});
 
 // Create the deletedMsgs collection
 bot.deletedMsgs = new Collection();
@@ -100,6 +96,9 @@ const init = async () => {
     console.log(' ');
     console.log(' ');
 
+    // Import prototypes
+    (await import('./modules/functions/prototypes.js')).default();
+
     const sentryMessage = ora('Logging in to Sentry...').start();
 
     // Setup Sentry
@@ -116,7 +115,7 @@ const init = async () => {
 
     // Send the command message and load all the commands
     const commandMessage = ora('Loading commands...').start();
-    const cmds = await commandInit(bot);
+    await commandInit(bot);
 
     // Update the command message
     if (bot.commands.filter((a) => a.slash?.enabled).size > 100) {
@@ -127,18 +126,18 @@ const init = async () => {
     } else {
         commandMessage.stopAndPersist({
             symbol: '✔️',
-            text: ` Loaded ${bot.commands.size} commands.`,
+            text: ' Loaded commands.',
         });
     }
 
     // Send the event message and load the events
     const eventMessage = ora('Loading events...').start();
-    const evts = await eventInit(bot);
+    await eventInit(bot);
 
     // Update the event message
     eventMessage.stopAndPersist({
         symbol: '✔️',
-        text: ` Loaded ${evts} events.`,
+        text: ' Loaded events.',
     });
 
     // Send the mongo message
