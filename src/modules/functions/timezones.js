@@ -1,4 +1,4 @@
-exports.timezones = [
+const timezones = [
     {
         label: 'Pacific/Midway (GMT-11:00)',
         tzCode: 'Pacific/Midway',
@@ -2550,3 +2550,5 @@ exports.timezones = [
         utc: '+00:00',
     },
 ];
+
+export default timezones;

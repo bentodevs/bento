@@ -1,9 +1,11 @@
-const { formatDistance } = require('date-fns');
-const { format, utcToZonedTime } = require('date-fns-tz');
-const mutes = require('../../database/models/mutes');
-const { getUser } = require('../../modules/functions/getters');
+import { format, formatDistance } from 'date-fns';
+import dateFnsTz from 'date-fns-tz';
+import mutes from '../../database/models/mutes.js';
+import { getUser } from '../../modules/functions/getters.js';
 
-module.exports = {
+const { utcToZonedTime } = dateFnsTz;
+
+export default {
     info: {
         name: 'mutelist',
         aliases: [],

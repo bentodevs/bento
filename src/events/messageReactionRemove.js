@@ -1,6 +1,6 @@
-const giveaways = require('../database/models/giveaways');
+import giveaways from '../database/models/giveaways.js';
 
-module.exports = async (bot, reaction, user) => {
+export default async (bot, reaction, user) => {
     // If the reaction or user are partial try to fetch them
     if (reaction.partial || user.partial) {
         try {

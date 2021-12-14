@@ -1,6 +1,6 @@
-const { model, Schema } = require('mongoose');
+import mongoose from 'mongoose';
 
-module.exports = model('users', new Schema({
+const users = mongoose.model('users', new mongoose.Schema({
     _id: String, // The user ID
     track: {
         type: Object,
@@ -12,3 +12,5 @@ module.exports = model('users', new Schema({
     guilds: Array, // Array with guilds with the users data for those guilds
     lastfm: String, // The user's Last.fm username
 }));
+
+export default users;

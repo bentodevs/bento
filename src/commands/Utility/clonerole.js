@@ -1,6 +1,6 @@
-const { getRole } = require('../../modules/functions/getters');
+import { getRole } from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'clonerole',
         aliases: [],

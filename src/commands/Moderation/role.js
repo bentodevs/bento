@@ -1,6 +1,6 @@
-const { getMember, getRole } = require('../../modules/functions/getters');
+import { getMember, getRole } from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'role',
         aliases: [

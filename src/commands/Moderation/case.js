@@ -1,11 +1,13 @@
-const { stripIndents } = require('common-tags');
-const { formatDistanceStrict } = require('date-fns');
-const { format, utcToZonedTime } = require('date-fns-tz');
-const { MessageEmbed } = require('discord.js');
-const punishments = require('../../database/models/punishments');
-const { getMember, getUser } = require('../../modules/functions/getters');
+import { stripIndents } from 'common-tags';
+import { formatDistanceStrict, format } from 'date-fns';
+import dateFnsTz from 'date-fns-tz';
+import { MessageEmbed } from 'discord.js';
+import punishments from '../../database/models/punishments.js';
+import { getMember, getUser } from '../../modules/functions/getters.js';
 
-module.exports = {
+const { utcToZonedTime } = dateFnsTz;
+
+export default {
     info: {
         name: 'case',
         aliases: ['hist', 'history'],

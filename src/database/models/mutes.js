@@ -1,6 +1,6 @@
-const { model, Schema } = require('mongoose');
+import mongoose from 'mongoose';
 
-module.exports = model('mutes', new Schema({
+const mutes = mongoose.model('mutes', new mongoose.Schema({
     guild: String, // The ID the mute exists in
     mutedUser: String, // The ID of the muted user
     muteTime: String, // The length of the mute
@@ -9,3 +9,5 @@ module.exports = model('mutes', new Schema({
     reason: String, // The reason for the mute
     caseID: Number, // The case number of the punishment
 }));
+
+export default mutes;

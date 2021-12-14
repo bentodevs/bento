@@ -1,9 +1,9 @@
-const { stripIndents } = require('common-tags');
-const { MessageEmbed } = require('discord.js');
-const config = require('../../config');
-const settings = require('../../database/models/settings');
+import { stripIndents } from 'common-tags';
+import { MessageEmbed } from 'discord.js';
+import config from '../../config.js';
+import settings from '../../database/models/settings.js';
 
-module.exports = {
+export default {
     info: {
         name: 'automod',
         aliases: [],
@@ -107,8 +107,6 @@ module.exports = {
     },
 
     run: async (bot, message, args) => {
-        const options = ['enable', 'disable'];
-
         if (!args[0]) {
             // Build the embed
             const embed = new MessageEmbed()
@@ -119,58 +117,52 @@ module.exports = {
                 🖇️ Invite posting is currently ${message.settings.moderation.no_invite ? '**disallowed**' : '**allowed**'}
                 🌐 Link posting is currently ${message.settings.moderation.no_link ? '**disallowed**' : '**allowed**'}
 
-                🔇 The number of allowed mentions before being muted is ${message.settings.moderation.mentions_mute || '**not set**'}
-                ${config.emojis.pepe_ping} The number of allowed mentions before being banned is ${message.settings.moderation.mentions_ban || '**not set**'}`)
+                🔇 The number of allowed mentions before being muted is ${`\`${message.settings.moderation.mentions_mute}\`` || '**not set**'}
+                ${config.emojis.pepe_ping} The number of allowed mentions before being banned is ${`\`${message.settings.moderation.mentions_ban}\`` || '**not set**'}`)
                 .setTimestamp()
                 .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ format: 'png', dynamic: true }));
 
             // Send embed
             message.reply({ embeds: [embed] });
         } else if (args[0].toLowerCase() === 'filter') {
-            if (args[1]?.toLowerCase() === 'enable') {
+            if (!message.settings.moderation?.filter?.state) {
                 // Enable filter & send confirmation
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { 'moderation.filter.state': true });
-                return message.confirmationReply('Message filtering has been **enabled**');
-            } if (args[1]?.toLowerCase() === 'disable') {
+                message.confirmationReply('Message filtering has been **enabled**');
+            } else {
                 // Disable filter & send confirmation
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { 'moderation.filter.state': false });
-                return message.confirmationReply('Message filtering has been **disabled**');
+                message.confirmationReply('Message filtering has been **disabled**');
             }
-            return message.errorReply(`You did not specify a valid option! Valid options are \`${options.join('`, `')}\``);
         } else if (args[0].toLowerCase() === 'zalgo') {
-            if (args[1]?.toLowerCase() === 'enable') {
-                // Enable zalgo filter & send confirmation
+            if (!message.settings.moderation?.filter?.zalgo) {
+                // Enable filter & send confirmation
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { 'moderation.filter.zalgo': true });
-                return message.confirmationReply('Zalgo text moderation has been **enabled**');
-            } if (args[1]?.toLowerCase() === 'disable') {
+                message.confirmationReply('Message filtering has been **enabled**');
+            } else {
                 // Disable filter & send confirmation
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { 'moderation.filter.zalgo': false });
-                return message.confirmationReply('Zalgo text moderation has been **disabled**');
+                message.confirmationReply('Message filtering has been **disabled**');
             }
-            return message.errorReply(`You did not specify a valid option! Valid options are \`${options.join('`, `')}\``);
         } else if (args[0].toLowerCase() === 'no-invite') {
-            if (args[1]?.toLowerCase() === 'enable') {
+            if (!message.settings.moderation?.no_invite) {
                 // Enable invite filter & send confirmation
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { 'moderation.no_invite': true });
                 message.confirmationReply('Invite filtering has been **enabled**');
-            } else if (args[1]?.toLowerCase() === 'disable') {
+            } else {
                 // Disable filter & send confirmation
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { 'moderation.no_invite': false });
                 message.confirmationReply('Invite filtering has been **disabled**');
-            } else {
-                return message.errorReply(`You did not specify a valid option! Valid options are \`${options.join('`, `')}\``);
             }
         } else if (args[0].toLowerCase() === 'no-link') {
-            if (args[1]?.toLowerCase() === 'enable') {
+            if (!message.settings.moderation?.no_link) {
                 // Enable link filter & send confirmation
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { 'moderation.no_link': true });
                 message.confirmationReply('Link filtering has been **enabled**');
-            } else if (args[1]?.toLowerCase() === 'disable') {
+            } else {
                 // Disable filter & send confirmation
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { 'moderation.no_link': false });
                 message.confirmationReply('Link filtering has been **disabled**');
-            } else {
-                return message.errorReply(`You did not specify a valid option! Valid options are \`${options.join('`, `')}\``);
             }
         } else if (args[0].toLowerCase() === 'mentions-mute') {
             if ((args[1]?.toLowerCase() === 'off') || (args[1].toLowerCase() === '0')) {
@@ -191,7 +183,7 @@ module.exports = {
                     .catch((err) => message.errorReply(`There was an error whilst setting the mute threshold: ${err.message}`));
             } else {
                 // If there was no valid number, or the settings isn't "off" - return an error
-                return message.errorReply('You did not specify a valid value!');
+                return message.errorReply('You did not specify a valid number, or `off`!');
             }
         } else if (args[0].toLowerCase() === 'mentions-ban') {
             if ((args[1]?.toLowerCase() === 'off') || (args[1]?.toLowerCase() === '0')) {
@@ -204,7 +196,7 @@ module.exports = {
                     .catch((err) => message.errorReply(`There was an error whilst disabling the ban threshold: ${err.message}`));
             } else if (!isNaN(args[1])) {
                 // If the amount specified is smaller than the mentions_mute setting return an error
-                if (message.settings.moderation.mentions_mute && args[1] < message.settings.moderation.mentions_mute) return message.errorReply('Te mentions-ban amount needs to be higher than the mentions-mute setting!');
+                if (message.settings.moderation.mentions_mute && (args[1] < parseInt(message.settings.moderation.mentions_mute, 10))) return message.errorReply('The mentions-ban amount needs to be higher than the mentions-mute setting!');
 
                 // Set max mantions in DB & retun confirmation - Catch any errors
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { 'moderation.mentions_ban': args[1] })
@@ -212,7 +204,7 @@ module.exports = {
                     .catch((err) => message.errorReply(`There was an error whilst setting the ban threshold: ${err.message}`));
             } else {
                 // If there was no valid number, or the settings isn't "off" - return an error
-                return message.errorReply('You did not specify a valid value!');
+                return message.errorReply('You did not specify a valid number, or `off`!');
             }
         } else {
             return message.errorReply('You did not specify a valid option!');

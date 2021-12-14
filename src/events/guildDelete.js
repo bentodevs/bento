@@ -1,6 +1,6 @@
-const config = require('../config');
+import config from '../config.js';
 
-module.exports = async (bot, guild) => {
+export default async (bot, guild) => {
     // If the guild is not available, then return
     // This typically indicates that there is a server outage
     if (!guild.available) return;

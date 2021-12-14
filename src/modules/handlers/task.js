@@ -1,7 +1,7 @@
-const { Collection } = require('discord.js');
-const { readdirSync } = require('fs');
+import { Collection } from 'discord.js';
+import { readdirSync } from 'fs';
 
-exports.init = (bot) => new Promise((resolve) => {
+export const init = (bot) => new Promise((resolve) => {
     // Create the tasks collection
     // eslint-disable-next-line no-param-reassign
     bot.tasks = new Collection();
@@ -11,18 +11,15 @@ exports.init = (bot) => new Promise((resolve) => {
 
     // Loop through the files
     for (const data of files) {
-        try {
-            // eslint-disable-next-line import/no-dynamic-require, global-require
-            const { init } = require(`../tasks/${data}`);
-
-            init(bot).then((interval) => {
+        import(`../tasks/${data}`).then((task) => {
+            task.default(bot).then((interval) => {
                 bot.tasks.set(data.split('.')[0], interval);
             });
-        } catch (err) {
+        }).catch((err) => {
             // Log the error
-            bot.logger.error(`Failed to reload ${data}`);
+            bot.logger.error(`Failed to load ${data}`);
             bot.logger.error(err.stack);
-        }
+        });
     }
 
     resolve(files.length);
@@ -36,7 +33,7 @@ exports.init = (bot) => new Promise((resolve) => {
  *
  * @returns {Promise<String>} Returns the task name if the task reloaded successfully
  */
-exports.reload = (bot, task) => new Promise((resolve, reject) => {
+export const reload = (bot, task) => new Promise((resolve, reject) => {
     // Get all the task files and get the specified task
     const files = readdirSync('./modules/tasks').filter((file) => file.endsWith('.js'));
     const file = files.find((e) => e.toLowerCase() === `${task.toLowerCase()}.js`);
@@ -44,35 +41,31 @@ exports.reload = (bot, task) => new Promise((resolve, reject) => {
     // If no file was found return an error
     if (!file) reject(new Error('Task not found'));
 
-    try {
-        // Get the task name
-        const taskName = file.split('.')[0];
+    // Get the task name
+    const taskName = file.split('.')[0];
 
-        // Stop the setInterval function
-        clearInterval(bot.tasks.get(taskName));
-        // Delete the task from cache
-        delete require.cache[require.resolve(`../tasks/${file}`)];
-        // Delete the task from the collection
-        bot.tasks.delete(taskName);
+    // Stop the setInterval function
+    clearInterval(bot.tasks.get(taskName));
+    // Delete the task from cache
+    delete require.cache[require.resolve(`../tasks/${file}`)];
+    // Delete the task from the collection
+    bot.tasks.delete(taskName);
 
-        // Get the task
-        // eslint-disable-next-line import/no-dynamic-require, global-require
-        const { init } = require(`../tasks/${file}`);
-
-        // Initialize the task
-        init(bot).then((interval) => {
+    import(`../tasks/${file}`).then((module) => {
+        module.default(bot).then((interval) => {
             bot.tasks.set(taskName, interval);
         });
 
         // Return the task name
         resolve(taskName);
-    } catch (err) {
+    }).catch((err) => {
         // Log the error
-        bot.logger.error(`Failed to reload ${file}`);
+        bot.logger.error(`Failed to load ${taskName}`);
         bot.logger.error(err.stack);
-        // Reject with the error
+
+        // Return the error
         reject(err);
-    }
+    });
 });
 
 /**
@@ -83,7 +76,7 @@ exports.reload = (bot, task) => new Promise((resolve, reject) => {
  *
  * @returns {Promise<String>} Returns the task name if the task loaded successfully
  */
-exports.load = (bot, task) => new Promise((resolve, reject) => {
+export const load = (bot, task) => new Promise((resolve, reject) => {
     // Get all the task files and get the specified task
     const files = readdirSync('./modules/tasks').filter((file) => file.endsWith('.js'));
     const file = files.find((e) => e.toLowerCase() === `${task.toLowerCase()}.js`);
@@ -91,31 +84,27 @@ exports.load = (bot, task) => new Promise((resolve, reject) => {
     // If the task wasn't found return an error
     if (!file) reject(new Error('Task not found'));
 
-    try {
-        // Get the task name
-        const taskName = file.split('.')[0];
+    // Get the task name
+    const taskName = file.split('.')[0];
 
-        // If the task is already loaded return an error
-        if (bot.tasks.get(taskName)) reject(new Error('Task is already loaded'));
+    // If the task is already loaded return an error
+    if (bot.tasks.get(taskName)) reject(new Error('Task is already loaded'));
 
-        // Import the task
-        // eslint-disable-next-line import/no-dynamic-require, global-require
-        const { init } = require(`../tasks/${file}`);
-
-        // Initialize the task
-        init(bot).then((interval) => {
+    import(`../tasks/${file}`).then((module) => {
+        module.default(bot).then((interval) => {
             bot.tasks.set(taskName, interval);
         });
 
         // Return the task name
         resolve(taskName);
-    } catch (err) {
+    }).catch((err) => {
         // Log the error
-        bot.logger.error(`Failed to load ${file}`);
+        bot.logger.error(`Failed to load ${taskName}`);
         bot.logger.error(err.stack);
-        // Reject with the error
+
+        // Reject the error
         reject(err);
-    }
+    });
 });
 
 /**
@@ -126,7 +115,7 @@ exports.load = (bot, task) => new Promise((resolve, reject) => {
  *
  * @returns {Promise<String>} Returns the task name if the task unloaded successfully
  */
-exports.unload = (bot, task) => new Promise((resolve, reject) => {
+export const unload = (bot, task) => new Promise((resolve, reject) => {
     // Get all the task files and get the specified task
     const files = readdirSync('./modules/tasks').filter((file) => file.endsWith('.js'));
     const file = files.find((e) => e.toLowerCase() === `${task.toLowerCase()}.js`);

@@ -1,10 +1,10 @@
-const { stripIndents } = require('common-tags');
-const { formatDistance } = require('date-fns');
-const { MessageEmbed } = require('discord.js');
-const { default: fetch } = require('node-fetch');
-const { fetchSteamUserByName, fetchSteamUserByID } = require('../../modules/functions/misc');
+import { stripIndents } from 'common-tags';
+import { formatDistance } from 'date-fns';
+import { MessageEmbed } from 'discord.js';
+import fetch from 'node-fetch';
+import { fetchSteamUserByName, fetchSteamUserByID } from '../../modules/functions/misc.js';
 
-module.exports = {
+export default {
     info: {
         name: 'csgo',
         aliases: [],

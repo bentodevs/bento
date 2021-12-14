@@ -1,4 +1,4 @@
-const { default: fetch } = require('node-fetch');
+import fetch from 'node-fetch';
 
 const endpoint = 'https://disease.sh';
 
@@ -7,7 +7,7 @@ const endpoint = 'https://disease.sh';
  *
  * @returns {Promise.<Object>} Global Covid Stats
  */
-exports.getGlobalStats = () => new Promise((resolve, reject) => {
+export const getGlobalStats = () => new Promise((resolve, reject) => {
     // Specify the API URL
     const URL = `${endpoint}/v3/covid-19/all`;
 
@@ -32,7 +32,7 @@ exports.getGlobalStats = () => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<Array>} An array with covid stats for all countries
  */
-exports.getAllCountryData = (sort) => new Promise((resolve, reject) => {
+export const getAllCountryData = (sort) => new Promise((resolve, reject) => {
     // Define the sort options
     const sortOpts = [
         'cases',
@@ -66,7 +66,7 @@ exports.getAllCountryData = (sort) => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<Object>} Covid stats for the specified country
  */
-exports.getDataByCountry = (country) => new Promise((resolve, reject) => {
+export const getDataByCountry = (country) => new Promise((resolve, reject) => {
     // Return an error if no country was specified
     if (!country) reject(new Error('Missing Args!'));
 
@@ -98,7 +98,7 @@ exports.getDataByCountry = (country) => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<Object>} Covid stats for the specified continent
  */
-exports.getDataByContinent = (continent) => new Promise((resolve, reject) => {
+export const getDataByContinent = (continent) => new Promise((resolve, reject) => {
     // Return an error if no continent was specified
     if (!continent) reject(new Error('Missing Args!'));
 
@@ -130,7 +130,7 @@ exports.getDataByContinent = (continent) => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<Object>} Covid stats for the specified US state
  */
-exports.getDataByState = (state) => new Promise((resolve, reject) => {
+export const getDataByState = (state) => new Promise((resolve, reject) => {
     // Return an error if no state was specified
     if (!state) reject(new Error('Missing Args!'));
 
@@ -165,7 +165,7 @@ exports.getDataByState = (state) => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<Object>} Vaccination Data
  */
-exports.getVaccineData = (days, full, type, data) => new Promise((resolve, reject) => {
+export const getVaccineData = (days, full, type, data) => new Promise((resolve, reject) => {
     // If an invalid type is specified return an error
     if (type && !['countries', 'states'].includes(type)) reject(new Error('Invalid Args!'));
     // If a type is specified but no data return an error

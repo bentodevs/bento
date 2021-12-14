@@ -1,6 +1,6 @@
-const { model, Schema } = require('mongoose');
+import mongoose from 'mongoose';
 
-module.exports = model('permissions', new Schema({
+const permissions = mongoose.model('permissions', new mongoose.Schema({
     _id: String, // Discord Guild ID
     permissions: {
         type: Object,
@@ -10,3 +10,5 @@ module.exports = model('permissions', new Schema({
         },
     },
 }));
+
+export default permissions;

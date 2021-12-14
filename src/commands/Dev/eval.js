@@ -1,6 +1,7 @@
-const { Util } = require('discord.js');
+import { Util as discordUtil } from 'discord.js';
+import util from 'util';
 
-module.exports = {
+export default {
     info: {
         name: 'eval',
         aliases: ['e'],
@@ -48,11 +49,11 @@ module.exports = {
             // Inspect the code if it didn't return a string
             if (typeof (evaled) !== 'string') {
                 // eslint-disable-next-line global-require
-                evaled = require('util').inspect(evaled);
+                evaled = util.inspect(evaled);
             }
 
             // Split the message
-            const msgs = Util.splitMessage(clean(evaled), { maxLength: '1800' });
+            const msgs = discordUtil.splitMessage(clean(evaled), { maxLength: '1800' });
 
             // Send the messages
             for (const data of msgs) {

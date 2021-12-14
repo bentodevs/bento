@@ -1,8 +1,10 @@
-const { model, Schema } = require('mongoose');
+import mongoose from 'mongoose';
 
-module.exports = model('premiumGuild', new Schema({
+const premiumGuild = mongoose.model('premiumGuild', new mongoose.Schema({
     _id: String, // The Guild ID
     active: Boolean,
     activatedBy: String,
     expiry: String,
 }));
+
+export default premiumGuild;

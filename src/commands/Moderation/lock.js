@@ -1,6 +1,6 @@
-const { getChannel } = require('../../modules/functions/getters');
+import { getChannel } from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'lock',
         aliases: [],
@@ -30,6 +30,10 @@ module.exports = {
             type: 'CHANNEL',
             description: 'Specify a channel.',
             required: false,
+            channel_types: [
+                'GUILD_TEXT',
+                'GUILD_NEWS',
+            ],
         }],
     },
 

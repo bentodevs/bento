@@ -1,17 +1,17 @@
 /* eslint-disable camelcase */
 // Import Dependencies
-const { stripIndents } = require('common-tags');
-const { MessageEmbed } = require('discord.js');
-const Sentry = require('@sentry/node');
-const { getSettings, getPerms } = require('../database/mongo');
-const { checkMessage, checkBlacklist } = require('../modules/functions/moderation');
-const { getTag, getChannel } = require('../modules/functions/getters');
-const { checkSelf, checkPerms } = require('../modules/functions/permissions');
-const { checkLevel } = require('../modules/functions/leveling');
-const tags = require('../database/models/tags');
-const afk = require('../database/models/afk');
+import { stripIndents } from 'common-tags';
+import { MessageEmbed } from 'discord.js';
+import Sentry from '@sentry/node';
+import { getSettings, getPerms } from '../database/mongo.js';
+import { checkMessage, checkBlacklist } from '../modules/functions/moderation.js';
+import { getTag, getChannel } from '../modules/functions/getters.js';
+import { checkSelf, checkPerms } from '../modules/functions/permissions.js';
+import { checkLevel } from '../modules/functions/leveling.js';
+import tags from '../database/models/tags.js';
+import afk from '../database/models/afk.js';
 
-module.exports = async (bot, message) => {
+export default async (bot, message) => {
     // If a message is partial try to fetch it.
     if (message.partial) {
         try {
@@ -96,7 +96,7 @@ module.exports = async (bot, message) => {
 
     // Import message functions
     // eslint-disable-next-line global-require
-    require('../modules/functions/messages')(message);
+    (await import('../modules/functions/messages.js')).default(message);
 
     // Return if the user didn't specify a valid command
     if (!cmd && !tag) return;

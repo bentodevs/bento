@@ -1,7 +1,7 @@
-const { default: fetch } = require('node-fetch');
-const { xml2json } = require('xml-js');
-const HttpsProxyAgent = require('https-proxy-agent');
-const config = require('../../config');
+import fetch from 'node-fetch';
+import { xml2json } from 'xml-js';
+import HttpsProxyAgent from 'https-proxy-agent';
+import config from '../../config.js';
 
 /**
  * Get a definition from the urbandictionary api
@@ -18,7 +18,7 @@ const config = require('../../config');
  *      console.error(err);
  * })
  */
-exports.urban = (query) => new Promise((resolve, reject) => {
+export const urban = (query) => new Promise((resolve, reject) => {
     // If no query was specified return an error
     if (!query) reject(new Error('Missing Args!'));
 
@@ -66,7 +66,7 @@ exports.urban = (query) => new Promise((resolve, reject) => {
  *      console.error(err);
  * })
  */
-exports.getMeme = () => new Promise((resolve, reject) => {
+export const getMeme = () => new Promise((resolve, reject) => {
     // Define all the subreddits
     const subs = [
         'memes',
@@ -122,7 +122,7 @@ exports.getMeme = () => new Promise((resolve, reject) => {
  *      console.error(err);
  * })
  */
-exports.getWeather = (query) => new Promise((resolve, reject) => {
+export const getWeather = (query) => new Promise((resolve, reject) => {
     // Define the API URL
     const URL = `https://api.weatherapi.com/v1/current.json?key=${config.apiKeys.weather}&q=${query}`;
 
@@ -163,7 +163,7 @@ exports.getWeather = (query) => new Promise((resolve, reject) => {
  *      console.error(data);
  * })
  */
-exports.getDadjoke = () => new Promise((resolve, reject) => {
+export const getDadjoke = () => new Promise((resolve, reject) => {
     // Define the API URL
     const URL = 'https://icanhazdadjoke.com/';
 
@@ -173,10 +173,7 @@ exports.getDadjoke = () => new Promise((resolve, reject) => {
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res) => res.json()).then((json) => {
-        // Return the joke
-        resolve(json);
-    }).catch((err) => {
+    }).then((res) => res.json()).then((json) => resolve(json)).catch((err) => {
         // Log and reject the error
         console.error(err);
         reject(err);
@@ -192,7 +189,7 @@ exports.getDadjoke = () => new Promise((resolve, reject) => {
  *
  * @returns {number}
  */
-exports.parseTime = (string, returnUnit, opts) => {
+export const parseTime = (string, returnUnit, opts) => {
     const DEFAULT_OPTS = {
         hoursPerDay: 24,
         daysPerWeek: 7,
@@ -294,7 +291,7 @@ exports.parseTime = (string, returnUnit, opts) => {
  *      console.error(err);
  * })
  */
-exports.fetchSteamUserByID = (user) => new Promise((resolve, reject) => {
+export const fetchSteamUserByID = (user) => new Promise((resolve, reject) => {
     // Define the baseURL for fetching a user's profile
     const baseURL = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${config.apiKeys.steam}&steamids=${user}`;
 
@@ -332,14 +329,14 @@ exports.fetchSteamUserByID = (user) => new Promise((resolve, reject) => {
  *      console.error(err);
  * })
  */
-exports.fetchSteamUserByName = (user) => new Promise((resolve, reject) => {
+export const fetchSteamUserByName = (user) => new Promise((resolve, reject) => {
     // Define the baseURL for fetching a user's profile
     const baseURL = `https://steamcommunity.com/id/${user}?xml=1`;
 
     fetch(baseURL)
         .then((res) => res.text())
         .then((res) => JSON.parse(xml2json(res)))
-    // deepcode ignore PromiseNotCaughtNode: No cause for concern, deepcode ignore ObjectConstructor: No cause for concern
+        // deepcode ignore PromiseNotCaughtNode: No cause for concern, deepcode ignore ObjectConstructor: No cause for concern
         .then((json) => ({
             steamID: json.elements[0].elements[0].elements[0].text,
             avatar: {
@@ -364,7 +361,7 @@ exports.fetchSteamUserByName = (user) => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<String>} URL to the image
  */
-exports.fetchWaifuApi = (type) => new Promise((resolve, reject) => {
+export const fetchWaifuApi = (type) => new Promise((resolve, reject) => {
     // Define all the different available types
     const types = [
         'waifu',
@@ -434,7 +431,7 @@ exports.fetchWaifuApi = (type) => new Promise((resolve, reject) => {
  *      console.error(data);
  * })
  */
-exports.getMinecraftStatus = (ip, port) => new Promise((resolve, reject) => {
+export const getMinecraftStatus = (ip, port) => new Promise((resolve, reject) => {
     // If no IP was specified return an error
     if (!ip) reject(new Error('Missing Arguments'));
 
@@ -466,14 +463,14 @@ exports.getMinecraftStatus = (ip, port) => new Promise((resolve, reject) => {
  *
  * @returns {Array} Array with giveaway winners
  */
-exports.drawGiveawayWinners = (entries, winners) => entries.sort(() => 0.5 - Math.random()).slice(0, winners);
+export const drawGiveawayWinners = (entries, winners) => { entries.sort(() => 0.5 - Math.random()).slice(0, winners); };
 
 /**
  * Get the current Discord status
  *
  * @returns {Promise.<Object>} Discord Status API Data
  */
-exports.getDiscordStatus = () => new Promise((resolve, reject) => {
+export const getDiscordStatus = () => new Promise((resolve, reject) => {
     // Specify the API URL
     const URL = 'https://discordstatus.com/api/v2/summary.json';
 
@@ -498,7 +495,7 @@ exports.getDiscordStatus = () => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<Buffer>} emote
  */
-exports.fetchEmote = (url) => new Promise((resolve, reject) => {
+export const fetchEmote = (url) => new Promise((resolve, reject) => {
     // Create the proxyAgent
     const proxyAgent = new HttpsProxyAgent(config.general.proxyUrl);
 
@@ -529,7 +526,7 @@ exports.fetchEmote = (url) => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<Object>} Last.fm user
  */
-exports.getLastFMUser = async (user) => new Promise((resolve, reject) => {
+export const getLastFMUser = (user) => new Promise((resolve, reject) => {
     // Define the LastFM API URL
     const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${user}&api_key=${config.apiKeys.lastfm}&format=json`;
 
@@ -559,7 +556,7 @@ exports.getLastFMUser = async (user) => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<Object>} Last.fm user play history
  */
-exports.getLastFMUserHistory = async (user) => new Promise((resolve, reject) => {
+export const getLastFMUserHistory = (user) => new Promise((resolve, reject) => {
     const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${user}&api_key=${config.apiKeys.lastfm}&format=json`;
 
     const data = fetch(URL).then((res) => res.json());
@@ -581,10 +578,8 @@ exports.getLastFMUserHistory = async (user) => new Promise((resolve, reject) => 
  *
  * @returns {String} The ordinal suffix for the supplied number
  */
-exports.getOrdinalSuffix = function getOrginalSuffix(num) {
-    // eslint-disable-next-line no-mixed-operators
-    return ['st', 'nd', 'rd'][((num + 90) % 100 - 10) % 10 - 1] || 'th';
-};
+// eslint-disable-next-line no-mixed-operators
+export const getOrdinalSuffix = (num) => ['st', 'nd', 'rd'][((num + 90) % 100 - 10) % 10 - 1] || 'th';
 
 /**
  * Get the reaction cooldown
@@ -595,7 +590,7 @@ exports.getOrdinalSuffix = function getOrginalSuffix(num) {
  *
  * @returns {Boolean} Returns false if the user isn't on cooldown otherwise returns true
  */
-exports.getReactCooldown = (bot, user, guild) => {
+export const getReactCooldown = (bot, user, guild) => {
     // Check if the user is a bot dev
     if (config.general.devs.includes(user.id)) return false;
 

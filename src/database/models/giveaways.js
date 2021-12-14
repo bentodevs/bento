@@ -1,6 +1,6 @@
-const { model, Schema } = require('mongoose');
+import mongoose from 'mongoose';
 
-module.exports = model('giveaways', new Schema({
+const giveaways = mongoose.model('giveaways', new mongoose.Schema({
     id: Number, // The Giveaway ID
     guild: {
         guild_id: String, // The Guild ID
@@ -18,3 +18,5 @@ module.exports = model('giveaways', new Schema({
     },
     active: Boolean, // Wether the giveaway is active or not
 }));
+
+export default giveaways;

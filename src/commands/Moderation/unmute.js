@@ -1,9 +1,9 @@
-const mutes = require('../../database/models/mutes');
-const { punishmentLog } = require('../../modules/functions/moderation');
-const { getMember } = require('../../modules/functions/getters');
-const punishments = require('../../database/models/punishments');
+import mutes from '../../database/models/mutes.js';
+import { punishmentLog } from '../../modules/functions/moderation.js';
+import { getMember } from '../../modules/functions/getters.js';
+import punishments from '../../database/models/punishments.js';
 
-module.exports = {
+export default {
     info: {
         name: 'unmute',
         aliases: [],
@@ -75,7 +75,7 @@ module.exports = {
             });
 
             // Send punishment log message
-            punishmentLog(message, member, action, reason, 'unmute');
+            punishmentLog(bot, message, member, action, reason, 'unmute');
             // Send the user a confirmation message
             member.send(`🔈 You have been unmuted in **${message.guild.name}**`).catch(() => { });
             // Send the public log message
@@ -103,7 +103,7 @@ module.exports = {
             });
 
             // Send punishment log message
-            punishmentLog(message, member, action, reason, 'unmute');
+            punishmentLog(bot, message, member, action, reason, 'unmute');
             // Send the public log message
             if (publicLog) publicLog.send(`🔉 **${member.user.tag}** has been unmuted for **${reason}**`);
             // Send the user a confirmation message
@@ -148,7 +148,7 @@ module.exports = {
             });
 
             // Send punishment log message
-            punishmentLog(interaction, user.member, action, reason, 'unmute');
+            punishmentLog(bot, interaction, user.member, action, reason, 'unmute');
             // Send the user a confirmation message
             user.member.send(`🔈 You have been unmuted in **${interaction.guild.name}**`).catch(() => { });
             // Send the public log message
@@ -176,7 +176,7 @@ module.exports = {
             });
 
             // Send punishment log message
-            punishmentLog(interaction, user.member, action, reason, 'unmute');
+            punishmentLog(bot, interaction, user.member, action, reason, 'unmute');
 
             // Send the user a confirmation message
             user.member.send(`🔈 You have been unmuted in **${interaction.guild.name}**`).catch(() => { });

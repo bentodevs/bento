@@ -1,7 +1,7 @@
-const { MessageEmbed } = require('discord.js');
-const { getMeme } = require('../../modules/functions/misc');
+import { MessageEmbed } from 'discord.js';
+import { getMeme } from '../../modules/functions/misc.js';
 
-module.exports = {
+export default {
     info: {
         name: 'meme',
         aliases: [

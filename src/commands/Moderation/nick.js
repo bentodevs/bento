@@ -1,8 +1,8 @@
-const { Permissions } = require('discord.js');
-const { getMember } = require('../../modules/functions/getters');
-const { checkPerms } = require('../../modules/functions/permissions');
+import { Permissions } from 'discord.js';
+import { getMember } from '../../modules/functions/getters.js';
+import { checkPerms } from '../../modules/functions/permissions.js';
 
-module.exports = {
+export default {
     info: {
         name: 'nick',
         aliases: [

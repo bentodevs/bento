@@ -1,7 +1,7 @@
-const { model, Schema } = require('mongoose');
-const config = require('../../config');
+import mongoose from 'mongoose';
+import config from '../../config.js';
 
-module.exports = model('settings', new Schema({
+const settings = mongoose.model('settings', new mongoose.Schema({
     _id: String, // Discord Guild ID
     general: {
         type: Object,
@@ -103,3 +103,5 @@ module.exports = model('settings', new Schema({
         },
     },
 }));
+
+export default settings;

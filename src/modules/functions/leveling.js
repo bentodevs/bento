@@ -1,15 +1,15 @@
-const Canvas = require('canvas');
-const { getColorFromURL } = require('color-thief-node');
-const { MessageAttachment } = require('discord.js');
-const users = require('../../database/models/users');
-const config = require('../../config');
+import Canvas from 'canvas';
+import { getColorFromURL } from 'color-thief-node';
+import { MessageAttachment } from 'discord.js';
+import users from '../../database/models/users.js';
+import config from '../../config.js';
 
 /**
  * Check the users level
  *
  * @param {Message} message
  */
-exports.checkLevel = async (message) => {
+export const checkLevel = async (message) => {
     // Try to find the user in the database
     let user = await users.findOne({ _id: message.author.id });
 
@@ -67,7 +67,7 @@ exports.checkLevel = async (message) => {
             // Send the level up message
             message.reply(`${config.emojis.level_up} ${message.author} just reached level **${stats.level + 1}**!`).then((msg) => {
                 setTimeout(() => {
-                    msg.delete().catch(() => {});
+                    msg.delete().catch(() => { });
                 }, 30000);
             });
         }
@@ -102,7 +102,7 @@ exports.checkLevel = async (message) => {
  *
  * @returns {Array} Array with all the guild data
  */
-exports.getGuildMemberData = async (guild) => {
+export const getGuildMemberData = async (guild) => {
     const data = await users.aggregate([
         {
             $match: {
@@ -133,6 +133,80 @@ exports.getGuildMemberData = async (guild) => {
 };
 
 /**
+ * Get the font size for the username and xp count
+ *
+ * @param {Canvas} canvas
+ * @param {String} text
+ * @param {String} font
+ * @param {Number} maxWidth
+ *
+ * @returns {Number} The font size
+ */
+export const getFontSize = (canvas, text, font, maxWidth) => {
+    // Get the canvas context
+    const context = canvas.getContext('2d');
+
+    // Declare a base size of the font
+    let fontSize = 40;
+
+    do {
+        // Assign the font to the context and decrement it so it can be measured again
+        context.font = `${fontSize -= 10}px ${font}`;
+        // Compare pixel width of the text to the canvas minus the approximate avatar size
+    } while (context.measureText(text).width > maxWidth);
+
+    // Return the result to use in the actual canvas
+    return fontSize;
+};
+
+/**
+ * Convert RGB to Hex
+ *
+ * @param {Array} array
+ *
+ * @returns {String} Hex Color
+ */
+export const rgbToHex = (array) => {
+    const componentToHex = (a) => {
+        const hex = a.toString(16);
+        return hex.length === 1 ? `0${hex}` : hex;
+    };
+
+    return `#${componentToHex(array[0])}${componentToHex(array[1])}${componentToHex(array[2])}`;
+};
+
+/**
+ * Brighten or darken a hex color by a certain percentage
+ *
+ * @param {String} color
+ * @param {String} percent
+ *
+ * @returns {String} color
+ */
+export const shadeColor = (color, percent) => {
+    let R = parseInt(color.substring(1, 3), 16);
+    let G = parseInt(color.substring(3, 5), 16);
+    let B = parseInt(color.substring(5, 7), 16);
+
+    // eslint-disable-next-line no-mixed-operators
+    R = parseInt(R * (100 + percent) / 100, 10);
+    // eslint-disable-next-line no-mixed-operators
+    G = parseInt(G * (100 + percent) / 100, 10);
+    // eslint-disable-next-line no-mixed-operators
+    B = parseInt(B * (100 + percent) / 100, 10);
+
+    R = (R < 255) ? R : 255;
+    G = (G < 255) ? G : 255;
+    B = (B < 255) ? B : 255;
+
+    const RR = ((R.toString(16).length === 1) ? `0${R.toString(16)}` : R.toString(16));
+    const GG = ((G.toString(16).length === 1) ? `0${G.toString(16)}` : G.toString(16));
+    const BB = ((B.toString(16).length === 1) ? `0${B.toString(16)}` : B.toString(16));
+
+    return `#${RR}${GG}${BB}`;
+};
+
+/**
  * Get the users rank card
  *
  * @param {Object} user
@@ -141,12 +215,15 @@ exports.getGuildMemberData = async (guild) => {
  *
  * @returns {Promise.<MessageAttachment>} The users rank card
  */
-exports.getRankCard = async (user, data, guild) => {
+export const getRankCard = async (user, data, guild, apiUser) => {
     // Create the canvas, get the context and load the images in
     const canvas = Canvas.createCanvas(700, 250);
     const ctx = canvas.getContext('2d');
-    const avatar = await Canvas.loadImage(user.user.displayAvatarURL({ format: 'png', dynamic: true }));
+    const avatar = await Canvas.loadImage(user.user.displayAvatarURL({ format: 'png' }));
     const blur = await Canvas.loadImage('https://i.imgur.com/E0We0O9.png');
+    let backgroundImage;
+
+    if (apiUser.banner) backgroundImage = await Canvas.loadImage(apiUser.bannerURL({ format: 'png', size: 1024 }));
 
     // Get the XP data
     const xp = (data.leveling.xp - Math.floor(20 * ((data.leveling.level - 1) ** 2) + (100 * (data.leveling.level - 1)) + 100)) + (data.leveling.level === 1 ? 100 : 0);
@@ -154,13 +231,13 @@ exports.getRankCard = async (user, data, guild) => {
     const percentage = Math.round(Math.floor((xp / xpNeeded) * 100));
 
     // Get the users rank
-    const gData = await this.getGuildMemberData(guild);
+    const gData = await getGuildMemberData(guild);
     const sorted = gData.sort((a, b) => b.guilds[0].leveling.xp - a.guilds[0].leveling.xp);
     // eslint-disable-next-line no-underscore-dangle
     const rank = sorted.map((a) => a._id).indexOf(user.id) + 1;
 
     // Get the dominant color from the users avatar
-    const color = await getColorFromURL(user.user.displayAvatarURL({ format: 'png', dynamic: true }));
+    const color = await getColorFromURL(user.user.displayAvatarURL({ format: 'png' }));
     // Define the status colors
     const colors = {
         online: '#3BA55D',
@@ -170,8 +247,8 @@ exports.getRankCard = async (user, data, guild) => {
     };
 
     // Draw the background
-    ctx.fillStyle = this.rgbToHex(color);
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    if (apiUser.banner) { ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height); } else { ctx.fillStyle = rgbToHex(color); }
+    if (!apiUser.banner) ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Add blur
     ctx.drawImage(blur, 0, 0, canvas.width, canvas.height);
@@ -214,7 +291,7 @@ exports.getRankCard = async (user, data, guild) => {
     // Fill the progress bar with the current percentage
     for (let i = 0; i < percentage; i += 1) {
         ctx.beginPath();
-        ctx.fillStyle = this.rgbToHex(color);
+        ctx.fillStyle = rgbToHex(color);
         ctx.arc(250 + (i * 3.95), 178, 8, 0, Math.PI * 2, true);
         ctx.fill();
         ctx.closePath();
@@ -225,7 +302,7 @@ exports.getRankCard = async (user, data, guild) => {
     if (user.user.username.length > 18) user.user.username = user.user.username.slice(0, 18);
 
     // Get the font size
-    const fontSize = this.getFontSize(canvas, user.user.username, 'Whitney Semibold', 200);
+    const fontSize = getFontSize(canvas, user.user.username, 'Whitney Semibold', 200);
 
     // Draw the username
     ctx.font = `${fontSize}px Whitney Semibold`;
@@ -248,7 +325,7 @@ exports.getRankCard = async (user, data, guild) => {
 
     // Draw the users level
     ctx.font = '40px Whitney Semibold';
-    ctx.fillStyle = this.rgbToHex(color);
+    ctx.fillStyle = 'white';
     ctx.fillText(data.leveling.level, 675, 50);
 
     // Get the width of the level
@@ -256,7 +333,7 @@ exports.getRankCard = async (user, data, guild) => {
 
     // Draw the level text
     ctx.font = '20px Whitney Semibold';
-    ctx.fillStyle = this.shadeColor(this.rgbToHex(color), -5);
+    ctx.fillStyle = '#e5e5e5';
     ctx.fillText('LEVEL', 670 - levelWidth, 50);
 
     // Get the width of the level text
@@ -277,78 +354,4 @@ exports.getRankCard = async (user, data, guild) => {
 
     // Create & return the attachment
     return new MessageAttachment(canvas.toBuffer(), 'rank-card.png');
-};
-
-/**
- * Get the font size for the username and xp count
- *
- * @param {Canvas} canvas
- * @param {String} text
- * @param {String} font
- * @param {Number} maxWidth
- *
- * @returns {Number} The font size
- */
-exports.getFontSize = (canvas, text, font, maxWidth) => {
-    // Get the canvas context
-    const context = canvas.getContext('2d');
-
-    // Declare a base size of the font
-    let fontSize = 40;
-
-    do {
-        // Assign the font to the context and decrement it so it can be measured again
-        context.font = `${fontSize -= 10}px ${font}`;
-        // Compare pixel width of the text to the canvas minus the approximate avatar size
-    } while (context.measureText(text).width > maxWidth);
-
-    // Return the result to use in the actual canvas
-    return fontSize;
-};
-
-/**
- * Convert RGB to Hex
- *
- * @param {Array} array
- *
- * @returns {String} Hex Color
- */
-exports.rgbToHex = (array) => {
-    const componentToHex = (a) => {
-        const hex = a.toString(16);
-        return hex.length === 1 ? `0${hex}` : hex;
-    };
-
-    return `#${componentToHex(array[0])}${componentToHex(array[1])}${componentToHex(array[2])}`;
-};
-
-/**
- * Brighten or darken a hex color by a certain percentage
- *
- * @param {String} color
- * @param {String} percent
- *
- * @returns {String} color
- */
-exports.shadeColor = (color, percent) => {
-    let R = parseInt(color.substring(1, 3), 16);
-    let G = parseInt(color.substring(3, 5), 16);
-    let B = parseInt(color.substring(5, 7), 16);
-
-    // eslint-disable-next-line no-mixed-operators
-    R = parseInt(R * (100 + percent) / 100, 10);
-    // eslint-disable-next-line no-mixed-operators
-    G = parseInt(G * (100 + percent) / 100, 10);
-    // eslint-disable-next-line no-mixed-operators
-    B = parseInt(B * (100 + percent) / 100, 10);
-
-    R = (R < 255) ? R : 255;
-    G = (G < 255) ? G : 255;
-    B = (B < 255) ? B : 255;
-
-    const RR = ((R.toString(16).length === 1) ? `0${R.toString(16)}` : R.toString(16));
-    const GG = ((G.toString(16).length === 1) ? `0${G.toString(16)}` : G.toString(16));
-    const BB = ((B.toString(16).length === 1) ? `0${B.toString(16)}` : B.toString(16));
-
-    return `#${RR}${GG}${BB}`;
 };

@@ -1,8 +1,8 @@
-const users = require('../../database/models/users');
-const { getMember } = require('../../modules/functions/getters');
-const { getRankCard } = require('../../modules/functions/leveling');
+import users from '../../database/models/users.js';
+import { getMember } from '../../modules/functions/getters.js';
+import { getRankCard } from '../../modules/functions/leveling.js';
 
-module.exports = {
+export default {
     info: {
         name: 'level',
         aliases: [
@@ -44,25 +44,23 @@ module.exports = {
 
     run: async (bot, message, args) => {
         const user = await getMember(message, args.join(' '), true);
+        const apiUser = await bot.users.fetch(user.id, { force: true });
 
         if (!user) return message.errorReply("You didn't specify a valid member!");
-
-        console.log(user.id);
 
         const data = await users.findOne({ _id: user.id, 'guilds.id': message.guild.id });
         const gData = data?.guilds.find((g) => g.id === message.guild.id);
 
-        console.log(gData.leveling);
-
         if (!data) return message.errorReply("I couldn't find any data for the member you specified!");
 
-        const xd = await getRankCard(user, gData, message.guild.id);
+        const xd = await getRankCard(user, gData, message.guild.id, apiUser);
 
         message.reply({ files: [xd] });
     },
 
     run_interaction: async (bot, interaction) => {
         const user = interaction.options?.get('user')?.member ?? interaction.member;
+        const apiUser = await bot.users.fetch(user.id, { force: true });
 
         if (!user) return interaction.error("You didn't specify a valid member!");
 
@@ -71,7 +69,7 @@ module.exports = {
 
         if (!data) return interaction.error("I couldn't find any data for the member you specified!");
 
-        const xd = await getRankCard(user, gData, interaction.guild.id);
+        const xd = await getRankCard(user, gData, interaction.guild.id, apiUser);
 
         interaction.reply({ files: [xd] });
     },

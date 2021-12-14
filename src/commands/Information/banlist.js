@@ -1,6 +1,6 @@
-const { MessageEmbed } = require('discord.js');
+import { MessageEmbed } from 'discord.js';
 
-module.exports = {
+export default {
     info: {
         name: 'banlist',
         aliases: [
@@ -98,8 +98,6 @@ module.exports = {
 
         // Format the data
         const description = pages[page].map((b) => `\`${b.user.username}#${b.user.discriminator}\` | **ID:** ${b.user.id}`);
-
-        console.log(description);
 
         // Build the embed
         const embed = new MessageEmbed()

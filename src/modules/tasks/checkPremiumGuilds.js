@@ -1,11 +1,11 @@
-const premiumGuild = require('../../database/models/premiumGuild');
+import premiumGuild from '../../database/models/premiumGuild.js';
 
 /**
  * Initialize the checkPremiumGuilds task
  *
  * @param {Object} bot
  */
-exports.init = async (bot) => {
+export default async function init(bot) {
     /**
      * Fetch all premium servers in the DB and action if the subscription has expired
      *
@@ -42,4 +42,4 @@ exports.init = async (bot) => {
 
     // Return the interval info
     return interval;
-};
+}

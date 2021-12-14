@@ -1,10 +1,12 @@
-const { stripIndents } = require('common-tags');
-const { parseISO } = require('date-fns');
-const { format, utcToZonedTime } = require('date-fns-tz');
-const { MessageEmbed } = require('discord.js');
-const { getDiscordStatus } = require('../../modules/functions/misc');
+import { stripIndents } from 'common-tags';
+import { parseISO, format } from 'date-fns';
+import dateFnsTz from 'date-fns-tz';
+import { MessageEmbed } from 'discord.js';
+import { getDiscordStatus } from '../../modules/functions/misc.js';
 
-module.exports = {
+const { utcToZonedTime } = dateFnsTz;
+
+export default {
     info: {
         name: 'discordstatus',
         aliases: [

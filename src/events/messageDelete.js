@@ -1,9 +1,9 @@
-const { stripIndents } = require('common-tags');
-const { MessageEmbed } = require('discord.js');
-const settings = require('../database/models/settings');
-const { getChannel } = require('../modules/functions/getters');
+import { stripIndents } from 'common-tags';
+import { MessageEmbed } from 'discord.js';
+import settings from '../database/models/settings.js';
+import { getChannel } from '../modules/functions/getters.js';
 
-module.exports = async (bot, message) => {
+export default async (bot, message) => {
     // If the message is partial try to fetch it before its fully deleted on discords side
     if (message.partial) {
         try {
@@ -55,8 +55,6 @@ module.exports = async (bot, message) => {
 
         // Get the log channel
         const channel = await getChannel(message, msgSettings.logs.deleted, false);
-
-        console.log(message.attachments);
 
         const embed = new MessageEmbed()
             .setAuthor(`Message by ${message.author.tag} deleted in #${message.channel.name}`, message.author.displayAvatarURL({ format: 'png', dynamic: true }))

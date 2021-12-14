@@ -1,8 +1,8 @@
-const { stripIndents } = require('common-tags');
-const settings = require('../../database/models/settings');
-const { getChannel } = require('../../modules/functions/getters');
+import { stripIndents } from 'common-tags';
+import settings from '../../database/models/settings.js';
+import { getChannel } from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'welcome',
         aliases: [],

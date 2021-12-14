@@ -1,9 +1,9 @@
-const { intervalToDuration, formatDuration } = require('date-fns');
-const settings = require('../database/models/settings');
-const { getSettings } = require('../database/mongo');
-const { getOrdinalSuffix } = require('../modules/functions/misc');
+import { intervalToDuration, formatDuration } from 'date-fns';
+import settings from '../database/models/settings.js';
+import { getSettings } from '../database/mongo.js';
+import { getOrdinalSuffix } from '../modules/functions/misc.js';
 
-module.exports = async (bot, member) => {
+export default async (bot, member) => {
     // If the member is a partial fetch it
     if (member.partial) {
         try {

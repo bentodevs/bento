@@ -1,8 +1,8 @@
-const { stripIndents } = require('common-tags');
-const { MessageEmbed } = require('discord.js');
-const settings = require('../database/models/settings');
+import { stripIndents } from 'common-tags';
+import { MessageEmbed } from 'discord.js';
+import settings from '../database/models/settings.js';
 
-module.exports = async (bot, oldMember, newMember) => {
+export default async (bot, oldMember, newMember) => {
     // Fetch full user if partial
     // If the member is a partial fetch it
     if (newMember.partial) {

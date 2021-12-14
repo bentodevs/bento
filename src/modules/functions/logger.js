@@ -1,7 +1,7 @@
-const chalk = require('chalk');
-const { format } = require('date-fns');
+import chalk from 'chalk';
+import { format } from 'date-fns';
 
-exports.log = (content, type = 'log') => {
+export function log(content, type = 'log') {
     const timestamp = `[${format(Date.now(), 'yyyy/MM/dd HH:mm:ss')}]:`;
     switch (type) {
     case 'log': {
@@ -24,10 +24,10 @@ exports.log = (content, type = 'log') => {
     }
     default: throw new TypeError('Logger type must be either warn, debug, log, ready or cmd');
     }
-};
+}
 
-exports.warn = (...args) => this.log(...args, 'warn');
-exports.error = (...args) => this.log(...args, 'error');
-exports.debug = (...args) => this.log(...args, 'debug');
-exports.cmd = (...args) => this.log(...args, 'cmd');
-exports.ready = (...args) => this.log(...args, 'ready');
+export function warn(...args) { this.log(...args, 'warn'); }
+export function error(...args) { this.log(...args, 'error'); }
+export function debug(...args) { this.log(...args, 'debug'); }
+export function cmd(...args) { this.log(...args, 'cmd'); }
+export function ready(...args) { this.log(...args, 'ready'); }

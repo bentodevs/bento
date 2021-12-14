@@ -1,8 +1,8 @@
-const { MessageEmbed } = require('discord.js');
-const { getMember } = require('../../modules/functions/getters');
-const { fetchWaifuApi } = require('../../modules/functions/misc');
+import { MessageEmbed } from 'discord.js';
+import { getMember } from '../../modules/functions/getters.js';
+import { fetchWaifuApi } from '../../modules/functions/misc.js';
 
-module.exports = {
+export default {
     info: {
         name: 'kiss',
         aliases: [],

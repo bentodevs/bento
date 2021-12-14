@@ -1,6 +1,6 @@
 // Import Dependencies
-const { Collection } = require('discord.js');
-const { readdirSync } = require('fs');
+import { Collection } from 'discord.js';
+import { readdirSync } from 'fs';
 
 /**
  * Start the command handler and load all the commands.
@@ -9,7 +9,7 @@ const { readdirSync } = require('fs');
  *
  * @returns {Promise<Number>} The amount of commands loaded
  */
-exports.init = (bot) => new Promise((resolve) => {
+export const init = (bot) => new Promise((resolve) => {
     // Create command and alias collections
     // eslint-disable-next-line no-param-reassign
     bot.commands = new Collection();
@@ -26,31 +26,30 @@ exports.init = (bot) => new Promise((resolve) => {
 
         // Loop through the commands
         for (const file of commands) {
-            try {
-                // Get the command file
-                // eslint-disable-next-line import/no-dynamic-require, global-require
-                const props = require(`../../commands/${category}/${file}`);
-                // Set the command path
-                props.path = `../../commands/${category}/${file}`;
-                // Add the command to the collection
-                bot.commands.set(props.info.name, props);
+            // Import the command
+            import(`../../commands/${category}/${file}`).then((cmd) => {
+                // Clone the command object to a new object
+                const obj = Object.create(cmd.default);
 
-                // Loop through the aliases and add them to the alias collection
-                if (props.info.aliases) {
-                    props.info.aliases.forEach((alias) => {
-                        bot.aliases.set(alias, props.info.name);
+                // Set the command path
+                obj.path = `../../commands/${category}/${file}`;
+                // Register the command
+                bot.commands.set(cmd.default.info.name, obj);
+
+                if (cmd.default.info.aliases) {
+                    cmd.default.info.aliases.forEach((alias) => {
+                        bot.aliases.set(alias, cmd.default.info.name);
                     });
                 }
-            } catch (err) {
-                // Log the error in case loading a command fails
+            }).catch((err) => {
                 bot.logger.error(`Failed to load ${file}`);
                 bot.logger.error(err.stack);
-            }
+            });
         }
     }
 
     // Resolve the amount of commands that were added
-    resolve(bot.commands.size);
+    resolve();
 });
 
 /**
@@ -61,34 +60,39 @@ exports.init = (bot) => new Promise((resolve) => {
  *
  * @returns {Promise<Boolean>} Returns true if the command was reloaded correctly.
  */
-exports.reload = (bot, command) => new Promise((resolve, reject) => {
+export const reload = (bot, command) => new Promise((resolve, reject) => {
     // Grab the file path
     const { path } = command;
 
-    try {
-        // Delete the command from cache
-        delete require.cache[require.resolve(path)];
-        // Delete the command from the collection
-        bot.commands.delete(command.info.name);
+    // Delete the command from cache
+    bot.commands.delete(command.info.name);
 
-        // Grab the file
-        // eslint-disable-next-line import/no-dynamic-require, global-require
-        const file = require(path);
-
-        // Set the file path
-        file.path = path;
-        // Se the collection data
-        bot.commands.set(command.info.name, file);
-
-        // Resolve
-        resolve(true);
-        return;
-    } catch (err) {
-        // Log the error
-        bot.logger.error(err.stack);
-        // Reject with the error
-        reject(err);
+    // If there are any aliases delete them from the collection
+    if (command.info.aliases) {
+        command.info.aliases.forEach((alias) => {
+            bot.aliases.delete(alias, command.info.name);
+        });
     }
+
+    import(path).then((cmd) => {
+        // Clone the command object to a new object
+        const obj = Object.create(cmd.default);
+
+        // Set the command path
+        obj.path = path;
+        // Register the command
+        bot.commands.set(obj.info.name, obj);
+
+        // Resolve the command reload
+        return resolve(true);
+    }).catch((err) => {
+        // Log the error
+        bot.logger.error(`Failed to reload ${path}`);
+        bot.logger.error(err.stack);
+
+        // Reject the command reload
+        return reject(err);
+    });
 });
 
 /**
@@ -100,43 +104,43 @@ exports.reload = (bot, command) => new Promise((resolve, reject) => {
  *
  * @returns {Promise<Object>} Returns command data if the command loaded correctly
  */
-exports.load = (bot, category, command) => new Promise((resolve, reject) => {
+export const load = (bot, category, command) => new Promise((resolve, reject) => {
     // If no args were specified return an error
     if (!bot || !category || !command) reject(new Error('Missing Args'));
 
-    try {
-        // get the commands in the category
-        const commands = readdirSync(`./commands/${category}`);
+    // get the commands in the category
+    const commands = readdirSync(`./commands/${category}`);
 
-        // If the command isn't in the category return an error
-        if (!commands.includes(`${command.toLowerCase()}.js`)) throw new Error('Command not found');
+    // If the command isn't in the category return an error
+    if (!commands.includes(`${command.toLowerCase()}.js`)) throw new Error('Command not found');
 
-        // Import the command and set the command path
-        // eslint-disable-next-line import/no-dynamic-require, global-require
-        const props = require(`../../commands/${category}/${command.toLowerCase()}`);
-        props.path = `../../commands/${category}/${command.toLowerCase()}.js`;
+    // Import the command
+    import(`../../commands/${category}/${command.toLowerCase()}.js`).then((cmd) => {
+        // Clone the command object to a new object
+        const obj = Object.create(cmd.default);
 
-        // If the command is already loaded return an error
-        if (bot.commands.has(props.info.name)) throw new Error('Command is already loaded');
+        if (bot.commands.has(cmd.default.info.name)) throw new Error('Command already loaded');
 
-        // Add the command to the collection
-        bot.commands.set(props.info.name, props);
+        // Set the command path
+        obj.path = `../../commands/${category}/${command.toLowerCase()}.js`;
+        // Register the command
+        bot.commands.set(cmd.default.info.name, obj);
 
-        // If there are any aliases add them to the collection
-        if (props.info.aliases) {
-            props.info.aliases.forEach((alias) => {
-                bot.aliases.set(alias, props.info.name);
+        if (cmd.default.info.aliases?.length) {
+            cmd.default.info.aliases.forEach((alias) => {
+                bot.aliases.set(alias, cmd.default.info.name);
             });
         }
 
         // Resolve the command data
-        resolve(props);
-    } catch (err) {
-        // Log the error
+        resolve(cmd.default);
+    }).catch((err) => {
+        bot.logger.error(`Failed to load ${command.toLowerCase()}`);
         bot.logger.error(err.stack);
+
         // Reject with the error
         reject(err);
-    }
+    });
 });
 
 /**
@@ -147,13 +151,9 @@ exports.load = (bot, category, command) => new Promise((resolve, reject) => {
  *
  * @returns {Promise<Boolean>} Returns true if the command unloaded correctly
  */
-exports.unload = (bot, command) => new Promise((resolve, reject) => {
-    // Get the command path
-    const { path } = command;
-
+export const unload = (bot, command) => new Promise((resolve, reject) => {
     try {
         // Delete the command from cache
-        delete require.cache[require.resolve(path)];
         // Delete the command from the collection
         bot.commands.delete(command.info.name);
 
@@ -181,7 +181,7 @@ exports.unload = (bot, command) => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<Boolean>} Returns true if the commands registered successfully
  */
-exports.registerGlobal = (bot) => new Promise((resolve, reject) => {
+export const registerGlobal = (bot) => new Promise((resolve, reject) => {
     const arr = [];
     const commands = Array.from(bot.commands.values());// .filter(c => !c.opts.guildOnly);
 
@@ -219,7 +219,7 @@ exports.registerGlobal = (bot) => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<Boolean>} Returns true if the commands registered successfully
  */
-exports.registerGuild = (bot, guildId) => new Promise((resolve, reject) => {
+export const registerGuild = (bot, guildId) => new Promise((resolve, reject) => {
     const arr = [];
     const commands = Array.from(bot.commands.values()).filter((c) => c.opts.guildOnly);
 

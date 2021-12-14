@@ -1,7 +1,7 @@
-const { MessageEmbed, MessageAttachment } = require('discord.js');
-const { getMinecraftStatus } = require('../../modules/functions/misc');
+import { MessageEmbed, MessageAttachment } from 'discord.js';
+import { getMinecraftStatus } from '../../modules/functions/misc.js';
 
-module.exports = {
+export default {
     info: {
         name: 'mcstatus',
         aliases: [

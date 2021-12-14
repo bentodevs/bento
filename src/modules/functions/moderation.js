@@ -1,10 +1,9 @@
-const { stripIndents } = require('common-tags');
-const { MessageEmbed, Permissions } = require('discord.js');
-const config = require('../../config');
-const settings = require('../../database/models/settings');
-const { log } = require('./logger');
+import { stripIndents } from 'common-tags';
+import { MessageEmbed, Permissions } from 'discord.js';
+import config from '../../config.js';
+import settings from '../../database/models/settings.js';
 
-exports.punishmentLog = async (message, member, pID, reason, type, length) => {
+export const punishmentLog = (bot, message, member, pID, reason, type, length) => {
     // Fetch the default logger channel
     const modlog = message.guild.channels.cache.get(message.settings.logs.default);
 
@@ -84,12 +83,12 @@ exports.punishmentLog = async (message, member, pID, reason, type, length) => {
         // Send the completed embed
         modlog.send({ embeds: [embed] });
     } else {
-        return log.error(`Received invalid punishment type: ${type.toLowerCase()}`);
+        return bot.logger.error(`Received invalid punishment type: ${type.toLowerCase()}`);
     }
 };
 
 // eslint-disable-next-line no-shadow
-exports.checkMessage = async (message, settings) => {
+export const checkMessage = async (message, settings) => {
     if (settings.ignore?.hierarchicRoleId && message.guild.roles.cache.get(settings.ignore?.hierarchicRoleId).position <= message.member.roles.highest.position) return;
     if (settings.ignore?.channels.includes(message.channel.id) || settings.ignore?.roles.includes(message.member.roles.cache) || message.member.permissions.has('ADMINISTRATOR')) return;
 
@@ -97,8 +96,10 @@ exports.checkMessage = async (message, settings) => {
         // eslint-disable-next-line no-unsafe-optional-chaining
         for (const data of settings.moderation.filter?.entries) {
             if (message.content.toLowerCase().includes(data.toLowerCase())) {
-                message.delete().catch(() => { });
-                await message.reply('you are unable to say that here!').then((m) => setTimeout(() => m.delete().catch(() => {}), 5000));
+                message.delete()
+                    .then(() => message.reply(`You are unable to say that here, ${message.author}!`))
+                    .then((m) => setTimeout(() => m.delete().catch(() => { }), 7000))
+                    .catch(() => { });
             }
         }
     }
@@ -106,8 +107,10 @@ exports.checkMessage = async (message, settings) => {
     if (settings.moderation?.filter?.zalgo) {
         const zalgo = /[\xCC\xCD]/;
         if (zalgo.test(message.content)) {
-            message.delete().catch(() => { });
-            await message.reply('you are unable to use Zalgo text here!').then((m) => setTimeout(() => m.delete().catch(() => {}), 5000));
+            message.delete()
+                .then(() => message.reply(`You are unable to use Zalgo text here, ${message.author}!`))
+                .then((m) => setTimeout(() => m.delete().catch(() => { }), 7000))
+                .catch(() => { });
         }
     }
 
@@ -115,8 +118,10 @@ exports.checkMessage = async (message, settings) => {
         const invite = /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]/g;
 
         if (invite.test(message.content)) {
-            message.delete().catch(() => { });
-            await message.reply('you are unable to send invite links here!').then((m) => setTimeout(() => m.delete().catch(() => {}), 5000));
+            message.delete()
+                .then(() => message.channel.send(`You are unable to send invite links here, ${message.author}!`))
+                .then((m) => setTimeout(() => m.delete().catch(() => { }), 7000))
+                .catch(() => { });
         }
     }
 
@@ -124,8 +129,10 @@ exports.checkMessage = async (message, settings) => {
         const link = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)?/gi;
 
         if (link.test(message.content)) {
-            message.delete().catch(() => { });
-            await message.reply('you are unable to send URLs here!').then((m) => setTimeout(() => m.delete().catch(() => {}), 5000));
+            message.delete()
+                .then(() => message.channel.send(`You are unable to send links here, ${message.author}!`))
+                .then((m) => setTimeout(() => m.delete().catch(() => { }), 7000))
+                .catch(() => { });
         }
     }
 };
@@ -137,7 +144,7 @@ exports.checkMessage = async (message, settings) => {
  *
  * @returns {Promise.<Boolean>} True if blacklisted, false if not blacklisted.
  */
-exports.checkBlacklist = async (message) => {
+export const checkBlacklist = async (message) => {
     // Get the author (to support interactions)
     const author = message.author ?? message.user;
 

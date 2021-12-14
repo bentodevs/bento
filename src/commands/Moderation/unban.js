@@ -1,10 +1,10 @@
-const config = require('../../config');
-const preban = require('../../database/models/preban');
-const punishments = require('../../database/models/punishments');
-const { getUser } = require('../../modules/functions/getters');
-const { punishmentLog } = require('../../modules/functions/moderation');
+import config from '../../config.js';
+import preban from '../../database/models/preban.js';
+import punishments from '../../database/models/punishments.js';
+import { getUser } from '../../modules/functions/getters.js';
+import { punishmentLog } from '../../modules/functions/moderation.js';
 
-module.exports = {
+export default {
     info: {
         name: 'unban',
         aliases: [],
@@ -78,7 +78,7 @@ module.exports = {
             });
 
             // Log the unban
-            punishmentLog(message, user, null, reason, 'unban');
+            punishmentLog(bot, message, user, null, reason, 'unban');
             // Send public ban log message, if it exists
             if (message.guild.channels.cache.has(message.settings.logs.ban)) publicLog.send(`${config.emojis.bans} **${ban.user.username}#${ban.user.discriminator}** was unbanned for **${reason}**`);
         } else {
@@ -100,7 +100,7 @@ module.exports = {
             // Send a confirmation message
             message.confirmationReply(`Successfully unbanned **${user.tag}**! *(Case #${action})*`);
             // Log the unban
-            punishmentLog(message, user, null, reason, 'unban');
+            punishmentLog(bot, message, user, null, reason, 'unban');
             // Send public ban log message, if it exists
             if (message.guild.channels.cache.has(message.settings.logs.ban)) publicLog.send(`${config.emojis.bans} **${user.tag}** was unbanned for **${reason}**`);
         }
@@ -138,7 +138,7 @@ module.exports = {
             });
 
             // Log the unban
-            punishmentLog(interaction, user, null, reason, 'unban');
+            punishmentLog(bot, interaction, user, null, reason, 'unban');
             // Send public ban log message, if it exists
             if (interaction.guild.channels.cache.has(interaction.settings.logs.ban)) publicLog.send(`${config.emojis.unban} **${user.user.tag}** was unbanned for **${reason}**`);
         } else {
@@ -154,7 +154,7 @@ module.exports = {
             // Send a confirmation message
             interaction.confirmation(`Successfully unbanned **${user.user.tag}**! *(Case #${action})*`);
             // Log the unban
-            punishmentLog(interaction, user, null, reason, 'unban');
+            punishmentLog(bot, interaction, user, null, reason, 'unban');
             // Send public ban log message, if it exists
             if (interaction.guild.channels.cache.has(interaction.settings.logs.ban)) publicLog.send(`${config.emojis.unban} **${user.user.tag}** was unbanned for **${reason}**`);
         }

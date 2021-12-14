@@ -1,11 +1,10 @@
 /* eslint-disable no-nested-ternary */
-const { stripIndents } = require('common-tags');
-const { startOfToday, startOfWeek } = require('date-fns');
-const { utcToZonedTime } = require('date-fns-tz');
-const { MessageEmbed } = require('discord.js');
-const config = require('../../config');
+import { stripIndents } from 'common-tags';
+import { startOfToday, startOfWeek } from 'date-fns';
+import utcToZonedTime from 'date-fns-tz/utcToZonedTime/index.js';
+import { MessageEmbed } from 'discord.js';
 
-module.exports = {
+export default {
     info: {
         name: 'memberstats',
         aliases: ['mstats'],
@@ -71,10 +70,10 @@ module.exports = {
             .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setFooter(`ID: ${message.guild.id}`)
             .setTimestamp()
-            .setDescription(stripIndents`🧑‍🤝‍🧑 **${message.guild.memberCount.toLocaleString()}** members | **${message.guild.members.cache.filter((m) => m.presence?.status && m.presence.status !== 'offline').size.toLocaleString()}** ${config.emojis.online} Online
+            .setDescription(stripIndents`🧑‍🤝‍🧑 **${message.guild.memberCount.toLocaleString()}** members | **${message.guild.members.cache.filter((m) => m.presence?.status && m.presence.status !== 'offline').size.toLocaleString()}** ${bot.config.emojis.online} Online
             📅 **${joinedToday.size}** members gained today
             🗓️ **${joinedWeek.size}** members gained this week
-            ${config.emojis.bans} ${bans.size <= 0 ? '**0** bans' : `**${bans.size.toLocaleString()}**`} ${bans.size <= 0 ? '' : bans.size > 1 ? 'bans' : 'ban'} *(${banMessage})*`);
+            ${bot.config.emojis.bans} ${bans.size <= 0 ? '**0** bans' : `**${bans.size.toLocaleString()}**`} ${bans.size <= 0 ? '' : bans.size > 1 ? 'bans' : 'ban'} *(${banMessage})*`);
 
         // Send the embed
         message.reply({ embeds: [embed] });
@@ -118,10 +117,10 @@ module.exports = {
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
             .setFooter(`ID: ${interaction.guild.id}`)
             .setTimestamp()
-            .setDescription(stripIndents`🧑‍🤝‍🧑 **${interaction.guild.memberCount.toLocaleString()}** members | **${interaction.guild.members.cache.filter((m) => m.presence?.status && m.presence.status !== 'offline').size.toLocaleString()}** ${config.emojis.online} Online
+            .setDescription(stripIndents`🧑‍🤝‍🧑 **${interaction.guild.memberCount.toLocaleString()}** members | **${interaction.guild.members.cache.filter((m) => m.presence?.status && m.presence.status !== 'offline').size.toLocaleString()}** ${bot.config.emojis.online} Online
             📅 **${joinedToday.size}** members gained today
             🗓️ **${joinedWeek.size}** members gained this week
-            ${config.emojis.bans} ${bans.size <= 0 ? '**0** bans' : `**${bans.size.toLocaleString()}**`} ${bans.size <= 0 ? '' : bans.size > 1 ? 'bans' : 'ban'} *(${banMessage})*`);
+            ${bot.config.emojis.bans} ${bans.size <= 0 ? '**0** bans' : `**${bans.size.toLocaleString()}**`} ${bans.size <= 0 ? '' : bans.size > 1 ? 'bans' : 'ban'} *(${banMessage})*`);
 
         // Send the embed
         interaction.reply({ embeds: [embed] });

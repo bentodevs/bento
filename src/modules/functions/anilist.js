@@ -1,4 +1,4 @@
-const { default: fetch } = require('node-fetch');
+import fetch from 'node-fetch';
 
 const endpoint = 'https://graphql.anilist.co';
 
@@ -18,7 +18,7 @@ const endpoint = 'https://graphql.anilist.co';
  *      console.log(err);
  * })
  */
-exports.getMedia = (title, type) => new Promise((resolve, reject) => {
+export const getMedia = (title, type) => new Promise((resolve, reject) => {
     // Check if a type was specified otherwise set it to "ANIME"
     // eslint-disable-next-line no-param-reassign
     type = type || 'ANIME';
@@ -63,7 +63,7 @@ exports.getMedia = (title, type) => new Promise((resolve, reject) => {
     }).then((res) => res.json()).then((json) => {
         if (json.errors) return reject(new Error('Not Found!'));
 
-        resolve(json.data.Media);
+        return resolve(json.data.Media);
     }).catch((err) => {
         reject(err);
     });
@@ -84,7 +84,7 @@ exports.getMedia = (title, type) => new Promise((resolve, reject) => {
  *      console.log(err);
  * })
  */
-exports.getCharacter = (name) => new Promise((resolve, reject) => {
+export const getCharacter = (name) => new Promise((resolve, reject) => {
     if (!name) reject(new Error('Missing Args!'));
 
     const query = `query ($search: String) {
@@ -134,7 +134,7 @@ exports.getCharacter = (name) => new Promise((resolve, reject) => {
  *      console.log(err);
  * })
  */
-exports.getProfile = (username) => new Promise((resolve, reject) => {
+export const getProfile = (username) => new Promise((resolve, reject) => {
     if (!username) reject(new Error('Missing Args!'));
 
     const query = `query ($search: String) {

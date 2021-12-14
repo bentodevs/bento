@@ -1,9 +1,13 @@
-const { formatDistance, formatDuration, intervalToDuration } = require('date-fns');
-const { format, utcToZonedTime } = require('date-fns-tz');
-const { MessageEmbed } = require('discord.js');
-const { getChannel } = require('../../modules/functions/getters');
+import {
+    format, formatDistance, formatDuration, intervalToDuration,
+} from 'date-fns';
+import dateFnsTz from 'date-fns-tz';
+import { MessageEmbed } from 'discord.js';
+import { getChannel } from '../../modules/functions/getters.js';
 
-module.exports = {
+const { utcToZonedTime } = dateFnsTz;
+
+export default {
     info: {
         name: 'channelinfo',
         aliases: [
@@ -90,13 +94,13 @@ module.exports = {
         desc += `**Position:** ${channel.position}${channel.parent ? ' (in category)' : ''} | [Open Channel](https://discord.com/channels/${message.guild.id}/${channel.id})\n`;
 
         if (channel.children) desc += `**Channels:** ${Array.from(channel.children.values()).join(', ')}\n`;
-        if (channel.parentID) desc += `**Category:** ${message.guild.channels.cache.get(channel.parentID).name}\n`;
+        if (channel.parentId) desc += `**Category:** ${message.guild.channels.cache.get(channel.parentId).name}\n`;
         if (channel.bitrate) desc += `**Bitrate:** ${channel.bitrate}kbps\n`;
         if (channel.members && channel.type === 'GUILD_VOICE') desc += `**Users Connected:** ${channel.members ? channel.members.size : 0}\n`;
         if (channel.topic) desc += `**Topic:** ${channel.topic !== '' ? channel.topic : 'None'}\n`;
         if (channel.nsfw) desc += '**NSFW:** True\n';
-        if (channel.lastMessageID) lastMessage = await channel.messages.fetch(channel.lastMessageID).catch(() => { });
-        if (channel.lastMessageID && lastMessage) desc += `**Last Activity:** ${formatDistance(lastMessage.createdTimestamp, Date.now(), { addSuffix: true })}`;
+        if (channel.lastMessageId) lastMessage = await channel.messages.fetch(channel.lastMessageID).catch(() => { });
+        if (channel.lastMessageId && lastMessage) desc += `**Last Activity:** ${formatDistance(lastMessage.createdTimestamp, Date.now(), { addSuffix: true })}`;
         if (channel.rateLimitPerUser > 0) desc += `\n**Rate Limit:** ${formatDuration(intervalToDuration({ start: 0, end: channel.rateLimitPerUser * 1000 }), { delimiter: ', ' })}`;
 
         // Build the embed
@@ -156,13 +160,13 @@ module.exports = {
         desc += `**Position:** ${channel.position}${channel.parent ? ' (in category)' : ''} | [Open Channel](https://discord.com/channels/${interaction.guild.id}/${channel.id})\n`;
 
         if (channel.children) desc += `**Channels:** ${Array.from(channel.children.values()).join(', ')}\n`;
-        if (channel.parentID) desc += `**Category:** ${interaction.guild.channels.cache.get(channel.parentID).name}\n`;
+        if (channel.parentId) desc += `**Category:** ${interaction.guild.channels.cache.get(channel.parentID).name}\n`;
         if (channel.bitrate) desc += `**Bitrate:** ${channel.bitrate}kbps\n`;
         if (channel.members && channel.type === 'voice') desc += `**Users Connected:** ${channel.members ? channel.members.size : 0}\n`;
         if (channel.topic) desc += `**Topic:** ${channel.topic !== '' ? channel.topic : 'None'}\n`;
         if (channel.nsfw) desc += '**NSFW:** True\n';
-        if (channel.lastMessageID) lastMessage = await channel.messages.fetch(channel.lastMessageID).catch(() => { });
-        if (channel.lastMessageID && lastMessage) desc += `**Last Activity:** ${formatDistance(lastMessage.createdTimestamp, Date.now(), { addSuffix: true })}`;
+        if (channel.lastMessageId) lastMessage = await channel.messages.fetch(channel.lastMessageID).catch(() => { });
+        if (channel.lastMessageId && lastMessage) desc += `**Last Activity:** ${formatDistance(lastMessage.createdTimestamp, Date.now(), { addSuffix: true })}`;
         if (channel.rateLimitPerUser > 0) desc += `\n**Rate Limit:** ${formatDuration(intervalToDuration({ start: 0, end: channel.rateLimitPerUser * 1000 }), { delimiter: ', ' })}`;
 
         // Build the embed

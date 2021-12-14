@@ -1,7 +1,7 @@
-const { format, formatDistance } = require('date-fns');
-const { MessageEmbed } = require('discord.js');
+import { format, formatDistance } from 'date-fns';
+import { MessageEmbed } from 'discord.js';
 
-module.exports = {
+export default {
     info: {
         name: 'boosters',
         aliases: [],

@@ -1,7 +1,7 @@
-const { stripIndents } = require('common-tags');
-const { MessageEmbed } = require('discord.js');
+import { stripIndents } from 'common-tags';
+import { MessageEmbed } from 'discord.js';
 
-module.exports = {
+export default {
     info: {
         name: 'pokemon',
         aliases: [

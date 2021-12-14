@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     info: {
         name: 'createsticker',
         aliases: ['sticker', 'cs'],

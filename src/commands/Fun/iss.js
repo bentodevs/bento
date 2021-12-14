@@ -1,8 +1,8 @@
-const { stripIndents } = require('common-tags');
-const { MessageEmbed } = require('discord.js');
-const { default: fetch } = require('node-fetch');
+import { stripIndents } from 'common-tags';
+import { MessageEmbed } from 'discord.js';
+import fetch from 'node-fetch';
 
-module.exports = {
+export default {
     info: {
         name: 'iss',
         aliases: ['spacestation'],

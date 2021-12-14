@@ -1,9 +1,9 @@
-const { Permissions, MessageActionRow, MessageButton } = require('discord.js');
-const permissions = require('../../database/models/permissions');
-const { getRole } = require('../../modules/functions/getters');
-const { filterSelfPerms } = require('../../modules/functions/permissions');
+import { Permissions, MessageActionRow, MessageButton } from 'discord.js';
+import permissions from '../../database/models/permissions.js';
+import { getRole } from '../../modules/functions/getters.js';
+import { filterSelfPerms } from '../../modules/functions/permissions.js';
 
-module.exports = {
+export default {
     info: {
         name: 'perms',
         aliases: [

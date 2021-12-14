@@ -1,8 +1,8 @@
-const { formatDistanceToNowStrict } = require('date-fns');
-const premiumGuild = require('../../database/models/premiumGuild');
-const { parseTime } = require('../../modules/functions/misc');
+import { formatDistanceToNowStrict } from 'date-fns';
+import premiumGuild from '../../database/models/premiumGuild.js';
+import { parseTime } from '../../modules/functions/misc.js';
 
-module.exports = {
+export default {
     info: {
         name: 'givepremium',
         aliases: ['givepro', 'obamacare'],

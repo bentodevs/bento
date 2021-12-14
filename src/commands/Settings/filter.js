@@ -1,7 +1,7 @@
-const { MessageEmbed } = require('discord.js');
-const settings = require('../../database/models/settings');
+import { MessageEmbed } from 'discord.js';
+import settings from '../../database/models/settings.js';
 
-module.exports = {
+export default {
     info: {
         name: 'filter',
         aliases: [],

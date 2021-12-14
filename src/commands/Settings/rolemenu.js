@@ -1,8 +1,8 @@
-const { MessageEmbed } = require('discord.js');
-const reactroles = require('../../database/models/reactroles');
-const { getChannel, getRole, getEmoji } = require('../../modules/functions/getters');
+import { MessageEmbed } from 'discord.js';
+import reactroles from '../../database/models/reactroles.js';
+import { getChannel, getRole, getEmoji } from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'rolemenu',
         aliases: [

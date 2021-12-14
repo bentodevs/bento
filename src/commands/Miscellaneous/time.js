@@ -1,8 +1,8 @@
-const { stripIndents } = require('common-tags');
-const { MessageEmbed } = require('discord.js');
-const { getWeather } = require('../../modules/functions/misc');
+import { stripIndents } from 'common-tags';
+import { MessageEmbed } from 'discord.js';
+import { getWeather } from '../../modules/functions/misc.js';
 
-module.exports = {
+export default {
     info: {
         name: 'time',
         aliases: [],

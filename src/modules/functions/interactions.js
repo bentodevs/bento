@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
-const config = require('../../config');
+import config from '../../config.js';
 
-module.exports = (interaction) => {
+export default function (interaction) {
     /**
      * Send a interaction reply starting with a error emote
      * @param {string} option
@@ -43,4 +43,4 @@ module.exports = (interaction) => {
             .then((int) => resolve(int))
             .catch((err) => reject(err));
     });
-};
+}

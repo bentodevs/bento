@@ -1,9 +1,9 @@
-const { stripIndents } = require('common-tags');
-const { formatDuration, intervalToDuration } = require('date-fns');
-const { MessageEmbed } = require('discord.js');
-const settings = require('../database/models/settings');
+import { stripIndents } from 'common-tags';
+import { formatDuration, intervalToDuration } from 'date-fns';
+import { MessageEmbed } from 'discord.js';
+import settings from '../database/models/settings.js';
 
-module.exports = async (bot, oldChannel, newChannel) => {
+export default async (bot, oldChannel, newChannel) => {
     // If channel type is DM, then ignore
     if (newChannel.type === 'DM') return;
 

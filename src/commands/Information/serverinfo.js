@@ -1,10 +1,12 @@
-const { stripIndents } = require('common-tags');
-const { formatDistance } = require('date-fns');
-const { format, utcToZonedTime } = require('date-fns-tz');
-const { MessageEmbed } = require('discord.js');
-const config = require('../../config');
+import { stripIndents } from 'common-tags';
+import { formatDistance, format } from 'date-fns';
+import dateFnsTz from 'date-fns-tz';
+import { MessageEmbed } from 'discord.js';
+import config from '../../config.js';
 
-module.exports = {
+const { utcToZonedTime } = dateFnsTz;
+
+export default {
     info: {
         name: 'serverinfo',
         aliases: [
@@ -82,7 +84,7 @@ module.exports = {
             🔒 **Security:** ${security[message.guild.verificationLevel]}
             ${config.emojis.nitro} **Server Boost Level:** ${boostLevel} (${boosters} ${(boosters > 1) || (boosters === 0) ? 'boosters' : 'booster'})
             ${config.emojis.ceo} **Owner:** ${owner.user.tag}
-            
+
             **Other**
             ${channels} channels | ${emotes} emotes | ${roles} roles`);
 

@@ -1,8 +1,7 @@
-const config = require('../config');
-const settings = require('../database/models/settings');
-const { registerGuild } = require('../modules/handlers/command');
+import config from '../config.js';
+import settings from '../database/models/settings.js';
 
-module.exports = async (bot, guild) => {
+export default async (bot, guild) => {
     // If there are no guild settings, then create them for the guild
     if (!await settings.findOne({ _id: guild.id })) {
         // eslint-disable-next-line new-cap

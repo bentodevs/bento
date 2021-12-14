@@ -1,7 +1,7 @@
-const { MessageEmbed } = require('discord.js');
-const { getMember, getUser } = require('../../modules/functions/getters');
+import { MessageEmbed } from 'discord.js';
+import { getMember, getUser } from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'banner',
         aliases: ['background'],
@@ -53,6 +53,8 @@ module.exports = {
         if (!usr.bannerURL()) {
             return message.errorReply("This user doesn't have a custom banner set!");
         }
+
+        console.log(usr.bannerURL({ format: 'png', dynamic: true, size: 2048 }));
 
         // Build the embed
         const embed = new MessageEmbed()

@@ -1,7 +1,7 @@
-const settings = require('../../database/models/settings');
-const { getChannel } = require('../../modules/functions/getters');
+import settings from '../../database/models/settings.js';
+import { getChannel } from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'restrict',
         aliases: [
@@ -39,6 +39,10 @@ module.exports = {
             type: 'CHANNEL',
             description: 'Specify a text or news channel.',
             required: true,
+            channel_types: [
+                'GUILD_TEXT',
+                'GUILD_NEWS',
+            ],
         }, {
             name: 'type',
             type: 'STRING',

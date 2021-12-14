@@ -1,8 +1,8 @@
-const { stripIndents } = require('common-tags');
-const { MessageEmbed } = require('discord.js');
-const { getLeagueChampByName } = require('../../modules/functions/riotgames');
+import { stripIndents } from 'common-tags';
+import { MessageEmbed } from 'discord.js';
+import { getLeagueChampByName } from '../../modules/functions/riotgames.js';
 
-module.exports = {
+export default {
     info: {
         name: 'championinfo',
         aliases: ['champinfo'],

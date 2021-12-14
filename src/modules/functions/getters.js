@@ -1,5 +1,5 @@
-const { MessageEmbed } = require('discord.js');
-const config = require('../../config');
+import { MessageEmbed } from 'discord.js';
+import config from '../../config.js';
 
 /**
  * Gets a guild member from the cache/fetches it from the Discord API
@@ -10,7 +10,7 @@ const config = require('../../config');
  *
  * @returns {Promise.<Object|Boolean>} Either the guild member, or false if no match could be found
  */
-exports.getMember = async (message, args, noArgsAuthor) => {
+export const getMember = async (message, args, noArgsAuthor) => {
     // If no args were supplied and noArgsAuthor is true, resolve as the member that sent the msg
     if (!args && noArgsAuthor) return message.member;
 
@@ -69,7 +69,7 @@ exports.getMember = async (message, args, noArgsAuthor) => {
  *
  * @returns {Promise.<Object|Boolean>} Either the user, or false if no match could be found
  */
-exports.getUser = async (bot, message, args, noArgsAuthor) => {
+export const getUser = async (bot, message, args, noArgsAuthor) => {
     // If no args were specified and noArgsAuthor is true return the author
     if (!args && noArgsAuthor) return message.author;
 
@@ -115,7 +115,7 @@ exports.getUser = async (bot, message, args, noArgsAuthor) => {
  *
  * @returns {Promise.<Object|Boolean>} Either the guild channel, or false if no match could be found
  */
-exports.getChannel = async (message, args, noArgsChannel) => {
+export const getChannel = async (message, args, noArgsChannel) => {
     // If no args were specified and noArgsChannel is true return the current channel
     if (!args && noArgsChannel) return message.channel;
 
@@ -149,7 +149,7 @@ exports.getChannel = async (message, args, noArgsChannel) => {
  *
  * @returns {Promise.<Object|Boolean>} Either the role, or false if no match could be found
  */
-exports.getRole = async (message, args) => {
+export const getRole = async (message, args) => {
     // If no args were specified return false
     if (!args) return false;
 
@@ -180,7 +180,7 @@ exports.getRole = async (message, args) => {
  *
  * @returns {Promise.<Boolean>} true
  */
-exports.getTag = async (tag, message, args) => {
+export const getTag = async (tag, message, args) => {
     // Replace all the placeholders
     let tagContent = tag.content
         .replace(/{author}/gi, message.author)
@@ -217,7 +217,7 @@ exports.getTag = async (tag, message, args) => {
  *
  * @returns {Object} Returns an object with the emoji info if it found one, otherwise returns false.
  */
-exports.getEmoji = (guild, string) => {
+export const getEmoji = async (guild, string) => {
     // 1. Check the string for unicode emojis
     // 2. Check the string for discord emojis
     const unicode = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g.exec(string);

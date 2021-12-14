@@ -1,9 +1,9 @@
-const settings = require('../../database/models/settings');
-const {
+import settings from '../../database/models/settings.js';
+import {
     getMember, getUser, getChannel, getRole,
-} = require('../../modules/functions/getters');
+} from '../../modules/functions/getters.js';
 
-module.exports = {
+export default {
     info: {
         name: 'blacklist',
         aliases: [
@@ -49,6 +49,10 @@ module.exports = {
                 type: 'CHANNEL',
                 description: 'The channel you want to (un)blacklist',
                 required: true,
+                channel_types: [
+                    'GUILD_TEXT',
+                    'GUILD_NEWS',
+                ],
             }],
         }, {
             name: 'user',
