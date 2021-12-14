@@ -96,8 +96,10 @@ export const checkMessage = async (message, settings) => {
         // eslint-disable-next-line no-unsafe-optional-chaining
         for (const data of settings.moderation.filter?.entries) {
             if (message.content.toLowerCase().includes(data.toLowerCase())) {
-                message.delete().catch(() => { });
-                await message.reply('you are unable to say that here!').then((m) => setTimeout(() => m.delete().catch(() => { }), 5000));
+                message.delete()
+                    .then(() => message.reply(`You are unable to say that here, ${message.author}!`))
+                    .then((m) => setTimeout(() => m.delete().catch(() => { }), 7000))
+                    .catch(() => { });
             }
         }
     }
@@ -105,8 +107,10 @@ export const checkMessage = async (message, settings) => {
     if (settings.moderation?.filter?.zalgo) {
         const zalgo = /[\xCC\xCD]/;
         if (zalgo.test(message.content)) {
-            message.delete().catch(() => { });
-            await message.reply('you are unable to use Zalgo text here!').then((m) => setTimeout(() => m.delete().catch(() => { }), 5000));
+            message.delete()
+                .then(() => message.reply(`You are unable to use Zalgo text here, ${message.author}!`))
+                .then((m) => setTimeout(() => m.delete().catch(() => { }), 7000))
+                .catch(() => { });
         }
     }
 
@@ -114,8 +118,10 @@ export const checkMessage = async (message, settings) => {
         const invite = /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]/g;
 
         if (invite.test(message.content)) {
-            message.delete().catch(() => { });
-            await message.reply('you are unable to send invite links here!').then((m) => setTimeout(() => m.delete().catch(() => { }), 5000));
+            message.delete()
+                .then(() => message.channel.send(`You are unable to send invite links here, ${message.author}!`))
+                .then((m) => setTimeout(() => m.delete().catch(() => { }), 7000))
+                .catch(() => { });
         }
     }
 
@@ -123,8 +129,10 @@ export const checkMessage = async (message, settings) => {
         const link = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)?/gi;
 
         if (link.test(message.content)) {
-            message.delete().catch(() => { });
-            await message.reply('you are unable to send URLs here!').then((m) => setTimeout(() => m.delete().catch(() => { }), 5000));
+            message.delete()
+                .then(() => message.channel.send(`You are unable to send links here, ${message.author}!`))
+                .then((m) => setTimeout(() => m.delete().catch(() => { }), 7000))
+                .catch(() => { });
         }
     }
 };
