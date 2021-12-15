@@ -39,7 +39,7 @@ export default {
             type: 'CHANNEL',
             description: 'Specify a text or news channel.',
             required: true,
-            channel_types: [
+            channelTypes: [
                 'GUILD_TEXT',
                 'GUILD_NEWS',
             ],

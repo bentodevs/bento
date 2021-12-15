@@ -49,7 +49,7 @@ export default {
                 type: 'CHANNEL',
                 description: 'The channel you want to (un)blacklist',
                 required: true,
-                channel_types: [
+                channelTypes: [
                     'GUILD_TEXT',
                     'GUILD_NEWS',
                 ],
