@@ -20,7 +20,7 @@ export default async (bot, interaction) => {
 
         // Import the interaction functions
         // eslint-disable-next-line global-require
-        require('../modules/functions/interactions')(interaction);
+        (await import('../modules/functions/interactions.js')).default(interaction);
 
         // Get the command
         const cmd = bot.commands.get(interaction.commandName);
