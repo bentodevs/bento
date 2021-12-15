@@ -77,7 +77,7 @@ bot.logger = winston.createLogger({
     ),
     transports: [new winston.transports.Console({ colorize: true })],
     levels: logLevels.levels,
-    level: 'debug',
+    level: 'cmd',
 });
 
 // Create the deletedMsgs collection
