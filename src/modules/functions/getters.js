@@ -217,7 +217,7 @@ export const getTag = async (tag, message, args) => {
  *
  * @returns {Object} Returns an object with the emoji info if it found one, otherwise returns false.
  */
-export const getEmoji = async (guild, string) => {
+export const getEmoji = (guild, string) => {
     // 1. Check the string for unicode emojis
     // 2. Check the string for discord emojis
     const unicode = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g.exec(string);
