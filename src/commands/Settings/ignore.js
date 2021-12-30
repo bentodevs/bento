@@ -1,4 +1,3 @@
-import config from '../../config.js';
 import settings from '../../database/models/settings.js';
 import { getChannel, getRole } from '../../modules/functions/getters.js';
 
@@ -95,8 +94,8 @@ export default {
 
             // Prepare the ignore message
             if (message.settings.ignore.hierarchicRoleId && hRole) msg += `\n🎖️ Users with the ${hRole} and above are currently being ignored`;
-            if (roles.length > 0) msg += `\n${config.emojis.team} The following roles are being ignored: ${roles.join(', ')}`;
-            if (channels.length > 0) msg += `\n${config.emojis.channel} The following channels are being ignored: ${channels.join(', ')}`;
+            if (roles.length > 0) msg += `\n${bot.config.emojis.team} The following roles are being ignored: ${roles.join(', ')}`;
+            if (channels.length > 0) msg += `\n${bot.config.emojis.channel} The following channels are being ignored: ${channels.join(', ')}`;
 
             // Send the ignore message
             message.reply(msg);
@@ -171,8 +170,8 @@ export default {
 
             // Prepare the ignore message
             if (interaction.settings.ignore.hierarchicRoleId && hRole) msg += `\n🎖️ Users with the ${hRole} and above are currently being ignored`;
-            if (roles.length > 0) msg += `\n${config.emojis.team} The following roles are being ignored: ${roles.join(', ')}`;
-            if (channels.length > 0) msg += `\n${config.emojis.channel} The following channels are being ignored: ${channels.join(', ')}`;
+            if (roles.length > 0) msg += `\n${bot.config.emojis.team} The following roles are being ignored: ${roles.join(', ')}`;
+            if (channels.length > 0) msg += `\n${bot.config.emojis.channel} The following channels are being ignored: ${channels.join(', ')}`;
 
             // Send the ignore message
             interaction.reply(msg);
