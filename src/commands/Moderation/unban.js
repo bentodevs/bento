@@ -78,7 +78,7 @@ export default {
             });
 
             // Log the unban
-            punishmentLog(bot, message, user, null, reason, 'unban');
+            punishmentLog(bot, message, user, action, reason, 'unban');
             // Send public ban log message, if it exists
             if (message.guild.channels.cache.has(message.settings.logs.ban)) publicLog.send(`${config.emojis.bans} **${ban.user.username}#${ban.user.discriminator}** was unbanned for **${reason}**`);
         } else {
@@ -95,12 +95,23 @@ export default {
             // then return an error
             if (!pban && !ban) return message.errorReply("You didn't specify a banned user!");
 
+            // Create the punishment record in the DB
+            await punishments.create({
+                id: action,
+                guild: message.guild.id,
+                type: 'unban',
+                user: user.id,
+                moderator: message.author.id,
+                actionTime: Date.now(),
+                reason,
+            });
+
             // Find the ban in the preban database
             await preban.findOneAndDelete({ user: user.id });
             // Send a confirmation message
             message.confirmationReply(`Successfully unbanned **${user.tag}**! *(Case #${action})*`);
             // Log the unban
-            punishmentLog(bot, message, user, null, reason, 'unban');
+            punishmentLog(bot, message, user, action, reason, 'unban');
             // Send public ban log message, if it exists
             if (message.guild.channels.cache.has(message.settings.logs.ban)) publicLog.send(`${config.emojis.bans} **${user.tag}** was unbanned for **${reason}**`);
         }
@@ -138,7 +149,7 @@ export default {
             });
 
             // Log the unban
-            punishmentLog(bot, interaction, user, null, reason, 'unban');
+            punishmentLog(bot, interaction, user, action, reason, 'unban');
             // Send public ban log message, if it exists
             if (interaction.guild.channels.cache.has(interaction.settings.logs.ban)) publicLog.send(`${config.emojis.unban} **${user.user.tag}** was unbanned for **${reason}**`);
         } else {
@@ -151,10 +162,22 @@ export default {
 
             // Find the ban in the preban database
             await preban.findOneAndDelete({ user: user.user.id });
+
+            // Create the punishment record in the DB
+            await punishments.create({
+                id: action,
+                guild: interaction.guild.id,
+                type: 'unban',
+                user: user.user.id,
+                moderator: interaction.member.id,
+                actionTime: Date.now(),
+                reason,
+            });
+
             // Send a confirmation message
             interaction.confirmation(`Successfully unbanned **${user.user.tag}**! *(Case #${action})*`);
             // Log the unban
-            punishmentLog(bot, interaction, user, null, reason, 'unban');
+            punishmentLog(bot, interaction, user, action, reason, 'unban');
             // Send public ban log message, if it exists
             if (interaction.guild.channels.cache.has(interaction.settings.logs.ban)) publicLog.send(`${config.emojis.unban} **${user.user.tag}** was unbanned for **${reason}**`);
         }
