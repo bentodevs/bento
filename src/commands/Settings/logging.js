@@ -1,6 +1,5 @@
 import { stripIndents } from 'common-tags';
 import { MessageEmbed } from 'discord.js';
-import config from '../../config.js';
 import settings from '../../database/models/settings.js';
 
 export default {
@@ -52,7 +51,7 @@ export default {
                 .setThumbnail('https://i.imgur.com/iML7LKF.png')
                 .setDescription(stripIndents`⚒️ Manual moderation logging is ${message.settings.manual_events.moderation ? '**enabled**' : '**disabled**'}
                     🖥️ Guild modification logging is ${message.settings.manual_events.guild ? '**enabled**' : '**disabled**'}
-                    ${config.emojis.channel} Channel modification logging is ${message.settings.manual_events.channels ? '**enabled**' : '**disabled**'}
+                    ${bot.config.emojis.channel} Channel modification logging is ${message.settings.manual_events.channels ? '**enabled**' : '**disabled**'}
                     📚 Role modification logging is ${message.settings.manual_events.roles ? '**enabled**' : '**disabled**'}
                     🧑‍🤝‍🧑 Member modification logging is ${message.settings.manual_events.members ? '**enabled**' : '**disabled**'}`);
 
