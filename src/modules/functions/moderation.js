@@ -45,8 +45,7 @@ export const punishmentLog = (bot, message, member, pID, reason, type, length) =
             .setAuthor(`Case #${pID} | User Banned`, member.user?.displayAvatarURL({ dynamic: true, format: 'png' }) ?? member.displayAvatarURL({ dynamic: true, format: 'png' }))
             .setThumbnail(member.user?.displayAvatarURL({ dynamic: true, format: 'png' }) ?? member.displayAvatarURL({ dynamic: true, format: 'png' }))
             .setDescription(stripIndents`**User:** ${member} (\`${member.user?.tag ?? member.tag}\`)
-            **Moderator:** ${message.author} (\`${message.author.tag}\`)
-            **Time:** Forever
+            **Moderator:** ${message?.author ?? message.user} (\`${message?.author?.tag ?? message.user.tag}\`)
             **Reason:** ${reason}`)
             .setColor(message.member.displayColor)
             .setTimestamp()
