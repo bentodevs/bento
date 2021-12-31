@@ -56,7 +56,7 @@ export default {
             **Mana:** ${champ.stats.mp} (+${champ.stats.mpperlevel} per level)
             **Armor:** ${champ.stats.armor} (+${champ.stats.armorperlevel} per level)
             **Attack Damage:** ${champ.stats.attackdamage} (+${champ.stats.attackdamage} per level)`)
-            .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: 'png' }))
+            .setFooter({ text: `Requested by ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true, format: 'png' }) })
             .setTimestamp();
 
         // Send the embed
@@ -84,7 +84,7 @@ export default {
             **Mana:** ${champ.stats.mp} (+${champ.stats.mpperlevel} per level)
             **Armor:** ${champ.stats.armor} (+${champ.stats.armorperlevel} per level)
             **Attack Damage:** ${champ.stats.attackdamage} (+${champ.stats.attackdamage} per level)`)
-            .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ dynamic: true, format: 'png' }))
+            .setFooter({ text: `Requested by ${interaction.user.tag}`, iconUrl: interaction.user.displayAvatarURL({ dynamic: true, format: 'png' }) })
             .setTimestamp();
 
         // Send the embed

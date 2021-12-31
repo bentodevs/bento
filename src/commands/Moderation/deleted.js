@@ -47,10 +47,10 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(user.tag, user.displayAvatarURL({ format: 'png', dynamic: true }))
+            .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL({ format: 'png', dynamic: true }) })
             .setDescription(deleted.content)
             .setColor(member?.displayColor ?? bot.config.general.embedColor)
-            .setFooter(deleted.id)
+            .setFooter({ text: deleted.id })
             .setTimestamp(deleted.deletedTimestamp);
 
         // Send the embed

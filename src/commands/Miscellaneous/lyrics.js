@@ -53,10 +53,10 @@ export default {
             for (const data of content) {
                 // Build the embed
                 const embed = new MessageEmbed()
-                    .setAuthor(`${res.title}`, res.image ?? bot.user.displayAvatarURL({ dynamic: true, format: 'png' }))
+                    .setAuthor({ name: `${res.title}`, iconUrl: res.image ?? bot.user.displayAvatarURL({ dynamic: true, format: 'png' }) })
                     .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
                     .setDescription(`\`\`\`${data}\`\`\``)
-                    .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: 'png' }))
+                    .setFooter({ text: `Requested by ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true, format: 'png' }) })
                     .setTimestamp();
 
                 if (data === content[0]) {
@@ -82,10 +82,10 @@ export default {
             for (const data of content) {
                 // Build the embed
                 const embed = new MessageEmbed()
-                    .setAuthor(`${res.title}`, res.image ?? bot.user.displayAvatarURL({ dynamic: true, format: 'png' }))
+                    .setAuthor({ name: `${res.title}`, iconUrl: res.image ?? bot.user.displayAvatarURL({ dynamic: true, format: 'png' }) })
                     .setColor(message.member?.displayColor || bot.config.general.embedColor)
                     .setDescription(`\`\`\`${data}\`\`\``)
-                    .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: 'png' }))
+                    .setFooter({ text: `Requested by ${message.author.tag}`, iconUrl: message.author.displayAvatarURL({ dynamic: true, format: 'png' }) })
                     .setTimestamp();
 
                 if (data === content[0]) {

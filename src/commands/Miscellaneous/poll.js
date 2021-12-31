@@ -149,7 +149,7 @@ export default {
         const embed = new MessageEmbed()
             .setThumbnail('https://i.imgur.com/6DbXHMG.png')
             .setDescription(msg)
-            .setFooter(`Started by: ${message.author.tag}`)
+            .setFooter({ text: `Started by: ${message.author.tag}` })
             .setTimestamp()
             .setColor(message.member?.displayColor || bot.config.general.embedColor);
 
@@ -208,7 +208,7 @@ export default {
         const embed = new MessageEmbed()
             .setThumbnail('https://i.imgur.com/6DbXHMG.png')
             .setDescription(msg)
-            .setFooter(`Started by: ${interaction.user.tag}`)
+            .setFooter({ text: `Started by: ${interaction.user.tag}` })
             .setTimestamp()
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor);
 

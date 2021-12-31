@@ -79,8 +79,8 @@ export default {
 
             // Create the members embed
             const embed = new MessageEmbed()
-                .setAuthor(`Members of ${message.guild.name}`, message.guild.iconURL({ format: 'png', dynamic: true }))
-                .setFooter(`${message.guild.memberCount} total members | Page ${page + 1} of ${pages.length}`)
+                .setAuthor({ name: `Members of ${message.guild.name}`, iconUrl: message.guild.iconURL({ format: 'png', dynamic: true }) })
+                .setFooter({ text: `${message.guild.memberCount} total members | Page ${page + 1} of ${pages.length}` })
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(description.join('\n'));
 
@@ -114,8 +114,8 @@ export default {
 
             // Create the members embed
             const embed = new MessageEmbed()
-                .setAuthor(`Members of ${role.name}`, message.guild.iconURL({ format: 'png', dynamic: true }))
-                .setFooter(`${role.members.size} total members | Page ${page + 1} of ${pages.length}`)
+                .setAuthor({ name: `Members of ${message.guild.name}`, iconUrl: message.guild.iconURL({ format: 'png', dynamic: true }) })
+                .setFooter({ text: `${role.members.size} total members | Page ${page + 1} of ${pages.length}` })
                 .setColor(role.hexColor ?? bot.config.general.embedColor)
                 .setDescription(description.join('\n'));
 
@@ -151,8 +151,8 @@ export default {
 
             // Create the members embed
             const embed = new MessageEmbed()
-                .setAuthor(`Members of ${interaction.guild.name}`, interaction.guild.iconURL({ format: 'png', dynamic: true }))
-                .setFooter(`${interaction.guild.memberCount} total members | Page ${page + 1} of ${pages.length}`)
+                .setAuthor({ name: `Members of ${interaction.guild.name}`, iconUrl: interaction.guild.iconURL({ format: 'png', dynamic: true }) })
+                .setFooter({ text: `${interaction.guild.memberCount} total members | Page ${page + 1} of ${pages.length}` })
                 .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
                 .setDescription(description.join('\n'));
 
@@ -185,8 +185,8 @@ export default {
 
             // Create the members embed
             const embed = new MessageEmbed()
-                .setAuthor(`Members of ${role.name}`, interaction.guild.iconURL({ format: 'png', dynamic: true }))
-                .setFooter(`${role.members.size} total members | Page ${page + 1} of ${pages.length}`)
+                .setAuthor({ name: `Members of ${role.name}`, iconUrl: interaction.guild.iconURL({ format: 'png', dynamic: true }) })
+                .setFooter({ text: `${role.members.size} total members | Page ${page + 1} of ${pages.length}` })
                 .setColor(role.hexColor ?? bot.config.general.embedColor)
                 .setDescription(description.join('\n'));
 

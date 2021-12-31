@@ -66,9 +66,9 @@ export default {
 
         // Create the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Member Stats for ${message.guild.name}`, message.guild.iconURL({ format: 'png', dynamic: true }))
+            .setAuthor({ name: `Member Stats for ${message.guild.name}`, iconUrl: message.guild.iconURL({ format: 'png', dynamic: true }) })
             .setColor(message.member?.displayColor || bot.config.general.embedColor)
-            .setFooter(`ID: ${message.guild.id}`)
+            .setFooter({ text: `ID: ${message.guild.id}` })
             .setTimestamp()
             .setDescription(stripIndents`🧑‍🤝‍🧑 **${message.guild.memberCount.toLocaleString()}** members | **${message.guild.members.cache.filter((m) => m.presence?.status && m.presence.status !== 'offline').size.toLocaleString()}** ${bot.config.emojis.online} Online
             📅 **${joinedToday.size}** members gained today
@@ -113,9 +113,9 @@ export default {
 
         // Create the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Member Stats for ${interaction.guild.name}`, interaction.guild.iconURL({ format: 'png', dynamic: true }))
+            .setAuthor({ name: `Member Stats for ${interaction.guild.name}`, iconUrl: interaction.guild.iconURL({ format: 'png', dynamic: true }) })
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
-            .setFooter(`ID: ${interaction.guild.id}`)
+            .setFooter({ text: `ID: ${interaction.guild.id}` })
             .setTimestamp()
             .setDescription(stripIndents`🧑‍🤝‍🧑 **${interaction.guild.memberCount.toLocaleString()}** members | **${interaction.guild.members.cache.filter((m) => m.presence?.status && m.presence.status !== 'offline').size.toLocaleString()}** ${bot.config.emojis.online} Online
             📅 **${joinedToday.size}** members gained today

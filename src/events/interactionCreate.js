@@ -81,7 +81,7 @@ export default async (bot, interaction) => {
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor(`An error occured in ${interaction.guild?.name ?? `${interaction.user.tag}'s dms`}`, 'https://i.imgur.com/e7xORGp.png')
+                .setAuthor({ name: `An error occured in ${interaction.guild?.name ?? `${interaction.user.tag}'s dms`}`, iconURL: 'https://i.imgur.com/e7xORGp.png' })
                 .setThumbnail('https://i.imgur.com/e7xORGp.png')
                 .setDescription(stripIndents`**Guild ID:** ${interaction.guild?.id ?? '<dms>'}
                 **Interaction Author:** ${interaction.user.tag} (${interaction.user.id})

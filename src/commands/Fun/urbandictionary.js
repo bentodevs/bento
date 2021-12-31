@@ -45,7 +45,7 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Urban Dictionary: ${result.word}`, 'https://i.imgur.com/kwkO5eD.jpg', result.permalink)
+            .setAuthor({ name: `Urban Dictionary: ${result.word}`, iconURL: 'https://i.imgur.com/kwkO5eD.jpg', url: result.permalink })
             .setThumbnail('https://i.imgur.com/kwkO5eD.jpg')
             .setDescription(`${result.definition.length >= 4000 ? `Definition is too large to display in a single message. [Click here](${result.permalink}) to view it on the site.` : result.definition}\n\n${result.example}\n\n👍 ${result.thumbs_up} 👎 ${result.thumbs_down} | [See all results](https://www.urbandictionary.com/define.php?term=${args.join('_')})`)
             .setColor(message.member?.displayColor || bot.config.general.embedColor);
@@ -67,7 +67,7 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Urban Dictionary: ${result.word}`, 'https://i.imgur.com/kwkO5eD.jpg', result.permalink)
+            .setAuthor({ name: `Urban Dictionary: ${result.word}`, iconURL: 'https://i.imgur.com/kwkO5eD.jpg', url: result.permalink })
             .setThumbnail('https://i.imgur.com/kwkO5eD.jpg')
             .setDescription(`${result.definition.length >= 2000 ? `Definition is too large to display in a single message. [Click here](${result.permalink}) to view it on the site.` : result.definition}\n\n${result.example}\n\n👍 ${result.thumbs_up} 👎 ${result.thumbs_down} | [See all results](https://www.urbandictionary.com/define.php?term=${interaction.options.get('query').value.split(' ').join('_')})`)
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor);

@@ -135,11 +135,11 @@ export default {
             }
 
             // Prepare the embed
-            embed.setAuthor(`${member.user.tag}${member.nickname ? ` ~ ${member.nickname}` : ''}`, member.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }));
+            embed.setAuthor({ name: `${member.user.tag}${member.nickname ? ` ~ ${member.nickname}` : ''}`, iconUrl: member.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }) });
             embed.setThumbnail(member.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }));
             embed.setDescription(stripIndents(description));
             embed.setColor(rgbToHex(color));
-            embed.setFooter(`Member #${message.guild.members.cache.filter((u) => u.joinedTimestamp !== null).sort((a, b) => a.joinedTimestamp - b.joinedTimestamp).map((user) => user.id).indexOf(member.id) + 1} | ID: ${member.id}`);
+            embed.setFooter({ text: `Member #${message.guild.members.cache.filter((u) => u.joinedTimestamp !== null).sort((a, b) => a.joinedTimestamp - b.joinedTimestamp).map((user) => user.id).indexOf(member.id) + 1} | ID: ${member.id}` });
         } else {
             // Get the users account creation time and format it
             const userCreated = format(utcToZonedTime(member.createdTimestamp, message.settings.general.timezone), 'PPp (z)', { timeZone: message.settings.general.timezone }); const timeSinceCreated = formatDistance(member.createdTimestamp, Date.now(), { addSuffix: true });
@@ -152,31 +152,31 @@ export default {
 
             // Switch between statusses and set the variables accordingly
             switch (member.presence?.status) {
-            case 'online':
-                status = `${config.emojis.online} **Online**`;
-                break;
-            case 'idle':
-                status = `${config.emojis.idle} **Idle**`;
-                break;
-            case 'offline':
-                status = `${config.emojis.offline} **Offline**`;
-                break;
-            case 'dnd':
-                status = `${config.emojis.dnd} **Do Not Disturb**`;
-                break;
-            default:
-                status = `${config.emojis.offline} **Offline**`;
+                case 'online':
+                    status = `${config.emojis.online} **Online**`;
+                    break;
+                case 'idle':
+                    status = `${config.emojis.idle} **Idle**`;
+                    break;
+                case 'offline':
+                    status = `${config.emojis.offline} **Offline**`;
+                    break;
+                case 'dnd':
+                    status = `${config.emojis.dnd} **Do Not Disturb**`;
+                    break;
+                default:
+                    status = `${config.emojis.offline} **Offline**`;
             }
 
             // Prepare the embed
-            embed.setAuthor(member.tag, member.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }));
+            embed.setAuthor({ name: member.tag, iconURL: member.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }) });
             embed.setThumbnail(member.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }));
             embed.setColor(rgbToHex(color));
             embed.setDescription(stripIndents`🙍 Human | ${status}
             **Created:** ${userCreated} (${timeSinceCreated})
 
             *This user is not a member of the server. No additional info is available.*`);
-            embed.setFooter(`ID: ${member.id}`);
+            embed.setFooter({ text: `ID: ${member.id}` });
         }
 
         // Send the embed

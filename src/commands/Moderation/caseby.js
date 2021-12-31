@@ -81,10 +81,10 @@ export default {
 
         // Build the history embed
         const embed = new MessageEmbed()
-            .setAuthor(`Punishments by ${member.user.tag}`, member.user.displayAvatarURL({ format: 'png', dynamic: true }))
+            .setAuthor({ name: `Punishments by ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ format: 'png', dynamic: true }) })
             .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setDescription(data.join('\n'))
-            .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
+            .setFooter({ text: `Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}` });
 
         // Send the history embed
         message.reply({ embeds: [embed] });
@@ -141,10 +141,10 @@ export default {
 
         // Build the history embed
         const embed = new MessageEmbed()
-            .setAuthor(`Punishments by ${member.user.tag}`, member.user.displayAvatarURL({ format: 'png', dynamic: true }))
+            .setAuthor({ name: `Punishments by ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ format: 'png', dynamic: true }) })
             .setColor(interaction.member.displayColor ?? bot.config.general.embedColor)
             .setDescription(data.join('\n'))
-            .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
+            .setFooter({ text: `Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}` });
 
         // Send the history embed
         interaction.editReply({ embeds: [embed] });

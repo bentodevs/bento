@@ -107,8 +107,8 @@ export default {
 
             // Create the members embed
             const embed = new MessageEmbed()
-                .setAuthor(`AFK members in ${message.guild.name}`, message.guild.iconURL({ format: 'png', dynamic: true }))
-                .setFooter(`${filtered.length} total AFK members | Page ${page + 1} of ${pages.length}`)
+                .setAuthor({ name: `AFK members in ${message.guild.name}`, iconURL: message.guild.iconURL({ format: 'png', dynamic: true }) })
+                .setFooter({ text: `${filtered.length} total AFK members | Page ${page + 1} of ${pages.length}` })
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(description.join('\n'));
 
@@ -178,8 +178,8 @@ export default {
 
             // Create the members embed
             const embed = new MessageEmbed()
-                .setAuthor(`AFK members in ${interaction.guild.name}`, interaction.guild.iconURL({ format: 'png', dynamic: true }))
-                .setFooter(`${filtered.length} total AFK members | Page ${page + 1} of ${pages.length}`)
+                .setAuthor({ name: `AFK members in ${interaction.guild.name}`, iconUrl: interaction.guild.iconURL({ format: 'png', dynamic: true }) })
+                .setFooter({ text: `${filtered.length} total AFK members | Page ${page + 1} of ${pages.length}` })
                 .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
                 .setDescription(description.join('\n'));
 

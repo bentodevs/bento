@@ -57,7 +57,7 @@ export default async (bot, message) => {
         const channel = await getChannel(message, msgSettings.logs.deleted, false);
 
         const embed = new MessageEmbed()
-            .setAuthor(`Message by ${message.author.tag} deleted in #${message.channel.name}`, message.author.displayAvatarURL({ format: 'png', dynamic: true }))
+            .setAuthor({ name: `Message by ${message.author.tag} deleted in #${message.channel.name}`, iconURL: message.author.displayAvatarURL({ format: 'png', dynamic: true }) })
             .setThumbnail(message.author.displayAvatarURL({ format: 'png', dynamic: true }))
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
             .setDescription(stripIndents`**User:** ${message.author} (\`${message.author.id}\`)

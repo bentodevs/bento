@@ -13,7 +13,7 @@ export const punishmentLog = (bot, message, member, pID, reason, type, length) =
     if (type.toLowerCase() === 'mute') {
         // Built the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Case #${pID} | User Muted`, member.user.displayAvatarURL({ dynamic: true, format: 'png' }))
+            .setAuthor({ name: `Case #${pID} | User Muted`, iconURL: (member?.user ?? member).displayAvatarURL({ dynamic: true, format: 'png' }) })
             .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: 'png' }))
             .setDescription(stripIndents`**User:** ${member} (\`${member.user.tag}\`)
             **Moderator:** ${message.author} (\`${message.author.tag}\`)
@@ -21,63 +21,63 @@ export const punishmentLog = (bot, message, member, pID, reason, type, length) =
             **Reason:** ${reason}`)
             .setColor(message.member.displayColor)
             .setTimestamp()
-            .setFooter(`User ID: ${member.user.id}`);
+            .setFooter({ text: `User ID: ${member.user.id}` });
 
         // Send the completed embed
         modlog.send({ embeds: [embed] });
     } else if (type.toLowerCase() === 'unmute') {
         // Built the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Case #${pID} | User Unmuted`, member.user.displayAvatarURL({ dynamic: true, format: 'png' }))
+            .setAuthor({ name: `Case #${pID} | User Unmuted`, iconURL: (member?.user ?? member).displayAvatarURL({ dynamic: true, format: 'png' }) })
             .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: 'png' }))
             .setDescription(stripIndents`**User:** ${member} (\`${member.user.tag}\`)
             **Moderator:** ${message.author}
             **Reason:** ${reason}`)
             .setColor(member.displayColor)
             .setTimestamp()
-            .setFooter(`User ID: ${member.user.id}`);
+            .setFooter({ text: `User ID: ${member.user.id}` });
 
         // Send the completed embed
         modlog.send({ embeds: [embed] });
     } else if (type.toLowerCase() === 'ban') {
         // Built the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Case #${pID} | User Banned`, member.user?.displayAvatarURL({ dynamic: true, format: 'png' }) ?? member.displayAvatarURL({ dynamic: true, format: 'png' }))
+            .setAuthor({ name: `Case #${pID} | User Banned`, iconURL: (member?.user ?? member).displayAvatarURL({ dynamic: true, format: 'png' }) })
             .setThumbnail(member.user?.displayAvatarURL({ dynamic: true, format: 'png' }) ?? member.displayAvatarURL({ dynamic: true, format: 'png' }))
             .setDescription(stripIndents`**User:** ${member} (\`${member.user?.tag ?? member.tag}\`)
             **Moderator:** ${message?.author ?? message.user} (\`${message?.author?.tag ?? message.user.tag}\`)
             **Reason:** ${reason}`)
             .setColor(message.member.displayColor)
             .setTimestamp()
-            .setFooter(`User ID: ${member.id}`);
+            .setFooter({ text: `User ID: ${member.id}` });
 
         // Send the completed embed
         modlog.send({ embeds: [embed] });
     } else if (type.toLowerCase() === 'unban') {
         // Built the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Case #${pID} | User Unbanned`, member.displayAvatarURL({ dynamic: true, format: 'png' }))
+            .setAuthor({ name: `Case #${pID} | User Unbanned`, iconURL: (member?.user ?? member).displayAvatarURL({ dynamic: true, format: 'png' }) })
             .setThumbnail(member.displayAvatarURL({ dynamic: true, format: 'png' }))
             .setDescription(stripIndents`**User:** ${member} (\`${member.tag}\`)
             **Moderator:** ${message.author} (\`${message.author.tag}\`)
             **Reason:** ${reason}`)
             .setColor(message.member.displayColor)
             .setTimestamp()
-            .setFooter(`User ID: ${member.id}`);
+            .setFooter({ text: `User ID: ${member.id}` });
 
         // Send the completed embed
         modlog.send({ embeds: [embed] });
     } else if (type.toLowerCase() === 'kick') {
         // Built the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Case #${pID} | User Kicked`, member.user.displayAvatarURL({ dynamic: true, format: 'png' }))
+            .setAuthor({ name: `Case #${pID} | User Kicked`, iconURL: (member?.user ?? member).displayAvatarURL({ dynamic: true, format: 'png' }) })
             .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: 'png' }))
             .setDescription(stripIndents`**User:** ${member} (\`${member.user.tag}\`)
             **Moderator:** ${message.author} (\`${message.author.tag}\`)
             **Reason:** ${reason}`)
             .setColor(message.member.displayColor)
             .setTimestamp()
-            .setFooter(`User ID: ${member.user.id}`);
+            .setFooter({ text: `User ID: ${member.user.id}` });
 
         // Send the completed embed
         modlog.send({ embeds: [embed] });

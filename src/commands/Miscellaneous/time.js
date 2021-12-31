@@ -58,28 +58,28 @@ export default {
 
         // Switch-case for adding the correct clock emoji
         switch (clockHour[0]) {
-        case '1': clock = '🕐'; break;
-        case '2': clock = '🕑'; break;
-        case '3': clock = '🕒'; break;
-        case '4': clock = '🕓'; break;
-        case '5': clock = '🕔'; break;
-        case '6': clock = '🕕'; break;
-        case '7': clock = '🕖'; break;
-        case '8': clock = '🕗'; break;
-        case '9': clock = '🕘'; break;
-        case '10': clock = '🕙'; break;
-        case '11': clock = '🕚'; break;
-        case '12': clock = '🕛'; break;
-        default: clock = '🕐'; break;
+            case '1': clock = '🕐'; break;
+            case '2': clock = '🕑'; break;
+            case '3': clock = '🕒'; break;
+            case '4': clock = '🕓'; break;
+            case '5': clock = '🕔'; break;
+            case '6': clock = '🕕'; break;
+            case '7': clock = '🕖'; break;
+            case '8': clock = '🕗'; break;
+            case '9': clock = '🕘'; break;
+            case '10': clock = '🕙'; break;
+            case '11': clock = '🕚'; break;
+            case '12': clock = '🕛'; break;
+            default: clock = '🕐'; break;
         }
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Time information for ${weather.location.name} (${weather.location.country})`)
+            .setAuthor({ name: `Time information for ${weather.location.name} (${weather.location.country})` })
             .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setDescription(stripIndents`${clock} **Local Time:** ${dt.toLocaleTimeString('en-US', { timeZone: weather.location.tz_id })}
             🗺️ **Timezone:** \`${weather.location.tz_id}\``)
-            .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: 'png' }));
+            .setFooter({ text: `Requested by ${message.author.tag}`, iconUrl: message.author.displayAvatarURL({ dynamic: true, format: 'png' }) });
 
         // Send the embed
         message.reply({ embeds: [embed] });
@@ -106,28 +106,28 @@ export default {
 
         // Switch-case for adding the correct clock emoji
         switch (clockHour[0]) {
-        case '1': clock = '🕐'; break;
-        case '2': clock = '🕑'; break;
-        case '3': clock = '🕒'; break;
-        case '4': clock = '🕓'; break;
-        case '5': clock = '🕔'; break;
-        case '6': clock = '🕕'; break;
-        case '7': clock = '🕖'; break;
-        case '8': clock = '🕗'; break;
-        case '9': clock = '🕘'; break;
-        case '10': clock = '🕙'; break;
-        case '11': clock = '🕚'; break;
-        case '12': clock = '🕛'; break;
-        default: clock = '🕐'; break;
+            case '1': clock = '🕐'; break;
+            case '2': clock = '🕑'; break;
+            case '3': clock = '🕒'; break;
+            case '4': clock = '🕓'; break;
+            case '5': clock = '🕔'; break;
+            case '6': clock = '🕕'; break;
+            case '7': clock = '🕖'; break;
+            case '8': clock = '🕗'; break;
+            case '9': clock = '🕘'; break;
+            case '10': clock = '🕙'; break;
+            case '11': clock = '🕚'; break;
+            case '12': clock = '🕛'; break;
+            default: clock = '🕐'; break;
         }
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Time information for ${weather.location.name} (${weather.location.country})`)
+            .setAuthor({ name: `Time information for ${weather.location.name} (${weather.location.country})` })
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
             .setDescription(stripIndents`${clock} **Local Time:** ${dt.toLocaleTimeString('en-US', { timeZone: weather.location.tz_id })}
             🗺️ **Timezone:** \`${weather.location.tz_id}\``)
-            .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ dynamic: true, format: 'png' }));
+            .setFooter({ text: `Requested by ${interaction.user.tag}`, iconUrl: interaction.user.displayAvatarURL({ dynamic: true, format: 'png' }) });
 
         // Send the embed
         interaction.reply({ embeds: [embed] });

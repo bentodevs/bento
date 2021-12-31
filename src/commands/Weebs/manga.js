@@ -61,7 +61,7 @@ export default {
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor(data.title.romaji, 'https://i.imgur.com/3Crs2k9.png', data.siteUrl)
+                .setAuthor({ name: data.title.romaji, iconURL: 'https://i.imgur.com/3Crs2k9.png', url: data.siteUrl })
                 .setDescription(stripIndents`${description}
 
                 [More Info](${data.siteUrl})`)

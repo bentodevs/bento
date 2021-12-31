@@ -51,7 +51,7 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`DuckDuckGo results for: ${args.join(' ')}`, 'https://i.imgur.com/Moe5TI0.png')
+            .setAuthor({ name: `DuckDuckGo results for: ${args.join(' ')}`, iconURL: 'https://i.imgur.com/Moe5TI0.png' })
             .setThumbnail(res.Image ? `https://api.duckduckgo.com/${res.Image}` : '')
             .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setDescription(stripIndents`${res.AbstractText ?? ''}
@@ -80,7 +80,7 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`DuckDuckGo results for: ${rawQuery}`, 'https://i.imgur.com/Moe5TI0.png')
+            .setAuthor({ name: `DuckDuckGo results for: ${rawQuery}`, iconURL: 'https://i.imgur.com/Moe5TI0.png' })
             .setThumbnail(res.Image ? `https://api.duckduckgo.com/${res.Image}` : '')
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
             .setDescription(stripIndents`${res.AbstractText ?? ''}

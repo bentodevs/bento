@@ -88,7 +88,7 @@ export default {
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor('R2-D2 Commands', bot.user.displayAvatarURL({ format: 'png', dynamic: true }))
+                .setAuthor({ name: 'R2-D2 Commands', iconUrl: bot.user.displayAvatarURL({ format: 'png', dynamic: true }) })
                 .setThumbnail(bot.user.displayAvatarURL({ format: 'png', dynamic: true, size: 256 }))
                 .setDescription(`${!message.guild && args[0]?.toLowerCase() !== 'all' ? `**-** Showing commands usable in DMs. To show all commands use \`${prefix}help all\`\n` : ''}**-** To use a command do \`${prefix}command\`.\n**-** Use \`${prefix}help <commandname>\` for additional details.\n**-** Commands labeled with a 🏆 are premium commands.`)
                 .setColor('#ABCDEF');
@@ -195,7 +195,7 @@ export default {
                 .setColor(bot.config.general.embedColor)
                 .setTitle(`Command: ${prefix}${command.info.name}${command.opts.guildOnly ? ' [Guild-only command]' : ''}`)
                 .setDescription(desc)
-                .setFooter('Do not include <> or [] — They indicate <required> and [optional] arguments.');
+                .setFooter({ text: 'Do not include <> or [] — They indicate <required> and [optional] arguments.' });
 
             // Send the embed
             message.reply({ embeds: [embed] });
@@ -251,7 +251,7 @@ export default {
                 .setDescription(stripIndents`**Name:** \`${category.toTitleCase()}\`
                 **Permissions:** ${perm}`)
                 .addField('**Commands**', commands.join(', '))
-                .setFooter(`For more detailed information about a command use ${prefix}help <command>`);
+                .setFooter({ text: `For more detailed information about a command use ${prefix}help <command>` });
 
             // Send the embed
             message.reply({ embeds: [embed] });

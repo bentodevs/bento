@@ -23,7 +23,7 @@ export default async (bot, oldMsg, newMsg) => {
         const channel = await getChannel(newMsg, msgSettings.logs.deleted, false);
 
         const embed = new MessageEmbed()
-            .setAuthor(`Message by ${newMsg.author.tag} edited in #${newMsg.channel.name}`, newMsg.author.displayAvatarURL({ format: 'png', dynamic: true }))
+            .setAuthor({ name: `Message by ${newMsg.author.tag} edited in #${newMsg.channel.name}`, iconUrl: newMsg.author.displayAvatarURL({ format: 'png', dynamic: true }) })
             .setThumbnail(newMsg.author.displayAvatarURL({ format: 'png', dynamic: true }))
             .setColor(newMsg.member?.displayColor ?? bot.config.general.embedColor)
             .setDescription(stripIndents`**User:** ${newMsg.author} (\`${newMsg.author.id}\`)

@@ -45,7 +45,7 @@ export default {
             .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setImage(meme.data.url)
             .setDescription(`[${meme.data.title}](https://www.reddit.com/${meme.data.permalink})`)
-            .setFooter(meme.data.subreddit_name_prefixed, bot.user.displayAvatarURL({ format: 'png', dynamic: true }));
+            .setFooter({ text: meme.data.subreddit_name_prefixed, iconURL: bot.user.displayAvatarURL({ format: 'png', dynamic: true }) });
 
         // Delete the status message & send the embed
         msg.delete().catch(() => {});
@@ -64,7 +64,7 @@ export default {
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
             .setImage(meme.data.url)
             .setDescription(`[${meme.data.title}](https://www.reddit.com/${meme.data.permalink})`)
-            .setFooter(meme.data.subreddit_name_prefixed, bot.user.displayAvatarURL({ format: 'png', dynamic: true }));
+            .setFooter({ text: meme.data.subreddit_name_prefixed, iconURL: bot.user.displayAvatarURL({ format: 'png', dynamic: true }) });
 
         // Send the embed
         interaction.editReply({ embeds: [embed] });

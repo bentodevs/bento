@@ -41,7 +41,7 @@ export default {
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor('Base64 encoded string', 'https://cdn.discordapp.com/emojis/774154612139622410.gif?v=1')
+                .setAuthor({ name: 'Base64 encoded string', iconURL: 'https://cdn.discordapp.com/emojis/774154612139622410.gif?v=1' })
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(`\`\`\`${encoded}\`\`\``);
 
@@ -54,7 +54,7 @@ export default {
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor('Base64 decoded string', 'https://cdn.discordapp.com/emojis/774154612139622410.gif?v=1')
+                .setAuthor({ name: 'Base64 decoded string', iconURL: 'https://cdn.discordapp.com/emojis/774154612139622410.gif?v=1' })
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(`\`\`\`${encoded}\`\`\``);
 

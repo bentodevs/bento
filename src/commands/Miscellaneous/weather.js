@@ -67,7 +67,7 @@ export default {
             **Wind:** ${weather.current.wind_kph} km/h / ${weather.current.wind_mph} mi/h ${directions[index]}
             **Visibility:** ${weather.current.vis_km} km / ${weather.current.vis_miles} miles
             **Clouds:** ${weather.current.cloud}%`)
-            .setFooter('Last Updated')
+            .setFooter({ text: 'Last Updated' })
             .setTimestamp(weather.current.last_updated_epoch * 1000)
             .setColor(message.member?.displayColor || bot.config.general.embedColor);
 
@@ -104,7 +104,7 @@ export default {
             **Wind:** ${weather.current.wind_kph} km/h / ${weather.current.wind_mph} mi/h ${directions[index]}
             **Visibility:** ${weather.current.vis_km} km / ${weather.current.vis_miles} miles
             **Clouds:** ${weather.current.cloud}%`)
-            .setFooter('Last Updated')
+            .setFooter({ text: 'Last Updated' })
             .setTimestamp(weather.current.last_updated_epoch * 1000)
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor);
 

@@ -37,10 +37,10 @@ export default async (bot, oldChannel, newChannel) => {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`${newChannel.name} was modified`, newChannel.guild.iconURL({ dynamic: true, format: 'png' }))
+            .setAuthor({ name: `${newChannel.name} was modified`, iconURL: newChannel.guild.iconURL({ dynamic: true, format: 'png' }) })
             .setColor(bot.config.general.embedColor)
             .setDescription(stripIndents`${desc}`)
-            .setFooter(`ID: ${newChannel.id}`)
+            .setFooter({ text: `ID: ${newChannel.id}` })
             .setTimestamp();
 
         // Send the emebed to the log channel

@@ -110,7 +110,7 @@ export default {
         if (!args[0]) {
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor(`Auto-mod settings for ${message.guild.name}`, message.guild.iconURL({ format: 'png', dynamic: true }))
+                .setAuthor({ name: `Auto-mod settings for ${message.guild.name}`, iconUrl: message.guild.iconURL({ format: 'png', dynamic: true }) })
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(stripIndents`🧮 Message filtering is currently ${message.settings.moderation.filter?.state ? '**enabled**' : '**disabled**'}
                 ⌨️ Using [Zalgo Text](https://en.wikipedia.org/wiki/Zalgo_text) is currently ${message.settings.moderation.filter?.zalgo ? '**disallowed**' : '**allowed**'}
@@ -120,7 +120,7 @@ export default {
                 🔇 The number of allowed mentions before being muted is ${`\`${message.settings.moderation.mentions_mute}\`` || '**not set**'}
                 ${config.emojis.pepe_ping} The number of allowed mentions before being banned is ${`\`${message.settings.moderation.mentions_ban}\`` || '**not set**'}`)
                 .setTimestamp()
-                .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ format: 'png', dynamic: true }));
+                .setFooter({ text: `Requested by ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ format: 'png', dynamic: true }) });
 
             // Send embed
             message.reply({ embeds: [embed] });
@@ -218,7 +218,7 @@ export default {
         if (sub === 'view') {
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor(`Auto-mod settings for ${interaction.guild.name}`, interaction.guild.iconURL({ format: 'png', dynamic: true }))
+                .setAuthor({ name: `Auto-mod settings for ${interaction.guild.name}`, iconUrl: interaction.guild.iconURL({ format: 'png', dynamic: true }) })
                 .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
                 .setDescription(stripIndents`🧮 Message filtering is currently ${interaction.settings.moderation.filter?.state ? '**enabled**' : '**disabled**'}
                 ⌨️ Using [Zalgo Text](https://en.wikipedia.org/wiki/Zalgo_text) is currently ${interaction.settings.moderation.filter?.zalgo ? '**disallowed**' : '**allowed**'}
@@ -228,7 +228,7 @@ export default {
                 🔇 The number of allowed mentions before being muted is ${interaction.settings.moderation.mentions_mute || '**not set**'}
                 ${config.emojis.pepe_ping} The number of allowed mentions before being banned is ${interaction.settings.moderation.mentions_ban || '**not set**'}`)
                 .setTimestamp()
-                .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ format: 'png', dynamic: true }));
+                .setFooter({ text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ format: 'png', dynamic: true }) });
 
             // Send embed
             interaction.reply({ embeds: [embed] });

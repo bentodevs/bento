@@ -98,10 +98,10 @@ export default {
 
             // Build the history embed
             const embed = new MessageEmbed()
-                .setAuthor(`Punishment History for ${member.user?.tag ?? member.tag}`, (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }))
+                .setAuthor({ name: `Punishment History for ${member.user?.tag ?? member.tag}`, iconURL: (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }) })
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(formatted.join('\n'))
-                .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
+                .setFooter({ text: `Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}` });
 
             message.reply({ embeds: [embed] });
         } else if (!isNaN(args[0])) {
@@ -118,7 +118,7 @@ export default {
             // Build the embed
             // "mute" is only added when the punishment type is a mute (Semi-obvious tbh...)
             const embed = new MessageEmbed()
-                .setAuthor(`Case #${punishment.id} - ${punishment.type.toTitleCase()}`, usr.displayAvatarURL({ format: 'png', dynamic: true }))
+                .setAuthor({ name: `Case #${punishment.id} - ${punishment.type.toTitleCase()}`, iconUrl: usr.displayAvatarURL({ format: 'png', dynamic: true }) })
                 .setColor((message.member.displayColor ? message.member.displayColor : '#B00B1E'))
                 .setDescription(stripIndents`**User:** \`${usr.tag}\`
                 **Moderator:** \`${mod.tag}\`
@@ -126,7 +126,7 @@ export default {
                 ${punishment.type === 'mute' ? `**Duration:** ${punishment.muteTime === 'forever' ? 'never' : `${formatDistanceStrict(parseInt(punishment.actionTime, 10), parseInt(punishment.actionTime, 10) + parseInt(punishment.muteTime, 10))}`}` : ''}`)
                 .setTimestamp(punishment.actionTime)
                 .setThumbnail(usr.displayAvatarURL({ format: 'png', dynamic: true }))
-                .setFooter(`Requested by ${message.author.tag}`);
+                .setFooter({ text: `Requested by ${message.author.tag}` });
 
             // Send the embed
             message.reply({ embeds: [embed] });
@@ -166,10 +166,10 @@ export default {
 
             // Build the history embed
             const embed = new MessageEmbed()
-                .setAuthor(`Punishment History for ${member.user?.tag ?? member.tag}`, (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }))
+                .setAuthor({ name: `Punishment History for ${member.user?.tag ?? member.tag}`, iconURL: (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }) })
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(formatted.join('\n'))
-                .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
+                .setFooter({ text: `Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}` });
 
             message.reply({ embeds: [embed] });
         }
@@ -217,10 +217,10 @@ export default {
 
             // Build the history embed
             const embed = new MessageEmbed()
-                .setAuthor(`Punishment History for ${member.user.tag}`, member.user.displayAvatarURL({ format: 'png', dynamic: true }))
+                .setAuthor({ name: `Punishment History for ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ format: 'png', dynamic: true }) })
                 .setColor(member.member?.displayColor ?? bot.config.general.embedColor)
                 .setDescription(formatted.join('\n'))
-                .setFooter(`Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}`);
+                .setFooter({ text: `Use this command with a number for specific case info | Page ${page + 1} of ${pages.length}` });
 
             interaction.reply({ embeds: [embed] });
         } else if (sub === 'info') {
@@ -238,7 +238,7 @@ export default {
             // Build the embed
             // "mute" is only added when the punishment type is a mute (Semi-obvious tbh...)
             const embed = new MessageEmbed()
-                .setAuthor(`Case #${punishment.id} - ${punishment.type.toTitleCase()}`, usr.displayAvatarURL({ format: 'png', dynamic: true }))
+                .setAuthor({ name: `Case #${punishment.id} - ${punishment.type.toTitleCase()}`, iconUrl: usr.displayAvatarURL({ format: 'png', dynamic: true }) })
                 .setColor(interaction.member.displayColor ?? bot.config.general.embedColor)
                 .setDescription(stripIndents`**User:** \`${usr.tag}\`
                 **Moderator:** \`${mod.tag}\`
@@ -246,7 +246,7 @@ export default {
                 ${punishment.type === 'mute' ? `**Duration:** ${punishment.muteTime === 'forever' ? 'never' : `${formatDistanceStrict(parseInt(punishment.actionTime, 10), parseInt(punishment.actionTime, 10) + parseInt(punishment.muteTime, 10))}`}` : ''}`)
                 .setTimestamp(punishment.actionTime)
                 .setThumbnail(usr.displayAvatarURL({ format: 'png', dynamic: true }))
-                .setFooter(`Requested by ${interaction.member.user.tag}`);
+                .setFooter({ text: `Requested by ${interaction.member.user.tag}` });
 
             // Send the embed
             interaction.reply({ embeds: [embed] });

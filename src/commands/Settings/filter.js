@@ -103,10 +103,10 @@ export default {
 
             // Build the filter embed
             const embed = new MessageEmbed()
-                .setAuthor(`Filtered words for ${message.guild.name}`, message.guild.iconURL({ format: 'png', dynamic: true }))
+                .setAuthor({ name: `Filtered words for ${message.guild.name}`, iconURL: message.guild.iconURL({ format: 'png', dynamic: true }) })
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(formatted.join(', '))
-                .setFooter(`The filter is currently ${filter.state ? 'enabled' : 'disabled'} | Page ${page + 1} of ${pages.length}`);
+                .setFooter({ text: `The filter is currently ${filter.state ? 'enabled' : 'disabled'} | Page ${page + 1} of ${pages.length}` });
 
             message.reply({ embeds: [embed] });
         } else if (args[0].toLowerCase() === 'add') {
@@ -199,10 +199,10 @@ export default {
 
             // Build the filter embed
             const embed = new MessageEmbed()
-                .setAuthor(`Filtered words for ${interaction.guild.name}`, interaction.guild.iconURL({ format: 'png', dynamic: true }))
+                .setAuthor({ name: `Filtered words for ${interaction.guild.name}`, iconURL: interaction.guild.iconURL({ format: 'png', dynamic: true }) })
                 .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
                 .setDescription(formatted.join(', '))
-                .setFooter(`The filter is currently ${filter.state ? 'enabled' : 'disabled'} | Page ${page + 1} of ${pages.length}`);
+                .setFooter({ text: `The filter is currently ${filter.state ? 'enabled' : 'disabled'} | Page ${page + 1} of ${pages.length}` });
 
             interaction.reply({ embeds: [embed] });
         } else if (sub === 'add') {

@@ -61,12 +61,12 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(json.Title, (json.Poster ?? 'https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png'))
+            .setAuthor({ name: json.Title, iconURL: (json.Poster ?? 'https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png') })
             .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setThumbnail((json.Poster ?? 'https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png'))
             .setDescription(msg)
             .setTimestamp()
-            .setFooter(`Requested by ${message.author.tag}`);
+            .setFooter({ text: `Requested by ${message.author.tag}` });
 
         // Send the embed
         message.reply({ embeds: [embed] });
@@ -94,12 +94,12 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(json.Title, (json.Poster ?? 'https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png'))
+            .setAuthor({ name: json.Title, iconURL: (json.Poster ?? 'https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png') })
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
             .setThumbnail((json.Poster ?? 'https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png'))
             .setDescription(msg)
             .setTimestamp()
-            .setFooter(`Requested by ${interaction.user.tag}`);
+            .setFooter({ text: `Requested by ${interaction.user.tag}` });
 
         // Send the embed
         interaction.reply({ embeds: [embed] });

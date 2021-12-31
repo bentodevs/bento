@@ -41,7 +41,7 @@ export default {
 
     run: async (bot, message, args) => {
         // Fetch all the bans
-        const bans = await message.guild.bans.fetch().then((b) => Array.from(b.values())).catch(() => {});
+        const bans = await message.guild.bans.fetch().then((b) => Array.from(b.values())).catch(() => { });
 
         // If the guild has no bans return an error
         if (!bans?.length) return message.errorReply("This guild doesn't have any bans!");
@@ -65,8 +65,8 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Banned user of ${message.guild.name}`, message.guild.iconURL({ format: 'png', dynamic: true }))
-            .setFooter(`${bans.length} total bans | Page ${page + 1} of ${pages.length}`)
+            .setAuthor({ name: `Banned user of ${message.guild.name}`, iconUrl: message.guild.iconURL({ format: 'png', dynamic: true }) })
+            .setFooter({ text: `${bans.length} total bans | Page ${page + 1} of ${pages.length}` })
             .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setDescription(description.join('\n'));
 
@@ -76,7 +76,7 @@ export default {
 
     run_interaction: async (bot, interaction) => {
         // Fetch all the bans
-        const bans = await interaction.guild.bans.fetch().then((b) => Array.from(b.values())).catch(() => {});
+        const bans = await interaction.guild.bans.fetch().then((b) => Array.from(b.values())).catch(() => { });
 
         // If the guild has no bans return an error
         if (!bans.length || !bans) return interaction.error("This guild doesn't have any bans!");
@@ -101,8 +101,8 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Banned user of ${interaction.guild.name}`, interaction.guild.iconURL({ format: 'png', dynamic: true }))
-            .setFooter(`${bans.length} total bans | Page ${page + 1} of ${pages.length}`)
+            .setAuthor({ name: `Banned user of ${interaction.guild.name}`, iconUrl: interaction.guild.iconURL({ format: 'png', dynamic: true }) })
+            .setFooter({ text: `${bans.length} total bans | Page ${page + 1} of ${pages.length}` })
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
             .setDescription(description.join('\n'));
 

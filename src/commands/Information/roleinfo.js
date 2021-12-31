@@ -58,9 +58,9 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Role: ${role.name}`, `https://dummyimage.com/64x64/${role.hexColor.replace('#', '')}/${role.hexColor.replace('#', '')}`)
+            .setAuthor({ name: `Role: ${role.name}`, iconUrl: `https://dummyimage.com/64x64/${role.hexColor.replace('#', '')}/${role.hexColor.replace('#', '')}` })
             .setThumbnail(`https://dummyimage.com/256x256/${role.hexColor.replace('#', '')}/${role.hexColor.replace('#', '')}`)
-            .setFooter(`ID: ${role.id}`)
+            .setFooter({ text: `ID: ${role.id}` })
             .setColor(role.hexColor ?? bot.config.general.embedColor)
             .setDescription(stripIndents`**Position:** ${role.position + 1}/${message.guild.roles.cache.size}
             **Color:** ${!role.color ? 'Default' : role.hexColor}
@@ -83,9 +83,9 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Role: ${role.name}`, `https://dummyimage.com/64x64/${role.hexColor.replace('#', '')}/${role.hexColor.replace('#', '')}`)
+            .setAuthor({ name: `Role: ${role.name}`, iconUrl: `https://dummyimage.com/64x64/${role.hexColor.replace('#', '')}/${role.hexColor.replace('#', '')}` })
             .setThumbnail(`https://dummyimage.com/256x256/${role.hexColor.replace('#', '')}/${role.hexColor.replace('#', '')}`)
-            .setFooter(`ID: ${role.id}`)
+            .setFooter({ text: `ID: ${role.id}` })
             .setColor(role.hexColor ?? bot.config.general.embedColor)
             .setDescription(stripIndents`**Position:** ${role.position + 1}/${interaction.guild.roles.cache.size}
             **Color:** ${!role.color ? 'Default' : role.hexColor}

@@ -49,7 +49,7 @@ export default {
         // Build the embed
         const embed = new MessageEmbed()
             .setColor(message.member?.displayColor || bot.config.general.embedColor)
-            .setAuthor(`Avatar for ${target.tag}`, target.displayAvatarURL({ format: 'png', dynamic: true }))
+            .setAuthor({ name: `Avatar for ${target.tag}`, iconURL: target.displayAvatarURL({ format: 'png', dynamic: true }) })
             .setImage(target.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }));
 
         // Send the embed
@@ -63,7 +63,7 @@ export default {
         // Build the embed
         const embed = new MessageEmbed()
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
-            .setAuthor(`Avatar for ${target.tag}`, target.displayAvatarURL({ format: 'png', dynamic: true }))
+            .setAuthor({ name: `Avatar for ${target.tag}`, iconUrl: target.displayAvatarURL({ format: 'png', dynamic: true }) })
             .setImage(target.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }));
 
         // Send the embed

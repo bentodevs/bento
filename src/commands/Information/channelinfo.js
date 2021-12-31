@@ -105,9 +105,9 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`${types[channel.type].type}: ${channel.name}`, types[channel.type].icon)
+            .setAuthor({ name: `${types[channel.type].type}: ${channel.name}`, iconUrl: types[channel.type].icon })
             .setDescription(desc)
-            .setFooter(`ID: ${channel.id}`)
+            .setFooter({ text: `ID: ${channel.id}` })
             .setColor(message.member?.displayColor || bot.config.general.embedColor);
 
         // Send the embed
@@ -171,9 +171,9 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`${types[channel.type].type}: ${channel.name}`, types[channel.type].icon)
+            .setAuthor({ name: `${types[channel.type].type}: ${channel.name}`, iconUrl: types[channel.type].icon })
             .setDescription(desc)
-            .setFooter(`ID: ${channel.id}`)
+            .setFooter({ text: `ID: ${channel.id}` })
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor);
 
         // Send the embed

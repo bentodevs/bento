@@ -42,10 +42,10 @@ export default async (bot, oldMember, newMember) => {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`${newMember.user.tag} was modified`, newMember.user.displayAvatarURL({ dynamic: true, format: 'png' }))
+            .setAuthor({ name: `${newMember.user.tag} was modified`, iconURL: newMember.user.displayAvatarURL({ dynamic: true, format: 'png' }) })
             .setColor(newMember.displayColor ?? bot.config.general.embedColor)
             .setDescription(stripIndents`${desc}`)
-            .setFooter(`ID: ${newMember.user.id}`)
+            .setFooter({ text: `ID: ${newMember.user.id}` })
             .setTimestamp();
 
         // Send the emebed to the log channel

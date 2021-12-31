@@ -83,7 +83,7 @@ export default {
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor(`${latestTrack.name} by ${latestTrack.artist?.['#text']}`, latestTrack.image[1]['#text'], latestTrack.url)
+                .setAuthor({ name: `${latestTrack.name} by ${latestTrack.artist?.['#text']}`, iconUrl: latestTrack.image[1]['#text'], url: latestTrack.url })
                 .setThumbnail(latestTrack.image[3]['#text'])
                 .setColor(message?.member.displayColor ?? config.general.embedColor)
                 .setDescription(stripIndents`**Track Name:** ${latestTrack.name}
@@ -136,9 +136,9 @@ export default {
 
             // Create the embed
             const embed = new MessageEmbed()
-                .setAuthor(`Listening history for ${user.lastfm}`, lfmUser.user.image[3]?.['#text'])
+                .setAuthor({ name: `Listening history for ${user.lastfm}`, iconUrl: lfmUser.user.image[3]?.['#text'] })
                 .setThumbnail(lfmUser.user.image[3]?.['#text'])
-                .setFooter(`Requested by ${message.author.tag}`)
+                .setFooter({ text: `Requested by ${message.author.tag}` })
                 .setColor(message?.member.displayColor ?? config.general.embedColor)
                 .setDescription(description.join('\n'));
 
@@ -171,7 +171,7 @@ export default {
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor(`${latestTrack.name} by ${latestTrack.artist?.['#text']}`, latestTrack.image[1]['#text'], latestTrack.url)
+                .setAuthor({ name: `${latestTrack.name} by ${latestTrack.artist?.['#text']}`, iconUrl: latestTrack.image[1]['#text'], url: latestTrack.url })
                 .setThumbnail(latestTrack.image[3]['#text'])
                 .setColor(interaction?.member.displayColor ?? config.general.embedColor)
                 .setDescription(stripIndents`**Track Name:** ${latestTrack.name}
@@ -251,9 +251,9 @@ export default {
 
                 // Create the members embed
                 const embed = new MessageEmbed()
-                    .setAuthor(`Listening history for ${user.user.tag}`, lfmUser.user.image[3]?.['#text'])
+                    .setAuthor({ name: `Listening history for ${user.user.tag}`, iconUrl: lfmUser.user.image[3]?.['#text'] })
                     .setThumbnail(lfmUser.user.image[3]?.['#text'])
-                    .setFooter(`Requested by ${interaction.user.tag}`)
+                    .setFooter({ text: `Requested by ${interaction.user.tag}` })
                     .setColor(interaction?.member.displayColor ?? config.general.embedColor)
                     .setDescription(description.join('\n'));
 
@@ -273,9 +273,9 @@ export default {
 
                 // Create the embed
                 const embed = new MessageEmbed()
-                    .setAuthor(`Listening history for ${interaction.user.tag}`, lfmUser.user.image[3]?.['#text'])
+                    .setAuthor({ name: `Listening history for ${interaction.user.tag}`, iconUrl: lfmUser.user.image[3]?.['#text'] })
                     .setThumbnail(lfmUser.user.image[3]?.['#text'])
-                    .setFooter(`Requested by ${interaction.user.tag}`)
+                    .setFooter({ text: `Requested by ${interaction.user.tag}` })
                     .setColor(interaction?.member.displayColor ?? config.general.embedColor)
                     .setDescription(description.join('\n'));
 

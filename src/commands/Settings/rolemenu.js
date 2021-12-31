@@ -123,9 +123,11 @@ export default {
                 // If the role is higher than the users highest role send an error
                 if (message.member.roles.highest.position <= role.position) return message.error('One of the roles you specified is higher than or equal to your highest role!');
 
+                console.log(emote.emoji);
+
                 // Push the emoji and role into the array
                 array.push({
-                    emoji: emote.emoji.id ? emote.emoji.id : emote.emoji,
+                    emoji: emote.emoji?.id ? emote.emoji.id : emote.emoji,
                     role: role.id,
                 });
 

@@ -96,7 +96,7 @@ export default {
 
             ${matches}`)
             .setTimestamp()
-            .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: 'png' }));
+            .setFooter({ text: `Requested by ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true, format: 'png' }) });
 
         // Delete the loading message
         msg.delete().catch(() => { });
@@ -140,7 +140,7 @@ export default {
 
             ${matches}`)
             .setTimestamp()
-            .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ dynamic: true, format: 'png' }));
+            .setFooter({ text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true, format: 'png' }) });
 
         // Send the embed
         interaction.editReply({ embeds: [embed] });

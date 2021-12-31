@@ -111,7 +111,7 @@ export default {
                 .setTitle('Global COVID-19 Statistics')
                 .setThumbnail('https://i.imgur.com/2K1x0bS.png')
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
-                .setFooter('Updated', message.author.displayAvatarURL({ format: 'png', dynamic: true }))
+                .setFooter({ text: 'Updated', iconURL: message.author.displayAvatarURL({ format: 'png', dynamic: true }) })
                 .setTimestamp(stats.updated)
                 .addField('Overall Statistics', stripIndents`Cases: **${stats.cases.toLocaleString()}**
                     Deaths: **${stats.deaths.toLocaleString()}**
@@ -127,7 +127,7 @@ export default {
                     Critical Cases: **${stats.critical.toLocaleString()}**`, false);
 
             // Delete the status message & send the embed
-            msg.delete().catch(() => {});
+            msg.delete().catch(() => { });
             message.reply({ embeds: [embed] });
         } else if (option === 'top' && (['cases', 'deaths'].includes(args[1]?.toLowerCase()) || !args[1])) {
             // Send a status message
@@ -153,10 +153,10 @@ export default {
                 .setDescription(description.join('\n'))
                 .setTimestamp()
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
-                .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ format: 'png', dynamic: true }));
+                .setFooter({ text: `Requested by ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ format: 'png', dynamic: true }) });
 
             // Delete the status message and send the embed
-            msg.delete().catch(() => {});
+            msg.delete().catch(() => { });
             message.reply({ embeds: [embed] });
         } else if (['continent', 'state'].includes(option)) {
             // If no continent or state was specified return an error
@@ -174,7 +174,7 @@ export default {
                 .setTitle(`COVID-19 Statistics for ${stats.continent ?? stats.state}`)
                 .setThumbnail('https://i.imgur.com/2K1x0bS.png')
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
-                .setFooter('Updated', message.author.displayAvatarURL({ format: 'png', dynamic: true }))
+                .setFooter({ text: 'Updated', iconURL: message.author.displayAvatarURL({ format: 'png', dynamic: true }) })
                 .setTimestamp(stats.updated)
                 .addField('Overall Statistics', stripIndents`Totals: **${stats.cases.toLocaleString()}**
                     Deaths: **${stats.deaths.toLocaleString()}**
@@ -186,7 +186,7 @@ export default {
                     Active Cases: **${stats.active.toLocaleString()}**${stats.critical ? `\nCritical Cases: **${stats.critical.toLocaleString()}**` : ''}`, false);
 
             // Delete the status message & send the embed
-            msg.delete().catch(() => {});
+            msg.delete().catch(() => { });
             message.reply({ embeds: [embed] });
         } else {
             // Send a status message and get the data
@@ -202,7 +202,7 @@ export default {
                 .setTitle(`COVID-19 Statistics for ${stats.country}`)
                 .setThumbnail(stats.countryInfo.flag)
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
-                .setFooter('Updated', message.author.displayAvatarURL({ format: 'png', dynamic: true }))
+                .setFooter({ text: 'Updated', iconURL: message.author.displayAvatarURL({ format: 'png', dynamic: true }) })
                 .setTimestamp(stats.updated)
                 .addField('Overall Statistics', stripIndents`Cases: **${stats.cases.toLocaleString()}**
                     Deaths: **${stats.deaths.toLocaleString()}**
@@ -217,7 +217,7 @@ export default {
                     Critical Cases: **${stats.critical.toLocaleString()}**`, false);
 
             // Delete the status message & send the embed
-            msg.delete().catch(() => {});
+            msg.delete().catch(() => { });
             message.reply({ embeds: [embed] });
         }
     },
@@ -239,7 +239,7 @@ export default {
                 .setTitle('Global COVID-19 Statistics')
                 .setThumbnail('https://i.imgur.com/2K1x0bS.png')
                 .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
-                .setFooter('Updated', interaction.user.displayAvatarURL({ format: 'png', dynamic: true }))
+                .setFooter({ text: 'Updated', iconUrl: interaction.user.displayAvatarURL({ format: 'png', dynamic: true }) })
                 .setTimestamp(stats.updated)
                 .addField('Overall Statistics', stripIndents`Cases: **${stats.cases.toLocaleString()}**
                     Deaths: **${stats.deaths.toLocaleString()}**
@@ -274,7 +274,7 @@ export default {
                 .setDescription(description.join('\n'))
                 .setTimestamp()
                 .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
-                .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ format: 'png', dynamic: true }));
+                .setFooter({ text: `Requested by ${interaction.user.tag}`, iconUrl: interaction.user.displayAvatarURL({ format: 'png', dynamic: true }) });
 
             // Delete the status message and send the embed
             interaction.editReply({ embeds: [embed] });
@@ -293,7 +293,7 @@ export default {
                 .setTitle(`COVID-19 Statistics for ${stats.continent ?? stats.state}`)
                 .setThumbnail('https://i.imgur.com/2K1x0bS.png')
                 .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
-                .setFooter('Updated', interaction.user.displayAvatarURL({ format: 'png', dynamic: true }))
+                .setFooter({ text: 'Updated', iconURL: interaction.user.displayAvatarURL({ format: 'png', dynamic: true }) })
                 .setTimestamp(stats.updated)
                 .addField('Overall Statistics', stripIndents`Totals: **${stats.cases.toLocaleString()}**
                     Deaths: **${stats.deaths.toLocaleString()}**
@@ -322,7 +322,7 @@ export default {
                 .setTitle(`COVID-19 Statistics for ${stats.country}`)
                 .setThumbnail(stats.countryInfo.flag)
                 .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
-                .setFooter('Updated', interaction.user.displayAvatarURL({ format: 'png', dynamic: true }))
+                .setFooter({ text: 'Updated', iconUrl: interaction.user.displayAvatarURL({ format: 'png', dynamic: true }) })
                 .setTimestamp(stats.updated)
                 .addField('Overall Statistics', stripIndents`Cases: **${stats.cases.toLocaleString()}**
                     Deaths: **${stats.deaths.toLocaleString()}**

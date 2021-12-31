@@ -73,9 +73,9 @@ export default {
         if (!option) {
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor(`Guild Settings for ${message.guild.name}`, message.guild.iconURL({ format: 'png', dynamic: true }))
+                .setAuthor({ name: `Guild Settings for ${message.guild.name}`, iconURL: message.guild.iconURL({ format: 'png', dynamic: true }) })
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
-                .setFooter(`ID: ${message.guild.id}`)
+                .setFooter({ text: `ID: ${message.guild.id}` })
                 .setDescription(`**Permission Messages:** \`${message.settings.general.permission_message ? 'enabled' : 'disabled'}\`
                 **Permission DM's:** \`${message.settings.general.permission_dms ? 'enabled' : 'disabled'}\`
                 **Disabled Messages:** \`${message.settings.general.disabled_message ? 'enabled' : 'disabled'}\`
@@ -174,13 +174,13 @@ export default {
         if (sub === 'view') {
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor(`Guild Settings for ${interaction.guild.name}`, interaction.guild.iconURL({ format: 'png', dynamic: true }))
+                .setAuthor({ name: `Guild Settings for ${interaction.guild.name}`, iconURL: interaction.guild.iconURL({ format: 'png', dynamic: true }) })
                 .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
-                .setFooter(`ID: ${interaction.guild.id}`)
+                .setFooter({ text: `ID: ${interaction.guild.id}` })
                 .setDescription(`**Permission Messages:** \`${interaction.settings.general.permission_message ? 'enabled' : 'disabled'}\`
-                **Permission DM's:** \`${interaction.settings.general.permission_dms ? 'enabled' : 'disabled'}\`
-                **Disabled Messages:** \`${interaction.settings.general.disabled_message ? 'enabled' : 'disabled'}\`
-                **TimeZone:** \`${timezones.find((a) => a.tzCode === interaction.settings.general.timezone).label}\``);
+            **Permission DM's:** \`${interaction.settings.general.permission_dms ? 'enabled' : 'disabled'}\`
+            **Disabled Messages:** \`${interaction.settings.general.disabled_message ? 'enabled' : 'disabled'}\`
+            **TimeZone:** \`${timezones.find((a) => a.tzCode === interaction.settings.general.timezone).label}\``);
 
             // Send the embed
             interaction.reply({ embeds: [embed] });

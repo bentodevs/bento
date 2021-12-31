@@ -144,10 +144,10 @@ export default {
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor(`Giveaways hosted in ${message.guild.name}`, message.guild.iconURL({ format: 'png', dynamic: true }))
+                .setAuthor({ name: `Giveaways hosted in ${message.guild.name}`, iconURL: message.guild.iconURL({ format: 'png', dynamic: true }) })
                 .setColor(message.member?.displayColor || bot.config.general.embedColor)
                 .setDescription(description.join('\n'))
-                .setFooter(`${g.length} Total Giveaways | Page ${page + 1} of ${pages.length}`);
+                .setFooter({ text: `${g.length} Total Giveaways | Page ${page + 1} of ${pages.length}` });
 
             // Send the embed
             message.reply({ embeds: [embed] });
@@ -261,14 +261,14 @@ export default {
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor(`Giveaway: ${prize}`, message.guild.iconURL({ dynamic: true, format: 'png' }))
+                .setAuthor({ name: `Giveaway: ${prize}`, iconUrl: message.guild.iconURL({ dynamic: true, format: 'png' }) })
                 .setDescription(stripIndents`React with 🎉 to enter the giveaway!
 
                 **Duration:** ${formatDuration(intervalToDuration({ start, end }), { delimiter: ',' })}
                 **Hosted By:** ${message.author}`)
                 .setTimestamp(end)
                 .setColor(bot.config.general.embedColor)
-                .setFooter(`${winners} winners | Ends`);
+                .setFooter({ text: `${winners} winners | Ends` });
 
             // Send the embed & add the reaction
             const messageId = await channel.send({ embeds: [embed] }).then((msg) => { msg.react('🎉'); return msg.id; });
@@ -309,10 +309,10 @@ export default {
             if (!g) return message.errorReply('There is no giveaway with that ID or the giveaway is not active!');
 
             // Get the giveaway message
-            const msg = await message.guild.channels.cache.get(g.guild.channel_id)?.messages.fetch(g.guild.message_id).catch(() => {});
+            const msg = await message.guild.channels.cache.get(g.guild.channel_id)?.messages.fetch(g.guild.message_id).catch(() => { });
 
             // Delete the giveaway message and set the giveaway to inactive
-            await msg?.delete().catch(() => {});
+            await msg?.delete().catch(() => { });
             await giveaways.findOneAndUpdate({ 'guild.guild_id': message.guild.id, id, active: true }, { active: false });
 
             // Send a confirmation
@@ -349,17 +349,17 @@ export default {
 
             // Get the channel, message and giveaway creator
             const channel = message.guild.channels.cache.get(g.guild.channel_id);
-            const msg = await channel?.messages.fetch(g.guild.message_id).catch(() => {});
+            const msg = await channel?.messages.fetch(g.guild.message_id).catch(() => { });
             const creator = message.guild.members.cache.get(g.creator);
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor(`Giveaway: ${g.prize}`, message.guild.iconURL({ dynamic: true, format: 'png' }))
+                .setAuthor({ name: `Giveaway: ${g.prize}`, iconURL: message.guild.iconURL({ dynamic: true, format: 'png' }) })
                 // eslint-disable-next-line no-nested-ternary
                 .setDescription(`${arr.length ? arr.length > 1 ? `**Winners:**\n${arr.join('\n')}` : `**Winner:** ${arr.join('\n')}` : 'Could not determine a winner!'}\n**Hosted By:** ${creator}`)
                 .setTimestamp(Date.now())
                 .setColor(bot.config.general.embedColor)
-                .setFooter(`${g.winners} winners | Ended at`);
+                .setFooter({ text: `${g.winners} winners | Ended at` });
 
             // Update the embed
             msg?.edit({ embeds: [embed] });
@@ -451,10 +451,10 @@ export default {
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor(`Giveaways hosted in ${interaction.guild.name}`, interaction.guild.iconURL({ format: 'png', dynamic: true }))
+                .setAuthor({ name: `Giveaways hosted in ${interaction.guild.name}`, iconUrl: interaction.guild.iconURL({ format: 'png', dynamic: true }) })
                 .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
                 .setDescription(description.join('\n'))
-                .setFooter(`${g.length} Total Giveaways | Page ${page + 1} of ${pages.length}`);
+                .setFooter({ text: `${g.length} Total Giveaways | Page ${page + 1} of ${pages.length}` });
 
             // Send the embed
             interaction.reply({ embeds: [embed] });
@@ -487,14 +487,14 @@ export default {
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor(`Giveaway: ${prize}`, interaction.guild.iconURL({ dynamic: true, format: 'png' }))
+                .setAuthor({ name: `Giveaway: ${prize}`, iconUrl: interaction.guild.iconURL({ dynamic: true, format: 'png' }) })
                 .setDescription(stripIndents`React with 🎉 to enter the giveaway!
 
                 **Duration:** ${formatDuration(intervalToDuration({ start, end }), { delimiter: ',' })}
                 **Hosted By:** ${interaction.user}`)
                 .setTimestamp(end)
                 .setColor(bot.config.general.embedColor)
-                .setFooter(`${winners} winners | Ends`);
+                .setFooter({ text: `${winners} winners | Ends` });
 
             // Send the embed & add the reaction
             const messageId = await channel.send({ embeds: [embed] }).then((msg) => { msg.react('🎉'); return msg.id; });
@@ -532,10 +532,10 @@ export default {
             if (!g) return interaction.error('There is no giveaway with that ID or the giveaway is not active!');
 
             // Get the giveaway message
-            const msg = await interaction.guild.channels.cache.get(g.guild.channel_id)?.messages.fetch(g.guild.message_id).catch(() => {});
+            const msg = await interaction.guild.channels.cache.get(g.guild.channel_id)?.messages.fetch(g.guild.message_id).catch(() => { });
 
             // Delete the giveaway message and set the giveaway to inactive
-            await msg?.delete().catch(() => {});
+            await msg?.delete().catch(() => { });
             await giveaways.findOneAndUpdate({ 'guild.guild_id': interaction.guild.id, id, active: true }, { active: false });
 
             // Send a confirmation
@@ -569,17 +569,17 @@ export default {
 
             // Get the channel, message and giveaway creator
             const channel = interaction.guild.channels.cache.get(g.guild.channel_id);
-            const msg = await channel?.messages.fetch(g.guild.message_id).catch(() => {});
+            const msg = await channel?.messages.fetch(g.guild.message_id).catch(() => { });
             const creator = interaction.guild.members.cache.get(g.creator);
 
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor(`Giveaway: ${g.prize}`, interaction.guild.iconURL({ dynamic: true, format: 'png' }))
+                .setAuthor({ name: `Giveaway: ${g.prize}`, iconUrl: interaction.guild.iconURL({ dynamic: true, format: 'png' }) })
                 // eslint-disable-next-line no-nested-ternary
                 .setDescription(`${arr.length ? arr.length > 1 ? `**Winners:**\n${arr.join('\n')}` : `**Winner:** ${arr.join('\n')}` : 'Could not determine a winner!'}\n**Hosted By:** ${creator}`)
                 .setTimestamp(Date.now())
                 .setColor(bot.config.general.embedColor)
-                .setFooter(`${g.winners} winners | Ended at`);
+                .setFooter({ text: `${g.winners} winners | Ended at` });
 
             // Update the embed
             msg?.edit({ embeds: [embed] });

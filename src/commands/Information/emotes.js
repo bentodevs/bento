@@ -61,8 +61,8 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Emotes of ${message.guild.name}`, message.guild.iconURL({ format: 'png', dynamic: true }))
-            .setFooter(`${emotes.size} total emotes | Page ${page + 1} of ${pages.length}`)
+            .setAuthor({ name: `Emotes of ${message.guild.name}`, iconUrl: message.guild.iconURL({ format: 'png', dynamic: true }) })
+            .setFooter({ text: `${emotes.size} total emotes | Page ${page + 1} of ${pages.length}` })
             .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setDescription(description.join('\n'));
 
@@ -95,8 +95,8 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Emotes of ${interaction.guild.name}`, interaction.guild.iconURL({ format: 'png', dynamic: true }))
-            .setFooter(`${emotes.size} total emotes | Page ${page + 1} of ${pages.length}`)
+            .setAuthor({ name: `Emotes of ${interaction.guild.name}`, iconUrl: interaction.guild.iconURL({ format: 'png', dynamic: true }) })
+            .setFooter({ text: `${emotes.size} total emotes | Page ${page + 1} of ${pages.length}` })
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
             .setDescription(description.join('\n'));
 

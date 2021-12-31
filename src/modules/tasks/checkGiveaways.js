@@ -39,21 +39,21 @@ export default async function init(bot) {
                 }
 
                 // Get the guild, channel, message and giveaway creator
-                const guild = bot.guilds.cache.get(data.guild.guild_id) || await bot.guilds.fetch(data.guild.guild_id).catch(() => {});
+                const guild = bot.guilds.cache.get(data.guild.guild_id) || await bot.guilds.fetch(data.guild.guild_id).catch(() => { });
                 const channel = guild?.channels.cache.get(data.guild.channel_id);
-                const msg = await channel?.messages.fetch(data.guild.message_id).catch(() => {});
+                const msg = await channel?.messages.fetch(data.guild.message_id).catch(() => { });
                 const creator = guild?.members.cache.get(data.creator);
 
                 if (!guild) return;
 
                 // Build the embed
                 const embed = new MessageEmbed()
-                    .setAuthor(`Giveaway: ${data.prize}`, guild.iconURL({ dynamic: true, format: 'png' }))
+                    .setAuthor({ name: `Giveaway: ${data.prize}`, iconURL: guild.iconURL({ dynamic: true, format: 'png' }) })
                     // eslint-disable-next-line no-nested-ternary
                     .setDescription(`${arr.length ? arr.length > 1 ? `**Winners:**\n${arr.join('\n')}` : `**Winner:** ${arr.join('\n')}` : 'Could not determine a winner!'}\n**Hosted By:** ${creator}`)
                     .setTimestamp(Date.now())
                     .setColor(bot.config.general.embedColor)
-                    .setFooter(`${data.winners} winners | Ended at`);
+                    .setFooter({ text: `${data.winners} winners | Ended at` });
 
                 // Update the embed
                 msg?.edit({ embeds: [embed] });

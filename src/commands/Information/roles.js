@@ -60,8 +60,8 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Roles of ${message.guild.name}`, message.guild.iconURL({ format: 'png', dynamic: true }))
-            .setFooter(`${sorted.length} total roles | Page ${page + 1} of ${pages.length}`)
+            .setAuthor({ name: `Roles of ${message.guild.name}`, iconURL: message.guild.iconURL({ format: 'png', dynamic: true }) })
+            .setFooter({ text: `${sorted.length} total roles | Page ${page + 1} of ${pages.length}` })
             .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setDescription(description.join('\n'));
 
@@ -93,8 +93,8 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Roles of ${interaction.guild.name}`, interaction.guild.iconURL({ format: 'png', dynamic: true }))
-            .setFooter(`${sorted.length} total roles | Page ${page + 1} of ${pages.length}`)
+            .setAuthor({ name: `Roles of ${interaction.guild.name}`, iconUrl: interaction.guild.iconURL({ format: 'png', dynamic: true }) })
+            .setFooter({ text: `${sorted.length} total roles | Page ${page + 1} of ${pages.length}` })
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
             .setDescription(description.join('\n'));
 

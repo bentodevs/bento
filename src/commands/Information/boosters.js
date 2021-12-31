@@ -65,10 +65,10 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Nitro Boosters of ${message.guild.name}`, message.guild.iconURL({ format: 'png', dynamic: true }))
+            .setAuthor({ name: `Nitro Boosters of ${message.guild.name}`, iconURL: message.guild.iconURL({ format: 'png', dynamic: true }) })
             .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .setDescription(formatted.join('\n'))
-            .setFooter(`${sorted.size} total boosters | Page ${page + 1} of ${pages.length}`);
+            .setFooter({ text: `${sorted.size} total boosters | Page ${page + 1} of ${pages.length}` });
 
         // Send the embed
         message.reply({ embeds: [embed] });
@@ -104,10 +104,10 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Nitro Boosters of ${interaction.guild.name}`, interaction.guild.iconURL({ format: 'png', dynamic: true }))
+            .setAuthor({ name: `Nitro Boosters of ${interaction.guild.name}`, iconURL: interaction.guild.iconURL({ format: 'png', dynamic: true }) })
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
             .setDescription(formatted.join('\n'))
-            .setFooter(`${sorted.size} total boosters | Page ${page + 1} of ${pages.length}`);
+            .setFooter({ text: `${sorted.size} total boosters | Page ${page + 1} of ${pages.length}` });
 
         // Send the embed
         interaction.reply({ embeds: [embed] });

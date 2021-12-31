@@ -76,7 +76,7 @@ export default {
 
         // Build embed
         const embed = new MessageEmbed()
-            .setAuthor(message.guild.name, message.guild.iconURL({ format: 'png', dynamic: true }))
+            .setAuthor({ name: message.guild.name, iconURL: message.guild.iconURL({ format: 'png', dynamic: true }) })
             .setColor(owner.displayColor ?? bot.config.general.embedColor)
             .setThumbnail(message.guild.iconURL({ format: 'png', dynamic: true }))
             .setDescription(stripIndents`🧑‍🤝‍🧑 **${members}** ${members > 1 ? 'members' : 'member'} [${bots} ${(bots > 1) || (bots === 0) ? 'bots' : 'bot'}] | ${config.emojis.online} **${online}** online

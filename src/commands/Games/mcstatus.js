@@ -61,12 +61,12 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Server Status - ${args[0]}`, 'attachment://img.png')
+            .setAuthor({ name: `Server Status - ${args[0]}`, iconURL: 'attachment://img.png' })
             .setThumbnail('attachment://img.png')
             .setDescription(`**Status:** ${bot.config.emojis.online} Online\n**Online Players:** ${status.players.online}/${status.players.max}\n\n**MOTD**\n\`\`\`${status.motd.clean.join('\n').removeMinecraftCodes()}\`\`\``)
             .setTimestamp()
             .setColor(message.member?.displayColor || bot.config.general.embedColor)
-            .setFooter(`Requested by: ${message.author.tag}`);
+            .setFooter({ text: `Requested by: ${message.author.tag}` });
 
         // Send the embed
         message.reply({ embeds: [embed], files: [icon] });
@@ -85,12 +85,12 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Server Status - ${interaction.options.get('server_ip').value}${interaction.options.get('server_port')?.value ? `:${interaction.options.get('server_port').value}` : ''}`, 'attachment://img.png')
+            .setAuthor({ name: `Server Status - ${interaction.options.get('server_ip').value}${interaction.options.get('server_port')?.value ? `:${interaction.options.get('server_port').value}` : ''}`, iconURL: 'attachment://img.png' })
             .setThumbnail('attachment://img.png')
             .setDescription(`**Status:** ${bot.config.emojis.online} Online\n**Online Players:** ${status.players.online}/${status.players.max}\n\n**MOTD**\n\`\`\`${status.motd.clean.join('\n').removeMinecraftCodes()}\`\`\``)
             .setTimestamp()
             .setColor(interaction.member?.displayColor || bot.config.general.embedColor)
-            .setFooter(`Requested by: ${interaction.user.tag}`);
+            .setFooter({ text: `Requested by: ${interaction.user.tag}` });
 
         // Send the embed
         interaction.reply({ embeds: [embed], files: [icon], ephemeral: true });

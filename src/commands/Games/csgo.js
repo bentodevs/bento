@@ -47,7 +47,7 @@ export default {
                             const timePlayed = formatDistance(0, new Date(user.playerstats.stats.find((a) => a.name === 'total_time_played').value * 1000), 'PPp');
 
                             const embed = new MessageEmbed()
-                                .setAuthor(`CS:GO Player Stats: ${data.profileInfo.name}`, 'https://i.imgur.com/ekIx2st.png')
+                                .setAuthor({ name: `CS:GO Player Stats: ${data.profileInfo.name}`, iconURL: 'https://i.imgur.com/ekIx2st.png' })
                                 .setThumbnail(data.avatar.full)
                                 .setColor(message.member.displayColor ?? bot.config.embedColor)
                                 .setDescription(stripIndents`**K/D:** ${(user.playerstats.stats.find((a) => a.name === 'total_kills').value / user.playerstats.stats.find((a) => a.name === 'total_deaths').value).toFixed(2)} (**Kills:** ${user.playerstats.stats.find((a) => a.name === 'total_kills').value} | **Deaths:** ${user.playerstats.stats.find((a) => a.name === 'total_deaths').value})
@@ -59,7 +59,7 @@ export default {
                                 ${user.playerstats.stats.find((a) => a.name === 'total_planted_bombs')?.value || 0} **bombs planted** | ${user.playerstats.stats.find((a) => a.name === 'total_defused_bombs')?.value || 0} **bombs defused**
                                 **Money Earned:** ${user.playerstats.stats.find((a) => a.name === 'total_money_earned').value}`)
                                 .setTimestamp()
-                                .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: 'png' }));
+                                .setFooter({ text: `Requested by ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true, format: 'png' }) });
 
                             message.reply({ embeds: [embed] });
                         })
@@ -75,7 +75,7 @@ export default {
                             const timePlayed = formatDistance(0, new Date(user.playerstats.stats.find((a) => a.name === 'total_time_played').value * 1000), 'PPp');
 
                             const embed = new MessageEmbed()
-                                .setAuthor(`CS:GO Player Stats: ${data.profileInfo.name}`, 'https://i.imgur.com/ekIx2st.png')
+                                .setAuthor({ name: `CS:GO Player Stats: ${data.profileInfo.name}`, iconURL: 'https://i.imgur.com/ekIx2st.png' })
                                 .setThumbnail(data.avatar.full)
                                 .setColor(message.member.displayColor ?? bot.config.embedColor)
                                 .setDescription(stripIndents`**K/D:** ${(user.playerstats.stats.find((a) => a.name === 'total_kills').value / user.playerstats.stats.find((a) => a.name === 'total_deaths').value).toFixed(2)} (**Kills:** ${user.playerstats.stats.find((a) => a.name === 'total_kills').value} | **Deaths:** ${user.playerstats.stats.find((a) => a.name === 'total_deaths').value})
@@ -87,7 +87,7 @@ export default {
                                 ${user.playerstats.stats.find((a) => a.name === 'total_planted_bombs')?.value || 0} **bombs planted** | ${user.playerstats.stats.find((a) => a.name === 'total_defused_bombs')?.value || 0} **bombs defused**
                                 **Money Earned:** ${user.playerstats.stats.find((a) => a.name === 'total_money_earned').value}`)
                                 .setTimestamp()
-                                .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true, format: 'png' }));
+                                .setFooter({ text: `Requested by ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true, format: 'png' }) });
 
                             message.reply({ embeds: [embed] });
                         })
@@ -113,7 +113,7 @@ export default {
                             const timePlayed = formatDistance(0, new Date(user.playerstats.stats.find((a) => a.name === 'total_time_played').value * 1000), 'PPp');
 
                             const embed = new MessageEmbed()
-                                .setAuthor(`CS:GO Player Stats: ${data.profileInfo.name}`, 'https://i.imgur.com/ekIx2st.png')
+                                .setAuthor({ name: `CS:GO Player Stats: ${data.profileInfo.name}`, iconURL: 'https://i.imgur.com/ekIx2st.png' })
                                 .setThumbnail(data.avatar.full)
                                 .setColor(interaction.member?.displayColor ?? bot.config.embedColor)
                                 .setDescription(stripIndents`**K/D:** ${(user.playerstats.stats.find((a) => a.name === 'total_kills').value / user.playerstats.stats.find((a) => a.name === 'total_deaths').value).toFixed(2)} (**Kills:** ${user.playerstats.stats.find((a) => a.name === 'total_kills').value} | **Deaths:** ${user.playerstats.stats.find((a) => a.name === 'total_deaths').value})
@@ -125,7 +125,7 @@ export default {
                                 ${user.playerstats.stats.find((a) => a.name === 'total_planted_bombs')?.value || 0} **bombs planted** | ${user.playerstats.stats.find((a) => a.name === 'total_defused_bombs')?.value || 0} **bombs defused**
                                 **Money Earned:** ${user.playerstats.stats.find((a) => a.name === 'total_money_earned').value}`)
                                 .setTimestamp()
-                                .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ dynamic: true, format: 'png' }));
+                                .setFooter({ text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true, format: 'png' }) });
 
                             interaction.editReply({ embeds: [embed] });
                         })
@@ -141,7 +141,7 @@ export default {
                             const timePlayed = formatDistance(0, new Date(user.playerstats.stats.find((a) => a.name === 'total_time_played').value * 1000), 'PPp');
 
                             const embed = new MessageEmbed()
-                                .setAuthor(`CS:GO Player Stats: ${data.profileInfo.name}`, 'https://i.imgur.com/ekIx2st.png')
+                                .setAuthor({ name: `CS:GO Player Stats: ${data.profileInfo.name}`, iconURL: 'https://i.imgur.com/ekIx2st.png' })
                                 .setThumbnail(data.avatar.full)
                                 .setColor(interaction.member?.displayColor ?? bot.config.embedColor)
                                 .setDescription(stripIndents`**K/D:** ${(user.playerstats.stats.find((a) => a.name === 'total_kills').value / user.playerstats.stats.find((a) => a.name === 'total_deaths').value).toFixed(2)} (**Kills:** ${user.playerstats.stats.find((a) => a.name === 'total_kills').value} | **Deaths:** ${user.playerstats.stats.find((a) => a.name === 'total_deaths').value})
@@ -153,7 +153,7 @@ export default {
                                 ${user.playerstats.stats.find((a) => a.name === 'total_planted_bombs')?.value || 0} **bombs planted** | ${user.playerstats.stats.find((a) => a.name === 'total_defused_bombs')?.value || 0} **bombs defused**
                                 **Money Earned:** ${user.playerstats.stats.find((a) => a.name === 'total_money_earned').value}`)
                                 .setTimestamp()
-                                .setFooter(`Requested by ${interaction.user.tag}`, interaction.user.displayAvatarURL({ dynamic: true, format: 'png' }));
+                                .setFooter({ text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true, format: 'png' }) });
 
                             interaction.editReply({ embeds: [embed] });
                         })

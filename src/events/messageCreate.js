@@ -165,7 +165,7 @@ export default async (bot, message) => {
 
         // Build the error embed
         const embed = new MessageEmbed()
-            .setAuthor(`An error occured in ${message.guild?.name ?? `${message.author.tag}'s dms`}`, 'https://i.imgur.com/e7xORGp.png')
+            .setAuthor({ name: `An error occured in ${message.guild?.name ?? `${message.author.tag}'s dms`}`, iconURL: 'https://i.imgur.com/e7xORGp.png' })
             .setThumbnail('https://i.imgur.com/e7xORGp.png')
             .setDescription(stripIndents`**Guild ID:** ${message.guild?.id ?? '<dms>'}
             **Message Author:** ${message.author.tag} (${message.author.id})
@@ -194,7 +194,7 @@ export default async (bot, message) => {
 
         // Build the log embed
         const embed = new MessageEmbed()
-            .setAuthor(`${message.author.tag} used a command in #${message.channel.name}`, message.author.displayAvatarURL({ format: 'png', dynamic: true }))
+            .setAuthor({ name: `${message.author.tag} used a command in #${message.channel.name}`, iconURL: message.author.displayAvatarURL({ format: 'png', dynamic: true }) })
             .setThumbnail(message.author.displayAvatarURL({ format: 'png', dynamic: true }))
             .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
             .setDescription(stripIndents`**User:** ${message.author} (\`${message.author.id}\`)

@@ -16,11 +16,11 @@ export default async (bot, channel) => {
         if (!log) return;
 
         const embed = new MessageEmbed()
-            .setAuthor(`${channel.name} was deleted`, channel.guild.iconURL({ dynamic: true, format: 'png' }))
+            .setAuthor({ name: `${channel.name} was deleted`, iconURL: channel.guild.iconURL({ dynamic: true, format: 'png' }) })
             .setColor(bot.config.general.embedColor)
             .setDescription(stripIndents`**Channel:** ${channel} (\`${channel.id}\`)
             **Channel Type:** ${channel.type.toTitleCase()}`)
-            .setFooter('Deleted at')
+            .setFooter({ text: 'Deleted at' })
             .setTimestamp(channel.createdTimestamp);
 
         log.send({ embeds: [embed] });

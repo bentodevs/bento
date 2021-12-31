@@ -41,7 +41,7 @@ export default {
         getProfile(message.options?.get('username')?.value ?? args.join(' ')).then((data) => {
             // Build the embed
             const embed = new MessageEmbed()
-                .setAuthor(data.name, 'https://i.imgur.com/3Crs2k9.png', data.siteUrl)
+                .setAuthor({ name: data.name, iconURL: 'https://i.imgur.com/3Crs2k9.png', url: data.siteUrl })
                 .setDescription(stripIndents`Name: **${data.name}**
                 ID: **${data.id}**${data.donatorTier ? `\nDonator Tier: **${data.donatorTier}**` : ''}${data.donatorBadge && data.donatorTier ? `\nDonator Badge: **${data.donatorBadge}**` : ''}
                 More Info: [Click Here](${data.siteUrl})`)

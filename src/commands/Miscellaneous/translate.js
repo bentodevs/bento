@@ -57,7 +57,7 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Translated From: ${ISO.getName(result.from.language.iso)}`)
+            .setAuthor({ name: `Translated From: ${ISO.getName(result.from.language.iso)}` })
             .setThumbnail('https://i.imgur.com/Lg3ZDtn.png')
             .setColor(message.member?.displayColor || bot.config.general.embedColor)
             .addField(`Original (${ISO.getName(result.from.language.iso)})`, toTranslate)
@@ -79,7 +79,7 @@ export default {
 
         // Build the embed
         const embed = new MessageEmbed()
-            .setAuthor(`Translated From: ${ISO.getName(result.from.language.iso)}`)
+            .setAuthor({ name: `Translated From: ${ISO.getName(result.from.language.iso)}` })
             .setThumbnail('https://i.imgur.com/Lg3ZDtn.png')
             .setColor(interaction.member?.displayColor ?? bot.config.general.embedColor)
             .addField(`Original (${ISO.getName(result.from.language.iso)})`, toTranslate)

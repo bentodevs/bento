@@ -82,6 +82,13 @@ export default {
             }
             // Grab the Channel the user specifies from Discord
             const chan = await getChannel(message, args.slice(1).join(''), true);
+
+            // If the channel isn't a text channel return an error
+            if (chan.type !== 'GUILD_TEXT' && chan.type !== 'GUILD_NEWS') return message.errorReply('The channel you specified isn\'t a text channel!');
+
+            // If the bot doesn't have permissions to send messages or embed in the channel return an error
+            if (!chan.permissionsFor(message.guild.me).has('EMBED_LINKS') || !chan.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return message.errorReply('I don\'t have permissions to send messages or embeds in that channel!');
+
             // Set the channel in the guild's settings
             await settings.findOneAndUpdate({ _id: message.guild.id }, { 'welcome.channel': chan.id });
             // Send a confirmation message
