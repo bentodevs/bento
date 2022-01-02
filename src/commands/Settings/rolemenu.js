@@ -45,28 +45,39 @@ export default {
             if (!reactRoles.length) return message.errorReply("There aren't any reaction menus setup for this guild!");
 
             // Define the msg and num
-            let msg = '__**Reaction Roles**__\n\n';
+            let msg = '';
             let num = 0;
 
             // Loop through the react roles data
             for (const data of reactRoles) {
-                // Increase the number by 1
-                num += 1;
-
                 // Grab the channel, message and the roles
                 const reactChannel = message.guild.channels.cache.get(data.channel);
                 const reactMsg = await reactChannel.messages.fetch(data.message).catch(() => {});
                 const { roles } = data;
 
+                if (!reactMsg) {
+                    await reactroles.findOneAndDelete({ guild: data.guild, message: data.message });
+                    // eslint-disable-next-line no-continue
+                    continue;
+                }
+
+                // Increase the number by 1
+                num += 1;
+
                 // If the message was found then add it to the msg
-                if (reactMsg) msg += `**${num}.** Message ID: ${reactMsg.id} | ${roles.length} roles | ${reactChannel}\n`;
+                if (reactMsg) msg += `**${num}.** Message ID: [${reactMsg.id}](${reactMsg.url}) | ${roles.length} role${roles.length > 1 ? 's' : ''} | ${reactChannel}\n`;
             }
 
             // If the message is empty return an error
             if (!msg) return message.errorReply("There aren't any reaction menus setup for this guild!");
 
+            const embed = new MessageEmbed()
+                .setAuthor({ name: `Reaction Menus for ${message.guild.name}`, iconURL: message.guild.iconURL({ dynamic: true, format: 'png' }) })
+                .setColor(message.member.displayHexColor)
+                .setDescription(msg);
+
             // Send the message
-            message.channel.send(msg);
+            message.channel.send({ embeds: [embed] });
         } else if (args[0] === 'remove') {
             // If the user didn't specify a message ID return an error
             if (!args[1]) return message.errorReply('You need to specify a message ID to remove!');
