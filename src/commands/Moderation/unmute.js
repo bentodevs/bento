@@ -51,9 +51,7 @@ export default {
         const muterole = message.settings.roles.mute;
         const mute = await mutes.findOne({ guild: message.guild.id, mutedUser: member?.id });
         const action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1;
-        const publicLog = message.guild.channels.cache.get(message.settings.logs.unmute);
 
-        // TODO: [BOT-78] Add case creation in non-slash unmute command
         // If no member was found return an error
         if (!member) return message.errorReply("You didn't specify a valid member!");
 
@@ -74,12 +72,21 @@ export default {
                 reason,
             });
 
-            // Send punishment log message
-            punishmentLog(bot, message, member, action, reason, 'unmute');
+            // Send the punishment to the log channel
+            const embed = punishmentLog(bot, message, member, action, reason, 'unmute');
+
+            // Send public ban log message, if it exists
+            message.guild.channels.fetch(message.settings.logs?.ban).then((channel) => {
+                channel?.send(`🔉 **${member?.user.tag}** was unmuted for **${reason}**`);
+            });
+
+            // Send the punishment to the mod log channel
+            message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
+                channel?.send({ embeds: [embed] });
+            });
+
             // Send the user a confirmation message
             member.send(`🔈 You have been unmuted in **${message.guild.name}**`).catch(() => { });
-            // Send the public log message
-            if (publicLog) publicLog.send(`🔉 **${member.user.tag}** has been unmuted for **${reason}**`);
             // Confirm that the command completed
             message.confirmationReply(`**${member.user.tag}** has been unmuted successfully!`);
         } else if (!mute && member.roles.cache.has(muterole)) {
@@ -102,14 +109,23 @@ export default {
                 reason,
             });
 
-            // Send punishment log message
-            punishmentLog(bot, message, member, action, reason, 'unmute');
-            // Send the public log message
-            if (publicLog) publicLog.send(`🔉 **${member.user.tag}** has been unmuted for **${reason}**`);
+            // Send the punishment to the log channel
+            const embed = punishmentLog(bot, message, member, action, reason, 'unmute');
+
+            // Send public ban log message, if it exists
+            message.guild.channels.fetch(message.settings.logs?.ban).then((channel) => {
+                channel?.send(`🔉 **${member?.user.tag}** was unmuted for **${reason}**`);
+            });
+
+            // Send the punishment to the mod log channel
+            message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
+                channel?.send({ embeds: [embed] });
+            });
+
             // Send the user a confirmation message
             member.send(`🔈 You have been unmuted in **${message.guild.name}**`).catch(() => { });
             // Confirm that the command completed
-            message.confirmationReply(`**${member.user.tag}** has been unmuted successfully! *(They did not seem to have the role)*`);
+            message.confirmationReply(`**${member.user.tag}** has been unmuted successfully! *(Case #${action})*`);
         } else if (!mute && !member.roles.cache.has(muterole)) {
             // If member doesn't have muted role AND is not in the DB, then remove the mute
             message.errorReply('That user is not muted!');
@@ -126,7 +142,6 @@ export default {
         const muterole = interaction.settings.roles.mute;
         const mute = await mutes.findOne({ guild: interaction.guild.id, mutedUser: user.user.id });
         const action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1;
-        const publicLog = interaction.guild.channels.cache.get(interaction.settings.logs.unmute);
 
         if (!user.member) return interaction.error('You did not specify a valid server member!');
 
@@ -147,12 +162,21 @@ export default {
                 reason,
             });
 
-            // Send punishment log message
-            punishmentLog(bot, interaction, user.member, action, reason, 'unmute');
+            // Send the punishment to the log channel
+            const embed = punishmentLog(bot, interaction, user.member, action, reason, 'unmute');
+
+            // Send public ban log message, if it exists
+            interaction.guild.channels.fetch(interaction.settings.logs?.ban).then((channel) => {
+                channel?.send(`🔉 **${interaction?.user.tag}** was unmuted for **${reason}**`);
+            });
+
+            // Send the punishment to the mod log channel
+            interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
+                channel?.send({ embeds: [embed] });
+            });
+
             // Send the user a confirmation message
-            user.member.send(`🔈 You have been unmuted in **${interaction.guild.name}**`).catch(() => { });
-            // Send the public log message
-            if (publicLog) publicLog.send(`🔉 **${user.user.tag}** has been unmuted for **${reason}**`);
+            user.send(`🔈 You have been unmuted in **${interaction.guild.name}**`).catch(() => { });
             // Confirm that the command completed
             interaction.confirmation(`**${user.user.tag}** has been unmuted successfully! *(Case #${action})*`);
         } else if (!mute && user.member.roles.cache.has(muterole)) {
@@ -175,15 +199,23 @@ export default {
                 reason,
             });
 
-            // Send punishment log message
-            punishmentLog(bot, interaction, user.member, action, reason, 'unmute');
+            // Send the punishment to the log channel
+            const embed = punishmentLog(bot, interaction, user.member, action, reason, 'unmute');
+
+            // Send public ban log message, if it exists
+            interaction.guild.channels.fetch(interaction.settings.logs?.ban).then((channel) => {
+                channel?.send(`🔉 **${interaction?.user.tag}** was unmuted for **${reason}**`);
+            });
+
+            // Send the punishment to the mod log channel
+            interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
+                channel?.send({ embeds: [embed] });
+            });
 
             // Send the user a confirmation message
-            user.member.send(`🔈 You have been unmuted in **${interaction.guild.name}**`).catch(() => { });
-            // Send the public log message
-            if (publicLog) publicLog.send(`🔉 **${user.user.tag}** has been unmuted for **${reason}**`);
+            user.send(`🔈 You have been unmuted in **${interaction.guild.name}**`).catch(() => { });
             // Confirm that the command completed
-            interaction.confirmation(`**${user.user.tag}** has been unmuted successfully! *(They did not seem to have the role) (Case #${action})*`);
+            interaction.confirmation(`**${user.user.tag}** has been unmuted successfully! *(Case #${action})*`);
         } else if (!mute && !user.member.roles.cache.has(muterole)) {
             // If member doesn't have muted role AND is not in the DB, then remove the mute
             interaction.error('That user is not muted!');
