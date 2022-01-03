@@ -47,18 +47,18 @@ export default {
 
         // Add the overall status to the description
         switch (status.status.indicator) {
-            case 'major':
-                description += `${bot.config.emojis.dnd} **Overall Status:** Major Outage Reported\n\n`;
-                break;
-            case 'minor':
-                description += `${bot.config.emojis.idle} **Overall Status:** Minor Outage Reported\n\n`;
-                break;
-            case 'none':
-                description += `${bot.config.emojis.online} **Overall Status:** No Outage Reported\n\n`;
-                break;
-            default:
-                description += `${bot.config.emojis.online} **Overall Status:** No Outage Reported\n\n`;
-                break;
+        case 'major':
+            description += `${bot.config.emojis.dnd} **Overall Status:** Major Outage Reported\n\n`;
+            break;
+        case 'minor':
+            description += `${bot.config.emojis.idle} **Overall Status:** Minor Outage Reported\n\n`;
+            break;
+        case 'none':
+            description += `${bot.config.emojis.online} **Overall Status:** No Outage Reported\n\n`;
+            break;
+        default:
+            description += `${bot.config.emojis.online} **Overall Status:** No Outage Reported\n\n`;
+            break;
         }
 
         // Define all the components
@@ -68,21 +68,21 @@ export default {
         for (const data of status.components) {
             if (components.includes(data.name.toLowerCase())) {
                 switch (data.status) {
-                    case 'major_outage':
-                        description += `${bot.config.emojis.dnd} **${data.name}:** Major Outage\n`;
-                        break;
-                    case 'partial_outage':
-                        description += `${bot.config.emojis.idle} **${data.name}:** Partial Outage\n`;
-                        break;
-                    case 'operational':
-                        description += `${bot.config.emojis.online} **${data.name}:** Operational\n`;
-                        break;
-                    case 'degraded_performance':
-                        description += `${bot.config.emojis.idle} **${data.name}:** Degraded Performance\n`;
-                        break;
-                    default:
-                        description += `${bot.config.emojis.offline} **${data.name}:** Not reported\n`;
-                        break;
+                case 'major_outage':
+                    description += `${bot.config.emojis.dnd} **${data.name}:** Major Outage\n`;
+                    break;
+                case 'partial_outage':
+                    description += `${bot.config.emojis.idle} **${data.name}:** Partial Outage\n`;
+                    break;
+                case 'operational':
+                    description += `${bot.config.emojis.online} **${data.name}:** Operational\n`;
+                    break;
+                case 'degraded_performance':
+                    description += `${bot.config.emojis.idle} **${data.name}:** Degraded Performance\n`;
+                    break;
+                default:
+                    description += `${bot.config.emojis.offline} **${data.name}:** Not reported\n`;
+                    break;
                 }
             }
         }
