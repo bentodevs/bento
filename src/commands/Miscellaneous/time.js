@@ -58,19 +58,19 @@ export default {
 
         // Switch-case for adding the correct clock emoji
         switch (clockHour[0]) {
-            case '1': clock = '🕐'; break;
-            case '2': clock = '🕑'; break;
-            case '3': clock = '🕒'; break;
-            case '4': clock = '🕓'; break;
-            case '5': clock = '🕔'; break;
-            case '6': clock = '🕕'; break;
-            case '7': clock = '🕖'; break;
-            case '8': clock = '🕗'; break;
-            case '9': clock = '🕘'; break;
-            case '10': clock = '🕙'; break;
-            case '11': clock = '🕚'; break;
-            case '12': clock = '🕛'; break;
-            default: clock = '🕐'; break;
+        case '1': clock = '🕐'; break;
+        case '2': clock = '🕑'; break;
+        case '3': clock = '🕒'; break;
+        case '4': clock = '🕓'; break;
+        case '5': clock = '🕔'; break;
+        case '6': clock = '🕕'; break;
+        case '7': clock = '🕖'; break;
+        case '8': clock = '🕗'; break;
+        case '9': clock = '🕘'; break;
+        case '10': clock = '🕙'; break;
+        case '11': clock = '🕚'; break;
+        case '12': clock = '🕛'; break;
+        default: clock = '🕐'; break;
         }
 
         // Build the embed
@@ -106,19 +106,19 @@ export default {
 
         // Switch-case for adding the correct clock emoji
         switch (clockHour[0]) {
-            case '1': clock = '🕐'; break;
-            case '2': clock = '🕑'; break;
-            case '3': clock = '🕒'; break;
-            case '4': clock = '🕓'; break;
-            case '5': clock = '🕔'; break;
-            case '6': clock = '🕕'; break;
-            case '7': clock = '🕖'; break;
-            case '8': clock = '🕗'; break;
-            case '9': clock = '🕘'; break;
-            case '10': clock = '🕙'; break;
-            case '11': clock = '🕚'; break;
-            case '12': clock = '🕛'; break;
-            default: clock = '🕐'; break;
+        case '1': clock = '🕐'; break;
+        case '2': clock = '🕑'; break;
+        case '3': clock = '🕒'; break;
+        case '4': clock = '🕓'; break;
+        case '5': clock = '🕔'; break;
+        case '6': clock = '🕕'; break;
+        case '7': clock = '🕖'; break;
+        case '8': clock = '🕗'; break;
+        case '9': clock = '🕘'; break;
+        case '10': clock = '🕙'; break;
+        case '11': clock = '🕚'; break;
+        case '12': clock = '🕛'; break;
+        default: clock = '🕐'; break;
         }
 
         // Build the embed

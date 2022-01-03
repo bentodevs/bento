@@ -1,7 +1,6 @@
 import { stripIndents } from 'common-tags';
 import { format } from 'date-fns';
 import dateFnsTz from 'date-fns-tz';
-import config from '../../config.js';
 import preban from '../../database/models/preban.js';
 import punishments from '../../database/models/punishments.js';
 import { getMember, getUser } from '../../modules/functions/getters.js';
@@ -54,7 +53,6 @@ export default {
         const member = await getMember(message, args[0], true) || await getUser(bot, message, args[0], true);
         const reason = args.slice(1, args.length).join(' ') || 'No reason provided';
         const action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1;
-        const publicLog = message.guild.channels.cache.get(message.settings.logs.ban);
 
         // If the member doesn't exist/isn't part of the guild, then return an error
         if (!member) return message.errorReply('You did not specify a valid user!');
@@ -91,10 +89,17 @@ export default {
                 });
 
                 // Send the punishment to the log channel
-                punishmentLog(bot, message, member.user, action, reason, 'ban');
+                const embed = punishmentLog(bot, message, member.user, action, reason, 'ban');
 
                 // Send public ban log message, if it exists
-                if (message.guild.channels.cache.has(message.settings.logs.ban)) publicLog.send(`${config.emojis.bans} **${member.tag}** was banned for **${reason}**`);
+                message.guild.channels.fetch(message.settings.logs?.ban).then((channel) => {
+                    channel?.send(`${bot.config.emojis.bans} **${(member?.user ?? member).tag}** was banned for **${reason}**`);
+                });
+
+                // Send the punishment to the mod log channel
+                message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
+                    channel?.send({ embeds: [embed] });
+                });
             } catch (e) {
                 // Catch any errors during the ban process & send error message
                 message.errorReply(`There was an issue banning \`${member.user.tag}\` - \`${e.message}\``);
@@ -128,10 +133,17 @@ export default {
             });
 
             // Send the punishment to the log channel
-            punishmentLog(bot, message, member, action, reason, 'ban');
+            const embed = punishmentLog(bot, message, member, action, reason, 'ban');
 
             // Send public ban log message, if it exists
-            if (message.guild.channels.cache.has(message.settings.logs.ban)) publicLog.send(`${config.emojis.bans} **${member.tag}** was banned for **${reason}**`);
+            message.guild.channels.fetch(message.settings.logs?.ban).then((channel) => {
+                channel?.send(`${bot.config.emojis.bans} **${(member?.user ?? member).tag}** was banned for **${reason}**`);
+            });
+
+            // Send the punishment to the mod log channel
+            message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
+                channel?.send({ embeds: [embed] });
+            });
         }
     },
 
@@ -142,7 +154,6 @@ export default {
         const user = interaction.options.get('user');
         const reason = interaction.options.get('reason')?.value || 'No reason specified';
         const action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1;
-        const publicLog = interaction.guild.channels.cache.get(interaction.settings.logs.ban);
 
         // If the user they want to ban is themselves, then return an error
         if (interaction.member.id === user.user.id) return interaction.reply('You are unable ban yourself!');
@@ -168,10 +179,17 @@ export default {
             });
 
             // Send the punishment to the log channel
-            punishmentLog(bot, interaction, user.user, action, reason, 'ban');
+            const embed = punishmentLog(bot, interaction, user.user, action, reason, 'ban');
 
             // Send public ban log message, if it exists
-            if (publicLog) publicLog.send(`${config.emojis.bans} **${user.user.tag}** was banned for **${reason}**`);
+            interaction.guild.channels.fetch(interaction.settings.logs?.ban).then((channel) => {
+                channel?.send(`${bot.config.emojis.bans} **${user.user.tag}** was banned by for **${reason}**`);
+            });
+
+            // Send the punishment to the mod log channel
+            interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
+                channel?.send({ embeds: [embed] });
+            });
         } else {
             // If the member is not part of the server, but the ID does exist, then we'll add them to the pre-ban database
             // This means that if/when they join the guild, they will be banned
@@ -201,10 +219,17 @@ export default {
             });
 
             // Send the punishment to the log channel
-            punishmentLog(bot, interaction, user.user, action, reason, 'ban');
+            const embed = punishmentLog(bot, interaction, user.user, action, reason, 'ban');
 
             // Send public ban log message, if it exists
-            if (publicLog) publicLog.send(`${config.emojis.bans} **${user.user.tag}** was banned for **${reason}**`);
+            interaction.guild.channels.fetch(interaction.settings.logs?.ban).then((channel) => {
+                channel?.send(`${bot.config.emojis.bans} **${user.user.tag}** was banned for **${reason}**`);
+            });
+
+            // Send the punishment to the mod log channel
+            interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
+                channel?.send({ embeds: [embed] });
+            });
         }
     },
 };

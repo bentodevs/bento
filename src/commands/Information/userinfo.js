@@ -152,20 +152,20 @@ export default {
 
             // Switch between statusses and set the variables accordingly
             switch (member.presence?.status) {
-                case 'online':
-                    status = `${config.emojis.online} **Online**`;
-                    break;
-                case 'idle':
-                    status = `${config.emojis.idle} **Idle**`;
-                    break;
-                case 'offline':
-                    status = `${config.emojis.offline} **Offline**`;
-                    break;
-                case 'dnd':
-                    status = `${config.emojis.dnd} **Do Not Disturb**`;
-                    break;
-                default:
-                    status = `${config.emojis.offline} **Offline**`;
+            case 'online':
+                status = `${config.emojis.online} **Online**`;
+                break;
+            case 'idle':
+                status = `${config.emojis.idle} **Idle**`;
+                break;
+            case 'offline':
+                status = `${config.emojis.offline} **Offline**`;
+                break;
+            case 'dnd':
+                status = `${config.emojis.dnd} **Do Not Disturb**`;
+                break;
+            default:
+                status = `${config.emojis.offline} **Offline**`;
             }
 
             // Prepare the embed

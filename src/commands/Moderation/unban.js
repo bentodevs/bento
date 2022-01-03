@@ -1,4 +1,3 @@
-import config from '../../config.js';
 import preban from '../../database/models/preban.js';
 import punishments from '../../database/models/punishments.js';
 import { getUser } from '../../modules/functions/getters.js';
@@ -47,7 +46,6 @@ export default {
         const reason = args.slice(1).join(' ') || 'No reason provided';
         const match = /<@!?(\d{17,19})>/g.exec(args[0]);
         const action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1;
-        const publicLog = message.guild.channels.cache.get(message.settings.logs.unban);
 
         // If the regex matches replace args[0]
         // eslint-disable-next-line no-param-reassign
@@ -77,10 +75,18 @@ export default {
                 reason,
             });
 
-            // Log the unban
-            punishmentLog(bot, message, user, action, reason, 'unban');
+            // Send the punishment to the log channel
+            const embed = punishmentLog(bot, message, user, action, reason, 'unban');
+
             // Send public ban log message, if it exists
-            if (message.guild.channels.cache.has(message.settings.logs.ban)) publicLog.send(`${config.emojis.bans} **${ban.user.username}#${ban.user.discriminator}** was unbanned for **${reason}**`);
+            message.guild.channels.fetch(message.settings.logs?.ban).then((channel) => {
+                channel?.send(`${bot.config.emojis.bans} **${user?.user.tag}** was unbanned for **${reason}**`);
+            });
+
+            // Send the punishment to the mod log channel
+            message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
+                channel?.send({ embeds: [embed] });
+            });
         } else {
             // Attempt to get the user
             const user = await getUser(bot, message, args[0], false);
@@ -110,10 +116,19 @@ export default {
             await preban.findOneAndDelete({ user: user.id });
             // Send a confirmation message
             message.confirmationReply(`Successfully unbanned **${user.tag}**! *(Case #${action})*`);
-            // Log the unban
-            punishmentLog(bot, message, user, action, reason, 'unban');
+
+            // Send the punishment to the log channel
+            const embed = punishmentLog(bot, message, user, action, reason, 'unban');
+
             // Send public ban log message, if it exists
-            if (message.guild.channels.cache.has(message.settings.logs.ban)) publicLog.send(`${config.emojis.bans} **${user.tag}** was unbanned for **${reason}**`);
+            message.guild.channels.fetch(message.settings.logs?.ban).then((channel) => {
+                channel?.send(`${bot.config.emojis.bans} **${user?.user.tag}** was unbanned for **${reason}**`);
+            });
+
+            // Send the punishment to the mod log channel
+            message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
+                channel?.send({ embeds: [embed] });
+            });
         }
     },
 
@@ -126,7 +141,6 @@ export default {
         const user = interaction.options.get('user');
         const reason = interaction.options.get('reason')?.value || 'No reason specified';
         const action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1;
-        const publicLog = interaction.guild.channels.cache.get(interaction.settings.logs.unban);
 
         // Try to find the ban
         const ban = bans.find((u) => u.user.id === user.user.id);
@@ -148,10 +162,18 @@ export default {
                 reason,
             });
 
-            // Log the unban
-            punishmentLog(bot, interaction, user, action, reason, 'unban');
+            // Send the punishment to the log channel
+            const embed = punishmentLog(bot, interaction, user, action, reason, 'unban');
+
             // Send public ban log message, if it exists
-            if (interaction.guild.channels.cache.has(interaction.settings.logs.ban)) publicLog.send(`${config.emojis.unban} **${user.user.tag}** was unbanned for **${reason}**`);
+            interaction.guild.channels.fetch(interaction.settings.logs?.ban).then((channel) => {
+                channel?.send(`${bot.config.emojis.bans} **${user?.user.tag}** was unbanned for **${reason}**`);
+            });
+
+            // Send the punishment to the mod log channel
+            interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
+                channel?.send({ embeds: [embed] });
+            });
         } else {
             // Find the ban in the preban database
             const pban = await preban.findOne({ user: user.user.id });
@@ -176,10 +198,19 @@ export default {
 
             // Send a confirmation message
             interaction.confirmation(`Successfully unbanned **${user.user.tag}**! *(Case #${action})*`);
-            // Log the unban
-            punishmentLog(bot, interaction, user, action, reason, 'unban');
+
+            // Send the punishment to the log channel
+            const embed = punishmentLog(bot, interaction, user, action, reason, 'unban');
+
             // Send public ban log message, if it exists
-            if (interaction.guild.channels.cache.has(interaction.settings.logs.ban)) publicLog.send(`${config.emojis.unban} **${user.user.tag}** was unbanned for **${reason}**`);
+            interaction.guild.channels.fetch(interaction.settings.logs?.ban).then((channel) => {
+                channel?.send(`${bot.config.emojis.bans} **${user?.user.tag}** was unbanned for **${reason}**`);
+            });
+
+            // Send the punishment to the mod log channel
+            interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
+                channel?.send({ embeds: [embed] });
+            });
         }
     },
 };

@@ -51,7 +51,6 @@ export default {
         const member = await getMember(message, args[0], true);
         const reason = args.slice(1).join(' ') || 'No reason provided';
         const action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1;
-        const publicLog = message.guild.channels.cache.get(message.settings.logs.kick);
 
         // If the member doesn't exist/isn't part of the guild, then return an error
         if (!member) return message.errorReply('That user is not a member of this server!');
@@ -87,10 +86,17 @@ export default {
             });
 
             // Send the punishment to the log channel
-            punishmentLog(bot, message, member, action, reason, 'kick');
+            const embed = punishmentLog(bot, message, member.user, action, reason, 'kick');
 
-            // Send public kick log message
-            if (publicLog) publicLog.send(`👢 **${member.user.tag}** was kicked for **${reason}**`);
+            // Send public ban log message, if it exists
+            message.guild.channels.fetch(message.settings.logs?.kick).then((channel) => {
+                channel?.send(`👢 **${member.user.tag}** was kicked for **${reason}**`);
+            });
+
+            // Send the punishment to the mod log channel
+            message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
+                channel?.send({ embeds: [embed] });
+            });
         } catch (e) {
             // Catch any errors during the kick process & send error message
             message.errorReply(`There was an issue kicking \`${member.user.tag}\` - \`${e.message}\``);
@@ -104,7 +110,6 @@ export default {
         const user = interaction.options.get('user');
         const reason = interaction.options.get('reason')?.value || 'No reason specified';
         const action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1;
-        const publicLog = interaction.guild.channels.cache.get(interaction.settings.logs.kick);
 
         if (!user.member) return interaction.error('You can only kick server members');
 
@@ -139,10 +144,17 @@ export default {
             });
 
             // Send the punishment to the log channel
-            punishmentLog(bot, interaction, user, action, reason, 'kick');
+            const embed = punishmentLog(bot, interaction, user, action, reason, 'ban');
 
-            // Send public kick log message
-            if (publicLog) publicLog.send(`👢 **${user.user.tag}** was kicked for **${reason}**`);
+            // Send public ban log message, if it exists
+            interaction.guild.channels.fetch(interaction.settings.logs?.kick).then((channel) => {
+                channel?.send(`👢 **${user.user.tag}** was kicked for **${reason}**`);
+            });
+
+            // Send the punishment to the mod log channel
+            interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
+                channel?.send({ embeds: [embed] });
+            });
         } catch (e) {
             // Catch any errors during the kick process & send error message
             interaction.error(`There was an issue kicking \`${user.user.tag}\` - \`${e.message}\``);

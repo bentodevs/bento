@@ -151,7 +151,9 @@ export default {
             if (channel.type !== 'GUILD_TEXT' && channel.type !== 'GUILD_NEWS') return message.errorReply("The channel you specified isn't a text channel!");
 
             // If the bot doesn't have permissions to send messages or embed in the channel return an error
-            if (!channel.permissionsFor(message.guild.me).has('EMBED_LINKS') || !channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return message.errorReply("I don't have permissions to send messages or embeds in that channel!");
+            // Check the bot has permissions to send messages in the channel
+            if (!channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')
+                || !channel.permissionsFor(message.guild.me).has('EMBED_LINKS')) return message.errorReply('I don\'t have permission to send messages in that channel! *(I require `Send messages` and `Embed links`!)*');
 
             // Set the logging channel
             await settings.findOneAndUpdate({ _id: message.guild.id }, {
@@ -241,7 +243,9 @@ export default {
             if (channel.type !== 'GUILD_TEXT' && channel.type !== 'GUILD_NEWS') return interaction.error("The channel you specified isn't a text channel!");
 
             // If the bot doesn't have permissions to send messages or embed in the channel return an error
-            if (!channel.permissionsFor(interaction.guild.me).has('EMBED_LINKS') || !channel.permissionsFor(interaction.guild.me).has('SEND_MESSAGES')) return interaction.error("I don't have permissions to send messages or embeds in that channel!");
+            // Check the bot has permissions to send messages in the channel
+            if (!channel.permissionsFor(interaction.guild.me).has('SEND_MESSAGES')
+                || !channel.permissionsFor(interaction.guild.me).has('EMBED_LINKS')) return interaction.error('I don\'t have permission to send messages in that channel! *(I require `Send messages` and `Embed links`!)*');
 
             // Set the logging channel
             await settings.findOneAndUpdate({ _id: interaction.guild.id }, {

@@ -3,87 +3,52 @@ import { MessageEmbed, Permissions } from 'discord.js';
 import config from '../../config.js';
 import settings from '../../database/models/settings.js';
 
-export const punishmentLog = (bot, message, member, pID, reason, type, length) => {
-    // Fetch the default logger channel
-    const modlog = message.guild.channels.cache.get(message.settings.logs.default);
+export const punishmentLog = (bot, message, member, punishmentId, reason, type, length) => {
+    const punishmentTypes = ['ban', 'kick', 'mute', 'unmute', 'unban', 'warn'];
 
-    // If the log channel doesn't exist, then return
-    if (!modlog) return;
+    // Create new embed
+    const embed = new MessageEmbed()
+        .setColor(message.member?.displayColor ?? bot.config.general.embedColor)
+        .setThumbnail((member?.author ?? member).displayAvatarURL({ format: 'png', dynamic: true }))
+        .setFooter({ text: `User ID: ${member.id}` })
+        .setTimestamp();
 
-    if (type.toLowerCase() === 'mute') {
-        // Built the embed
-        const embed = new MessageEmbed()
-            .setAuthor({ name: `Case #${pID} | User Muted`, iconURL: (member?.user ?? member).displayAvatarURL({ dynamic: true, format: 'png' }) })
-            .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: 'png' }))
-            .setDescription(stripIndents`**User:** ${member} (\`${member.user.tag}\`)
-            **Moderator:** ${message.author} (\`${message.author.tag}\`)
-            **Time:** ${length}
-            **Reason:** ${reason}`)
-            .setColor(message.member.displayColor)
-            .setTimestamp()
-            .setFooter({ text: `User ID: ${member.user.id}` });
+    // Create new desctiprion string
+    const description = `**User:** ${member} (\`${member.id}\`)
+    **Moderator:** ${message?.author ?? message.user} (\`${(message?.author ?? message.user).id}\`)`;
 
-        // Send the completed embed
-        modlog.send({ embeds: [embed] });
-    } else if (type.toLowerCase() === 'unmute') {
-        // Built the embed
-        const embed = new MessageEmbed()
-            .setAuthor({ name: `Case #${pID} | User Unmuted`, iconURL: (member?.user ?? member).displayAvatarURL({ dynamic: true, format: 'png' }) })
-            .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: 'png' }))
-            .setDescription(stripIndents`**User:** ${member} (\`${member.user.tag}\`)
-            **Moderator:** ${message.author}
-            **Reason:** ${reason}`)
-            .setColor(member.displayColor)
-            .setTimestamp()
-            .setFooter({ text: `User ID: ${member.user.id}` });
-
-        // Send the completed embed
-        modlog.send({ embeds: [embed] });
-    } else if (type.toLowerCase() === 'ban') {
-        // Built the embed
-        const embed = new MessageEmbed()
-            .setAuthor({ name: `Case #${pID} | User Banned`, iconURL: (member?.user ?? member).displayAvatarURL({ dynamic: true, format: 'png' }) })
-            .setThumbnail(member.user?.displayAvatarURL({ dynamic: true, format: 'png' }) ?? member.displayAvatarURL({ dynamic: true, format: 'png' }))
-            .setDescription(stripIndents`**User:** ${member} (\`${member.user?.tag ?? member.tag}\`)
-            **Moderator:** ${message?.author ?? message.user} (\`${message?.author?.tag ?? message.user.tag}\`)
-            **Reason:** ${reason}`)
-            .setColor(message.member.displayColor)
-            .setTimestamp()
-            .setFooter({ text: `User ID: ${member.id}` });
-
-        // Send the completed embed
-        modlog.send({ embeds: [embed] });
-    } else if (type.toLowerCase() === 'unban') {
-        // Built the embed
-        const embed = new MessageEmbed()
-            .setAuthor({ name: `Case #${pID} | User Unbanned`, iconURL: (member?.user ?? member).displayAvatarURL({ dynamic: true, format: 'png' }) })
-            .setThumbnail(member.displayAvatarURL({ dynamic: true, format: 'png' }))
-            .setDescription(stripIndents`**User:** ${member} (\`${member.tag}\`)
-            **Moderator:** ${message.author} (\`${message.author.tag}\`)
-            **Reason:** ${reason}`)
-            .setColor(message.member.displayColor)
-            .setTimestamp()
-            .setFooter({ text: `User ID: ${member.id}` });
-
-        // Send the completed embed
-        modlog.send({ embeds: [embed] });
-    } else if (type.toLowerCase() === 'kick') {
-        // Built the embed
-        const embed = new MessageEmbed()
-            .setAuthor({ name: `Case #${pID} | User Kicked`, iconURL: (member?.user ?? member).displayAvatarURL({ dynamic: true, format: 'png' }) })
-            .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: 'png' }))
-            .setDescription(stripIndents`**User:** ${member} (\`${member.user.tag}\`)
-            **Moderator:** ${message.author} (\`${message.author.tag}\`)
-            **Reason:** ${reason}`)
-            .setColor(message.member.displayColor)
-            .setTimestamp()
-            .setFooter({ text: `User ID: ${member.user.id}` });
-
-        // Send the completed embed
-        modlog.send({ embeds: [embed] });
-    } else {
-        return bot.logger.error(`Received invalid punishment type: ${type.toLowerCase()}`);
+    switch (type) {
+    case 'ban':
+        embed.setAuthor({ name: `Case ${punishmentId} | User Banned`, iconURL: (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }) });
+        embed.setDescription(stripIndents`${description}
+            **Reason:** ${reason}`);
+        break;
+    case 'kick':
+        embed.setAuthor({ name: `Case ${punishmentId} | User Kicked`, iconURL: (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }) });
+        embed.setDescription(stripIndents`${description}
+            **Reason:** ${reason}`);
+        break;
+    case 'mute':
+        embed.setAuthor({ name: `Case ${punishmentId} | User Muted`, iconURL: (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }) });
+        embed.setDescription(stripIndents`${description}
+            **Length:** ${length}
+            **Reason:** ${reason}`);
+        break;
+    case 'unmute':
+        embed.setAuthor({ name: `Case ${punishmentId} | User Unmuted`, iconURL: (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }) });
+        embed.setDescription(stripIndents`${description}
+            **Reason:** ${reason}`);
+        break;
+    case 'unban':
+        embed.setAuthor({ name: `Case ${punishmentId} | User Unbanned`, iconURL: (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }) });
+        embed.setDescription(stripIndents`${description}
+            **Reason:** ${reason}`);
+        break;
+    default:
+        throw new Error(`Invalid punishment type - Must be one of ${punishmentTypes.join(', ')}`);
     }
+
+    return embed;
 };
 
 // eslint-disable-next-line no-shadow

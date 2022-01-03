@@ -68,7 +68,6 @@ export default {
         const muterole = message.guild.roles.cache.get(message.settings.roles.mute);
         const action = await punishments.countDocuments({ guild: message.guild.id }) + 1 || 1;
         const mute = await mutes.findOne({ guild: message.guild.id, mutedUser: member?.id });
-        const publicLog = message.guild.channels.cache.get(message.settings.logs.mute);
 
         let time; let
             reason = '';
@@ -139,11 +138,18 @@ export default {
             muteTime: time === 'forever' ? 'forever' : time.toString(),
         });
 
-        // Send punishment log
-        punishmentLog(bot, message, member, action, reason, 'mute', (time === 'forever' ? 'Forever' : `${formatDistanceToNowStrict(Date.now() + time)}`));
+        // Send the punishment to the log channel
+        const embed = punishmentLog(bot, message, member, action, reason, 'mute', (time === 'forever' ? 'Forever' : `${formatDistanceToNowStrict(Date.now() + time)}`));
 
-        // Send public mute log message
-        if (publicLog) publicLog.send(`🔇 **${member.user.tag}** was muted ${time === 'forever' ? 'for **forever**' : `for **${formatDistanceToNowStrict(Date.now() + time)}**`} with the reason **${reason}**`);
+        // Send public ban log message, if it exists
+        message.guild.channels.fetch(message.settings.logs?.kick).then((channel) => {
+            channel?.send(`🔇 **${member.user.tag}** was muted ${time === 'forever' ? 'for **forever**' : `for **${formatDistanceToNowStrict(Date.now() + time)}**`} with the reason **${reason}**`);
+        });
+
+        // Send the punishment to the mod log channel
+        message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
+            channel?.send({ embeds: [embed] });
+        });
     },
 
     run_interaction: async (bot, interaction) => {
@@ -165,7 +171,6 @@ export default {
         const action = await punishments.countDocuments({ guild: interaction.guild.id }) + 1 || 1;
         const mute = await mutes.findOne({ guild: interaction.guild.id, mutedUser: user.member?.id });
         const muterole = interaction.guild.roles.cache.get(interaction.settings.roles?.mute);
-        const publicLog = interaction.guild.channels.cache.get(interaction.settings.logs.mute);
 
         let time = '';
 
@@ -222,10 +227,17 @@ export default {
             muteTime: time === 'forever' ? 'forever' : time.toString(),
         });
 
-        // Send punishment log
-        punishmentLog(bot, interaction, user, action, reason, 'mute', (time === 'forever' ? 'Forever' : `${formatDistanceToNowStrict(Date.now() + time)}`));
+        // Send the punishment to the log channel
+        const embed = punishmentLog(bot, interaction, user, action, reason, 'mute', (time === 'forever' ? 'Forever' : `${formatDistanceToNowStrict(Date.now() + time)}`));
 
-        // Send public mute log message
-        if (publicLog) publicLog.send(`🔇 **${user.user.tag}** was muted ${time === 'forever' ? 'for **forever**' : `for **${formatDistanceToNowStrict(Date.now() + time)}**`} with the reason **${reason}**`);
+        // Send public ban log message, if it exists
+        interaction.guild.channels.fetch(interaction.settings.logs?.kick).then((channel) => {
+            channel?.send(`🔇 **${interaction.user.tag}** was muted ${time === 'forever' ? 'for **forever**' : `for **${formatDistanceToNowStrict(Date.now() + time)}**`} with the reason **${reason}**`);
+        });
+
+        // Send the punishment to the mod log channel
+        interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
+            channel?.send({ embeds: [embed] });
+        });
     },
 };
