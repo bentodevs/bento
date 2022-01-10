@@ -1,7 +1,6 @@
 import { MessageEmbed } from 'discord.js';
 import giveaways from '../../database/models/giveaways.js';
 import { getUser } from '../functions/getters.js';
-import { drawGiveawayWinners } from '../functions/misc.js';
 
 /**
  * Initialize the checkGiveaways task
@@ -22,11 +21,11 @@ export default async function init(bot) {
         for (const data of g) {
             if (Date.now() >= data.timestamps.ends) {
                 // Get the winners and define the array
-                const winners = drawGiveawayWinners(data.entries, data.winners);
+                const winners = data.entries.sort(() => 0.5 - Math.random()).slice(0, data.winners);
                 const arr = [];
 
                 // Loop through the winners
-                for (const i of (winners)) {
+                for (const i of winners) {
                     // Get the user
                     const user = await getUser(bot, null, i);
 
