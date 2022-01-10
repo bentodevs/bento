@@ -463,7 +463,10 @@ export const getMinecraftStatus = (ip, port) => new Promise((resolve, reject) =>
  *
  * @returns {Array} Array with giveaway winners
  */
-export const drawGiveawayWinners = (entries, winners) => { entries.sort(() => 0.5 - Math.random()).slice(0, winners); };
+export const drawGiveawayWinners = (entries, winners) => {
+    const gWinners = entries.sort(() => 0.5 - Math.random()).slice(0, winners);
+    return gWinners;
+};
 
 /**
  * Get the current Discord status
