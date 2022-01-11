@@ -42,7 +42,7 @@ export default {
     run: async (bot, message, args) => {
         // Get the query, fetch the URL and convert the data to JSON
         const query = args[0].toLowerCase() === '-t' ? args[1] : args.join(' ');
-        const req = await fetch(`https://www.omdbapi.com/?apiKey=${bot.config.apiKeys.omdb}&${args[0].toLowerCase() === '-t' ? 'i' : 't'}=${query}`);
+        const req = await fetch(`https://www.omdbapi.com/?apiKey=${process.env.OMDB_TOKEN}&${args[0].toLowerCase() === '-t' ? 'i' : 't'}=${query}`);
         const json = await req.json();
 
         // If the response isn't "True" return an error
@@ -75,7 +75,7 @@ export default {
     run_interaction: async (bot, interaction) => {
         // Get the query, fetch the URL and convert the data to JSON
         const query = interaction.options.get('query').value;
-        const req = await fetch(`https://www.omdbapi.com/?apiKey=${bot.config.apiKeys.omdb}&${interaction.options.get('id').value ? 'i' : 't'}=${query}`);
+        const req = await fetch(`https://www.omdbapi.com/?apiKey=${process.env.OMDB_TOKEN}&${interaction.options.get('id').value ? 'i' : 't'}=${query}`);
         const json = await req.json();
 
         // If the response isn't "True" return an error
