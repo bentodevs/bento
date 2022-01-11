@@ -1,14 +1,14 @@
 {
   "name": "r2-d2",
-  "version": "2021.12.0",
+  "version": "2022.2.0",
   "description": "A multi-purpose Discord bot",
   "type": "module",
   "main": "src/bot.js",
   "scripts": {
-    "dev": "node .",
+    "dev": "NODE_ENV=development node src/bot.js",
+    "prod": "NODE_ENV=production node src/bot.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "start": "cd src && node bot.js",
     "tracer": "cd src && node --trace-warnings bot.js"
   },
   "engines": {
@@ -39,6 +39,7 @@
     "date-fns": "^2.28.0",
     "date-fns-tz": "^1.2.2",
     "discord.js": "^13.5.0",
+    "dotenv": "^10.0.0",
     "flip": "^1.0.0",
     "https-proxy-agent": "^5.0.0",
     "iso-639-1": "^2.1.11",
