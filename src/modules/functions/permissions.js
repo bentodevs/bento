@@ -2,6 +2,18 @@ import config from '../../config.js';
 import { getRole } from './getters.js';
 
 /**
+ * Filter the Self Perms from the command object without completely deleting it from the commands collection
+ *
+ * @param {Object} obj
+ *
+ * @returns {Object} Filtered Object
+ */
+export const filterSelfPerms = (obj) => {
+    Object.fromEntries(Object.entries(obj)
+        .filter(([key]) => key !== 'self'));
+};
+
+/**
  * Check if the user has permissions to run the command
  *
  * @param {Object} bot The client which is used to transact between this app & Discord
@@ -16,7 +28,7 @@ export const checkPerms = async (bot, message, permissions, cmd) => {
     if (bot.config.general.devs.includes(message.author?.id ?? message.user.id)) return false;
 
     // Get the permissions
-    const checkCat = message.permissions.categories[cmd.info.category.toLowerCase()]?.permission && JSON.stringify(message.permissions.commands[cmd.info.name]) === JSON.stringify(this.filterSelfPerms(cmd.perms));
+    const checkCat = message.permissions.categories[cmd.info.category.toLowerCase()]?.permission && JSON.stringify(message.permissions.commands[cmd.info.name]) === JSON.stringify(filterSelfPerms(cmd.perms));
     const permission = checkCat ? message.permissions.categories[cmd.info.category.toLowerCase()] : message.permissions.commands[cmd.info.name];
 
     // Get the location for if data needs to be modified
@@ -30,7 +42,7 @@ export const checkPerms = async (bot, message, permissions, cmd) => {
             if (!position) {
                 // Update the permission in the database
                 await permissions.findOneAndUpdate({ _id: message.guild.id }, {
-                    [location]: !checkCat ? this.filterSelfPerms(cmd.perms) : {},
+                    [location]: !checkCat ? filterSelfPerms(cmd.perms) : {},
                 });
 
                 // Return true
@@ -51,7 +63,7 @@ export const checkPerms = async (bot, message, permissions, cmd) => {
                 if (!role) {
                     if (permission.permission.length === 1) {
                         await permissions.findOneAndUpdate({ _id: message.guild.id }, {
-                            [location]: !checkCat ? this.filterSelfPerms(cmd.perms) : {},
+                            [location]: !checkCat ? filterSelfPerms(cmd.perms) : {},
                         });
                     } else {
                         await permissions.findOneAndUpdate({ _id: message.guild.id }, {
@@ -126,16 +138,4 @@ export const checkSelf = async (message, cmd) => {
 
     // Return false if all the checks passed
     return false;
-};
-
-/**
- * Filter the Self Perms from the command object without completely deleting it from the commands collection
- *
- * @param {Object} obj
- *
- * @returns {Object} Filtered Object
- */
-export const filterSelfPerms = (obj) => {
-    Object.fromEntries(Object.entries(obj)
-        .filter(([key]) => key !== 'self'));
 };
