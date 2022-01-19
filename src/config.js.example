@@ -2,7 +2,6 @@ const config = {
 
     // General Settings
     general: {
-        token: "", // Token to login to the Discord API
         prefix: ".", // Default Bot Prefix
         version: "2021.1.1", // Current Version
         embedColor: "#ABCDEF", // Default Embed Color
@@ -25,17 +24,6 @@ const config = {
             guild: "", // Guild to log bot join/leaves in
             channel: "" // Channel to log bot join/leaves in
         }
-    },
-
-    // API Keys
-    apiKeys: {
-        weather: "", // WeatherAPI.com API Key
-        steam: "", // Steam API Key
-        riot: "", // Riot Games API Key
-        trackerNetwork: "", // TrackerNetwork API Key
-        omdb: "", // omdb API Key
-        r2d2: "", // R2-D2 API Key
-        lastfm: "" // Last.fm API Key
     },
 
     // Global Emojis
@@ -68,15 +56,6 @@ const config = {
         team: "",
         pepe_ping: ""
     },
-
-    // Mongo Info
-    mongo: {
-        username: "",
-        password: "",
-        host: "localhost",
-        port: "27017",
-        database: "R2-D2"
-    }
 
 };
 
