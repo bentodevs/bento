@@ -5,11 +5,12 @@ on:
 
 jobs:
   sentry:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Create Sentry release
-        uses: lasalefamine/action-release@v1
+        uses: getsentry/action-release@v1
+        if: ${{ github.event_name == 'release' }}
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
@@ -17,5 +18,4 @@ jobs:
           SENTRY_URL: ${{ secrets.SENTRY_URL }}
         with:
           environment: production
-          version: ${{ github.ref }}
-          version_prefix: "v"
+          version: v2022.1.1
