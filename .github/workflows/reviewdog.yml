@@ -1,0 +1,26 @@
+name: reviewdog
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  eslint:
+    name: runner / eslint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: eslint-github-pr-check
+        uses: ./
+        with:
+          tool_name: eslint-github-pr-check
+          reporter: github-pr-check
+          level: info
+      - name: eslint-github-check
+        uses: ./
+        with:
+          tool_name: eslint-github-check
+          reporter: github-check
+          level: warning
