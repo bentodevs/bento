@@ -1,4 +1,5 @@
 // Import dependencies
+import dotenv from 'dotenv';
 import { Client, Collection } from 'discord.js';
 import mongoose from 'mongoose';
 import ora from 'ora';
@@ -12,6 +13,9 @@ import { getMongooseURL } from './database/mongo.js';
 import { init as commandInit } from './modules/handlers/command.js';
 import { init as eventInit } from './modules/handlers/event.js';
 import config from './config.js';
+
+// Load env variables
+dotenv.config();
 
 // Create the bot client
 const bot = new Client({
@@ -144,7 +148,7 @@ const init = async () => {
     const mongoMsg = ora('Connecting to the Mongo database...').start();
 
     // Connect to the mongo DB
-    bot.mongo = await mongoose.connect(getMongooseURL(bot.config.mongo), {
+    bot.mongo = await mongoose.connect(getMongooseURL(process.env.MONGODB_USERNAME, process.env.MONGODB_PASSWORD, process.env.MONGODB_HOST, process.env.MONGODB_PORT, process.env.MONGODB_DATABASE), {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     }).catch((err) => {
@@ -162,7 +166,7 @@ const init = async () => {
     const loginMessage = ora('Logging into the Discord API...').start();
 
     // Login to the Discord API and update the login message
-    bot.login(bot.config.general.token)
+    bot.login(process.env.BOT_TOKEN)
         .then(() => {
             loginMessage.stopAndPersist({
                 symbol: '✔️',

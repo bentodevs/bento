@@ -79,23 +79,26 @@ export async function getPerms(bot, guild) {
 /**
  * Generate the Mongoose URL
  *
- * @param {Object} options Object with the mongo db credentials
+ * @param {String} username Object with the mongo db username
+ * @param {String} password Object with the mongo db password
+ * @param {String} host Object with the mongo db host
+ * @param {String} port Object with the mongo db port
+ * @param {String} database Object with the mongo db database
  *
  * @returns {String} Mongoose URL
  */
-export function getMongooseURL(options) {
+export function getMongooseURL(username, password, host, port, database) {
     // If there are no options replace set it as an empty object
     // eslint-disable-next-line no-param-reassign
-    options = options || {};
 
     // Define the URL
     let URL = 'mongodb://';
 
     // If a username & password were specified add them to the URL
-    if (options.password && options.username) { URL += `${options.username}:${encodeURIComponent(options.password)}@`; }
+    if (password && username) { URL += `${username}:${encodeURIComponent(password)}@`; }
 
     // Add the host, port & database to the URL
-    URL += `${(options.host || 'localhost')}:${(options.port || '27017')}/${options.database || 'admin'}`;
+    URL += `${(host || 'localhost')}:${(port || '27017')}/${database || 'admin'}`;
 
     // Return the URL
     return URL;

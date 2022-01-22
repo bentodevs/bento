@@ -124,7 +124,7 @@ export const getMeme = () => new Promise((resolve, reject) => {
  */
 export const getWeather = (query) => new Promise((resolve, reject) => {
     // Define the API URL
-    const URL = `https://api.weatherapi.com/v1/current.json?key=${config.apiKeys.weather}&q=${query}`;
+    const URL = `https://api.weatherapi.com/v1/current.json?key=${process.env.WEATHER_TOKEN}&q=${query}`;
 
     // Fetch the weather API
     fetch(URL, {
@@ -293,7 +293,7 @@ export const parseTime = (string, returnUnit, opts) => {
  */
 export const fetchSteamUserByID = (user) => new Promise((resolve, reject) => {
     // Define the baseURL for fetching a user's profile
-    const baseURL = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${config.apiKeys.steam}&steamids=${user}`;
+    const baseURL = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${process.env.STEAM_TOKEN}&steamids=${user}`;
 
     fetch(baseURL)
         .then((res) => res.json())
@@ -531,7 +531,7 @@ export const fetchEmote = (url) => new Promise((resolve, reject) => {
  */
 export const getLastFMUser = (user) => new Promise((resolve, reject) => {
     // Define the LastFM API URL
-    const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${user}&api_key=${config.apiKeys.lastfm}&format=json`;
+    const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${user}&api_key=${process.env.LASTFM_TOKEN}&format=json`;
 
     // Fetch the URL
     fetch(URL)
@@ -560,7 +560,7 @@ export const getLastFMUser = (user) => new Promise((resolve, reject) => {
  * @returns {Promise.<Object>} Last.fm user play history
  */
 export const getLastFMUserHistory = (user) => new Promise((resolve, reject) => {
-    const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${user}&api_key=${config.apiKeys.lastfm}&format=json`;
+    const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${user}&api_key=${process.env.LASTFM_TOKEN}&format=json`;
 
     const data = fetch(URL).then((res) => res.json());
 

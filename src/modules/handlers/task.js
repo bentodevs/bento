@@ -7,7 +7,7 @@ export const init = (bot) => new Promise((resolve) => {
     bot.tasks = new Collection();
 
     // Get the task files
-    const files = readdirSync('./modules/tasks').filter((file) => file.endsWith('.js'));
+    const files = readdirSync('./src/modules/tasks').filter((file) => file.endsWith('.js'));
 
     // Loop through the files
     for (const data of files) {
@@ -35,7 +35,7 @@ export const init = (bot) => new Promise((resolve) => {
  */
 export const reload = (bot, task) => new Promise((resolve, reject) => {
     // Get all the task files and get the specified task
-    const files = readdirSync('./modules/tasks').filter((file) => file.endsWith('.js'));
+    const files = readdirSync('./src/modules/tasks').filter((file) => file.endsWith('.js'));
     const file = files.find((e) => e.toLowerCase() === `${task.toLowerCase()}.js`);
 
     // If no file was found return an error
@@ -78,7 +78,7 @@ export const reload = (bot, task) => new Promise((resolve, reject) => {
  */
 export const load = (bot, task) => new Promise((resolve, reject) => {
     // Get all the task files and get the specified task
-    const files = readdirSync('./modules/tasks').filter((file) => file.endsWith('.js'));
+    const files = readdirSync('./src/modules/tasks').filter((file) => file.endsWith('.js'));
     const file = files.find((e) => e.toLowerCase() === `${task.toLowerCase()}.js`);
 
     // If the task wasn't found return an error

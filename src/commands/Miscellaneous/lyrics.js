@@ -35,7 +35,7 @@ export default {
         // 1. Fetch the user's Spotify presence data
         // 2. Define the request headers
         const spotifyData = message.member.presence.activities.find((a) => a.name.toLowerCase() === 'spotify');
-        const reqHeads = { headers: { authorization: bot.config.apiKeys.r2d2 } };
+        const reqHeads = { headers: { authorization: process.env.R2D2_TOKEN } };
 
         if (spotifyData && !args[0]) {
             // 1. Get the song from the API

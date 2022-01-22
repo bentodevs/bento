@@ -9,7 +9,7 @@ import { readdirSync } from 'fs';
  */
 export const init = (bot) => new Promise((resolve) => {
     // Get all the event files
-    const files = readdirSync('./events').filter((file) => file.endsWith('.js'));
+    const files = readdirSync('./src/events').filter((file) => file.endsWith('.js'));
 
     // Loop through the files
     for (const data of files) {
@@ -45,7 +45,7 @@ export const init = (bot) => new Promise((resolve) => {
  */
 export const reload = (bot, event) => new Promise((resolve, reject) => {
     // Get all the event files and find the event specified
-    const files = readdirSync('./events').filter((file) => file.endsWith('.js'));
+    const files = readdirSync('./src/events').filter((file) => file.endsWith('.js'));
     const file = files.find((e) => e.toLowerCase() === `${event.toLowerCase()}.js`);
 
     // If the event doesn't exist return an error
@@ -81,7 +81,7 @@ export const reload = (bot, event) => new Promise((resolve, reject) => {
  */
 export const load = (bot, event) => new Promise((resolve, reject) => {
     // Get all the event files and find the event specified
-    const files = readdirSync('./events').filter((file) => file.endsWith('.js'));
+    const files = readdirSync('./src/events').filter((file) => file.endsWith('.js'));
     const file = files.find((e) => e.toLowerCase() === `${event.toLowerCase()}.js`);
 
     // If the event doesn't exist return an error
@@ -116,7 +116,7 @@ export const load = (bot, event) => new Promise((resolve, reject) => {
  */
 export const unload = (bot, event) => new Promise((resolve, reject) => {
     // Get all the event files and find the event specified
-    const files = readdirSync('./events').filter((file) => file.endsWith('.js'));
+    const files = readdirSync('./src/events').filter((file) => file.endsWith('.js'));
     const file = files.find((e) => e.toLowerCase() === `${event.toLowerCase()}.js`);
 
     // If the event doesn't exist return an error

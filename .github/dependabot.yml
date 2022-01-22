@@ -9,10 +9,10 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
+    target-branch: "develop"
     labels:
       - "meta: dependencies"
       - "meta: automation"
       - "priority: medium"
     reviewers:
-      - "WaitroseDev"
-      - "JarnoPwr"
+      - "BehnH"

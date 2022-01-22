@@ -204,7 +204,7 @@ export default async (bot, message) => {
             **Message:** ${message.content}`)
             .setTimestamp();
 
-        channel?.send({ embeds: [embed] });
+        if (channel) channel?.send({ embeds: [embed] });
     }
 
     // Log that the command has been run

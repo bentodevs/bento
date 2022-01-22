@@ -17,12 +17,12 @@ export const init = (bot) => new Promise((resolve) => {
     bot.aliases = new Collection();
 
     // Get the category directories
-    const categories = readdirSync('./commands');
+    const categories = readdirSync('./src/commands');
 
     // Loop through the categories
     for (const category of categories) {
         // Get all the commands
-        const commands = readdirSync(`./commands/${category}`).filter((file) => file.endsWith('.js'));
+        const commands = readdirSync(`./src/commands/${category}`).filter((file) => file.endsWith('.js'));
 
         // Loop through the commands
         for (const file of commands) {

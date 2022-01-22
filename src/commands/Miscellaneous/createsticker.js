@@ -32,5 +32,7 @@ export default {
     run: async (bot, message, args) => {
         // If no args were specified & no attachment was added return the help embed
         if (!message.attachments.size && !args[0]) return bot.commands.get('help').run(bot, message, ['createsticker']);
+
+        console.log(message);
     },
 };

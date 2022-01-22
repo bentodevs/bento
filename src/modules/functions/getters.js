@@ -186,7 +186,7 @@ export const getTag = async (tag, message, args) => {
         .replace(/{author}/gi, message.author)
         .replace(/{prefix}/gi, message.settings.general.prefix)
         .replace(/{guild}/gi, message.guild.name)
-        .replace(/{mention}/gi, await this.getMember(message, args[0] ? args.join(' ') : false, true).then((member) => member) ?? message.author);
+        .replace(/{mention}/gi, await getMember(message, args[0] ? args.join(' ') : false, true).then((member) => member) ?? message.author);
 
     // If the tag includes "-e" convert it to an embed
     if (tagContent.includes('-e')) {
