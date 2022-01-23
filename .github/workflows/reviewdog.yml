@@ -1,10 +1,10 @@
 name: reviewdog
-
 on:
   pull_request:
   push:
     branches:
-      - 'main'
+      - main
+  workflow_dispatch:
 
 jobs:
   eslint:
@@ -12,15 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: eslint-github-pr-check
-        uses: ./
+      - uses: reviewdog/action-eslint@v1
         with:
-          tool_name: eslint-github-pr-check
-          reporter: github-pr-check
-          level: info
-      - name: eslint-github-check
-        uses: ./
-        with:
-          tool_name: eslint-github-check
-          reporter: github-check
-          level: warning
+          reporter: github-review # Change reporter.
+          eslint_flags: 'src/'
