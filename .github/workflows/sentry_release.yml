@@ -12,7 +12,7 @@ jobs:
         uses: getsentry/action-release@v1
         if: ${{ github.event_name == 'release' }}
         env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN_R2D2 }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           SENTRY_URL: ${{ secrets.SENTRY_URL }}
