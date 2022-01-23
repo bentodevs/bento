@@ -11,8 +11,16 @@ jobs:
     name: runner / eslint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: reviewdog/action-eslint@v1
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install cairo
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+      - name: Run reviewdog
+        uses: reviewdog/action-eslint@v1
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          reporter: github-review # Change reporter.
+          reporter: github-pr-review # Change reporter.
           eslint_flags: 'src/'
