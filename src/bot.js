@@ -100,6 +100,12 @@ const init = async () => {
     console.log(' ');
     console.log(' ');
 
+    if (process.env.NODE_ENV === 'development') {
+        // Log the dev environment
+        console.log('== RUNNING IN DEVELOPMENT MODE ==');
+        console.log(' ');
+    }
+
     // Import prototypes
     (await import('./modules/functions/prototypes.js')).default();
 

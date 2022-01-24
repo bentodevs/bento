@@ -95,7 +95,7 @@ export default async (bot, interaction) => {
             channel?.send({ embeds: [embed] });
 
             // If the bot is in a dev environment log the error as well
-            if (bot.config.general.development) console.log(err);
+            if (process.env.NODE_ENV !== 'development') console.log(err);
 
             // Send the error message to the user
             interaction.error({
