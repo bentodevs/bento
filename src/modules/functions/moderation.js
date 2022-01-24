@@ -103,7 +103,7 @@ export const checkMessage = async (message, settings) => {
 
     // Check if the message contains any links
     if (settings.moderation?.no_link) {
-        const link = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)?/gi;
+        const link = /[(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/gi;
 
         if (link.test(message.content)) {
             message.delete()
