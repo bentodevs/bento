@@ -44,6 +44,11 @@ export const punishmentLog = (bot, message, member, punishmentId, reason, type, 
         embed.setDescription(stripIndents`${description}
             **Reason:** ${reason}`);
         break;
+    case 'warn':
+        embed.setAuthor({ name: `Case ${punishmentId} | User Warned`, iconURL: (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }) });
+        embed.setDescription(stripIndents`${description}
+            **Reason:** ${reason}`);
+        break;
     default:
         throw new Error(`Invalid punishment type - Must be one of ${punishmentTypes.join(', ')}`);
     }
