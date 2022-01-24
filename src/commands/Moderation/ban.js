@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import dateFnsTz from 'date-fns-tz';
 import preban from '../../database/models/preban.js';
 import punishments from '../../database/models/punishments.js';
+import settings from '../../database/models/settings.js';
 import { getMember, getUser } from '../../modules/functions/getters.js';
 import { punishmentLog } from '../../modules/functions/moderation.js';
 
@@ -94,15 +95,28 @@ export default {
                 // Send public ban log message, if it exists
                 message.guild.channels.fetch(message.settings.logs?.ban).then((channel) => {
                     channel?.send(`${bot.config.emojis.bans} **${(member?.user ?? member).tag}** was banned for **${reason}**`);
+                }).catch((err) => {
+                    if (message.settings.logs?.ban) {
+                        settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.ban': null });
+                    } else {
+                        bot.logger.error(err.stack);
+                    }
                 });
 
                 // Send the punishment to the mod log channel
                 message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
                     channel?.send({ embeds: [embed] });
+                }).catch((err) => {
+                    if (!message.settings.logs?.default) {
+                        settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
+                    } else {
+                        bot.logger.error(err.stack);
+                    }
                 });
             } catch (e) {
                 // Catch any errors during the ban process & send error message
-                message.errorReply(`There was an issue banning \`${member.user.tag}\` - \`${e.message}\``);
+                message.errorReply(`I ran into an issue whilst trying to ban \`${member.user.tag}\`: \`${e.message}\``);
+                bot.logger.error(e.stack);
             }
         } else {
             // If the member is not part of the server, but the ID does exist, then we'll add them to the pre-ban database
@@ -136,13 +150,25 @@ export default {
             const embed = punishmentLog(bot, message, member, action, reason, 'ban');
 
             // Send public ban log message, if it exists
-            message.guild.channels.fetch(message.settings.logs?.ban).then((channel) => {
+            message.guild.channels.fetch(message.settings.logs?.ban).then(async (channel) => {
                 channel?.send(`${bot.config.emojis.bans} **${(member?.user ?? member).tag}** was banned for **${reason}**`);
+            }).catch((err) => {
+                if (message.settings.logs?.ban) {
+                    settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.ban': null });
+                } else {
+                    bot.logger.error(err.stack);
+                }
             });
 
             // Send the punishment to the mod log channel
             message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
+            }).catch((err) => {
+                if (!message.settings.logs?.default) {
+                    settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
+                } else {
+                    bot.logger.error(err.stack);
+                }
             });
         }
     },
@@ -224,11 +250,17 @@ export default {
             // Send public ban log message, if it exists
             interaction.guild.channels.fetch(interaction.settings.logs?.ban).then((channel) => {
                 channel?.send(`${bot.config.emojis.bans} **${user.user.tag}** was banned for **${reason}**`);
+            }).catch(() => {
+                bot.logger.debug(`Failed to find ban log channel for ${interaction.guild.name} (${interaction.guild.id}) - Removing from Database`);
+                settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.ban': null }).catch(() => { });
             });
 
             // Send the punishment to the mod log channel
             interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
+            }).catch(() => {
+                bot.logger.debug(`Failed to find default log channel for ${interaction.guild.name} (${interaction.guild.id}) - Removing from Database`);
+                settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.ban': null }).catch(() => { });
             });
         }
     },

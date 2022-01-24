@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import punishments from '../../database/models/punishments.js';
 import { punishmentLog } from '../../modules/functions/moderation.js';
 import { getMember } from '../../modules/functions/getters.js';
+import settings from '../../database/models/settings.js';
 
 const { utcToZonedTime } = dateFnsTz;
 
@@ -88,14 +89,26 @@ export default {
             // Send the punishment to the log channel
             const embed = punishmentLog(bot, message, member.user, action, reason, 'kick');
 
-            // Send public ban log message, if it exists
+            // Send public kick log message, if it exists
             message.guild.channels.fetch(message.settings.logs?.kick).then((channel) => {
                 channel?.send(`👢 **${member.user.tag}** was kicked for **${reason}**`);
+            }).catch((err) => {
+                if (message.settings.logs?.kick) {
+                    settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.kick': null });
+                } else {
+                    bot.logger.error(err.stack);
+                }
             });
 
             // Send the punishment to the mod log channel
             message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
+            }).catch((err) => {
+                if (!message.settings.logs?.default) {
+                    settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
+                } else {
+                    bot.logger.error(err.stack);
+                }
             });
         } catch (e) {
             // Catch any errors during the kick process & send error message
@@ -149,11 +162,20 @@ export default {
             // Send public ban log message, if it exists
             interaction.guild.channels.fetch(interaction.settings.logs?.kick).then((channel) => {
                 channel?.send(`👢 **${user.user.tag}** was kicked for **${reason}**`);
+            }).catch(() => {
+                bot.logger.debug(`Failed to find kick log channel for ${interaction.guild.name} (${interaction.guild.id}) - Removing from Database`);
+                settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.kick': null }).catch(() => { });
             });
 
             // Send the punishment to the mod log channel
             interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
+            }).catch((err) => {
+                if (!interaction.settings.logs?.default) {
+                    settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
+                } else {
+                    bot.logger.error(err.stack);
+                }
             });
         } catch (e) {
             // Catch any errors during the kick process & send error message
