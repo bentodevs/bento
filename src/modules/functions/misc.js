@@ -500,7 +500,7 @@ export const getDiscordStatus = () => new Promise((resolve, reject) => {
  */
 export const fetchEmote = (url) => new Promise((resolve, reject) => {
     // Create the proxyAgent
-    const proxyAgent = new HttpsProxyAgent(config.general.proxyUrl);
+    const proxyAgent = new HttpsProxyAgent(process.env.PROXY_URL);
 
     // Fetch the URL
     fetch(url, {
