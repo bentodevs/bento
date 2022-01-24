@@ -47,6 +47,7 @@ const config = {
         unban: '<:unban:873653427199152169>',
         channel: '<:channel:843408284010545153>',
         pepe_ping: '<:PeepoPing:842359606697132073>',
+        warning: '<a:warning:935206281172627457>',
     },
 };
 
