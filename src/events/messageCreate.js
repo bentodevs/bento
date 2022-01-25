@@ -180,7 +180,7 @@ export default async (bot, message) => {
         channel?.send({ embeds: [embed] });
 
         // If the bot is in a dev environment log the error as well
-        if (process.env.NODE_ENV !== 'development') console.log(err);
+        if (process.env.NODE_ENV === 'development') console.log(err);
 
         // Send an error message to the user
         message.errorReply(stripIndents`An error occurred while running the command: \`${err}\`
