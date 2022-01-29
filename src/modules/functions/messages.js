@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import config from '../../config.js';
 
-export default function (message) {
+export default (message) => {
     /**
      * Send a message starting with a error emote
      * @param {option} option
@@ -85,4 +85,4 @@ export default function (message) {
             .then((msg) => { resolve(msg); })
             .catch((err) => { reject(err); });
     });
-}
+};
