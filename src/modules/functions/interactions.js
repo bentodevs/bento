@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import config from '../../config.js';
 
-export default function (interaction) {
+export default (interaction) => {
     /**
      * Send a interaction reply starting with a error emote
      * @param {string} option
@@ -43,4 +43,4 @@ export default function (interaction) {
             .then((int) => resolve(int))
             .catch((err) => reject(err));
     });
-}
+};
