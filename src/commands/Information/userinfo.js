@@ -2,9 +2,7 @@ import { stripIndents } from 'common-tags';
 import { MessageEmbed } from 'discord.js';
 import { format, formatDistance } from 'date-fns';
 import dateFnsTz from 'date-fns-tz';
-import { getColorFromURL } from 'color-thief-node';
 import { getMember, getUser } from '../../modules/functions/getters.js';
-import { rgbToHex } from '../../modules/functions/leveling.js';
 import config from '../../config.js';
 
 const { utcToZonedTime } = dateFnsTz;
@@ -63,17 +61,14 @@ export default {
 
         // Check if the user is a guild member
         if (member.guild) {
-            // 1. Get the users account creation time and format it
-            // 2. Get the time the user joined the guild and format it
-            // 3. Get the time the user started boosting and format it
-            // 4. Get the roles the user has and format them
+            // Get the user's account creation date & format it
             const userCreated = format(utcToZonedTime(member.user.createdTimestamp, message.settings.general.timezone), 'PPp (z)', { timeZone: message.settings.general.timezone }); const timeSinceCreated = formatDistance(member.user.createdTimestamp, Date.now(), { addSuffix: true });
+            // Get the user's guild join date & format it
             const userJoined = format(utcToZonedTime(member.joinedTimestamp, message.settings.general.timezone), 'PPp (z)', { timeZone: message.settings.general.timezone }); const timeSinceJoin = formatDistance(member.joinedTimestamp, Date.now(), { addSuffix: true });
+            // If the user is boosting, get the time they started boosting & format it
             const userBoosted = member.premiumSinceTimestamp ? format(utcToZonedTime(member.premiumSinceTimestamp, message.settings.general.timezone), 'PPp (z)', { timeZone: message.settings.general.timezone }) : null; const timeSinceBoost = member.premiumSinceTimestamp ? formatDistance(member.premiumSinceTimestamp, Date.now(), { addSuffix: true }) : null;
+            // Get the user's roles & format them
             const roles = member.roles.cache.filter((role) => role.name !== '@everyone').sort((b, a) => a.position - b.position).map((role) => role.toString()).join(', ');
-
-            // Get the dominant color from the users avatar
-            const color = await getColorFromURL(member.user.displayAvatarURL({ format: 'png', dynamic: false }));
 
             // Define vars
             let statusEmote;
@@ -135,17 +130,14 @@ export default {
             }
 
             // Prepare the embed
-            embed.setAuthor({ name: `${member.user.tag}${member.nickname ? ` ~ ${member.nickname}` : ''}`, iconUrl: member.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }) });
+            embed.setAuthor({ name: `${member.user.tag}${member.nickname ? ` ~ ${member.nickname}` : ''}`, iconURL: member.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }) });
             embed.setThumbnail(member.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }));
             embed.setDescription(stripIndents(description));
-            embed.setColor(rgbToHex(color));
+            embed.setColor(member.displayHexColor ?? bot.config.general.embedColor);
             embed.setFooter({ text: `Member #${message.guild.members.cache.filter((u) => u.joinedTimestamp !== null).sort((a, b) => a.joinedTimestamp - b.joinedTimestamp).map((user) => user.id).indexOf(member.id) + 1} | ID: ${member.id}` });
         } else {
             // Get the users account creation time and format it
             const userCreated = format(utcToZonedTime(member.createdTimestamp, message.settings.general.timezone), 'PPp (z)', { timeZone: message.settings.general.timezone }); const timeSinceCreated = formatDistance(member.createdTimestamp, Date.now(), { addSuffix: true });
-
-            // Get the dominant color from the users avatar
-            const color = await getColorFromURL(member.displayAvatarURL({ format: 'png', dynamic: false }));
 
             // Define status var
             let status;
@@ -171,11 +163,11 @@ export default {
             // Prepare the embed
             embed.setAuthor({ name: member.tag, iconURL: member.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }) });
             embed.setThumbnail(member.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }));
-            embed.setColor(rgbToHex(color));
+            embed.setColor(bot.config.general.embedColor);
             embed.setDescription(stripIndents`🙍 Human | ${status}
             **Created:** ${userCreated} (${timeSinceCreated})
 
-            *This user is not a member of the server. No additional info is available.*`);
+            ${message?.guild ? '*This user is not a member of the server. No additional info is available.*' : "*No more information is available in DM's*"}`);
             embed.setFooter({ text: `ID: ${member.id}` });
         }
 
