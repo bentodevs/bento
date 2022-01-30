@@ -36,7 +36,7 @@ export default async function init(bot) {
             headers: reqHeaders,
             body: JSON.stringify(reqBody),
         }).then((res) => {
-            if (res.status === 200) bot.logger.debug('Posted guild count statistics to Top.GG successfully');
+            if (res.status === 200) bot.logger.info('Posted guild count statistics to Top.GG successfully');
         }).catch((err) => {
             bot.logger.error(err);
             Sentry.captureException(err);
@@ -53,7 +53,7 @@ export default async function init(bot) {
         if (process.env.NODE_ENV === 'production') {
             await getAndPublishGuildCount(bot);
         } else {
-            bot.logger.log('Not posting guild count statistics to Top.GG due to a non-production environment');
+            bot.logger.debug('Not posting guild count statistics to Top.GG due to a non-production environment');
         }
     }, 3600000);
 
