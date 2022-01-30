@@ -15,7 +15,7 @@ export default async function init(bot) {
 
     const getAndPublishGuildCount = async () => {
         // Get all guilds
-        const guilds = await bot.guilds.fetch({ limit: 500 });
+        const guilds = await bot.guilds.fetch({ limit: 200 });
 
         // Get the guild count
         const guildCount = guilds.size;
@@ -46,11 +46,15 @@ export default async function init(bot) {
     };
 
     // Do not run the function if in dev environment
-    if (process.env.NODE_ENV !== 'development') await getAndPublishGuildCount(bot);
+    if (process.env.NODE_ENV === 'production') await getAndPublishGuildCount(bot);
 
     // Run the getAndPublishGuildCount function every hour
     const interval = setInterval(async () => {
-        await getAndPublishGuildCount(bot);
+        if (process.env.NODE_ENV === 'production') {
+            await getAndPublishGuildCount(bot);
+        } else {
+            bot.logger.log('Not posting guild count statistics to Top.GG due to a non-production environment');
+        }
     }, 3600000);
 
     // Return the interval info
