@@ -108,7 +108,7 @@ export const getGuildMemberData = async (guild) => {
             $match: {
                 guilds: {
                     $elemMatch: {
-                        id: guild,
+                        id: guild.id,
                     },
                 },
             },
@@ -116,12 +116,13 @@ export const getGuildMemberData = async (guild) => {
         {
             $project: {
                 _id: 1,
+                usernames: 1,
                 guilds: {
                     $filter: {
                         input: '$guilds',
                         as: 'guilds',
                         cond: {
-                            $eq: ['$$guilds.id', guild],
+                            $eq: ['$$guilds.id', guild.id],
                         },
                     },
                 },
