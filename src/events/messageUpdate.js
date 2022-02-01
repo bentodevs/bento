@@ -1,7 +1,6 @@
 import { stripIndents } from 'common-tags';
 import { MessageEmbed } from 'discord.js';
 import settings from '../database/models/settings.js';
-import { getChannel } from '../modules/functions/getters.js';
 import { checkMessage } from '../modules/functions/moderation.js';
 
 export default async (bot, oldMsg, newMsg) => {
@@ -18,10 +17,8 @@ export default async (bot, oldMsg, newMsg) => {
     const msgSettings = await settings.findOne({ _id: newMsg.guild.id });
 
     // Logging code
-    if (msgSettings.logs?.deleted) {
-        // Get the log channel
-        const channel = await getChannel(newMsg, msgSettings.logs.deleted, false);
-
+    if (msgSettings.logs?.edited) {
+        // Build the message embed
         const embed = new MessageEmbed()
             .setAuthor({ name: `Message by ${newMsg.author.tag} edited in #${newMsg.channel.name}`, iconUrl: newMsg.author.displayAvatarURL({ format: 'png', dynamic: true }) })
             .setThumbnail(newMsg.author.displayAvatarURL({ format: 'png', dynamic: true }))
@@ -32,7 +29,15 @@ export default async (bot, oldMsg, newMsg) => {
             .addField('New Message Content', newMsg.content, true)
             .setTimestamp();
 
-        channel?.send({ embeds: [embed] });
+        newMsg.guild.channels.fetch(msgSettings.logs.edited)
+            .then((channel) => channel.send({ embeds: [embed] }))
+            .catch(async (err) => {
+                if (msgSettings.logs.edited) {
+                    await settings.findOneAndUpdate({ _id: newMsg.guild.id }, { 'logs.edited': null });
+                } else {
+                    bot.logger.error(err);
+                }
+            });
     }
 
     // Run the new message through automod
