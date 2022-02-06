@@ -83,7 +83,7 @@ export default {
             message.guild.channels.fetch(message.settings.logs?.unban).then((channel) => {
                 channel?.send(`${bot.config.emojis.unban} **${user?.user.tag}** was unbanned for **${reason}**`);
             }).catch((err) => {
-                if (message.settings.logs?.unban && err.httpStatus === 404) {
+                if (message.settings.logs?.unban) {
                     settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.unban': null });
                 } else {
                     bot.logger.error(err.stack);
@@ -137,7 +137,7 @@ export default {
             message.guild.channels.fetch(message.settings.logs?.unban).then((channel) => {
                 channel?.send(`${bot.config.emojis.unban} **${user?.user.tag}** was unbanned for **${reason}**`);
             }).catch((err) => {
-                if (message.settings.logs?.unban && err.httpStatus === 404) {
+                if (message.settings.logs?.unban) {
                     settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.unban': null });
                 } else {
                     bot.logger.error(err.stack);
@@ -194,7 +194,7 @@ export default {
             interaction.guild.channels.fetch(interaction.settings.logs?.unban).then((channel) => {
                 channel?.send(`${bot.config.emojis.unban} **${user?.user.tag}** was unbanned for **${reason}**`);
             }).catch((err) => {
-                if (interaction.settings.logs?.unban && err.httpStatus === 404) {
+                if (interaction.settings.logs?.unban) {
                     settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.unban': null });
                 } else {
                     bot.logger.error(err.stack);
@@ -205,7 +205,7 @@ export default {
             interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
             }).catch((err) => {
-                if (!interaction.settings.logs?.default && err.httpStatus === 404) {
+                if (!interaction.settings.logs?.default) {
                     settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
                 } else {
                     bot.logger.error(err.stack);

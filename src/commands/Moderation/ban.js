@@ -96,7 +96,7 @@ export default {
                 message.guild.channels.fetch(message.settings.logs?.ban).then((channel) => {
                     channel?.send(`${bot.config.emojis.bans} **${(member?.user ?? member).tag}** was banned for **${reason}**`);
                 }).catch((err) => {
-                    if (message.settings.logs?.ban && err.httpStatus === 404) {
+                    if (message.settings.logs?.ban) {
                         settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.ban': null });
                     } else {
                         bot.logger.error(err.stack);
@@ -153,7 +153,7 @@ export default {
             message.guild.channels.fetch(message.settings.logs?.ban).then(async (channel) => {
                 channel?.send(`${bot.config.emojis.bans} **${(member?.user ?? member).tag}** was banned for **${reason}**`);
             }).catch((err) => {
-                if (message.settings.logs?.ban && err.httpStatus === 404) {
+                if (message.settings.logs?.ban) {
                     settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.ban': null });
                 } else {
                     bot.logger.error(err.stack);

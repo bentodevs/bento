@@ -93,7 +93,7 @@ export default {
             message.guild.channels.fetch(message.settings.logs?.kick).then((channel) => {
                 channel?.send(`👢 **${member.user.tag}** was kicked for **${reason}**`);
             }).catch((err) => {
-                if (message.settings.logs?.kick && err.httpStatus === 404) {
+                if (message.settings.logs?.kick) {
                     settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.kick': null });
                 } else {
                     bot.logger.error(err.stack);
