@@ -7,7 +7,7 @@ export default {
         name: 'setup',
         aliases: [],
         usage: 'setup <option> [value]',
-        examples: ['setup mute muted', 'setup cmdchannel #commands'],
+        examples: ['setup muterole muted', 'setup cmdchannel #commands'],
         description: 'Create, configure and manage the mute role & command channels',
         category: 'Settings',
         info: null,
