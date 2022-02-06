@@ -80,7 +80,7 @@ export default {
             message.guild.channels.fetch(message.settings.logs?.unmute).then((channel) => {
                 channel?.send(`🔉 **${member?.user.tag}** was unmuted for **${reason}**`);
             }).catch((err) => {
-                if (message.settings.logs?.unmute) {
+                if (message.settings.logs?.unmute && err.httpStatus === 404) {
                     settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.unmute': null });
                 } else {
                     bot.logger.error(err.stack);
@@ -129,7 +129,7 @@ export default {
             message.guild.channels.fetch(message.settings.logs?.unmute).then((channel) => {
                 channel?.send(`🔉 **${member?.user.tag}** was unmuted for **${reason}**`);
             }).catch((err) => {
-                if (message.settings.logs?.unmute) {
+                if (message.settings.logs?.unmute && err.httpStatus === 404) {
                     settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.unmute': null });
                 } else {
                     bot.logger.error(err.stack);
@@ -194,7 +194,7 @@ export default {
             interaction.guild.channels.fetch(interaction.settings.logs?.unmute).then((channel) => {
                 channel?.send(`🔉 **${interaction?.user.tag}** was unmuted for **${reason}**`);
             }).catch((err) => {
-                if (interaction.settings.logs?.unmute) {
+                if (interaction.settings.logs?.unmute && err.httpStatus === 404) {
                     settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.unmute': null });
                 } else {
                     bot.logger.error(err.stack);
@@ -205,7 +205,7 @@ export default {
             interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
             }).catch((err) => {
-                if (!interaction.settings.logs?.default) {
+                if (!interaction.settings.logs?.default && err.httpStatus === 404) {
                     settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
                 } else {
                     bot.logger.error(err.stack);

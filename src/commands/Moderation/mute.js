@@ -145,7 +145,7 @@ export default {
         message.guild.channels.fetch(message.settings.logs?.mute).then((channel) => {
             channel?.send(`🔇 **${member.user.tag}** was muted ${time === 'forever' ? 'for **forever**' : `for **${formatDistanceToNowStrict(Date.now() + time)}**`} with the reason **${reason}**`);
         }).catch((err) => {
-            if (message.settings.logs?.mute) {
+            if (message.settings.logs?.mute && err.httpStatus === 404) {
                 settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.mute': null });
             } else {
                 bot.logger.error(err.stack);
