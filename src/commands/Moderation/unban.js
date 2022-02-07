@@ -82,9 +82,9 @@ export default {
             // Send public unban log message, if it exists
             message.guild.channels.fetch(message.settings.logs?.unban).then((channel) => {
                 channel?.send(`${bot.config.emojis.unban} **${user?.user.tag}** was unbanned for **${reason}**`);
-            }).catch((err) => {
-                if (message.settings.logs?.unban) {
-                    settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.unban': null });
+            }).catch(async (err) => {
+                if (message.settings.logs?.unban && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.unban': null });
                 } else {
                     bot.logger.error(err.stack);
                 }
@@ -93,9 +93,9 @@ export default {
             // Send the punishment to the mod log channel
             message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
-            }).catch((err) => {
-                if (!message.settings.logs?.default) {
-                    settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
+            }).catch(async (err) => {
+                if (message.settings.logs?.default && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
                 } else {
                     bot.logger.error(err.stack);
                 }
@@ -136,9 +136,9 @@ export default {
             // Send public ban log message, if it exists
             message.guild.channels.fetch(message.settings.logs?.unban).then((channel) => {
                 channel?.send(`${bot.config.emojis.unban} **${user?.user.tag}** was unbanned for **${reason}**`);
-            }).catch((err) => {
-                if (message.settings.logs?.unban) {
-                    settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.unban': null });
+            }).catch(async (err) => {
+                if (message.settings.logs?.unban && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.unban': null });
                 } else {
                     bot.logger.error(err.stack);
                 }
@@ -147,9 +147,9 @@ export default {
             // Send the punishment to the mod log channel
             message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
-            }).catch((err) => {
-                if (!message.settings.logs?.default) {
-                    settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
+            }).catch(async (err) => {
+                if (message.settings.logs?.default && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
                 } else {
                     bot.logger.error(err.stack);
                 }
@@ -193,9 +193,9 @@ export default {
             // Send public unban log message, if it exists
             interaction.guild.channels.fetch(interaction.settings.logs?.unban).then((channel) => {
                 channel?.send(`${bot.config.emojis.unban} **${user?.user.tag}** was unbanned for **${reason}**`);
-            }).catch((err) => {
-                if (interaction.settings.logs?.unban) {
-                    settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.unban': null });
+            }).catch(async (err) => {
+                if (interaction.settings.logs?.unban && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.unban': null });
                 } else {
                     bot.logger.error(err.stack);
                 }
@@ -204,9 +204,9 @@ export default {
             // Send the punishment to the mod log channel
             interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
-            }).catch((err) => {
-                if (!interaction.settings.logs?.default) {
-                    settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
+            }).catch(async (err) => {
+                if (interaction.settings.logs?.default && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
                 } else {
                     bot.logger.error(err.stack);
                 }
@@ -242,9 +242,9 @@ export default {
             // Send public ban log message, if it exists
             interaction.guild.channels.fetch(interaction.settings.logs?.ban).then((channel) => {
                 channel?.send(`${bot.config.emojis.unban} **${user?.user.tag}** was unbanned for **${reason}**`);
-            }).catch((err) => {
-                if (interaction.settings.logs?.unban) {
-                    settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.unban': null });
+            }).catch(async (err) => {
+                if (interaction.settings.logs?.unban && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.unban': null });
                 } else {
                     bot.logger.error(err.stack);
                 }
@@ -253,9 +253,9 @@ export default {
             // Send the punishment to the mod log channel
             interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
-            }).catch((err) => {
-                if (!interaction.settings.logs?.default) {
-                    settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
+            }).catch(async (err) => {
+                if (interaction.settings.logs?.default && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
                 } else {
                     bot.logger.error(err.stack);
                 }

@@ -81,9 +81,9 @@ export default {
         // Send the log message
         message.guild.channels.fetch(message.settings.logs.default).then((channel) => {
             channel.send({ embeds: [logMessage] });
-        }).catch((err) => {
-            if (!message.settings.logs?.default) {
-                settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
+        }).catch(async (err) => {
+            if (message.settings.logs?.default && err?.httpStatus === 404) {
+                await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
             } else {
                 bot.logger.error(err.stack);
             }

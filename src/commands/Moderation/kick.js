@@ -92,9 +92,9 @@ export default {
             // Send public kick log message, if it exists
             message.guild.channels.fetch(message.settings.logs?.kick).then((channel) => {
                 channel?.send(`👢 **${member.user.tag}** was kicked for **${reason}**`);
-            }).catch((err) => {
-                if (message.settings.logs?.kick) {
-                    settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.kick': null });
+            }).catch(async (err) => {
+                if (message.settings.logs?.kick && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.kick': null });
                 } else {
                     bot.logger.error(err.stack);
                 }
@@ -103,9 +103,9 @@ export default {
             // Send the punishment to the mod log channel
             message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
-            }).catch((err) => {
-                if (!message.settings.logs?.default) {
-                    settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
+            }).catch(async (err) => {
+                if (message.settings.logs?.default && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
                 } else {
                     bot.logger.error(err.stack);
                 }
@@ -162,17 +162,20 @@ export default {
             // Send public ban log message, if it exists
             interaction.guild.channels.fetch(interaction.settings.logs?.kick).then((channel) => {
                 channel?.send(`👢 **${user.user.tag}** was kicked for **${reason}**`);
-            }).catch(() => {
-                bot.logger.debug(`Failed to find kick log channel for ${interaction.guild.name} (${interaction.guild.id}) - Removing from Database`);
-                settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.kick': null }).catch(() => { });
+            }).catch(async (err) => {
+                if (interaction.settings.logs?.kick && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.kick': null });
+                } else {
+                    bot.logger.error(err.stack);
+                }
             });
 
             // Send the punishment to the mod log channel
             interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
-            }).catch((err) => {
-                if (!interaction.settings.logs?.default) {
-                    settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
+            }).catch(async (err) => {
+                if (interaction.settings.logs?.default && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
                 } else {
                     bot.logger.error(err.stack);
                 }
