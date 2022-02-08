@@ -107,6 +107,6 @@ export default async (bot, interaction) => {
         }
 
         // Log that the command has been run
-        bot.logger.cmd(`${interaction.user.tag} (${interaction.user.id}) ran command ${cmd.info.name}${interaction?.guildId ? ` in ${interaction.guild.name} (${interaction.guildId})` : ''}`);
+        bot.logger.cmd(`${interaction.user.tag} (${interaction.user.id}) ran command ${cmd.info.name}${interaction?.guildId ? ` in ${interaction.guild.name} (${interaction.guildId})` : " in DM's"}`);
     }
 };

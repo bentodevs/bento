@@ -208,5 +208,5 @@ export default async (bot, message) => {
     }
 
     // Log that the command has been run
-    bot.logger.cmd(`${message.author.tag} (${message.author.id}) ran command ${cmd.info.name}${message?.guild ? ` in ${message.guild.name} (${message.guild.id})` : ''}`);
+    bot.logger.cmd(`${message.author.tag} (${message.author.id}) ran command ${cmd.info.name}${message?.guild ? ` in ${message.guild.name} (${message.guild.id})` : " in DM's"}`);
 };
