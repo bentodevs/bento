@@ -98,7 +98,7 @@ export default {
                 }).catch(async (err) => {
                     if (message.settings.logs?.ban && err?.httpStatus === 404) {
                         await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.ban': null });
-                    } else {
+                    } else if (message.settings.logs?.ban) {
                         bot.logger.error(err.stack);
                     }
                 });
@@ -109,7 +109,7 @@ export default {
                 }).catch(async (err) => {
                     if (message.settings.logs?.default && err?.httpStatus === 404) {
                         await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
-                    } else {
+                    } else if (message.settings.logs?.default) {
                         bot.logger.error(err.stack);
                     }
                 });
@@ -155,7 +155,7 @@ export default {
             }).catch(async (err) => {
                 if (message.settings.logs?.ban && err?.httpStatus === 404) {
                     await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.ban': null });
-                } else {
+                } else if (message.settings.logs?.ban) {
                     bot.logger.error(err.stack);
                 }
             });
@@ -166,7 +166,7 @@ export default {
             }).catch(async (err) => {
                 if (message.settings.logs?.default && err?.httpStatus === 404) {
                     await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
-                } else {
+                } else if (message.settings.logs?.default) {
                     bot.logger.error(err.stack);
                 }
             });
@@ -213,7 +213,7 @@ export default {
             }).catch(async (err) => {
                 if (interaction.settings.logs?.ban && err?.httpStatus === 404) {
                     await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.ban': null });
-                } else {
+                } else if (interaction.settings.logs?.ban) {
                     bot.logger.error(err.stack);
                 }
             });
@@ -224,7 +224,7 @@ export default {
             }).catch(async (err) => {
                 if (interaction.settings.logs?.default && err?.httpStatus === 404) {
                     await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
-                } else {
+                } else if (interaction.settings.logs?.default) {
                     bot.logger.error(err.stack);
                 }
             });
@@ -265,7 +265,7 @@ export default {
             }).catch(async (err) => {
                 if (interaction.settings.logs?.ban && err?.httpStatus === 404) {
                     await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.ban': null });
-                } else {
+                } else if (interaction.settings.logs?.ban) {
                     bot.logger.error(err.stack);
                 }
             });
@@ -276,7 +276,7 @@ export default {
             }).catch(async (err) => {
                 if (interaction.settings.logs?.default && err?.httpStatus === 404) {
                     await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
-                } else {
+                } else if (interaction.settings.logs?.default) {
                     bot.logger.error(err.stack);
                 }
             });

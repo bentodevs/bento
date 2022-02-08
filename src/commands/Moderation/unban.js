@@ -85,8 +85,8 @@ export default {
             }).catch(async (err) => {
                 if (message.settings.logs?.unban && err?.httpStatus === 404) {
                     await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.unban': null });
-                } else {
-                    bot.logger.error(err.stack);
+                } else if (message.settings.logs?.unban) {
+                    bot.logger.error(err);
                 }
             });
 
@@ -96,8 +96,8 @@ export default {
             }).catch(async (err) => {
                 if (message.settings.logs?.default && err?.httpStatus === 404) {
                     await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
-                } else {
-                    bot.logger.error(err.stack);
+                } else if (message.settings.logs?.default) {
+                    bot.logger.error(err);
                 }
             });
         } else {
@@ -139,8 +139,8 @@ export default {
             }).catch(async (err) => {
                 if (message.settings.logs?.unban && err?.httpStatus === 404) {
                     await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.unban': null });
-                } else {
-                    bot.logger.error(err.stack);
+                } else if (message.settings.logs?.unban) {
+                    bot.logger.error(err);
                 }
             });
 
@@ -150,8 +150,8 @@ export default {
             }).catch(async (err) => {
                 if (message.settings.logs?.default && err?.httpStatus === 404) {
                     await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
-                } else {
-                    bot.logger.error(err.stack);
+                } else if (message.settings.logs?.default) {
+                    bot.logger.error(err);
                 }
             });
         }
@@ -196,8 +196,8 @@ export default {
             }).catch(async (err) => {
                 if (interaction.settings.logs?.unban && err?.httpStatus === 404) {
                     await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.unban': null });
-                } else {
-                    bot.logger.error(err.stack);
+                } else if (interaction.settings.logs?.unban) {
+                    bot.logger.error(err);
                 }
             });
 
@@ -207,8 +207,8 @@ export default {
             }).catch(async (err) => {
                 if (interaction.settings.logs?.default && err?.httpStatus === 404) {
                     await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
-                } else {
-                    bot.logger.error(err.stack);
+                } else if (interaction.settings.logs?.default) {
+                    bot.logger.error(err);
                 }
             });
         } else {
@@ -245,8 +245,8 @@ export default {
             }).catch(async (err) => {
                 if (interaction.settings.logs?.unban && err?.httpStatus === 404) {
                     await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.unban': null });
-                } else {
-                    bot.logger.error(err.stack);
+                } else if (interaction.settings.logs?.unban) {
+                    bot.logger.error(err);
                 }
             });
 
@@ -256,8 +256,8 @@ export default {
             }).catch(async (err) => {
                 if (interaction.settings.logs?.default && err?.httpStatus === 404) {
                     await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
-                } else {
-                    bot.logger.error(err.stack);
+                } else if (interaction.settings.logs?.default) {
+                    bot.logger.error(err);
                 }
             });
         }

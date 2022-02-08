@@ -147,8 +147,8 @@ export default {
         }).catch(async (err) => {
             if (message.settings.logs?.mute && err?.httpStatus === 404) {
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.mute': null });
-            } else {
-                bot.logger.error(err.stack);
+            } else if (message.settings.logs?.mute) {
+                bot.logger.error(err);
             }
         });
 
@@ -158,8 +158,8 @@ export default {
         }).catch(async (err) => {
             if (message.settings.logs?.default && err?.httpStatus === 404) {
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
-            } else {
-                bot.logger.error(err.stack);
+            } else if (message.settings.logs?.default) {
+                bot.logger.error(err);
             }
         });
     },
@@ -249,8 +249,8 @@ export default {
             }).catch(async (err) => {
                 if (interaction.settings.logs?.mute && err?.httpStatus === 404) {
                     await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.mute': null });
-                } else {
-                    bot.logger.error(err.stack);
+                } else if (interaction.settings.logs?.mute) {
+                    bot.logger.error(err);
                 }
             });
 
@@ -260,8 +260,8 @@ export default {
         }).catch(async (err) => {
             if (interaction.settings.logs?.default && err?.httpStatus === 404) {
                 await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
-            } else {
-                bot.logger.error(err.stack);
+            } else if (interaction.settings.logs?.default) {
+                bot.logger.error(err);
             }
         });
     },

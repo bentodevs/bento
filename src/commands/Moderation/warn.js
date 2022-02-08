@@ -79,18 +79,18 @@ export default {
         const logMessage = punishmentLog(bot, message, member, action, reason, 'warn');
 
         // Send the log message
-        message.guild.channels.fetch(message.settings.logs.default).then((channel) => {
+        message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
             channel.send({ embeds: [logMessage] });
         }).catch(async (err) => {
             if (message.settings.logs?.default && err?.httpStatus === 404) {
                 await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
-            } else {
-                bot.logger.error(err.stack);
+            } else if (message.settings.logs?.default) {
+                bot.logger.error(err);
             }
         });
 
         // Reply to the moderator
-        message.confirmationReply(`${bot.config.emojis.warning} ${member.user.tag} was warned for **${reason}** *(Case #${action})*`);
+        message.confirmationReply(`${member.user.tag} was warned for **${reason}** *(Case #${action})*`);
     },
 
     run_interaction: async (bot, interaction) => {
@@ -131,8 +131,8 @@ export default {
         }).catch((err) => {
             if (!interaction.settings.logs?.default) {
                 settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
-            } else {
-                bot.logger.error(err.stack);
+            } else if (interaction.settings.logs?.default) {
+                bot.logger.error(err);
             }
         });
 
