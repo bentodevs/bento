@@ -17,7 +17,7 @@ export default async (bot, oldMsg, newMsg) => {
     const msgSettings = await settings.findOne({ _id: newMsg.guild.id });
 
     // Logging code
-    if (msgSettings.logs?.edited) {
+    if (msgSettings.logs?.edited && oldMsg?.content && newMsg?.content) {
         // Build the message embed
         const embed = new MessageEmbed()
             .setAuthor({ name: `Message by ${newMsg.author.tag} edited in #${newMsg.channel.name}`, iconUrl: newMsg.author.displayAvatarURL({ format: 'png', dynamic: true }) })
