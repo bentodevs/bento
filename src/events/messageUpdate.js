@@ -32,9 +32,9 @@ export default async (bot, oldMsg, newMsg) => {
         newMsg.guild.channels.fetch(msgSettings.logs.edited)
             .then((channel) => channel.send({ embeds: [embed] }))
             .catch(async (err) => {
-                if (msgSettings.logs.edited) {
+                if (msgSettings.logs?.edited && err.httpStatus === 404) {
                     await settings.findOneAndUpdate({ _id: newMsg.guild.id }, { 'logs.edited': null });
-                } else {
+                } else if (msgSettings.logs?.edited) {
                     bot.logger.error(err);
                 }
             });

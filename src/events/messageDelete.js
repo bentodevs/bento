@@ -71,7 +71,7 @@ export default async (bot, message) => {
         message.guild.channels.fetch(msgSettings.logs.deleted)
             .then((channel) => channel.send({ embeds: [embed] }))
             .catch(async (err) => {
-                if (msgSettings.logs.deleted) {
+                if (msgSettings.logs?.deleted && err.httpStatus === 404) {
                     await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.edited': null });
                 } else {
                     bot.logger.error(err);
