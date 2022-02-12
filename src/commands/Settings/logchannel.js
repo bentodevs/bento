@@ -135,7 +135,7 @@ export default {
                     [`logs.${option}`]: null,
                 });
                 // Send a confirmation message
-                message.confirmationReply(`${option} logging has been disabled!`);
+                message.confirmationReply(`${option.toTitleCase()} logging has been disabled!`);
 
                 // Return
                 return;
@@ -151,9 +151,8 @@ export default {
             if (channel.type !== 'GUILD_TEXT' && channel.type !== 'GUILD_NEWS') return message.errorReply("The channel you specified isn't a text channel!");
 
             // If the bot doesn't have permissions to send messages or embed in the channel return an error
-            // Check the bot has permissions to send messages in the channel
             if (!channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')
-                || !channel.permissionsFor(message.guild.me).has('EMBED_LINKS')) return message.errorReply('I don\'t have permission to send messages in that channel! *(I require `Send messages` and `Embed links`!)*');
+                || !channel.permissionsFor(message.guild.me).has('EMBED_LINKS')) return message.errorReply("I don't have permission to send messages in that channel! *(I require `Send messages` and `Embed links`!)*");
 
             // Set the logging channel
             await settings.findOneAndUpdate({ _id: message.guild.id }, {
@@ -189,6 +188,8 @@ export default {
     run_interaction: async (bot, interaction) => {
         // Get the option
         const option = interaction.options?.get('option')?.value;
+
+        // TODO: Add a way to disable log channels
 
         if (!option) {
             // Define logs
@@ -243,9 +244,8 @@ export default {
             if (channel.type !== 'GUILD_TEXT' && channel.type !== 'GUILD_NEWS') return interaction.error("The channel you specified isn't a text channel!");
 
             // If the bot doesn't have permissions to send messages or embed in the channel return an error
-            // Check the bot has permissions to send messages in the channel
             if (!channel.permissionsFor(interaction.guild.me).has('SEND_MESSAGES')
-                || !channel.permissionsFor(interaction.guild.me).has('EMBED_LINKS')) return interaction.error('I don\'t have permission to send messages in that channel! *(I require `Send messages` and `Embed links`!)*');
+                || !channel.permissionsFor(interaction.guild.me).has('EMBED_LINKS')) return interaction.error("I don't have permission to send messages in that channel! *(I require `Send messages` and `Embed links`!)*");
 
             // Set the logging channel
             await settings.findOneAndUpdate({ _id: interaction.guild.id }, {

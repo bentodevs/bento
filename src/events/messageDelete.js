@@ -1,7 +1,6 @@
 import { stripIndents } from 'common-tags';
 import { MessageEmbed } from 'discord.js';
 import settings from '../database/models/settings.js';
-import { getChannel } from '../modules/functions/getters.js';
 
 export default async (bot, message) => {
     // If the message is partial try to fetch it before its fully deleted on discords side
@@ -53,9 +52,7 @@ export default async (bot, message) => {
             user = '**Deleted by:** The author or a bot';
         }
 
-        // Get the log channel
-        const channel = await getChannel(message, msgSettings.logs.deleted, false);
-
+        // Build the base message embed
         const embed = new MessageEmbed()
             .setAuthor({ name: `Message by ${message.author.tag} deleted in #${message.channel.name}`, iconURL: message.author.displayAvatarURL({ format: 'png', dynamic: true }) })
             .setThumbnail(message.author.displayAvatarURL({ format: 'png', dynamic: true }))
@@ -65,9 +62,20 @@ export default async (bot, message) => {
             ${user}`)
             .setTimestamp();
 
+        // If there is message content, then add it as a field to the embed
         if (message.content) embed.addField('Message', message.content);
+        // If there are message attachments (Images, etc) then add them as a field to the embed
         if (message.attachments.size > 0) embed.addField('Attachments', message.attachments.map((a) => a.proxyURL).join('\n'));
 
-        channel?.send({ embeds: [embed] });
+        // Get the log channel & send the embed
+        message.guild.channels.fetch(msgSettings.logs.deleted)
+            .then((channel) => channel.send({ embeds: [embed] }))
+            .catch(async (err) => {
+                if (msgSettings.logs?.deleted && err.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.edited': null });
+                } else {
+                    bot.logger.error(err);
+                }
+            });
     }
 };

@@ -141,14 +141,26 @@ export default {
         // Send the punishment to the log channel
         const embed = punishmentLog(bot, message, member, action, reason, 'mute', (time === 'forever' ? 'Forever' : `${formatDistanceToNowStrict(Date.now() + time)}`));
 
-        // Send public ban log message, if it exists
-        message.guild.channels.fetch(message.settings.logs?.kick).then((channel) => {
+        // Send public mute log message, if it exists
+        message.guild.channels.fetch(message.settings.logs?.mute).then((channel) => {
             channel?.send(`🔇 **${member.user.tag}** was muted ${time === 'forever' ? 'for **forever**' : `for **${formatDistanceToNowStrict(Date.now() + time)}**`} with the reason **${reason}**`);
+        }).catch(async (err) => {
+            if (message.settings.logs?.mute && err?.httpStatus === 404) {
+                await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.mute': null });
+            } else if (message.settings.logs?.mute) {
+                bot.logger.error(err);
+            }
         });
 
         // Send the punishment to the mod log channel
         message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
             channel?.send({ embeds: [embed] });
+        }).catch(async (err) => {
+            if (message.settings.logs?.default && err?.httpStatus === 404) {
+                await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
+            } else if (message.settings.logs?.default) {
+                bot.logger.error(err);
+            }
         });
     },
 
@@ -231,13 +243,26 @@ export default {
         const embed = punishmentLog(bot, interaction, user, action, reason, 'mute', (time === 'forever' ? 'Forever' : `${formatDistanceToNowStrict(Date.now() + time)}`));
 
         // Send public ban log message, if it exists
-        interaction.guild.channels.fetch(interaction.settings.logs?.kick).then((channel) => {
-            channel?.send(`🔇 **${interaction.user.tag}** was muted ${time === 'forever' ? 'for **forever**' : `for **${formatDistanceToNowStrict(Date.now() + time)}**`} with the reason **${reason}**`);
-        });
+        interaction.guild.channels.fetch(interaction.settings.logs?.mute)
+            .then((channel) => {
+                channel?.send(`🔇 **${interaction.user.tag}** was muted ${time === 'forever' ? 'for **forever**' : `for **${formatDistanceToNowStrict(Date.now() + time)}**`} with the reason **${reason}**`);
+            }).catch(async (err) => {
+                if (interaction.settings.logs?.mute && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.mute': null });
+                } else if (interaction.settings.logs?.mute) {
+                    bot.logger.error(err);
+                }
+            });
 
         // Send the punishment to the mod log channel
         interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
             channel?.send({ embeds: [embed] });
+        }).catch(async (err) => {
+            if (interaction.settings.logs?.default && err?.httpStatus === 404) {
+                await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
+            } else if (interaction.settings.logs?.default) {
+                bot.logger.error(err);
+            }
         });
     },
 };

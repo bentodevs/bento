@@ -53,7 +53,7 @@ export default {
 
         if (!data) return message.errorReply("I couldn't find any data for the member you specified!");
 
-        const xd = await getRankCard(user, gData, message.guild.id, apiUser);
+        const xd = await getRankCard(user, gData, message.guild, apiUser);
 
         message.reply({ files: [xd] });
     },
@@ -69,7 +69,7 @@ export default {
 
         if (!data) return interaction.error("I couldn't find any data for the member you specified!");
 
-        const xd = await getRankCard(user, gData, interaction.guild.id, apiUser);
+        const xd = await getRankCard(user, gData, interaction.guild, apiUser);
 
         interaction.reply({ files: [xd] });
     },

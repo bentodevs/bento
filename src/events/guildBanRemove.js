@@ -38,6 +38,28 @@ export default async (bot, guild) => {
         });
 
         // Log the unban
-        punishmentLog(bot, message, entry.target, action, 'Manual unban', 'unban');
+        const embed = punishmentLog(bot, message, entry.target, action, 'Manual unban', 'unban');
+
+        // Send public unban log message, if it exists
+        guild.channels.fetch(sets.logs?.unban).then((channel) => {
+            channel?.send(`${bot.config.emojis.unban} **${entry.target.tag}** was unbanned for **No reason specified**`);
+        }).catch(async (err) => {
+            if (sets.logs?.unban && err.httpStatus === 404) {
+                await settings.findOneAndUpdate({ _id: guild.id }, { 'logs.unban': null });
+            } else if (sets.logs?.unban) {
+                bot.logger.error(err.stack);
+            }
+        });
+
+        // Send the punishment to the mod log channel
+        guild.channels.fetch(sets.logs?.default).then((channel) => {
+            channel?.send({ embeds: [embed] });
+        }).catch(async (err) => {
+            if (sets.logs?.default && err.httpStatus === 404) {
+                await settings.findOneAndUpdate({ _id: guild.id }, { 'logs.default': null });
+            } else if (sets.logs?.default) {
+                bot.logger.error(err.stack);
+            }
+        });
     }
 };

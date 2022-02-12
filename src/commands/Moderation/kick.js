@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import punishments from '../../database/models/punishments.js';
 import { punishmentLog } from '../../modules/functions/moderation.js';
 import { getMember } from '../../modules/functions/getters.js';
+import settings from '../../database/models/settings.js';
 
 const { utcToZonedTime } = dateFnsTz;
 
@@ -88,14 +89,26 @@ export default {
             // Send the punishment to the log channel
             const embed = punishmentLog(bot, message, member.user, action, reason, 'kick');
 
-            // Send public ban log message, if it exists
+            // Send public kick log message, if it exists
             message.guild.channels.fetch(message.settings.logs?.kick).then((channel) => {
                 channel?.send(`👢 **${member.user.tag}** was kicked for **${reason}**`);
+            }).catch(async (err) => {
+                if (message.settings.logs?.kick && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.kick': null });
+                } else if (message.settings.logs?.kick) {
+                    bot.logger.error(err);
+                }
             });
 
             // Send the punishment to the mod log channel
             message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
+            }).catch(async (err) => {
+                if (message.settings.logs?.default && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
+                } else if (message.settings.logs?.default) {
+                    bot.logger.error(err);
+                }
             });
         } catch (e) {
             // Catch any errors during the kick process & send error message
@@ -149,11 +162,23 @@ export default {
             // Send public ban log message, if it exists
             interaction.guild.channels.fetch(interaction.settings.logs?.kick).then((channel) => {
                 channel?.send(`👢 **${user.user.tag}** was kicked for **${reason}**`);
+            }).catch(async (err) => {
+                if (interaction.settings.logs?.kick && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.kick': null });
+                } else if (interaction.settings.logs?.kick) {
+                    bot.logger.error(err);
+                }
             });
 
             // Send the punishment to the mod log channel
             interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
+            }).catch(async (err) => {
+                if (interaction.settings.logs?.default && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
+                } else if (interaction.settings.logs?.default) {
+                    bot.logger.error(err);
+                }
             });
         } catch (e) {
             // Catch any errors during the kick process & send error message

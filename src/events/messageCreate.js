@@ -180,7 +180,7 @@ export default async (bot, message) => {
         channel?.send({ embeds: [embed] });
 
         // If the bot is in a dev environment log the error as well
-        if (bot.config.general.development) console.log(err);
+        if (process.env.NODE_ENV === 'development') console.log(err);
 
         // Send an error message to the user
         message.errorReply(stripIndents`An error occurred while running the command: \`${err}\`
@@ -208,5 +208,5 @@ export default async (bot, message) => {
     }
 
     // Log that the command has been run
-    bot.logger.cmd(`${message.author.tag} (${message.author.id}) ran command ${cmd.info.name}${message?.guild ? ` in ${message.guild.name} (${message.guild.id})` : ''}`);
+    bot.logger.cmd(`${message.author.tag} (${message.author.id}) ran command ${cmd.info.name}${message?.guild ? ` in ${message.guild.name} (${message.guild.id})` : " in DM's"}`);
 };

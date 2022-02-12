@@ -108,7 +108,7 @@ export const getGuildMemberData = async (guild) => {
             $match: {
                 guilds: {
                     $elemMatch: {
-                        id: guild,
+                        id: guild.id,
                     },
                 },
             },
@@ -116,12 +116,13 @@ export const getGuildMemberData = async (guild) => {
         {
             $project: {
                 _id: 1,
+                usernames: 1,
                 guilds: {
                     $filter: {
                         input: '$guilds',
                         as: 'guilds',
                         cond: {
-                            $eq: ['$$guilds.id', guild],
+                            $eq: ['$$guilds.id', guild.id],
                         },
                     },
                 },
@@ -291,7 +292,7 @@ export const getRankCard = async (user, data, guild, apiUser) => {
     // Fill the progress bar with the current percentage
     for (let i = 0; i < percentage; i += 1) {
         ctx.beginPath();
-        ctx.fillStyle = rgbToHex(color);
+        ctx.fillStyle = '#e5e5e5';
         ctx.arc(250 + (i * 3.95), 178, 8, 0, Math.PI * 2, true);
         ctx.fill();
         ctx.closePath();

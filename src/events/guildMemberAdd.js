@@ -20,7 +20,7 @@ export default async (bot, member) => {
     // If not, then kick them
     if ((Date.now() - member.user.createdTimestamp) < serverSettings.moderation.minimumAge) {
         // Send the User a DM stating that they were kicked for not meeting the minimum age
-        await member.send(`:boot: You have been kicked from **${member.guild.name}** as your account does not meet the minimum age requirement! (Minimum age: ${formatDuration(intervalToDuration({ start: 0, end: serverSettings.general.minage }))})`);
+        await member.send(`:boot: You have been kicked from **${member.guild.name}** as your account does not meet the minimum age requirement! (Minimum age: ${formatDuration(intervalToDuration({ start: 0, end: serverSettings.moderation.minimumAge }))})`);
 
         // Kick the user from the Server
         member.kick(`Account does not meet the minimum age requirement. (Created: ${formatDuration(intervalToDuration({ start: member.user.createdTimestamp, end: Date.now() }))} ago)`);

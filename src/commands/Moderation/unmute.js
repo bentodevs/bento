@@ -2,6 +2,7 @@ import mutes from '../../database/models/mutes.js';
 import { punishmentLog } from '../../modules/functions/moderation.js';
 import { getMember } from '../../modules/functions/getters.js';
 import punishments from '../../database/models/punishments.js';
+import settings from '../../database/models/settings.js';
 
 export default {
     info: {
@@ -75,14 +76,26 @@ export default {
             // Send the punishment to the log channel
             const embed = punishmentLog(bot, message, member, action, reason, 'unmute');
 
-            // Send public ban log message, if it exists
-            message.guild.channels.fetch(message.settings.logs?.ban).then((channel) => {
+            // Send public unmute log message, if it exists
+            message.guild.channels.fetch(message.settings.logs?.unmute).then((channel) => {
                 channel?.send(`🔉 **${member?.user.tag}** was unmuted for **${reason}**`);
+            }).catch(async (err) => {
+                if (message.settings.logs?.unmute && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.unmute': null });
+                } else if (message.settings.logs?.unmute) {
+                    bot.logger.error(err);
+                }
             });
 
             // Send the punishment to the mod log channel
             message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
+            }).catch(async (err) => {
+                if (message.settings.logs?.default && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
+                } else if (message.settings.logs?.default) {
+                    bot.logger.error(err);
+                }
             });
 
             // Send the user a confirmation message
@@ -112,14 +125,26 @@ export default {
             // Send the punishment to the log channel
             const embed = punishmentLog(bot, message, member, action, reason, 'unmute');
 
-            // Send public ban log message, if it exists
-            message.guild.channels.fetch(message.settings.logs?.ban).then((channel) => {
+            // Send public unmute log message, if it exists
+            message.guild.channels.fetch(message.settings.logs?.unmute).then((channel) => {
                 channel?.send(`🔉 **${member?.user.tag}** was unmuted for **${reason}**`);
+            }).catch(async (err) => {
+                if (message.settings.logs?.unmute && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.unmute': null });
+                } else if (message.settings.logs?.unmute) {
+                    bot.logger.error(err);
+                }
             });
 
             // Send the punishment to the mod log channel
             message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
+            }).catch(async (err) => {
+                if (message.settings.logs?.default && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
+                } else if (message.settings.logs?.default) {
+                    bot.logger.error(err);
+                }
             });
 
             // Send the user a confirmation message
@@ -165,14 +190,26 @@ export default {
             // Send the punishment to the log channel
             const embed = punishmentLog(bot, interaction, user.member, action, reason, 'unmute');
 
-            // Send public ban log message, if it exists
-            interaction.guild.channels.fetch(interaction.settings.logs?.ban).then((channel) => {
+            // Send public unmute message, if it exists
+            interaction.guild.channels.fetch(interaction.settings.logs?.unmute).then((channel) => {
                 channel?.send(`🔉 **${interaction?.user.tag}** was unmuted for **${reason}**`);
+            }).catch(async (err) => {
+                if (interaction.settings.logs?.unmute && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.unmute': null });
+                } else if (interaction.settings.logs?.unmute) {
+                    bot.logger.error(err);
+                }
             });
 
             // Send the punishment to the mod log channel
             interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
+            }).catch(async (err) => {
+                if (interaction.settings.logs?.default && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
+                } else if (interaction.settings.logs?.default) {
+                    bot.logger.error(err);
+                }
             });
 
             // Send the user a confirmation message
@@ -202,14 +239,26 @@ export default {
             // Send the punishment to the log channel
             const embed = punishmentLog(bot, interaction, user.member, action, reason, 'unmute');
 
-            // Send public ban log message, if it exists
-            interaction.guild.channels.fetch(interaction.settings.logs?.ban).then((channel) => {
+            // Send public unmute log message, if it exists
+            interaction.guild.channels.fetch(interaction.settings.logs?.unmute).then((channel) => {
                 channel?.send(`🔉 **${interaction?.user.tag}** was unmuted for **${reason}**`);
+            }).catch(async (err) => {
+                if (interaction.settings.logs?.unmute && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.unmute': null });
+                } else if (interaction.settings.logs?.unmute) {
+                    bot.logger.error(err);
+                }
             });
 
             // Send the punishment to the mod log channel
             interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
+            }).catch(async (err) => {
+                if (interaction.settings.logs?.default && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
+                } else if (interaction.settings.logs?.default) {
+                    bot.logger.error(err);
+                }
             });
 
             // Send the user a confirmation message

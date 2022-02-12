@@ -40,7 +40,7 @@ export default {
         if (deleteCount - 2 > 1000) return message.errorReply('Please specify a number between 1 and 1000!');
 
         // Send the status message
-        const msg = await message.loadingReply(`Deleting \`${deleteCount - 2}\` messages...`);
+        const msg = await message.loading(`Deleting \`${deleteCount - 2}\` messages...`);
 
         // Create the bulkDelete function
         async function bulkDelete() {

@@ -23,7 +23,7 @@ export default async (bot) => {
     // Set the bots status
     await bot.user.setPresence({ activities: [{ name: `${bot.config.general.prefix}help | r2-d2.dev`, type: 'WATCHING' }], status: 'online' });
     // Register all the slash commands if the bot isn't in a dev environment
-    if (!bot.config.general.development) await registerGlobal(bot);
+    if (process.env.NODE_ENV !== 'development') await registerGlobal(bot);
 
     // Stop and update the ready message
     rdyMsg.stopAndPersist({

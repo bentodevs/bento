@@ -44,6 +44,11 @@ export const punishmentLog = (bot, message, member, punishmentId, reason, type, 
         embed.setDescription(stripIndents`${description}
             **Reason:** ${reason}`);
         break;
+    case 'warn':
+        embed.setAuthor({ name: `Case ${punishmentId} | User Warned`, iconURL: (member?.user ?? member).displayAvatarURL({ format: 'png', dynamic: true }) });
+        embed.setDescription(stripIndents`${description}
+            **Reason:** ${reason}`);
+        break;
     default:
         throw new Error(`Invalid punishment type - Must be one of ${punishmentTypes.join(', ')}`);
     }
@@ -53,9 +58,14 @@ export const punishmentLog = (bot, message, member, punishmentId, reason, type, 
 
 // eslint-disable-next-line no-shadow
 export const checkMessage = async (message, settings) => {
+    // Check if there is a heirarchic role id, and if there is then check if the user has a role
+    // equal to or higher than the heirarchic role position
     if (settings.ignore?.hierarchicRoleId && message.guild.roles.cache.get(settings.ignore?.hierarchicRoleId).position <= message.member.roles.highest.position) return;
+    // If the message is in an ignored channel, they have an ignored role,
+    // or the author has the permissions 'ADMINISTRATOR', then return
     if (settings.ignore?.channels.includes(message.channel.id) || settings.ignore?.roles.includes(message.member.roles.cache) || message.member.permissions.has('ADMINISTRATOR')) return;
 
+    // Run the filter over the message content
     if (settings.moderation?.filter?.state) {
         // eslint-disable-next-line no-unsafe-optional-chaining
         for (const data of settings.moderation.filter?.entries) {
@@ -68,6 +78,7 @@ export const checkMessage = async (message, settings) => {
         }
     }
 
+    // Check if the message contains Zalgo text
     if (settings.moderation?.filter?.zalgo) {
         const zalgo = /[\xCC\xCD]/;
         if (zalgo.test(message.content)) {
@@ -78,6 +89,7 @@ export const checkMessage = async (message, settings) => {
         }
     }
 
+    // Check if the message contains any invites to Discord servers
     if (settings.moderation?.no_invite) {
         const invite = /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]/g;
 
@@ -89,8 +101,9 @@ export const checkMessage = async (message, settings) => {
         }
     }
 
+    // Check if the message contains any links
     if (settings.moderation?.no_link) {
-        const link = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)?/gi;
+        const link = /[(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/gi;
 
         if (link.test(message.content)) {
             message.delete()
@@ -99,6 +112,8 @@ export const checkMessage = async (message, settings) => {
                 .catch(() => { });
         }
     }
+
+    // TODO: Add message mention size checks
 };
 
 /**

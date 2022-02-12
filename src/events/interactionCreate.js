@@ -95,7 +95,7 @@ export default async (bot, interaction) => {
             channel?.send({ embeds: [embed] });
 
             // If the bot is in a dev environment log the error as well
-            if (bot.config.general.development) console.log(err);
+            if (process.env.NODE_ENV === 'development') console.log(err);
 
             // Send the error message to the user
             interaction.error({
@@ -107,6 +107,6 @@ export default async (bot, interaction) => {
         }
 
         // Log that the command has been run
-        bot.logger.cmd(`${interaction.user.tag} (${interaction.user.id}) ran command ${cmd.info.name}${interaction?.guildId ? ` in ${interaction.guild.name} (${interaction.guildId})` : ''}`);
+        bot.logger.cmd(`${interaction.user.tag} (${interaction.user.id}) ran command ${cmd.info.name}${interaction?.guildId ? ` in ${interaction.guild.name} (${interaction.guildId})` : " in DM's"}`);
     }
 };

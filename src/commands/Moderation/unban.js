@@ -1,5 +1,6 @@
 import preban from '../../database/models/preban.js';
 import punishments from '../../database/models/punishments.js';
+import settings from '../../database/models/settings.js';
 import { getUser } from '../../modules/functions/getters.js';
 import { punishmentLog } from '../../modules/functions/moderation.js';
 
@@ -78,21 +79,33 @@ export default {
             // Send the punishment to the log channel
             const embed = punishmentLog(bot, message, user, action, reason, 'unban');
 
-            // Send public ban log message, if it exists
-            message.guild.channels.fetch(message.settings.logs?.ban).then((channel) => {
-                channel?.send(`${bot.config.emojis.bans} **${user?.user.tag}** was unbanned for **${reason}**`);
+            // Send public unban log message, if it exists
+            message.guild.channels.fetch(message.settings.logs?.unban).then((channel) => {
+                channel?.send(`${bot.config.emojis.unban} **${user?.user.tag}** was unbanned for **${reason}**`);
+            }).catch(async (err) => {
+                if (message.settings.logs?.unban && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.unban': null });
+                } else if (message.settings.logs?.unban) {
+                    bot.logger.error(err);
+                }
             });
 
             // Send the punishment to the mod log channel
             message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
+            }).catch(async (err) => {
+                if (message.settings.logs?.default && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
+                } else if (message.settings.logs?.default) {
+                    bot.logger.error(err);
+                }
             });
         } else {
             // Attempt to get the user
             const user = await getUser(bot, message, args[0], false);
 
             // If the user doesn't exist/isn't valid then return an error
-            if (!user) message.errorReply('You did not specify a valid user');
+            if (!user) return message.errorReply('You did not specify a valid user');
 
             // Find the ban in the preban database
             const pban = await preban.findOne({ user: user.id });
@@ -121,13 +134,25 @@ export default {
             const embed = punishmentLog(bot, message, user, action, reason, 'unban');
 
             // Send public ban log message, if it exists
-            message.guild.channels.fetch(message.settings.logs?.ban).then((channel) => {
-                channel?.send(`${bot.config.emojis.bans} **${user?.user.tag}** was unbanned for **${reason}**`);
+            message.guild.channels.fetch(message.settings.logs?.unban).then((channel) => {
+                channel?.send(`${bot.config.emojis.unban} **${user?.user.tag}** was unbanned for **${reason}**`);
+            }).catch(async (err) => {
+                if (message.settings.logs?.unban && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.unban': null });
+                } else if (message.settings.logs?.unban) {
+                    bot.logger.error(err);
+                }
             });
 
             // Send the punishment to the mod log channel
             message.guild.channels.fetch(message.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
+            }).catch(async (err) => {
+                if (message.settings.logs?.default && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: message.guild.id }, { 'logs.default': null });
+                } else if (message.settings.logs?.default) {
+                    bot.logger.error(err);
+                }
             });
         }
     },
@@ -165,14 +190,26 @@ export default {
             // Send the punishment to the log channel
             const embed = punishmentLog(bot, interaction, user, action, reason, 'unban');
 
-            // Send public ban log message, if it exists
-            interaction.guild.channels.fetch(interaction.settings.logs?.ban).then((channel) => {
-                channel?.send(`${bot.config.emojis.bans} **${user?.user.tag}** was unbanned for **${reason}**`);
+            // Send public unban log message, if it exists
+            interaction.guild.channels.fetch(interaction.settings.logs?.unban).then((channel) => {
+                channel?.send(`${bot.config.emojis.unban} **${user?.user.tag}** was unbanned for **${reason}**`);
+            }).catch(async (err) => {
+                if (interaction.settings.logs?.unban && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.unban': null });
+                } else if (interaction.settings.logs?.unban) {
+                    bot.logger.error(err);
+                }
             });
 
             // Send the punishment to the mod log channel
             interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
+            }).catch(async (err) => {
+                if (interaction.settings.logs?.default && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
+                } else if (interaction.settings.logs?.default) {
+                    bot.logger.error(err);
+                }
             });
         } else {
             // Find the ban in the preban database
@@ -204,12 +241,24 @@ export default {
 
             // Send public ban log message, if it exists
             interaction.guild.channels.fetch(interaction.settings.logs?.ban).then((channel) => {
-                channel?.send(`${bot.config.emojis.bans} **${user?.user.tag}** was unbanned for **${reason}**`);
+                channel?.send(`${bot.config.emojis.unban} **${user?.user.tag}** was unbanned for **${reason}**`);
+            }).catch(async (err) => {
+                if (interaction.settings.logs?.unban && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.unban': null });
+                } else if (interaction.settings.logs?.unban) {
+                    bot.logger.error(err);
+                }
             });
 
             // Send the punishment to the mod log channel
             interaction.guild.channels.fetch(interaction.settings.logs?.default).then((channel) => {
                 channel?.send({ embeds: [embed] });
+            }).catch(async (err) => {
+                if (interaction.settings.logs?.default && err?.httpStatus === 404) {
+                    await settings.findOneAndUpdate({ _id: interaction.guild.id }, { 'logs.default': null });
+                } else if (interaction.settings.logs?.default) {
+                    bot.logger.error(err);
+                }
             });
         }
     },
