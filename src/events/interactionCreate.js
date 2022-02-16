@@ -5,6 +5,7 @@ import Sentry from '@sentry/node';
 import { getSettings, getPerms } from '../database/mongo.js';
 import { checkBlacklist } from '../modules/functions/moderation.js';
 import { checkPerms, checkSelf } from '../modules/functions/permissions.js';
+import reminders from '../database/models/reminders.js';
 
 export default async (bot, interaction) => {
     if (interaction.isCommand() || interaction.isContextMenu()) {
@@ -108,5 +109,40 @@ export default async (bot, interaction) => {
 
         // Log that the command has been run
         bot.logger.cmd(`${interaction.user.tag} (${interaction.user.id}) ran command ${cmd.info.name}${interaction?.guildId ? ` in ${interaction.guild.name} (${interaction.guildId})` : " in DM's"}`);
+    } else if (interaction.isButton()) {
+        // Return if the user is a bot
+        if (interaction.user.bot) return;
+
+        if (interaction.customId.startsWith('reminder-')) {
+            const data = interaction.customId.split('-');
+
+            if (data[3] === 'completed') {
+                // Remove the reminder from the database
+                await reminders.findOneAndUpdate({ _id: interaction.user.id }, { $pull: { reminders: { id: parseInt(data[2], 10) } } });
+
+                // Update the original message
+                interaction.message.edit({ content: `${bot.config.emojis.confirmation} Reminder has been completed!`, embeds: interaction.message.embeds, components: [] });
+
+                // Send an ephemeral message confirming it
+                interaction.reply({ content: `${bot.config.emojis.confirmation} Your reminder has been marked as completed!`, ephemeral: true });
+            } else if (data[3] === 'snooze') {
+                await reminders.findOneAndUpdate({
+                    _id: interaction.user.id,
+                    reminders: {
+                        $elemMatch: {
+                            id: parseInt(data[2], 10),
+                        },
+                    },
+                }, {
+                    $set: {
+                        'reminders.$.pending': false,
+                        'reminders.$.remindTime': Date.now() + 600000,
+                    },
+                });
+
+                // Send an ephemeral message confirming it
+                interaction.reply({ content: `${bot.config.emojis.confirmation} Your reminder has been snoozed for 10 minutes!`, ephemeral: true });
+            }
+        }
     }
 };

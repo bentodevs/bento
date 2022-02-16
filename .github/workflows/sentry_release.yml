@@ -19,4 +19,4 @@ jobs:
           SENTRY_URL: ${{ secrets.SENTRY_URL }}
         with:
           environment: production
-          version: v2022.1.1
+          version: 2022.2
