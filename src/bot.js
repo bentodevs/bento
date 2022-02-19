@@ -63,13 +63,6 @@ const logLevels = {
         ready: 3,
         cmd: 4,
     },
-    colors: {
-        error: 'red',
-        warn: 'yellow',
-        debug: 'whiteBG blue',
-        ready: 'green',
-        cmd: 'cyan',
-    },
 };
 
 winston.addColors(logLevels.colors);
