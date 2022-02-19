@@ -65,8 +65,6 @@ const logLevels = {
     },
 };
 
-winston.addColors(logLevels.colors);
-
 bot.logger = winston.createLogger({
     format: winston.format.combine(
         winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
