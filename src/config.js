@@ -9,7 +9,7 @@ const config = {
             '420325176379703298', // Jarno
             '648882989471891499', // Waitrose
         ],
-        sentrydsn: '',
+        sentrydsn: 'https://465b1d5d13e94c38b88ea251a4048b12@sentry.behn.cc/4',
     },
 
     // Global logging
