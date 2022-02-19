@@ -112,6 +112,7 @@ const init = async () => {
             new Sentry.Integrations.Http({ tracing: true }),
         ],
         tracesSampleRate: 1.0,
+        release: `r2-d2@${process.env.npm_package_version}`,
     });
 
     sentryMessage.stopAndPersist({
