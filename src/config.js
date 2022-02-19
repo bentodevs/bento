@@ -3,7 +3,6 @@ const config = {
     // General Settings
     general: {
         prefix: '.', // Default Bot Prefix
-        version: '2021.2.0', // Current Version
         embedColor: '#ABCDEF', // Default Embed Color,
         devs: [
             '420325176379703298', // Jarno
