@@ -114,7 +114,12 @@ const init = async () => {
     // Setup Sentry
     Sentry.init({
         dsn: bot.config.general.sentrydsn,
-        integrations: [new Tracing.Integrations.Mongo()],
+        integrations: [
+            new Tracing.Integrations.Mongo({
+                useMongoose: true,
+            }),
+            new Sentry.Integrations.Http({ tracing: true }),
+        ],
         tracesSampleRate: 1.0,
     });
 
