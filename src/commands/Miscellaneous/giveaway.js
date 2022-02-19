@@ -63,6 +63,7 @@ export default {
                 type: 'CHANNEL',
                 description: 'The channel you want to host the giveaway in.',
                 required: true,
+                channelType: ['GUILD_TEXT', 'GUILD_NEWS'],
             }, {
                 name: 'duration',
                 type: 'STRING',
@@ -264,11 +265,11 @@ export default {
                 .setAuthor({ name: `Giveaway: ${prize}`, iconUrl: message.guild.iconURL({ dynamic: true, format: 'png' }) })
                 .setDescription(stripIndents`React with 🎉 to enter the giveaway!
 
-                **Duration:** ${formatDuration(intervalToDuration({ start, end }), { delimiter: ',' })}
+                **Drawn:** <t:${Math.trunc(end / 1000)}:R>
                 **Hosted By:** ${message.author}`)
                 .setTimestamp(end)
                 .setColor(bot.config.general.embedColor)
-                .setFooter({ text: `${winners} winners | Ends` });
+                .setFooter({ text: `${winners} winner${winners > 1 ? 's' : ''} | Ends` });
 
             // Send the embed & add the reaction
             const messageId = await channel.send({ embeds: [embed] }).then((msg) => { msg.react('🎉'); return msg.id; });
@@ -356,10 +357,13 @@ export default {
             const embed = new MessageEmbed()
                 .setAuthor({ name: `Giveaway: ${g.prize}`, iconURL: message.guild.iconURL({ dynamic: true, format: 'png' }) })
                 // eslint-disable-next-line no-nested-ternary
-                .setDescription(`${arr.length ? arr.length > 1 ? `**Winners:**\n${arr.join('\n')}` : `**Winner:** ${arr.join('\n')}` : 'Could not determine a winner!'}\n**Hosted By:** ${creator}`)
+                .setDescriptions(stripIndents`${arr.length ? arr.length > 1 ? `**Winners:**\n${arr.join('\n')}` : `**Winner:** ${arr.join('\n')}` : 'Could not determine a winner!'}
+
+                **Drawn:** <t:${Math.trunc(Date.now() / 1000)}:R>
+                **Hosted By:** ${creator}`)
                 .setTimestamp(Date.now())
                 .setColor(bot.config.general.embedColor)
-                .setFooter({ text: `${g.winners} winners | Ended at` });
+                .setFooter({ text: `${g.winners} winner${g.winners > 1 ? 's' : ''} | Ended at` });
 
             // Update the embed
             msg?.edit({ embeds: [embed] });
@@ -465,9 +469,6 @@ export default {
             const winners = interaction.options.get('winners').value;
             const prize = interaction.options.get('prize').value;
 
-            // Channel Checks
-            if (channel.type !== 'GUILD_NEWS' && channel.type !== 'GUILD_TEXT') return interaction.error("The channel you specified isn't a text or news channel!");
-
             // Time Checks
             if (!time) return interaction.error("You didn't specify a valid giveaway duration!");
             if (time < 60000) return interaction.error('The minumum duration for a giveaway is 1 minute!');
@@ -490,11 +491,11 @@ export default {
                 .setAuthor({ name: `Giveaway: ${prize}`, iconUrl: interaction.guild.iconURL({ dynamic: true, format: 'png' }) })
                 .setDescription(stripIndents`React with 🎉 to enter the giveaway!
 
-                **Duration:** ${formatDuration(intervalToDuration({ start, end }), { delimiter: ',' })}
+                **Drawn:** <t:${Math.trunc(end / 1000)}:R>
                 **Hosted By:** ${interaction.user}`)
                 .setTimestamp(end)
                 .setColor(bot.config.general.embedColor)
-                .setFooter({ text: `${winners} winners | Ends` });
+                .setFooter({ text: `${winners} winner${winners > 1 ? 's' : ''} | Ends` });
 
             // Send the embed & add the reaction
             const messageId = await channel.send({ embeds: [embed] }).then((msg) => { msg.react('🎉'); return msg.id; });
@@ -576,10 +577,13 @@ export default {
             const embed = new MessageEmbed()
                 .setAuthor({ name: `Giveaway: ${g.prize}`, iconUrl: interaction.guild.iconURL({ dynamic: true, format: 'png' }) })
                 // eslint-disable-next-line no-nested-ternary
-                .setDescription(`${arr.length ? arr.length > 1 ? `**Winners:**\n${arr.join('\n')}` : `**Winner:** ${arr.join('\n')}` : 'Could not determine a winner!'}\n**Hosted By:** ${creator}`)
+                .setDescription(stripIndents`${arr.length ? arr.length > 1 ? `**Winners:**\n${arr.join('\n')}` : `**Winner:** ${arr.join('\n')}` : 'Could not determine a winner!'}
+
+                **Drawn:** <t:${Math.trunc(Date.now() / 1000)}:R>
+                **Hosted By:** ${creator}`)
                 .setTimestamp(Date.now())
                 .setColor(bot.config.general.embedColor)
-                .setFooter({ text: `${g.winners} winners | Ended at` });
+                .setFooter({ text: `${g.winners} winner${g.winners > 1 ? 's' : ''} | Ended at` });
 
             // Update the embed
             msg?.edit({ embeds: [embed] });

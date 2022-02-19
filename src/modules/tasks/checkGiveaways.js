@@ -1,3 +1,5 @@
+/* eslint-disable no-nested-ternary */
+import { stripIndents } from 'common-tags';
 import { MessageEmbed } from 'discord.js';
 import giveaways from '../../database/models/giveaways.js';
 import { getUser } from '../functions/getters.js';
@@ -50,10 +52,13 @@ export default async function init(bot) {
                 const embed = new MessageEmbed()
                     .setAuthor({ name: `Giveaway: ${data.prize}`, iconURL: guild.iconURL({ dynamic: true, format: 'png' }) })
                     // eslint-disable-next-line no-nested-ternary
-                    .setDescription(`${arr.length ? arr.length > 1 ? `**Winners:**\n${arr.join('\n')}` : `**Winner:** ${arr.join('\n')}` : 'Could not determine a winner!'}\n**Hosted By:** ${creator}`)
+                    .setDescription(stripIndents`${arr.length ? arr.length > 1 ? `**Winners:**\n${arr.join('\n')}` : `**Winner:** ${arr.join('\n')}` : 'Could not determine a winner!'}
+
+                    **Drawn:** <t:${Math.trunc(data.timestamps.ends / 1000)}:R>
+                    **Hosted By:** ${creator}`)
                     .setTimestamp(Date.now())
                     .setColor(bot.config.general.embedColor)
-                    .setFooter({ text: `${data.winners} winners | Ended at` });
+                    .setFooter({ text: `${data.winners} winner${data.winners > 1 ? 's' : ''} | Ended at` });
 
                 // Update the embed
                 msg?.edit({ embeds: [embed] });

@@ -72,7 +72,7 @@ export default async (bot, message) => {
         // Return
         return;
     }
-   // Cache the guild member if they aren't cached
+    // Cache the guild member if they aren't cached
     if (message.guild && !message.member) await message.guild.members.fetch(message.author.id, { force: true }).catch(() => {});
 
     // Get the args and the command/tag.

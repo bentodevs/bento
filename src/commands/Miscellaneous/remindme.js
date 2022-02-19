@@ -159,6 +159,7 @@ export default {
                 guild: message.guild?.id ?? null,
                 timeCreated: created,
                 remindTime: created + time,
+                pending: false,
             };
 
             if (!data) {
@@ -260,6 +261,7 @@ export default {
                 guild: interaction.guild?.id ?? null,
                 timeCreated: created,
                 remindTime: created + time,
+                pending: false,
             };
 
             if (!data) {

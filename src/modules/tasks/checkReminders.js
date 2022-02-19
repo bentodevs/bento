@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { MessageEmbed } from 'discord.js';
+import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import config from '../../config.js';
 import reminders from '../../database/models/reminders.js';
 
@@ -28,8 +28,12 @@ export default async function init(bot) {
             if (user) {
                 // Loop through the reminders
                 for (const rmdData of data.reminders) {
+                    if (rmdData.pending) return;
+
                     // Check if the reminder is due
                     if (Date.now() >= rmdData.remindTime) {
+                        // Create the custom ID
+                        const customId = `reminder-${data.id}-${rmdData.id}`;
                         // Build the embed
                         const embed = new MessageEmbed()
                             .setThumbnail('https://i.imgur.com/gOJ0Cuj.png')
@@ -37,24 +41,35 @@ export default async function init(bot) {
                             .addField('Reminder', rmdData.reminder)
                             .addField('Set at', format(rmdData.timeCreated, 'PPp'));
 
-                        // Send the embed to the user
-                        user.send({ embeds: [embed] })
-                            .catch(() => {});
+                        const row = new MessageActionRow()
+                            .addComponents(
+                                new MessageButton()
+                                    .setCustomId(`${customId}-completed`)
+                                    .setLabel('Completed')
+                                    .setStyle('SUCCESS'),
+                                new MessageButton()
+                                    .setCustomId(`${customId}-snooze`)
+                                    .setLabel('Snooze for 10 minutes')
+                                    .setStyle('PRIMARY'),
+                            );
 
-                        // Check if the user has more than 1 reminder
-                        if (data.reminders.length <= 1) {
-                            // Delete the user from the reminder database
-                            await reminders.findOneAndDelete({ _id: user.id });
-                        } else {
-                            // Remove the reminder from the users reminders
-                            await reminders.findOneAndUpdate({ _id: user.id }, {
-                                $pull: {
-                                    reminders: {
-                                        id: rmdData.id,
-                                    },
+                        // Send the embed to the user
+                        user.send({ embeds: [embed], components: [row] })
+                            .catch(() => { });
+
+                        // Set the reminder to pending so it can be completed or snoozed
+                        await reminders.findOneAndUpdate({
+                            _id: data.id,
+                            reminders: {
+                                $elemMatch: {
+                                    id: rmdData.id,
                                 },
-                            });
-                        }
+                            },
+                        }, {
+                            $set: {
+                                'reminders.$.pending': true,
+                            },
+                        });
                     }
                 }
             } else {

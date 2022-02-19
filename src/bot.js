@@ -63,13 +63,6 @@ const logLevels = {
         ready: 3,
         cmd: 4,
     },
-    colors: {
-        error: 'red',
-        warn: 'yellow',
-        debug: 'whiteBG blue',
-        ready: 'green',
-        cmd: 'cyan',
-    },
 };
 
 winston.addColors(logLevels.colors);
@@ -114,7 +107,12 @@ const init = async () => {
     // Setup Sentry
     Sentry.init({
         dsn: bot.config.general.sentrydsn,
-        integrations: [new Tracing.Integrations.Mongo()],
+        integrations: [
+            new Tracing.Integrations.Mongo({
+                useMongoose: true,
+            }),
+            new Sentry.Integrations.Http({ tracing: true }),
+        ],
         tracesSampleRate: 1.0,
     });
 
