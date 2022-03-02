@@ -2,7 +2,7 @@ export default {
     info: {
         name: 'createsticker',
         aliases: ['sticker', 'cs'],
-        usage: 'createsticker [url | message id | attachment | sticker] <emoji> <name>',
+        usage: 'createsticker [url | attachment | sticker] <emoji> <name>',
         examples: [
             'createsticker <sticker> :open_mouth: poggers',
             'createsticker https://i.imgur.com/H2RlRVJ.gif :cat: catjam',
@@ -21,7 +21,7 @@ export default {
         guildOnly: true,
         devOnly: false,
         premium: false,
-        noArgsHelp: true,
+        noArgsHelp: false,
         disabled: false,
     },
     slash: {
@@ -30,9 +30,58 @@ export default {
     },
 
     run: async (bot, message, args) => {
-        // If no args were specified & no attachment was added return the help embed
-        if (!message.attachments.size && !args[0]) return bot.commands.get('help').run(bot, message, ['createsticker']);
+        // Regex variables
+        const unicodeEmote = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi.exec(message.cleanContent);
+        const url = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/gi.exec(message.cleanContent);
 
-        console.log(message);
+        if (message.stickers?.size) {
+            if (!args[0]) {
+                const sticker = await message.stickers.first().fetch();
+
+                message.guild.stickers.create(sticker.url, sticker.name, sticker.tags[0])
+                    .then((createdSticker) => message.confirmationReply(`Successfully created the sticker: \`${createdSticker.name}\``))
+                    .catch((err) => message.errorReply(`Something went wrong: \`${err}\``));
+            } else if (args[0]) {
+                const sticker = await message.stickers.first().fetch();
+
+                let stickerURL; let name; let
+                    emoji;
+
+                if (url) {
+                    stickerURL = url[0];
+                } else if (message.attachments.size > 0) {
+                    stickerURL = message.attachments.first().url;
+                } else if (sticker) {
+                    stickerURL = sticker.url;
+                }
+
+                console.log(stickerURL);
+
+                /* message.guild.stickers.create(stickerURL, args.slice(2).join(' ').trim() ?? sticker.name, unicodeEmote[0] ?? sticker.tags[0])
+                    .then((createdSticker) => message.confirmationReply(`Successfully created the sticker: \`${createdSticker.name}\``))
+                    .catch((err) => message.errorReply(`Something went wrong: \`${err}\``)); */
+            }
+        } else if (args[0]) {
+            let stickerURL; let name; let
+                emoji;
+
+            if (url) {
+                stickerURL = url[0];
+            } else if (message.attachments.size > 0) {
+                stickerURL = message.attachments.first().url;
+            }
+
+            if (unicodeEmote) {
+                emoji = unicodeEmote[0];
+            } else {
+                emoji = ':robot:';
+            }
+
+            console.log(stickerURL);
+
+            /* message.guild.stickers.create(stickerURL, args.slice(2).join(' ').trim() ?? sticker.name, unicodeEmote[0] ?? sticker.tags[0])
+                    .then((createdSticker) => message.confirmationReply(`Successfully created the sticker: \`${createdSticker.name}\``))
+                    .catch((err) => message.errorReply(`Something went wrong: \`${err}\``)); */
+        }
     },
 };
