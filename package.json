@@ -45,7 +45,7 @@
     "iso-639-1": "^2.1.13",
     "mongoose": "^6.2.4",
     "node-canvas": "^2.7.0",
-    "node-fetch": "^3.1.1",
+    "node-fetch": "^3.2.2",
     "ora": "^6.1.0",
     "pokedex-promise-v2": "^4.0.0",
     "winston": "^3.6.0",
