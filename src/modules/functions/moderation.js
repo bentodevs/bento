@@ -71,7 +71,7 @@ export const checkMessage = async (message, settings) => {
         for (const data of settings.moderation.filter?.entries) {
             if (message.content.toLowerCase().includes(data.toLowerCase())) {
                 message.delete()
-                    .then(() => message.reply(`You are unable to say that here, ${message.author}!`))
+                    .then(() => message.channel.send(`You are unable to say that here, ${message.author}!`))
                     .then((m) => setTimeout(() => m.delete().catch(() => { }), 7000))
                     .catch(() => { });
             }
@@ -83,7 +83,7 @@ export const checkMessage = async (message, settings) => {
         const zalgo = /[\xCC\xCD]/;
         if (zalgo.test(message.content)) {
             message.delete()
-                .then(() => message.reply(`You are unable to use Zalgo text here, ${message.author}!`))
+                .then(() => message.channel.send(`You are unable to use Zalgo text here, ${message.author}!`))
                 .then((m) => setTimeout(() => m.delete().catch(() => { }), 7000))
                 .catch(() => { });
         }
