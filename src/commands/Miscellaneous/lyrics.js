@@ -34,13 +34,14 @@ export default {
     run: async (bot, message, args) => {
         // 1. Fetch the user's Spotify presence data
         // 2. Define the request headers
-        const spotifyData = message.member.presence.activities.find((a) => a.name.toLowerCase() === 'spotify');
         const reqHeads = { headers: { authorization: process.env.R2D2_TOKEN } };
 
-        if (spotifyData && !args[0]) {
+        if (message?.guild && !args[0]) {
+            const spotifyData = message.member.presence?.activities?.find((a) => a.name.toLowerCase() === 'spotify');
+
             // 1. Get the song from the API
             // 2. Convert the data to JSON
-            const req = await fetch(`http://localhost:2021/lyrics/${encodeURIComponent(spotifyData.details)}%20${encodeURIComponent(spotifyData.state)}`, reqHeads);
+            const req = await fetch(`https://api.r2-d2.dev/lyrics/${encodeURIComponent(spotifyData.details)}%20${encodeURIComponent(spotifyData.state)}`, reqHeads);
             const res = await req.json();
 
             // If there is no lyrics element, then return an error
@@ -70,7 +71,7 @@ export default {
         } else if (args[0]) {
             // 1. Get the song from the API
             // 2. Conver the data to JSON
-            const req = await fetch(`http://localhost:2021/lyrics/${args.join('%20')}`, reqHeads);
+            const req = await fetch(`https://api.r2-d2.dev/lyrics/${args.join('%20')}`, reqHeads);
             const res = await req.json();
 
             // If there is no lyrics element, then return an error
