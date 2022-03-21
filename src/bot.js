@@ -102,23 +102,30 @@ const init = async () => {
 
     const sentryMessage = ora('Logging in to Sentry...').start();
 
-    // Setup Sentry
-    Sentry.init({
-        dsn: bot.config.general.sentrydsn,
-        integrations: [
-            new Tracing.Integrations.Mongo({
-                useMongoose: true,
-            }),
-            new Sentry.Integrations.Http({ tracing: true }),
-        ],
-        tracesSampleRate: 1.0,
-        release: `r2-d2@${process.env.npm_package_version}`,
-    });
+    if (process.env.NODE_ENV !== 'development') {
+        // Setup Sentry
+        Sentry.init({
+            dsn: bot.config.general.sentrydsn,
+            integrations: [
+                new Tracing.Integrations.Mongo({
+                    useMongoose: true,
+                }),
+                new Sentry.Integrations.Http({ tracing: true }),
+            ],
+            tracesSampleRate: 1.0,
+            release: `r2-d2@${process.env.npm_package_version}`,
+        });
 
-    sentryMessage.stopAndPersist({
-        symbol: '✔️',
-        text: ' Signed in to Sentry!',
-    });
+        sentryMessage.stopAndPersist({
+            symbol: '✔️',
+            text: ' Signed in to Sentry!',
+        });
+    } else {
+        sentryMessage.stopAndPersist({
+            symbol: '⚠️',
+            text: ' Not logging in to Sentry in development mode!',
+        });
+    }
 
     // Send the command message and load all the commands
     const commandMessage = ora('Loading commands...').start();
