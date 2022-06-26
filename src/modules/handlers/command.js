@@ -33,13 +33,15 @@ export const init = (bot) => new Promise((resolve) => {
 
                 // Set the command path
                 obj.path = `../../commands/${category}/${file}`;
-                // Register the command
-                bot.commands.set(cmd.default.info.name, obj);
+                if (!cmd.default.opts.disabled) {
+                    // Register the command
+                    bot.commands.set(cmd.default.info.name, obj);
 
-                if (cmd.default.info.aliases) {
-                    cmd.default.info.aliases.forEach((alias) => {
-                        bot.aliases.set(alias, cmd.default.info.name);
-                    });
+                    if (cmd.default.info.aliases) {
+                        cmd.default.info.aliases.forEach((alias) => {
+                            bot.aliases.set(alias, cmd.default.info.name);
+                        });
+                    }
                 }
             }).catch((err) => {
                 bot.logger.error(`Failed to load ${file}`);
@@ -186,19 +188,28 @@ export const registerGlobal = (bot) => new Promise((resolve, reject) => {
     const commands = Array.from(bot.commands.values());// .filter(c => !c.opts.guildOnly);
 
     for (const data of commands) {
-        if (data.slash?.enabled) {
+        if (data.slash?.types?.chat) {
             arr.push({
                 name: data.info.name,
                 description: data.info.description,
                 type: 'CHAT_INPUT',
                 options: data.slash?.opts ?? [],
+                defaultPermission: data.slash?.defaultPermission ?? 'NONE',
+                dmPermission: data.slash?.dm_permission ?? 'NONE',
             });
         }
 
-        if (data.context?.enabled) {
+        if (data.slash?.types?.user) {
             arr.push({
                 name: data.info.name,
                 type: 'USER',
+            });
+        }
+
+        if (data.slash?.types?.message) {
+            arr.push({
+                name: data.info.name,
+                type: 'MESSAGE',
             });
         }
     }
