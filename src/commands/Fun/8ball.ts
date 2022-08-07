@@ -1,39 +1,41 @@
-export default {
+import { ApplicationCommandOptionType } from 'discord.js';
+import { Command } from '../../modules/interfaces/cmd';
+
+const command: Command = {
     info: {
         name: '8ball',
-        aliases: ['8'],
         usage: '8ball <question>',
         examples: [
             '8ball is today a good day?',
         ],
         description: 'Ask the 8ball questions.',
         category: 'Fun',
-        info: 'A list of possible answers can be found [here](https://en.wikipedia.org/wiki/Magic_8-Ball#Possible_answers).',
-        options: [],
-    },
-    perms: {
-        permission: ['@everyone'],
-        type: 'role',
-        self: [],
+        information: 'A list of possible answers can be found [here](https://en.wikipedia.org/wiki/Magic_8-Ball#Possible_answers).',
+        selfPerms: [],
     },
     opts: {
         guildOnly: false,
         devOnly: false,
         premium: false,
-        noArgsHelp: true,
         disabled: false,
     },
     slash: {
-        enabled: true,
+        types: {
+            chat: true,
+            user: false,
+            message: false,
+        },
         opts: [{
             name: 'question',
-            type: 'STRING',
+            type: ApplicationCommandOptionType.String,
             description: 'A question to ask the 8ball.',
             required: true,
         }],
+        dmPermission: true,
+        defaultPermission: true,
     },
 
-    run: async (bot, message) => {
+    run: async (bot, interaction) => {
         // All possible 8ball answers (taken from https://en.wikipedia.org/wiki/Magic_8-Ball#Possible_answers)
         const answers = [
             'It is certain.',
@@ -62,6 +64,8 @@ export default {
         const result = Math.floor((Math.random() * answers.length));
 
         // Send the answer
-        message.reply(`🎱 ${answers[result]}`);
+        interaction.reply(`🎱 ${answers[result]}`);
     },
 };
+
+export default command;

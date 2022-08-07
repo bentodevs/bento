@@ -1,33 +1,32 @@
-export default {
+import { ApplicationCommandOptionType } from 'discord.js';
+import { Command } from '../../modules/interfaces/cmd';
+
+const command: Command = {
     info: {
         name: 'rps',
-        aliases: [],
         usage: 'rps <"rock" | "paper" | "scissors">',
         examples: [
             'rps paper',
         ],
         description: 'Play a game of rock paper scissors against R2-D2!',
         category: 'Fun',
-        info: null,
-        options: [],
-    },
-    perms: {
-        permission: ['@everyone'],
-        type: 'role',
-        self: [],
+        selfPerms: [],
     },
     opts: {
         guildOnly: false,
         devOnly: false,
         premium: false,
-        noArgsHelp: true,
         disabled: false,
     },
     slash: {
-        enabled: true,
+        types: {
+            chat: true,
+            user: false,
+            message: false,
+        },
         opts: [{
             name: 'option',
-            type: 'STRING',
+            type: ApplicationCommandOptionType.String,
             description: 'Rock, paper or scissors.',
             required: true,
             choices: [
@@ -36,39 +35,11 @@ export default {
                 { name: 'Scissors', value: 'scissors' },
             ],
         }],
+        dmPermission: true,
+        defaultPermission: true,
     },
 
-    run: async (bot, message, args) => {
-        // Define the different options & formatted versions of them
-        const options = [
-            'scissors',
-            'rock',
-            'paper',
-        ];
-        const formatted = [
-            'scissors ✌️',
-            'rock ✊',
-            'paper ✋',
-        ];
-
-        // If the user specified an invalid option return an error
-        if (!options.includes(args[0].toLowerCase())) return message.errorReply("You didn't specify a valid option! Please enter `rock`, `paper` or `scissors`!");
-
-        // Get the userPick and the botPick
-        const userPick = options.indexOf(args[0].toLowerCase());
-        const botPick = Math.floor(Math.random() * 3);
-
-        // Check who won
-        if (userPick === botPick) {
-            return message.reply(`I chose **${formatted[botPick]}**, its a draw!`);
-        } if (botPick > userPick || (botPick === 0 && userPick === 2)) {
-            message.reply(`I chose **${formatted[botPick]}**, I win!`);
-        } else {
-            message.reply(`I chose **${formatted[botPick]}**, you win!`);
-        }
-    },
-
-    run_interaction: async (bot, interaction) => {
+    run: async (bot, interaction) => {
         // Define the different options & formatted versions of them
         const options = [
             'scissors',
@@ -82,7 +53,7 @@ export default {
         ];
 
         // Get the userPick and the botPick
-        const userPick = options.indexOf(interaction.options.get('option').value);
+        const userPick = options.indexOf((interaction.options.get('option')?.value as string));
         const botPick = Math.floor(Math.random() * 3);
 
         // Check who won
@@ -95,3 +66,5 @@ export default {
         }
     },
 };
+
+export default command;

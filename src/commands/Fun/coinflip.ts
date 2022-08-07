@@ -1,43 +1,39 @@
-export default {
+import { Command } from '../../modules/interfaces/cmd';
+
+const command: Command = {
     info: {
         name: 'coinflip',
-        aliases: [
-            'coin',
-            'flip',
-            'cf',
-            'cflip',
-            'cointoss',
-        ],
         usage: '',
         examples: [],
         description: 'Flips a coin.',
         category: 'Fun',
-        info: null,
-        options: [],
-    },
-    perms: {
-        permission: ['@everyone'],
-        type: 'role',
-        self: [],
+        selfPerms: [],
     },
     opts: {
         guildOnly: false,
         devOnly: false,
         premium: false,
-        noArgsHelp: false,
         disabled: false,
     },
     slash: {
-        enabled: true,
+        types: {
+            chat: true,
+            user: false,
+            message: false,
+        },
         opts: [],
+        dmPermission: true,
+        defaultPermission: true,
     },
 
-    run: async (bot, message) => {
+    run: async (bot, interaction) => {
         // Get a random number between 0 and 1, if the number is 1 pick heads otherwise pick tails
         const random = Math.floor(Math.random() * 2);
         const result = random === 1 ? 'heads' : 'tails';
 
         // Send a message with the result
-        message.reply(`🪙 The coin landed on **${result}**!`);
+        interaction.reply(`🪙 The coin landed on **${result}**!`);
     },
 };
+
+export default command;
