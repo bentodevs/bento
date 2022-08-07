@@ -1,15 +1,22 @@
 {
-    "extends": ["eslint:recommended", "airbnb-base"],
     "env": {
         "node": true,
-        "es6": true
+        "es2021": true
     },
+    "extends": [
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "ignorePatterns": [
+        "dist/**/*"
+    ],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": 11,
-        "sourceType": "module"
+        "ecmaVersion": 12
     },
     "rules": {
-        "no-console": "off",
         "no-unused-vars": "warn",
         "no-useless-escape": "warn",
         "no-empty": "warn",
@@ -19,7 +26,7 @@
         "require-atomic-updates": "off",
         "no-extra-semi": "warn",
         "semi": [2, "always"],
-        "indent": ["warn", 4],
+        "indent": "off",
         "consistent-return": "off",
         "max-len": "off",
         "no-restricted-syntax": "off",
@@ -37,6 +44,8 @@
         "import/no-unresolved": "off",
         "import/extensions": "off",
         "no-restricted-globals": "off",
-        "no-new": "off"
+        "no-new": "off",
+        "max-classes-per-file": "off",
+        "@typescript-eslint/indent": ["error", 4]
     }
 }
