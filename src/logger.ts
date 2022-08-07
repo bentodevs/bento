@@ -1,16 +1,16 @@
-import winston from "winston";
+import winston from 'winston';
 
 const logFormat = winston.format.printf(({ level, message, timestamp }) => `${timestamp} ${level.toUpperCase()}: ${message}`);
 
 const logLevels = {
     levels: {
-        fatal: 100,
-        error: 90,
-        warn: 80,
-        info: 70,
-        debug: 60,
-        all: 0
-    }
+        fatal: 0,
+        error: 10,
+        warn: 20,
+        info: 30,
+        debug: 30,
+        all: 100,
+    },
 };
 
 const logger = winston.createLogger({

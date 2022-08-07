@@ -1,17 +1,17 @@
 import dotenv from 'dotenv';
-import { Client, Collection } from 'discord.js';
+import { Client, Collection, Partials } from 'discord.js';
 import mongoose from 'mongoose';
-import ora from 'ora';
-import Pokedex from 'pokedex-promise-v2';
+// import Pokedex from 'pokedex-promise-v2';
 import Sentry from '@sentry/node';
-import { getMongooseURL, init as dbInit } from './database/mongo.js';
+import { getMongooseURL, init as dbInit } from './database/mongo';
 
 // Import handlers
-import { init as commandInit } from './modules/handlers/command.js';
-import { init as eventInit } from './modules/handlers/event.js';
-import { INTENTS } from './modules/utils/constants.js';
+// eslint-disable-next-line import/no-cycle
+import { init as commandInit } from './modules/handlers/command';
+import { init as eventInit } from './modules/handlers/event';
+import { INTENTS } from './modules/structures/constants';
 import logger from './logger';
-import { Command } from './modules/interfaces/cmd.js';
+import { Command } from './modules/interfaces/cmd';
 
 // Load env variables
 dotenv.config();
@@ -20,57 +20,46 @@ dotenv.config();
 const bot = new Client({
     allowedMentions: {
         parse: [
-            'users'
+            'users',
         ],
     },
     partials: [
-        'CHANNEL',
-        'GUILD_MEMBER',
-        'MESSAGE',
-        'REACTION',
-        'USER',
+        Partials.Channel,
+        Partials.GuildMember,
+        Partials.Reaction,
+        Partials.User,
     ],
     intents: INTENTS,
 });
 
 export const commands = new Collection<string, Command>();
 export const tasks = new Collection<string, any>();
+export const cooldowns = new Collection<string, any>();
+// export const pokedex = new Pokedex();
 
 // Initialize Mongo connection
 const mongooseUrl = getMongooseURL(process.env.MONGODB_USERNAME, process.env.MONGODB_PASSWORD, process.env.MONGODB_HOST, process.env.MONGODB_PORT, process.env.MONGODB_DATABASE);
 export const db = dbInit(mongooseUrl)
     .then(() => logger.debug('Successfully started DB'))
-    .catch((err) => logger.error(err));
+    .catch((err) => logger.error('Failed to connect to Mongo:', err));
 
 // Init function
 const init = async () => {
-    // Log R2-D2 ascii art
-    logger.info(`     ____  ____       ____ ____
-    |  _ \\|___ \\     |  _ \\___ \\
-    | |_) | __) |____| | | |__) |
-    |  _ < / __/_____| |_| / __/
-    |_| \\_\\_____|    |____/_____|`);
-    logger.info(' ');
-    logger.info(' ');
-
     if (process.env.NODE_ENV === 'development') {
         // Log the dev environment
         logger.info('== RUNNING IN DEVELOPMENT MODE ==');
         logger.info(' ');
     }
 
-    // Import prototypes
-    (await import('./modules/utils/prototypes.js')).default();
-
     // Send the command message and load all the commands
-    logger.info('Loading commands...')
+    logger.info('Loading commands...');
     await commandInit();
 
     // Update the command message
     if (commands.filter((a) => a.slash.types.chat).size > 100) {
-        logger.error('Failed to load commands: Interaction command count exceeds 100.')
+        logger.error('Failed to load commands: Interaction command count exceeds 100.');
     } else {
-        logger.info('Loaded commands.')
+        logger.info('Loaded commands.');
     }
 
     // Send the event message and load the events
@@ -78,32 +67,17 @@ const init = async () => {
     await eventInit(bot);
 
     // Update the event message
-    logger.info('Loaded events')
-
-    // Send the mongo message
-    const mongoMsg = ora('Connecting to the Mongo database...').start();
-
-    // Update the mongo message
-    mongoMsg.stopAndPersist({
-        symbol: '✔️',
-        text: ' Successfully connected to the Mongo database!',
-    });
+    logger.info('Loaded events');
 
     // Send the login message
-    const loginMessage = ora('Logging into the Discord API...').start();
+    logger.info('Logging into the Discord API...');
 
     // Login to the Discord API and update the login message
     bot.login(process.env.BOT_TOKEN)
         .then(() => {
-            loginMessage.stopAndPersist({
-                symbol: '✔️',
-                text: ' Successfully logged into the Discord API!',
-            });
+            logger.info('Logged into Discord');
         }).catch((err) => {
-            loginMessage.stopAndPersist({
-                symbol: '❌',
-                text: `Error while logging into discord: ${err}`,
-            });
+            logger.error('Failed to log into Discord');
 
             Sentry.captureException(err.stack);
         });
