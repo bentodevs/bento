@@ -1,15 +1,17 @@
+import { Client, MessageReaction, User } from 'discord.js';
 import giveaways from '../database/models/giveaways.js';
 import reactroles from '../database/models/reactroles.js';
+import logger from '../logger';
 import { getReactCooldown } from '../modules/functions/misc.js';
 
-export default async (bot, reaction, user) => {
+export default async (bot: Client, reaction: MessageReaction, user: User) => {
     // If the reaction or user are partial try to fetch them
     if (reaction.partial || user.partial) {
         try {
             await reaction.fetch();
             await user.fetch();
         } catch (err) {
-            return bot.logger.error(err);
+            return logger.error(err);
         }
     }
 
@@ -25,18 +27,18 @@ export default async (bot, reaction, user) => {
     // Handle reactroles
     if (reactRole) {
         // Get the emote
-        const emote = reactRole.roles.find((r) => r.emoji === reaction.emoji.name) || reactRole.roles.find((r) => r.emoji === reaction.emoji.id);
+        const emote = reactRole.roleIds.find((r) => r.emoji === reaction.emoji.name) || reactRole.roleIds.find((r) => r.emoji === reaction.emoji.id);
 
         // If the emote wasn't found return
         if (!emote) return;
 
         // Grab the role and the member
-        const role = reaction.message.guild.roles.cache.get(emote.role);
-        const member = reaction.message.guild.members.cache.get(user.id);
+        const role = await reaction.message.guild.roles.fetch(emote.role);
+        const member = await reaction.message.guild.members.fetch(user.id);
 
         // If the role wasn't found or the user is on cooldown return
         if (!role) return;
-        if (getReactCooldown(bot, user, reaction.message.guild.id)) return;
+        if (getReactCooldown(user, reaction.message.guild.id)) return;
 
         // If the user has the role remove it, otherwise add it
         if (member.roles.cache.has(role.id)) {

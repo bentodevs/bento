@@ -1,13 +1,15 @@
+import { Client, MessageReaction, User } from 'discord.js';
 import giveaways from '../database/models/giveaways.js';
+import logger from '../logger';
 
-export default async (bot, reaction, user) => {
+export default async (bot: Client, reaction: MessageReaction, user: User) => {
     // If the reaction or user are partial try to fetch them
     if (reaction.partial || user.partial) {
         try {
             await reaction.fetch();
             await user.fetch();
         } catch (err) {
-            return bot.logger.error(err);
+            return logger.error(err);
         }
     }
 
