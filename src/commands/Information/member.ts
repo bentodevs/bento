@@ -4,10 +4,10 @@ import {
     ApplicationCommandOptionType,
     ChatInputCommandInteraction, Collection, EmbedBuilder, GuildMember, PermissionFlagsBits, Role, Snowflake,
 } from 'discord.js';
-import { Command } from '../../modules/interfaces/cmd.js';
-import { DEFAULT_COLOR } from '../../modules/structures/constants.js';
-import emojis from '../../modules/structures/emotes.js';
-import { InteractionResponseUtils } from '../../modules/utils/TextUtils.js';
+import { Command } from '../../modules/interfaces/cmd';
+import { DEFAULT_COLOR } from '../../modules/structures/constants';
+import emojis from '../../modules/structures/emotes';
+import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
 
 const command: Command = {
     info: {

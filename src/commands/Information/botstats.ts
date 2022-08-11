@@ -100,6 +100,7 @@ const command: Command = {
                         ],
                         scopes: [
                             OAuth2Scopes.Bot,
+                            OAuth2Scopes.ApplicationsCommandsUpdate,
                         ],
                     }))
                     .setStyle(ButtonStyle.Link)

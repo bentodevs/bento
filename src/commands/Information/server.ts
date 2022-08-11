@@ -5,11 +5,11 @@ import {
     ApplicationCommandOptionType,
     ChatInputCommandInteraction, Collection, EmbedBuilder, GuildMember, PermissionFlagsBits, Snowflake,
 } from 'discord.js';
-import { getSettings } from '../../database/mongo.js';
-import { Command } from '../../modules/interfaces/cmd.js';
-import { DEFAULT_COLOR } from '../../modules/structures/constants.js';
-import emojis from '../../modules/structures/emotes.js';
-import { InteractionResponseUtils } from '../../modules/utils/TextUtils.js';
+import { getSettings } from '../../database/mongo';
+import { Command } from '../../modules/interfaces/cmd';
+import { DEFAULT_COLOR } from '../../modules/structures/constants';
+import emojis from '../../modules/structures/emotes';
+import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
 
 const { utcToZonedTime } = dateFnsTz;
 

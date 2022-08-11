@@ -3,10 +3,10 @@ import {
     ActivityType, APIInteractionDataResolvedGuildMember, ApplicationCommandOptionType, ChatInputCommandInteraction, Collection, EmbedBuilder, GuildMember, PermissionFlagsBits, User,
 } from 'discord.js';
 import { formatDistance } from 'date-fns';
-import { Command } from '../../modules/interfaces/cmd.js';
-import { InteractionResponseUtils } from '../../modules/utils/TextUtils.js';
-import { DEFAULT_COLOR } from '../../modules/structures/constants.js';
-import emojis from '../../modules/structures/emotes.js';
+import { Command } from '../../modules/interfaces/cmd';
+import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
+import { DEFAULT_COLOR } from '../../modules/structures/constants';
+import emojis from '../../modules/structures/emotes';
 
 const command: Command = {
     info: {

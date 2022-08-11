@@ -6,7 +6,7 @@ import {
 import { Command } from '../../modules/interfaces/cmd.js';
 import { DEFAULT_COLOR } from '../../modules/structures/constants.js';
 import emojis from '../../modules/structures/emotes.js';
-import { InteractionResponseUtils, StringUtils } from '../../modules/utils/TextUtils.js';
+import { InteractionResponseUtils, StringUtils } from '../../utils/TextUtils.js';
 
 const command: Command = {
     info: {

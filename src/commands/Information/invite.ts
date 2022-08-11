@@ -2,7 +2,7 @@ import {
     NewsChannel, PermissionFlagsBits, TextChannel, VoiceChannel,
 } from 'discord.js';
 import { Command } from '../../modules/interfaces/cmd';
-import { InteractionResponseUtils } from '../../modules/utils/TextUtils';
+import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
 
 const command: Command = {
     info: {

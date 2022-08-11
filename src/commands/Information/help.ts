@@ -6,7 +6,7 @@ import {
 import { commands } from '../../bot';
 import { Command } from '../../modules/interfaces/cmd';
 import { DEFAULT_COLOR, OWNERS, WEBSITE } from '../../modules/structures/constants';
-import { InteractionResponseUtils, StringUtils } from '../../modules/utils/TextUtils';
+import { InteractionResponseUtils, StringUtils } from '../../utils/TextUtils';
 
 const command: Command = {
     info: {
