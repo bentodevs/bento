@@ -3,7 +3,7 @@ import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, PermissionFlag
 import fetch, { Response } from 'node-fetch';
 import { Command } from '../../modules/interfaces/cmd';
 import { DEFAULT_COLOR } from '../../modules/structures/constants';
-import { InteractionResponseUtils } from '../../modules/utils/TextUtils';
+import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
 
 const command: Command = {
     info: {
