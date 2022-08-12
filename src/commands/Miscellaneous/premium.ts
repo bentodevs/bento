@@ -1,6 +1,3 @@
-import { formatDistance } from 'date-fns';
-import premiumGuild from '../../database/models/premiumGuild.js';
-import { getUser } from '../../modules/functions/getters.js';
 import { Command } from '../../modules/interfaces/cmd.js';
 import { SUPPORT_SERVER } from '../../modules/structures/constants.js';
 

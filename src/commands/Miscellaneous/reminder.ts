@@ -3,7 +3,7 @@ import { ApplicationCommandOptionType, ChatInputCommandInteraction, PermissionFl
 import reminders from '../../database/models/reminders';
 import { parseTime } from '../../modules/functions/misc';
 import { Command } from '../../modules/interfaces/cmd';
-import { InteractionResponseUtils } from '../../modules/utils/TextUtils';
+import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
 import { Reminder } from '../../types/dbTypes';
 
 const command: Command = {

@@ -5,7 +5,7 @@ import logger from '../../logger';
 import { Command } from '../../modules/interfaces/cmd';
 import { DEFAULT_COLOR } from '../../modules/structures/constants';
 import emojis from '../../modules/structures/emotes';
-import { InteractionResponseUtils } from '../../modules/utils/TextUtils';
+import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
 
 const command: Command = {
     info: {

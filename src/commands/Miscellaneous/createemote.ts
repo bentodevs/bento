@@ -8,8 +8,9 @@ import { fetchEmote } from '../../modules/functions/misc';
 import { Command } from '../../modules/interfaces/cmd';
 import { ID_REGEX_EXACT } from '../../modules/structures/constants';
 import emojis from '../../modules/structures/emotes';
-import CDNUtils from '../../modules/utils/cdn';
-import { EmojiUtils, InteractionResponseUtils, URL_REGEX } from '../../modules/utils/TextUtils';
+import CDNUtils from '../../utils/CDNUtils';
+import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
+import { EmojiUtils, URL_REGEX } from '../../utils/TextUtils';
 
 const command: Command = {
     info: {

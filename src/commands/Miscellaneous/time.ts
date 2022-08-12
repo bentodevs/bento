@@ -3,9 +3,9 @@ import {
     ApplicationCommandOptionType,
     ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionFlagsBits,
 } from 'discord.js';
-import { getWeather } from '../../modules/functions/misc.js';
-import { DEFAULT_COLOR } from '../../modules/structures/constants.js';
-import { InteractionResponseUtils } from '../../modules/utils/TextUtils.js';
+import { getWeather } from '../../modules/functions/misc';
+import { DEFAULT_COLOR } from '../../modules/structures/constants';
+import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
 
 export default {
     info: {

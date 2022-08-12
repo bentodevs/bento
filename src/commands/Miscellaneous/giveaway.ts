@@ -1,16 +1,17 @@
 import { stripIndents } from 'common-tags';
 import { formatDuration, intervalToDuration } from 'date-fns';
 import {
-    ApplicationCommandOptionType, ChatInputCommandInteraction, EmbedBuilder, GuildMember, NewsChannel, PermissionFlagsBits, TextChannel, User,
+    ApplicationCommandOptionType, ChatInputCommandInteraction, EmbedBuilder, GuildMember, Message, NewsChannel, PermissionFlagsBits, TextChannel, User,
 } from 'discord.js';
 import giveaways from '../../database/models/giveaways';
+import logger from '../../logger';
 import { getUser } from '../../modules/functions/getters';
-import { parseTime, drawGiveawayWinners } from '../../modules/functions/misc.js';
+import { parseTime, drawGiveawayWinners } from '../../modules/functions/misc';
 import { Command } from '../../modules/interfaces/cmd';
 import { IGiveaways } from '../../modules/interfaces/db';
 import { DEFAULT_COLOR } from '../../modules/structures/constants';
 import emojis from '../../modules/structures/emotes';
-import { InteractionResponseUtils } from '../../modules/utils/TextUtils';
+import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
 
 const command: Command = {
     info: {
@@ -222,13 +223,15 @@ const command: Command = {
             const g = await giveaways.findOne({ 'guild.guildId': interaction.guild?.id, id, active: true });
 
             // If the giveaway wasn't found return an error
-            if (!g) return InteractionResponseUtils.error(interaction, 'There is no giveaway with that ID or the giveaway is not active!', true).then(() => { });
+            if (!g) return InteractionResponseUtils.error(interaction, 'There is no giveaway with that ID or the giveaway is not active!', true);
 
             // Get the giveaway message
-            const msg = await (interaction.guild?.channels.cache.get(g.guild.channelId) as NewsChannel | TextChannel)?.messages.fetch(g.guild.messageId).catch(() => { });
+            const msg = await (interaction.guild?.channels.cache.get(g.guild.channelId) as NewsChannel | TextChannel)?.messages.fetch(g.guild.messageId).catch(() => {
+                logger.debug(`Failed to get giveaway message in ${interaction.guildId} - Channel ${g.guild.channelId}`);
+            });
 
             // Delete the giveaway message and set the giveaway to inactive
-            await msg?.delete().catch(() => { });
+            await msg?.delete().catch(() => logger.debug(`Failed to delete message ${msg.id} in ${g.guild.channelId}`));
             await giveaways.findOneAndUpdate({ 'guild.guildId': interaction.guild?.id, id, active: true }, { active: false });
 
             // Send a confirmation
@@ -262,7 +265,7 @@ const command: Command = {
 
             // Get the channel, message and giveaway creator
             const channel = interaction.guild?.channels.cache.get(g.guild.channelId);
-            const msg = await (channel as TextChannel | NewsChannel)?.messages.fetch(g.guild.messageId).catch(() => { });
+            const msg = await (channel as TextChannel | NewsChannel)?.messages.fetch(g.guild.messageId).catch(() => logger.debug(`Failed to fetch message ${g.guild.messageId}`));
             const creator = interaction.guild?.members.cache.get(g.creator);
 
             // Build the embed
@@ -278,7 +281,7 @@ const command: Command = {
                 .setFooter({ text: `${g.winners} winner${g.winners > 1 ? 's' : ''} | Ended at` });
 
             // Update the embed
-            msg?.edit({ embeds: [embed] });
+            (msg as Message)?.edit({ embeds: [embed] });
 
             // Set the giveaway to inactive in the db
             await giveaways.findOneAndUpdate({ 'guild.guildId': interaction.guild?.id, id, active: true }, {

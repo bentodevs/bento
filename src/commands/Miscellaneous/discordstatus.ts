@@ -4,6 +4,7 @@ import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import { getDiscordStatus } from '../../modules/functions/misc.js';
 import { Command } from '../../modules/interfaces/cmd.js';
 import emojis from '../../modules/structures/emotes.js';
+import { StringUtils } from '../../utils/StringUtils.js';
 
 const command: Command = {
     info: {
@@ -36,7 +37,7 @@ const command: Command = {
     run: async (bot, interaction) => {
         await interaction.deferReply();
         // Get the current Discord Status
-        const status: any = await getDiscordStatus();
+        const status = await getDiscordStatus();
 
         // Define the description and incident vars
         let description = `**Last Update:** ${format(parseISO(status.page.updated_at), 'PPp O')}\n\n`;
@@ -89,7 +90,7 @@ const command: Command = {
             for (const data of status.incidents) {
                 incidents += stripIndents(`**Issue:** [${data.name}](https://discordstatus.com/incidents/${data.id})
                 **Identified:** <t:${parseFloat((Date.parse(data.created_at) / 1000).toString())}:R>
-                **Status:** ${data.status.toTitleCase()}\n\n`);
+                **Status:** ${StringUtils.toTitleCase(data.status)}\n\n`);
             }
         }
 
