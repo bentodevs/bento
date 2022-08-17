@@ -134,3 +134,7 @@ dist
 
 # VSCode Files
 .vscode/*
+
+# TS files
+dist/
+tsconfig.tsbuildinfo
