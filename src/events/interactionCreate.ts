@@ -1,18 +1,18 @@
 /* eslint-disable no-multi-assign, no-param-reassign */
 import { stripIndents } from 'common-tags';
 import {
-    Client, GuildTextBasedChannel, Interaction, InteractionType, EmbedBuilder, ChatInputCommandInteraction,
+    Client, Interaction, InteractionType, ChatInputCommandInteraction,
 } from 'discord.js';
 import Sentry from '@sentry/node';
-import { getSettings } from '../database/mongo.js';
-import { checkBlacklist } from '../modules/functions/moderation.js';
-import { checkSelf } from '../modules/functions/permissions.js';
-import { handleReminder } from '../modules/functions/buttonInteractions.js';
-import { commands } from '../bot.js';
+import { getSettings } from '../database/mongo';
+import { checkBlacklist } from '../modules/functions/moderation';
+import { checkSelf } from '../modules/functions/permissions';
+import { handleReminder } from '../modules/functions/buttonInteractions';
+import { commands } from '../bot';
 import logger from '../logger';
-import { InteractionResponseUtils } from '../modules/utils/TextUtils.js';
-import { OWNERS, SUPPORT_SERVER } from '../modules/structures/constants.js';
-import emojis from '../modules/structures/emotes.js';
+import { OWNERS, SUPPORT_SERVER } from '../modules/structures/constants';
+import emojis from '../modules/structures/emotes';
+import { InteractionResponseUtils } from '../utils/InteractionResponseUtils';
 
 export default async (bot: Client, interaction: Interaction) => {
     if (interaction.type === InteractionType.ApplicationCommand) {
@@ -23,7 +23,7 @@ export default async (bot: Client, interaction: Interaction) => {
         const settings = await getSettings(interaction?.guild?.id ?? '');
 
         // If the member isn't found try to fetch it
-        if (interaction.guild && !interaction.member) await interaction.guild.members.fetch(interaction.user).catch(() => {});
+        if (interaction.guild && !interaction.member) await interaction.guild.members.fetch(interaction.user).catch(() => { logger.error(`Failed to fetch ${interaction.user.id}`);  });
 
         // Get the command
         const cmd = commands.get(interaction.commandName);
