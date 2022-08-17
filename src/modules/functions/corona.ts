@@ -1,4 +1,5 @@
-import fetch from 'node-fetch';
+import fetch, { Response } from 'node-fetch';
+import logger from '../../logger';
 
 const endpoint = 'https://disease.sh';
 
@@ -7,7 +8,7 @@ const endpoint = 'https://disease.sh';
  *
  * @returns {Promise.<Object>} Global Covid Stats
  */
-export const getGlobalStats = () => new Promise((resolve, reject) => {
+export const getGlobalStats = (): Promise<object> => new Promise((resolve, reject) => {
     // Specify the API URL
     const URL = `${endpoint}/v3/covid-19/all`;
 
@@ -17,10 +18,10 @@ export const getGlobalStats = () => new Promise((resolve, reject) => {
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res) => res.json()).then((json) => {
+    }).then((res: Response) => res.json()).then((json: any) => {
         resolve(json);
     }).catch((err) => {
-        console.error(err);
+        logger.error(err);
         reject(err);
     });
 });
@@ -32,7 +33,7 @@ export const getGlobalStats = () => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<Array>} An array with covid stats for all countries
  */
-export const getAllCountryData = (sort) => new Promise((resolve, reject) => {
+export const getAllCountryData = (sort: string): Promise<Array<any>> => new Promise((resolve, reject) => {
     // Define the sort options
     const sortOpts = [
         'cases',
@@ -51,10 +52,10 @@ export const getAllCountryData = (sort) => new Promise((resolve, reject) => {
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res) => res.json()).then((json) => {
+    }).then((res: Response) => res.json()).then((json: any) => {
         resolve(json);
     }).catch((err) => {
-        console.error(err);
+        logger.error(err);
         reject(err);
     });
 });
@@ -66,10 +67,7 @@ export const getAllCountryData = (sort) => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<Object>} Covid stats for the specified country
  */
-export const getDataByCountry = (country) => new Promise((resolve, reject) => {
-    // Return an error if no country was specified
-    if (!country) reject(new Error('Missing Args!'));
-
+export const getDataByCountry = (country: string): Promise<object | undefined> => new Promise((resolve, reject) => {
     // Define the URL
     const URL = `${endpoint}/v3/covid-19/countries/${country}`;
 
@@ -79,14 +77,14 @@ export const getDataByCountry = (country) => new Promise((resolve, reject) => {
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res) => {
+    }).then((res: Response) => {
         if (!res || res.status !== 200) resolve(undefined);
 
-        res.json().then((json) => {
+        res.json().then((json: any) => {
             resolve(json);
         });
     }).catch((err) => {
-        console.error(err);
+        logger.error(err);
         reject(err);
     });
 });
@@ -98,7 +96,7 @@ export const getDataByCountry = (country) => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<Object>} Covid stats for the specified continent
  */
-export const getDataByContinent = (continent) => new Promise((resolve, reject) => {
+export const getDataByContinent = (continent: string): Promise<object | undefined> => new Promise((resolve, reject) => {
     // Return an error if no continent was specified
     if (!continent) reject(new Error('Missing Args!'));
 
@@ -111,14 +109,14 @@ export const getDataByContinent = (continent) => new Promise((resolve, reject) =
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res) => {
+    }).then((res: Response) => {
         if (!res || res.status !== 200) resolve(undefined);
 
-        res.json().then((json) => {
+        res.json().then((json: any) => {
             resolve(json);
         });
     }).catch((err) => {
-        console.error(err);
+        logger.error(err);
         reject(err);
     });
 });
@@ -130,7 +128,7 @@ export const getDataByContinent = (continent) => new Promise((resolve, reject) =
  *
  * @returns {Promise.<Object>} Covid stats for the specified US state
  */
-export const getDataByState = (state) => new Promise((resolve, reject) => {
+export const getDataByState = (state: string): Promise<object | undefined> => new Promise((resolve, reject) => {
     // Return an error if no state was specified
     if (!state) reject(new Error('Missing Args!'));
 
@@ -143,14 +141,14 @@ export const getDataByState = (state) => new Promise((resolve, reject) => {
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res) => {
+    }).then((res: Response) => {
         if (!res || res.status !== 200) resolve(undefined);
 
-        res.json().then((json) => {
+        res.json().then((json: any) => {
             resolve(json);
         });
     }).catch((err) => {
-        console.error(err);
+        logger.error(err);
         reject(err);
     });
 });
@@ -165,7 +163,7 @@ export const getDataByState = (state) => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<Object>} Vaccination Data
  */
-export const getVaccineData = (days, full, type, data) => new Promise((resolve, reject) => {
+export const getVaccineData = (days: number, full: boolean, type: string, data: string): Promise<object | undefined> => new Promise((resolve, reject) => {
     // If an invalid type is specified return an error
     if (type && !['countries', 'states'].includes(type)) reject(new Error('Invalid Args!'));
     // If a type is specified but no data return an error
@@ -180,14 +178,14 @@ export const getVaccineData = (days, full, type, data) => new Promise((resolve, 
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res) => {
+    }).then((res: Response) => {
         if (!res || res.status !== 200) resolve(undefined);
 
-        res.json().then((json) => {
+        res.json().then((json: any) => {
             resolve(json);
         });
     }).catch((err) => {
-        console.error(err);
+        logger.error(err);
         reject(err);
     });
 });

@@ -1,11 +1,11 @@
 import { stripIndents } from 'common-tags';
 import { formatDuration, intervalToDuration } from 'date-fns';
 import {
-    Client, GuildBasedChannel, GuildTextBasedChannel, EmbedBuilder, TextBasedChannel, TextChannel, ThreadChannel, VoiceBasedChannel,
+    Client, GuildBasedChannel, GuildTextBasedChannel, EmbedBuilder, TextChannel, VoiceBasedChannel,
 } from 'discord.js';
 import settings from '../database/models/settings.js';
 import { DEFAULT_COLOR } from '../modules/structures/constants.js';
-import { StringUtils } from '../modules/utils/TextUtils.js';
+import { StringUtils } from '../utils/StringUtils.js';
 
 export default async (bot: Client, oldChannel: GuildBasedChannel, newChannel: GuildBasedChannel) => {
     const sets = await settings.findOne({ _id: newChannel.guild.id });
