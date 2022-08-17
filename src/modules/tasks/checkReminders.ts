@@ -1,14 +1,16 @@
-import { format } from 'date-fns';
-import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
-import config from '../../config.js';
-import reminders from '../../database/models/reminders.js';
+import {
+    ButtonStyle, Client, ActionRowBuilder, ButtonBuilder, EmbedBuilder,
+} from 'discord.js';
+import reminders from '../../database/models/reminders';
+import logger from '../../logger';
+import { DEFAULT_COLOR } from '../structures/constants';
 
 /**
  * Initialize the checkReminders task
  *
  * @param {Object} bot
  */
-export default async function init(bot) {
+export default async function init(bot: Client): Promise<NodeJS.Timer> {
     /**
      * Fetch all the users in the reminder DB and send them their reminders if they are due
      *
@@ -16,14 +18,15 @@ export default async function init(bot) {
     */
 
     // eslint-disable-next-line no-shadow
-    const checkReminders = async (bot) => {
+    const checkReminders = async () => {
         // Get all users that have active reminders
         const users = await reminders.find({});
 
         // Loop through the users
         for (const data of users) {
             // Try to fetch the user
-            const user = bot.users.cache.get(data.id) || await bot.users.fetch(data.id).catch(() => {});
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            const user = bot.users.cache.get(data.id) || await bot.users.fetch(data.id).catch(() => { });
 
             if (user) {
                 // Loop through the reminders
@@ -31,31 +34,44 @@ export default async function init(bot) {
                     if (rmdData.pending) return;
 
                     // Check if the reminder is due
-                    if (Date.now() >= rmdData.remindTime) {
+                    if (Date.now() >= rmdData.timestamps.remindAt) {
                         // Create the custom ID
                         const customId = `reminder-${data.id}-${rmdData.id}`;
                         // Build the embed
-                        const embed = new MessageEmbed()
-                            .setThumbnail('https://i.imgur.com/gOJ0Cuj.png')
-                            .setColor(config.general.embedColor)
-                            .addField('Reminder', rmdData.reminder)
-                            .addField('Set at', format(rmdData.timeCreated, 'PPp'));
+                        const embed = new EmbedBuilder()
+                            .setThumbnail('https://twemoji.maxcdn.com/v/latest/72x72/1f4ec.png')
+                            .setColor(DEFAULT_COLOR)
+                            .addFields([
+                                {
+                                    name: 'Reminder',
+                                    value: rmdData.text,
+                                },
+                                {
+                                    name: 'Set at',
+                                    value: `<t:${rmdData.timestamps.created}>`,
+                                },
+                            ]);
 
-                        const row = new MessageActionRow()
-                            .addComponents(
-                                new MessageButton()
+                        const row = new ActionRowBuilder<ButtonBuilder>({
+                            components: [
+                                new ButtonBuilder()
                                     .setCustomId(`${customId}-completed`)
                                     .setLabel('Completed')
-                                    .setStyle('SUCCESS'),
-                                new MessageButton()
+                                    .setStyle(ButtonStyle.Success),
+                                new ButtonBuilder()
                                     .setCustomId(`${customId}-snooze`)
                                     .setLabel('Snooze for 10 minutes')
-                                    .setStyle('PRIMARY'),
-                            );
+                                    .setStyle(ButtonStyle.Primary),
+                            ],
+                        });
 
                         // Send the embed to the user
-                        user.send({ embeds: [embed], components: [row] })
-                            .catch(() => { });
+                        user.send({
+                            embeds: [embed],
+                            components: [row],
+                        }).catch(() => {
+                            logger.debug(`Failed to send reminder message to ${user.id}`);
+                        });
 
                         // Set the reminder to pending so it can be completed or snoozed
                         await reminders.findOneAndUpdate({
@@ -74,7 +90,7 @@ export default async function init(bot) {
                 }
             } else {
                 // Delete the users reminder data as the user cannot be found anymore
-                reminders.delete(data.user);
+                reminders.findOneAndDelete({ _id: data.id });
             }
         }
 
@@ -82,11 +98,11 @@ export default async function init(bot) {
     };
 
     // Run the checkReminders function
-    await checkReminders(bot);
+    await checkReminders();
 
     // Run the checkReminders function every 30 seconds
     const interval = setInterval(async () => {
-        await checkReminders(bot);
+        await checkReminders();
     }, 30000);
 
     // Return the interval info
