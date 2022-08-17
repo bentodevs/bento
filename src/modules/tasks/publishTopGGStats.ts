@@ -1,19 +1,15 @@
 import Sentry from '@sentry/node';
+import { Client } from 'discord.js';
 import fetch from 'node-fetch';
+import logger from '../../logger';
 
 /**
  * Initialise the publishTopGGStats task
  *
  * @param {Object} bot
  */
-export default async function init(bot) {
-    /**
-     * Fetch all guilds
-     *
-     * @param {Object} bot
-    */
-
-    const getAndPublishGuildCount = async () => {
+export default async function init(bot: Client): Promise<NodeJS.Timer> {
+    const getAndPublishGuildCount = async (bot: Client) => {
         // Get all guilds
         const guilds = await bot.guilds.fetch({ limit: 200 });
 
@@ -21,7 +17,7 @@ export default async function init(bot) {
         const guildCount = guilds.size;
 
         // Define the URL
-        const url = `https://top.gg/api/bots/${bot.user.id}/stats`;
+        const url = `https://top.gg/api/bots/${bot?.user?.id}/stats`;
         // Define the request body
         const reqBody = {
             server_count: guildCount,
@@ -33,12 +29,12 @@ export default async function init(bot) {
 
         fetch(url, {
             method: 'POST',
-            headers: reqHeaders,
+            headers: JSON.stringify(reqHeaders),
             body: JSON.stringify(reqBody),
         }).then((res) => {
-            if (res.status === 200) bot.logger.info('Posted guild count statistics to Top.GG successfully');
+            if (res.status === 200) logger.debug('Posted guild count statistics to Top.GG successfully');
         }).catch((err) => {
-            bot.logger.error(err);
+            logger.error(err);
             Sentry.captureException(err);
         });
 
@@ -53,7 +49,7 @@ export default async function init(bot) {
         if (process.env.NODE_ENV === 'production') {
             await getAndPublishGuildCount(bot);
         } else {
-            bot.logger.debug('Not posting guild count statistics to Top.GG due to a non-production environment');
+            logger.debug('Not posting guild count statistics to Top.GG due to a non-production environment');
         }
     }, 3600000);
 

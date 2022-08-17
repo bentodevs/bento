@@ -1,15 +1,11 @@
-import premiumGuild from '../../database/models/premiumGuild.js';
+import premiumGuild from '../../database/models/premiumGuild';
 
 /**
  * Initialize the checkPremiumGuilds task
- *
- * @param {Object} bot
  */
-export default async function init(bot) {
+export default async function init(): Promise<NodeJS.Timer> {
     /**
      * Fetch all premium servers in the DB and action if the subscription has expired
-     *
-     * @param {Object} bot
      *
      * @returns {Promise<Boolean>} Success/Failure
      */
@@ -19,7 +15,7 @@ export default async function init(bot) {
 
         for await (const data of premiumData) {
             // If the expiry timestamp has passed, then remove premium access
-            if (data.expiry !== 'forever') {
+            if (data.expiry !== -1) {
                 if (Date.now() > data.expiry) {
                     // Return a removal of premium
                     // eslint-disable-next-line no-underscore-dangle
@@ -33,11 +29,11 @@ export default async function init(bot) {
     };
 
     // Run the getMutes function
-    await getPremiumServers(bot);
+    await getPremiumServers();
 
     // Run the getPremiumServers function every minute
     const interval = setInterval(async () => {
-        await getPremiumServers(bot);
+        await getPremiumServers();
     }, 60000);
 
     // Return the interval info
