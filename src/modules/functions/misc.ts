@@ -1,7 +1,14 @@
-import fetch from 'node-fetch';
+import fetch, { Response } from 'node-fetch';
 import { xml2json } from 'xml-js';
-import HttpsProxyAgent from 'https-proxy-agent';
-import config from '../../config.js';
+import { User } from 'discord.js';
+import createHttpsProxyAgent from 'https-proxy-agent';
+import logger from '../../logger';
+import { cooldowns } from '../../bot';
+import { OWNERS } from '../structures/constants';
+import {
+    DadJoke, DiscordStatus, UrbanDictionary, UrbanDictionaryDefinitionElement, Weather,
+} from '../../types';
+import { StringUtils } from '../../utils/StringUtils';
 
 /**
  * Get a definition from the urbandictionary api
@@ -18,7 +25,7 @@ import config from '../../config.js';
  *      console.error(err);
  * })
  */
-export const urban = (query) => new Promise((resolve, reject) => {
+export const urban = (query: string): Promise<UrbanDictionaryDefinitionElement> => new Promise((resolve, reject) => {
     // If no query was specified return an error
     if (!query) reject(new Error('Missing Args!'));
 
@@ -31,24 +38,24 @@ export const urban = (query) => new Promise((resolve, reject) => {
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res) => res.json()).then((json) => {
+    }).then((res: Response) => res.json()).then((json: UrbanDictionary) => {
         // If something went wrong return null
-        if (json.error) return resolve(null);
+        if (json.error) return reject(new Error(json.error));
         // If no results were found return null
-        if (!json.list.length) return resolve(null);
+        if (!json.list.length) return reject(new Error('No results were found for the query.'));
 
         // Sort the data by thumps_up and return the result with the most thumps up
-        const result = json.list.sort((a, b) => b.thumps_up - a.thumps_up)[0];
+        const result = json.list.sort((a: UrbanDictionaryDefinitionElement, b: UrbanDictionaryDefinitionElement) => b.thumbs_up - a.thumbs_up)[0];
 
         // Remove urban dictionary formatting
-        result.definition = result.definition.removeUrbanFormatting();
-        result.example = result.example.removeUrbanFormatting();
+        result.definition = StringUtils.removeUrbanFormatting(result.definition);
+        result.example = StringUtils.removeUrbanFormatting(result.example);
 
         // Return the result
         return resolve(result);
-    }).catch((err) => {
+    }).catch((err: Error) => {
         // Log and reject the error
-        console.error(err);
+        logger.error(err);
         reject(err);
     });
 });
@@ -66,7 +73,7 @@ export const urban = (query) => new Promise((resolve, reject) => {
  *      console.error(err);
  * })
  */
-export const getMeme = () => new Promise((resolve, reject) => {
+export const getMeme = (): Promise<object> => new Promise((resolve, reject) => {
     // Define all the subreddits
     const subs = [
         'memes',
@@ -88,7 +95,7 @@ export const getMeme = () => new Promise((resolve, reject) => {
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res) => res.json()).then((json) => {
+    }).then((res: Response) => res.json()).then((json: any) => {
         // Filter out all the bad posts
         const filtered = json.data.children.filter((p) => !p.data.over_18 && p.data.post_hint !== 'hosted:video' && p.data.post_hint !== 'link' && p.data.post_hint !== 'self' && p.data.post_hint);
 
@@ -102,7 +109,7 @@ export const getMeme = () => new Promise((resolve, reject) => {
         resolve(post);
     }).catch((err) => {
         // Log and reject the error
-        console.error(err);
+        logger.error(err);
         reject(err);
     });
 });
@@ -122,7 +129,7 @@ export const getMeme = () => new Promise((resolve, reject) => {
  *      console.error(err);
  * })
  */
-export const getWeather = (query) => new Promise((resolve, reject) => {
+export const getWeather = (query: string): Promise<Weather | undefined> => new Promise((resolve, reject) => {
     // Define the API URL
     const URL = `https://api.weatherapi.com/v1/current.json?key=${process.env.WEATHER_TOKEN}&q=${query}`;
 
@@ -132,7 +139,7 @@ export const getWeather = (query) => new Promise((resolve, reject) => {
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res) => res.json()).then((json) => {
+    }).then((res: Response) => res.json()).then((json: any) => {
         if (json.error) {
             if (json.error.code === 1006) {
                 // If the error is 1006 return undefined
@@ -145,7 +152,7 @@ export const getWeather = (query) => new Promise((resolve, reject) => {
         resolve(json);
     }).catch((err) => {
         // Log and reject the error
-        console.error(err);
+        logger.error(err);
         reject(err);
     });
 });
@@ -163,7 +170,7 @@ export const getWeather = (query) => new Promise((resolve, reject) => {
  *      console.error(data);
  * })
  */
-export const getDadjoke = () => new Promise((resolve, reject) => {
+export const getDadjoke = (): Promise<DadJoke> => new Promise((resolve, reject) => {
     // Define the API URL
     const URL = 'https://icanhazdadjoke.com/';
 
@@ -173,9 +180,9 @@ export const getDadjoke = () => new Promise((resolve, reject) => {
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res) => res.json()).then((json) => resolve(json)).catch((err) => {
+    }).then((res: Response) => res.json()).then((json: any) => resolve(json)).catch((err) => {
         // Log and reject the error
-        console.error(err);
+        logger.error(err);
         reject(err);
     });
 });
@@ -189,7 +196,7 @@ export const getDadjoke = () => new Promise((resolve, reject) => {
  *
  * @returns {number}
  */
-export const parseTime = (string, returnUnit, opts) => {
+export const parseTime = (string: string, returnUnit: string, opts: object | null): number | null => {
     const DEFAULT_OPTS = {
         hoursPerDay: 24,
         daysPerWeek: 7,
@@ -214,25 +221,27 @@ export const parseTime = (string, returnUnit, opts) => {
 
     let totalSeconds = 0;
 
-    // eslint-disable-next-line no-shadow
-    function getUnitValues(opts) {
-        // eslint-disable-next-line no-shadow
-        const unitValues = {
+    function getUnitValues(unitOpts) {
+        type UnitValues = {
+            [key: string]: any;
+        };
+
+        const unitValues: UnitValues = {
             ms: 0.001,
             s: 1,
             m: 60,
             h: 3600,
         };
 
-        unitValues.d = opts.hoursPerDay * unitValues.h;
-        unitValues.w = opts.daysPerWeek * unitValues.d;
-        unitValues.mth = (opts.daysPerYear / opts.monthsPerYear) * unitValues.d;
-        unitValues.y = opts.daysPerYear * unitValues.d;
+        unitValues.d = unitOpts.hoursPerDay * unitValues.h;
+        unitValues.w = unitOpts.daysPerWeek * unitValues.d;
+        unitValues.mth = (unitOpts.daysPerYear / unitOpts.monthsPerYear) * unitValues.d;
+        unitValues.y = unitOpts.daysPerYear * unitValues.d;
 
         return unitValues;
     }
 
-    function getUnitKey(unit) {
+    function getUnitKey(unit: string) {
         for (const key of Object.keys(UNIT_MAP)) {
             if (UNIT_MAP[key].indexOf(unit) > -1) {
                 return key;
@@ -243,7 +252,7 @@ export const parseTime = (string, returnUnit, opts) => {
     }
 
     // eslint-disable-next-line no-shadow
-    function getSeconds(value, unit, unitValues) {
+    function getSeconds(value, unit: string, unitValues) {
         return value * unitValues[getUnitKey(unit)];
     }
 
@@ -258,11 +267,9 @@ export const parseTime = (string, returnUnit, opts) => {
         .replace(/[^.\w+-]+/g, '')
         .match(/[-+]?[0-9.]+[a-z]+/g);
 
-    if (groups === null) {
-        return null;
-    }
+    if (groups === null) return null;
 
-    groups.forEach((group) => {
+    groups.forEach((group: any) => {
         const value = group.match(/[0-9.]+/g)[0];
         const unit = group.match(/[a-z]+/g)[0];
 
@@ -291,13 +298,13 @@ export const parseTime = (string, returnUnit, opts) => {
  *      console.error(err);
  * })
  */
-export const fetchSteamUserByID = (user) => new Promise((resolve, reject) => {
+export const fetchSteamUserByID = (user: string): Promise<object> => new Promise((resolve, reject) => {
     // Define the baseURL for fetching a user's profile
     const baseURL = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${process.env.STEAM_TOKEN}&steamids=${user}`;
 
     fetch(baseURL)
-        .then((res) => res.json())
-        .then((json) => ({
+        .then((res: Response) => res.json())
+        .then((json: any) => ({
             steamID: json.response.players[0].steamid,
             avatar: {
                 full: json.response.players[0].avatarfull,
@@ -329,14 +336,13 @@ export const fetchSteamUserByID = (user) => new Promise((resolve, reject) => {
  *      console.error(err);
  * })
  */
-export const fetchSteamUserByName = (user) => new Promise((resolve, reject) => {
+export const fetchSteamUserByName = (user: string): Promise<object> => new Promise((resolve, reject) => {
     // Define the baseURL for fetching a user's profile
     const baseURL = `https://steamcommunity.com/id/${user}?xml=1`;
 
     fetch(baseURL)
-        .then((res) => res.text())
-        .then((res) => JSON.parse(xml2json(res)))
-        // deepcode ignore PromiseNotCaughtNode: No cause for concern, deepcode ignore ObjectConstructor: No cause for concern
+        .then((res: Response) => res.text())
+        .then((res: any) => JSON.parse(xml2json(res)))
         .then((json) => ({
             steamID: json.elements[0].elements[0].elements[0].text,
             avatar: {
@@ -361,7 +367,7 @@ export const fetchSteamUserByName = (user) => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<String>} URL to the image
  */
-export const fetchWaifuApi = (type) => new Promise((resolve, reject) => {
+export const fetchWaifuApi = (type: string): Promise<string> => new Promise((resolve, reject) => {
     // Define all the different available types
     const types = [
         'waifu',
@@ -408,12 +414,12 @@ export const fetchWaifuApi = (type) => new Promise((resolve, reject) => {
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res) => res.json()).then((json) => {
+    }).then((res: Response) => res.json()).then((json: any) => {
         // Resolve the URL
         resolve(json.url);
     }).catch((err) => {
         // Log and reject the error
-        console.error(err);
+        logger.error(err);
         reject(err);
     });
 });
@@ -431,7 +437,7 @@ export const fetchWaifuApi = (type) => new Promise((resolve, reject) => {
  *      console.error(data);
  * })
  */
-export const getMinecraftStatus = (ip, port) => new Promise((resolve, reject) => {
+export const getMinecraftStatus = (ip: string, port: string): Promise<object> => new Promise((resolve, reject) => {
     // If no IP was specified return an error
     if (!ip) reject(new Error('Missing Arguments'));
 
@@ -445,12 +451,12 @@ export const getMinecraftStatus = (ip, port) => new Promise((resolve, reject) =>
         headers: {
             'content-type': 'application/json',
         },
-    }).then((res) => res.json()).then((json) => {
+    }).then((res: Response) => res.json()).then((json: any) => {
         // Return the status
         resolve(json);
     }).catch((err) => {
         // Log and reject the error
-        console.error(err);
+        logger.error(err);
         reject(err);
     });
 });
@@ -463,7 +469,7 @@ export const getMinecraftStatus = (ip, port) => new Promise((resolve, reject) =>
  *
  * @returns {Array} Array with giveaway winners
  */
-export const drawGiveawayWinners = (entries, winners) => {
+export const drawGiveawayWinners = (entries: Array<any>, winners: number): Array<any> => {
     const gWinners = entries.sort(() => 0.5 - Math.random()).slice(0, winners);
     return gWinners;
 };
@@ -473,7 +479,7 @@ export const drawGiveawayWinners = (entries, winners) => {
  *
  * @returns {Promise.<Object>} Discord Status API Data
  */
-export const getDiscordStatus = () => new Promise((resolve, reject) => {
+export const getDiscordStatus = (): Promise<DiscordStatus> => new Promise((resolve, reject) => {
     // Specify the API URL
     const URL = 'https://discordstatus.com/api/v2/summary.json';
 
@@ -483,10 +489,10 @@ export const getDiscordStatus = () => new Promise((resolve, reject) => {
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res) => res.json()).then((json) => {
+    }).then((res: Response) => res.json()).then((json: any) => {
         resolve(json);
     }).catch((err) => {
-        console.error(err);
+        logger.error(err);
         reject(err);
     });
 });
@@ -498,26 +504,23 @@ export const getDiscordStatus = () => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<Buffer>} emote
  */
-export const fetchEmote = (url) => new Promise((resolve, reject) => {
+export const fetchEmote = (url: string): Promise<Buffer> => new Promise((resolve, reject) => {
     // Create the proxyAgent
-    const proxyAgent = new HttpsProxyAgent(process.env.PROXY_URL);
+    const proxyAgent = new createHttpsProxyAgent.HttpsProxyAgent(process.env.WEBPROXY_HOST);
 
     // Fetch the URL
-    fetch(url, {
-        agent: proxyAgent,
-    }).then(async (res) => {
+    fetch(url, { agent: proxyAgent }).then(async (res: Response) => {
         // If the url didn't contain an image return an error
-        if (!res.headers.get('content-type').startsWith('image')) reject(new Error("The URL or File you specified isn't an image!"));
+        if (!res.headers.get('content-type')?.startsWith('image')) return reject(new Error("The URL or File you specified isn't an image!"));
         // If the size of the file is too big return an error
-        if (res.headers.get('content-length') > 256 * 1024) reject(new Error('The emoji is too big! It must be 256KB or less.'));
-
+        if (res.headers.get('content-length') && (parseFloat(res.headers.get('content-length') ?? '0') > 256 * 1024)) return reject(new Error('The emoji is too big! It must be 256KB or less.'));
         // Convert the image to a buffer and resolve it
-        res.buffer().then((buff) => {
+        res.buffer().then((buff: Buffer) => {
             resolve(buff);
         });
     }).catch((err) => {
         // Log the error and reject it
-        console.error(err);
+        logger.error(err);
         reject(new Error('Something went wrong while fetching the image!'));
     });
 });
@@ -529,20 +532,20 @@ export const fetchEmote = (url) => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<Object>} Last.fm user
  */
-export const getLastFMUser = (user) => new Promise((resolve, reject) => {
+export const getLastFMUser = (user: string): Promise<object> => new Promise((resolve, reject) => {
     // Define the LastFM API URL
     const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${user}&api_key=${process.env.LASTFM_TOKEN}&format=json`;
 
     // Fetch the URL
     fetch(URL)
-        .then((res) => res.json())
-        .then((d) => {
+        .then((res: Response) => res.json())
+        .then((d: any) => {
             if (d?.error === 6) {
                 // If the user isn't found, throw an error
                 reject(new Error('User not found'));
             } else if (d?.error) {
                 // If there is an unknown error, then throw and log to console
-                console.error(d.error.message);
+                logger.error(d.error.message);
                 reject(new Error('An unknown error occurred!'));
             } else {
                 // Resolve the User
@@ -559,19 +562,18 @@ export const getLastFMUser = (user) => new Promise((resolve, reject) => {
  *
  * @returns {Promise.<Object>} Last.fm user play history
  */
-export const getLastFMUserHistory = (user) => new Promise((resolve, reject) => {
+export const getLastFMUserHistory = (user: string): Promise<object> => new Promise((resolve, reject) => {
     const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${user}&api_key=${process.env.LASTFM_TOKEN}&format=json`;
-
-    const data = fetch(URL).then((res) => res.json());
-
-    if (data?.error === 6) {
-        reject(new Error('User not found'));
-    } else if (data?.error) {
-        console.error(data.error.message);
-        reject(new Error('An unknown error occurred!'));
-    } else {
-        resolve(data);
-    }
+    fetch(URL).then((res: Response) => res.json()).then((data: any) => {
+        if (data?.error === 6) {
+            reject(new Error('User not found'));
+        } else if (data?.error) {
+            logger.error(data.error.message);
+            reject(new Error('An unknown error occurred!'));
+        } else {
+            resolve(data);
+        }
+    });
 });
 
 /**
@@ -582,37 +584,56 @@ export const getLastFMUserHistory = (user) => new Promise((resolve, reject) => {
  * @returns {String} The ordinal suffix for the supplied number
  */
 // eslint-disable-next-line no-mixed-operators
-export const getOrdinalSuffix = (num) => ['st', 'nd', 'rd'][((num + 90) % 100 - 10) % 10 - 1] || 'th';
+export const getOrdinalSuffix = (num: number): string => ['st', 'nd', 'rd'][((num + 90) % 100 - 10) % 10 - 1] || 'th';
 
 /**
  * Get the reaction cooldown
  *
- * @param {Object} bot The client which is used to transact between this app & Discord
  * @param {User} user The user object
  * @param {String} guild The guild id strong
  *
  * @returns {Boolean} Returns false if the user isn't on cooldown otherwise returns true
  */
-export const getReactCooldown = (bot, user, guild) => {
+export const getReactCooldown = (user: User, guild: string) => {
     // Check if the user is a bot dev
-    if (config.general.devs.includes(user.id)) return false;
+    if (OWNERS.includes(user.id)) return false;
 
     // Check if the user is in the collection
-    if (bot.cooldowns.has(`${guild}-${user.id}-reaction`)) {
+    if (cooldowns.has(`${guild}-${user.id}-reaction`)) {
         // Grab the users data
-        const usr = bot.cooldowns.get(`${guild}-${user.id}-reaction`);
+        const usr = cooldowns.get(`${guild}-${user.id}-reaction`);
 
         // If the user is on count 10 return true
         if (usr.count >= 10) return true;
 
         // Update the users count
-        bot.cooldowns.set(`${guild}-${user.id}-reaction`, { count: usr.count + 1 });
+        cooldowns.set(`${guild}-${user.id}-reaction`, { count: usr.count + 1 });
 
         // Return false
         return false;
     }
     // Set the users data
-    bot.cooldowns.set(`${guild}-${user.id}-reaction`, { count: 1 });
+    cooldowns.set(`${guild}-${user.id}-reaction`, { count: 1 });
     // Remove the user data after 15 seconds
-    setTimeout(() => { bot.cooldowns.delete(`${guild}-${user.id}-reaction`); }, 15000);
+    setTimeout(() => { cooldowns.delete(`${guild}-${user.id}-reaction`); }, 15000);
 };
+
+export function shuffle<T>(array: T[]): T[] {
+    let currentIndex = array.length;
+    let randomIndex;
+
+    // While there remain elements to shuffle.
+    while (currentIndex !== 0) {
+        // Pick a remaining element.
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        // eslint-disable-next-line no-plusplus
+        currentIndex--;
+
+        // And swap it with the current element.
+        // eslint-disable-next-line no-param-reassign
+        [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
+}

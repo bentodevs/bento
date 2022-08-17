@@ -1,6 +1,7 @@
-import fetch from 'node-fetch';
+import fetch, { Response } from 'node-fetch';
 
 const endpoint = 'https://graphql.anilist.co';
+type MediaType = 'ANIME' | 'MANGA'
 
 /**
  * Get anime or manga data from Anilist
@@ -18,22 +19,7 @@ const endpoint = 'https://graphql.anilist.co';
  *      console.log(err);
  * })
  */
-export const getMedia = (title, type) => new Promise((resolve, reject) => {
-    // Check if a type was specified otherwise set it to "ANIME"
-    // eslint-disable-next-line no-param-reassign
-    type = type || 'ANIME';
-
-    // Array with the available types
-    const types = [
-        'ANIME',
-        'MANGA',
-    ];
-
-    // If no arguments were specified return an error
-    if (!title || !type) reject(new Error('Missing Args!'));
-    // If an invalid type was specified return an error
-    if (!types.includes(type.toUpperCase())) reject(new Error('Invalid Type!'));
-
+export const getMedia = (title: string, type: MediaType): Promise<object> => new Promise((resolve, reject) => {
     // Prepare the query
     const query = `query ($search: String, $type: MediaType) {
             Media(search: $search, type: $type, isAdult: false) {
@@ -60,7 +46,7 @@ export const getMedia = (title, type) => new Promise((resolve, reject) => {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ query, variables }),
-    }).then((res) => res.json()).then((json) => {
+    }).then((res: Response) => res.json()).then((json: any) => {
         if (json.errors) return reject(new Error('Not Found!'));
 
         return resolve(json.data.Media);
@@ -84,9 +70,7 @@ export const getMedia = (title, type) => new Promise((resolve, reject) => {
  *      console.log(err);
  * })
  */
-export const getCharacter = (name) => new Promise((resolve, reject) => {
-    if (!name) reject(new Error('Missing Args!'));
-
+export const getCharacter = (name: string): Promise<object> => new Promise((resolve, reject) => {
     const query = `query ($search: String) {
             Character(search: $search) {
                 id
@@ -110,7 +94,7 @@ export const getCharacter = (name) => new Promise((resolve, reject) => {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ query, variables }),
-    }).then((res) => res.json()).then((json) => {
+    }).then((res: Response) => res.json()).then((json: any) => {
         if (json.errors) return reject(new Error('Not Found!'));
 
         resolve(json.data.Character);
@@ -134,9 +118,7 @@ export const getCharacter = (name) => new Promise((resolve, reject) => {
  *      console.log(err);
  * })
  */
-export const getProfile = (username) => new Promise((resolve, reject) => {
-    if (!username) reject(new Error('Missing Args!'));
-
+export const getProfile = (username: string): Promise<object> => new Promise((resolve, reject) => {
     const query = `query ($search: String) {
             User(name: $search) {
                 id
@@ -175,7 +157,7 @@ export const getProfile = (username) => new Promise((resolve, reject) => {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ query, variables }),
-    }).then((res) => res.json()).then((json) => {
+    }).then((res: Response) => res.json()).then((json: any) => {
         if (json.errors) return reject(new Error('Not Found!'));
 
         resolve(json.data.User);
