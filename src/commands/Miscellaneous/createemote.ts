@@ -90,10 +90,9 @@ const command: Command = {
 
     run: async (bot, interaction: ChatInputCommandInteraction) => {
         const subCmd = interaction.options.getSubcommand();
+        await interaction.deferReply();
 
         if (subCmd === 'steal') {
-            await interaction.deferReply();
-
             const rawEmoji = interaction.options.getString('emoji', true);
             const newName = interaction.options.getString('name');
 
@@ -130,7 +129,6 @@ const command: Command = {
                 interaction.editReply(`${emojis.error} Failed to create the emote: \`${err}\``);
             });
         } else if (subCmd === 'upload') {
-            await interaction.deferReply();
             const rawEmoji = interaction.options.getAttachment('emoji', true);
             const newName = interaction.options.getString('name');
 
@@ -153,11 +151,11 @@ const command: Command = {
                     interaction.editReply(`${emojis.error} Failed to create the emote: \`${err.message}\``);
                 });
         } else if (subCmd === 'url') {
-            await interaction.deferReply();
+            logger.debug(interaction.deferred);
             const rawEmoji = interaction.options.getString('emoji', true);
             const newName = interaction.options.getString('name');
 
-            if (!URL_REGEX.test(rawEmoji)) return interaction.editReply(`${emojis.error} You didn't provide a valid URL!`);
+            // if (!URL_REGEX.test(rawEmoji)) return interaction.editReply(`${emojis.error} You didn't provide a valid URL!`);
 
             fetchEmote(rawEmoji).then((emote) => {
                 interaction.guild?.emojis.create({
