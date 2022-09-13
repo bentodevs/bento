@@ -92,6 +92,8 @@ const command: Command = {
         const subCmd = interaction.options.getSubcommand();
 
         if (subCmd === 'steal') {
+            await interaction.deferReply();
+
             const rawEmoji = interaction.options.getString('emoji', true);
             const newName = interaction.options.getString('name');
 
@@ -122,10 +124,10 @@ const command: Command = {
                 attachment: buffer,
                 reason: `Created using the createemote command by ${interaction.user.tag}`,
             }).then((e) => {
-                InteractionResponseUtils.confirmation(interaction, `Successfully created the emote: \`:${e.name}:\` ${e}`, true);
+                interaction.editReply(`${emojis.confirmation} Successfully created the emote: \`:${e.name}:\` ${e}`);
             }).catch((err) => {
                 logger.error('Failed to steal emoji:', err);
-                InteractionResponseUtils.error(interaction, `Failed to create the emote: \`${err}\``, true);
+                interaction.editReply(`${emojis.error} Failed to create the emote: \`${err}\``);
             });
         } else if (subCmd === 'upload') {
             await interaction.deferReply();
