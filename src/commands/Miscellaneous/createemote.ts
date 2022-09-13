@@ -90,6 +90,7 @@ const command: Command = {
 
     run: async (bot, interaction: ChatInputCommandInteraction) => {
         const subCmd = interaction.options.getSubcommand();
+        await interaction.deferReply();
 
         if (subCmd === 'steal') {
             const rawEmoji = interaction.options.getString('emoji', true);
@@ -122,13 +123,12 @@ const command: Command = {
                 attachment: buffer,
                 reason: `Created using the createemote command by ${interaction.user.tag}`,
             }).then((e) => {
-                InteractionResponseUtils.confirmation(interaction, `Successfully created the emote: \`:${e.name}:\` ${e}`, true);
+                interaction.editReply(`${emojis.confirmation} Successfully created the emote: \`:${e.name}:\` ${e}`);
             }).catch((err) => {
                 logger.error('Failed to steal emoji:', err);
-                InteractionResponseUtils.error(interaction, `Failed to create the emote: \`${err}\``, true);
+                interaction.editReply(`${emojis.error} Failed to create the emote: \`${err}\``);
             });
         } else if (subCmd === 'upload') {
-            await interaction.deferReply();
             const rawEmoji = interaction.options.getAttachment('emoji', true);
             const newName = interaction.options.getString('name');
 
@@ -151,10 +151,11 @@ const command: Command = {
                     interaction.editReply(`${emojis.error} Failed to create the emote: \`${err.message}\``);
                 });
         } else if (subCmd === 'url') {
+            logger.debug(interaction.deferred);
             const rawEmoji = interaction.options.getString('emoji', true);
             const newName = interaction.options.getString('name');
 
-            if (!URL_REGEX.test(rawEmoji)) return InteractionResponseUtils.error(interaction, "You didn't provide a valid URL!", true);
+            // if (!URL_REGEX.test(rawEmoji)) return interaction.editReply(`${emojis.error} You didn't provide a valid URL!`);
 
             fetchEmote(rawEmoji).then((emote) => {
                 interaction.guild?.emojis.create({
@@ -162,12 +163,12 @@ const command: Command = {
                     name: (newName ?? path.parse(URL.toString()).name).toString(),
                     reason: `Created using the createemote command by ${interaction.user.tag}`,
                 }).then((e) => {
-                    InteractionResponseUtils.confirmation(interaction, `Successfully created the emote: \`:${e.name}:\` ${e}`, false);
+                    interaction.editReply(`${emojis.confirmation} Successfully created the emote: \`:${e.name}:\` ${e}`);
                 }).catch((err) => {
-                    InteractionResponseUtils.error(interaction, `Failed to create the emote: \`${err.message}\``, true);
+                    interaction.editReply(`${emojis.error} Failed to create the emote: \`${err.message}\``);
                 });
             }).catch((err) => {
-                InteractionResponseUtils.error(interaction, `Failed to create the emote: \`${err.message}\``, true);
+                interaction.editReply(`${emojis.error} Failed to create the emote: \`${err.message}\``);
             });
         }
     },
