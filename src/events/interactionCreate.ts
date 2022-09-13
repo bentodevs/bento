@@ -65,7 +65,7 @@ export default async (bot: Client, interaction: Interaction) => {
             await cmd.run(bot, interaction);
         } catch (err) {
             // Send the error to Sentry
-            // Sentry.captureException(err);
+            Sentry.captureException(err);
 
             // If the bot is in a dev environment log the error as well
             logger.error(err);
