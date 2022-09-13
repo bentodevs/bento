@@ -1,7 +1,6 @@
-import { User } from '@sentry/node';
 import { stripIndents } from 'common-tags';
 import {
-    Client, EmbedBuilder, GuildMember, Interaction, PermissionFlagsBits,
+    Client, EmbedBuilder, GuildMember, Interaction, PermissionFlagsBits, User,
 } from 'discord.js';
 import { default as settingsDb } from '../../database/models/settings';
 import { getSettings } from '../../database/mongo';
@@ -11,16 +10,24 @@ import { DEFAULT_COLOR, OWNERS } from '../structures/constants';
 export const punishmentLog = (
     bot: Client,
     interaction: any,
-    member: User | GuildMember,
+    _member: User | GuildMember,
     punishmentId: number,
     reason: string,
     type: PunishmentType,
     length?: string,
 ) => {
+    let member: User;
+
+    if (_member instanceof User) {
+        member = _member;
+    } else {
+        member = _member.user;
+    }
+
     // Create new embed
     const embed = new EmbedBuilder()
         .setColor((interaction.member as GuildMember).displayHexColor ?? DEFAULT_COLOR)
-        .setThumbnail((member?.user ?? member).displayAvatarURL())
+        .setThumbnail(member.displayAvatarURL())
         .setFooter({ text: `User ID: ${member.id}` })
         .setTimestamp();
 
@@ -30,28 +37,28 @@ export const punishmentLog = (
 
     switch (type) {
         case 'BAN':
-            embed.setAuthor({ name: `Case ${punishmentId} | User Banned`, iconURL: (member?.user ?? member).displayAvatarURL() });
+            embed.setAuthor({ name: `Case ${punishmentId} | User Banned`, iconURL: member.displayAvatarURL() });
             embed.setDescription(stripIndents`${description}
             **Reason:** ${reason}`);
             break;
         case 'KICK':
-            embed.setAuthor({ name: `Case ${punishmentId} | User Kicked`, iconURL: (member?.user ?? member).displayAvatarURL() });
+            embed.setAuthor({ name: `Case ${punishmentId} | User Kicked`, iconURL: member.displayAvatarURL() });
             embed.setDescription(stripIndents`${description}
             **Reason:** ${reason}`);
             break;
         case 'MUTE':
-            embed.setAuthor({ name: `Case ${punishmentId} | User Muted`, iconURL: (member?.user ?? member).displayAvatarURL() });
+            embed.setAuthor({ name: `Case ${punishmentId} | User Muted`, iconURL: member.displayAvatarURL() });
             embed.setDescription(stripIndents`${description}
             **Length:** ${length}
             **Reason:** ${reason}`);
             break;
         case 'UNMUTE':
-            embed.setAuthor({ name: `Case ${punishmentId} | User Unmuted`, iconURL: (member?.user ?? member).displayAvatarURL() });
+            embed.setAuthor({ name: `Case ${punishmentId} | User Unmuted`, iconURL: member.displayAvatarURL() });
             embed.setDescription(stripIndents`${description}
             **Reason:** ${reason}`);
             break;
         case 'UNBAN':
-            embed.setAuthor({ name: `Case ${punishmentId} | User Unbanned`, iconURL: (member?.user ?? member).displayAvatarURL() });
+            embed.setAuthor({ name: `Case ${punishmentId} | User Unbanned`, iconURL: member.displayAvatarURL() });
             embed.setDescription(stripIndents`${description}
             **Reason:** ${reason}`);
             break;
@@ -69,7 +76,7 @@ export const punishmentLog = (
  *
  * @returns {Promise.<Boolean>} True if blacklisted, false if not blacklisted.
  */
-export const checkBlacklist = async (interaction: Interaction) => {
+export const checkBlacklist = async (interaction: Interaction): Promise<boolean> => {
     if (!interaction.inGuild()) return false;
 
     // Get the interaction user
