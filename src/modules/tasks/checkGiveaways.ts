@@ -2,6 +2,7 @@
 import { stripIndents } from 'common-tags';
 import { Client, EmbedBuilder, GuildTextBasedChannel } from 'discord.js';
 import giveaways from '../../database/models/giveaways.js';
+import logger from '../../logger.js';
 import { getUser } from '../functions/getters.js';
 import { drawGiveawayWinners } from '../functions/misc.js';
 import { DEFAULT_COLOR } from '../structures/constants.js';
@@ -43,9 +44,9 @@ export default async function init(bot: Client) {
                 }
 
                 // Get the guild, channel, message and giveaway creator
-                const guild = bot.guilds.cache.get(data.guild.guildId) || await bot.guilds.fetch(data.guild.guildId).catch(() => { });
+                const guild = bot.guilds.cache.get(data.guild.guildId) || await bot.guilds.fetch(data.guild.guildId).catch(() => { logger.error(`Failed to fetch guild ${data.guild.guildId}`); });
                 const channel = guild?.channels.cache.get(data.guild.channelId);
-                const msg = await (channel as GuildTextBasedChannel)?.messages.fetch(data.guild.messageId).catch(() => { });
+                const msg = await (channel as GuildTextBasedChannel)?.messages.fetch(data.guild.messageId).catch(() => { logger.debug(`Failed to fetch message ${data.guild.messageId} from ${data.guild.guildId}`); });
                 const creator = guild?.members.cache.get(data.creator);
 
                 if (!guild) return;
