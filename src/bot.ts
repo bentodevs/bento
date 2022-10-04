@@ -6,7 +6,6 @@ import Sentry from '@sentry/node';
 import { getMongooseURL, init as dbInit } from './database/mongo';
 
 // Import handlers
-// eslint-disable-next-line import/no-cycle
 import { init as commandInit } from './modules/handlers/command';
 import { init as eventInit } from './modules/handlers/event';
 import { INTENTS } from './modules/structures/constants';
