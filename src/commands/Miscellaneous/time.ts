@@ -4,7 +4,7 @@ import {
     ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionFlagsBits,
 } from 'discord.js';
 import { getWeather } from '../../modules/functions/misc';
-import { DEFAULT_COLOR } from '../../modules/structures/constants';
+import { DEFAULT_COLOR } from '../../data/constants';
 import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
 
 export default {

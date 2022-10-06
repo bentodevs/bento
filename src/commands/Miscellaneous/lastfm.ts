@@ -5,8 +5,8 @@ import {
 import users from '../../database/models/users';
 import { getLastFMUser, getLastFMUserHistory } from '../../modules/functions/misc';
 import { Command } from '../../modules/interfaces/cmd';
-import { DEFAULT_COLOR } from '../../modules/structures/constants';
-import emojis from '../../modules/structures/emotes';
+import { DEFAULT_COLOR } from '../../data/constants';
+import emojis from '../../data/emotes';
 import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
 
 const command: Command = {

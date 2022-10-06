@@ -4,7 +4,7 @@ import { User } from 'discord.js';
 import createHttpsProxyAgent from 'https-proxy-agent';
 import logger from '../../logger';
 import { cooldowns } from '../../bot';
-import { OWNERS } from '../structures/constants';
+import { OWNERS } from '../../data/constants';
 import {
     DadJoke, DiscordStatus, UrbanDictionary, UrbanDictionaryDefinitionElement, Weather,
 } from '../../types';
@@ -150,7 +150,7 @@ export const getWeather = (query: string): Promise<Weather | undefined> => new P
         }
         // Resolve the weather data
         resolve(json);
-    }).catch((err) => {
+    }).catch((err: Error) => {
         // Log and reject the error
         logger.error(err);
         reject(err);

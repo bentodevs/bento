@@ -1,4 +1,4 @@
-import { CDN_BASE } from '../modules/structures/constants.js';
+import { CDN_BASE } from '../data/constants.js';
 
 function formatAndSize(format, size) {
     return `.${format}${size ? `?size=${size}` : ''}`;

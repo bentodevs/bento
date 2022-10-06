@@ -3,7 +3,7 @@ import {
     Client, EmbedBuilder, GuildBasedChannel, TextChannel,
 } from 'discord.js';
 import settings from '../database/models/settings.js';
-import { DEFAULT_COLOR } from '../modules/structures/constants.js';
+import { DEFAULT_COLOR } from '../data/constants.js';
 
 export default async (bot: Client, channel: GuildBasedChannel) => {
     const sets = await settings.findOne({ _id: channel.guild.id });

@@ -1,6 +1,6 @@
 import { ButtonInteraction, CacheType } from 'discord.js';
+import emojis from '../../data/emotes';
 import reminders from '../../database/models/reminders';
-import emojis from '../structures/emotes';
 
 export const handleReminder = async (interaction: ButtonInteraction<CacheType>) => {
     const parts = interaction.customId.split('-');

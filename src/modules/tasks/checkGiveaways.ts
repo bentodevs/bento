@@ -1,12 +1,11 @@
-/* eslint-disable no-nested-ternary */
 import { stripIndents } from 'common-tags';
 import { Client, EmbedBuilder, GuildTextBasedChannel } from 'discord.js';
-import giveaways from '../../database/models/giveaways.js';
-import logger from '../../logger.js';
-import { getUser } from '../functions/getters.js';
-import { drawGiveawayWinners } from '../functions/misc.js';
-import { DEFAULT_COLOR } from '../structures/constants.js';
-import emojis from '../structures/emotes.js';
+import giveaways from '../../database/models/giveaways';
+import logger from '../../logger';
+import { getUser } from '../functions/getters';
+import { drawGiveawayWinners } from '../functions/misc';
+import { DEFAULT_COLOR } from '../../data/constants';
+import emojis from '../../data/emotes';
 
 /**
  * Initialize the checkGiveaways task

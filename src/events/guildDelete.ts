@@ -1,5 +1,5 @@
 import { Client, Guild, WebhookClient } from 'discord.js';
-import { OPS_JOINLEAVE_ID, OPS_JOINLEAVE_SECRET } from '../modules/structures/constants';
+import { OPS_JOINLEAVE_ID, OPS_JOINLEAVE_SECRET } from '../data/constants';
 
 export default async (bot: Client, guild: Guild) => {
     // If the guild is not available, then return

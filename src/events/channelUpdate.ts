@@ -4,7 +4,7 @@ import {
     Client, GuildBasedChannel, GuildTextBasedChannel, EmbedBuilder, TextChannel, VoiceBasedChannel,
 } from 'discord.js';
 import settings from '../database/models/settings.js';
-import { DEFAULT_COLOR } from '../modules/structures/constants.js';
+import { DEFAULT_COLOR } from '../data/constants.js';
 import { StringUtils } from '../utils/StringUtils.js';
 
 export default async (bot: Client, oldChannel: GuildBasedChannel, newChannel: GuildBasedChannel) => {

@@ -5,7 +5,7 @@ import {
 import { default as settingsDb } from '../../database/models/settings';
 import { getSettings } from '../../database/mongo';
 import { PunishmentType } from '../../types/dbTypes';
-import { DEFAULT_COLOR, OWNERS } from '../structures/constants';
+import { DEFAULT_COLOR, OWNERS } from '../../data/constants';
 
 export const punishmentLog = (
     bot: Client,

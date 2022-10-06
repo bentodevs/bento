@@ -3,7 +3,7 @@ import {
     ChatInputCommandInteraction, Collection, EmbedBuilder, GuildEmoji, GuildMember, PermissionFlagsBits, Snowflake,
 } from 'discord.js';
 import { Command } from '../../modules/interfaces/cmd';
-import { DEFAULT_COLOR } from '../../modules/structures/constants';
+import { DEFAULT_COLOR } from '../../data/constants';
 import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
 
 const command: Command = {

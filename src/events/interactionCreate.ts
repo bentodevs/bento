@@ -10,9 +10,10 @@ import { checkSelf } from '../modules/functions/permissions';
 import { handleReminder } from '../modules/functions/buttonInteractions';
 import { commands } from '../bot';
 import logger from '../logger';
-import { OWNERS, SUPPORT_SERVER } from '../modules/structures/constants';
-import emojis from '../modules/structures/emotes';
+import { OWNERS, SUPPORT_SERVER } from '../data/constants';
+import emojis from '../data/emotes';
 import { InteractionResponseUtils } from '../utils/InteractionResponseUtils';
+import currencySymbols from '../data/functionalData/currencySymbols';
 
 export default async (bot: Client, interaction: Interaction) => {
     if (interaction.type === InteractionType.ApplicationCommand) {
@@ -23,7 +24,7 @@ export default async (bot: Client, interaction: Interaction) => {
         const settings = await getSettings(interaction?.guild?.id ?? '');
 
         // If the member isn't found try to fetch it
-        if (interaction.guild && !interaction.member) await interaction.guild.members.fetch(interaction.user).catch(() => { logger.error(`Failed to fetch ${interaction.user.id}`);  });
+        if (interaction.guild && !interaction.member) await interaction.guild.members.fetch(interaction.user).catch(() => { logger.error(`Failed to fetch ${interaction.user.id}`); });
 
         // Get the command
         const cmd = commands.get(interaction.commandName);
@@ -87,5 +88,27 @@ export default async (bot: Client, interaction: Interaction) => {
         if (interaction.user.bot) return;
 
         if (interaction.customId.startsWith('reminder-')) return handleReminder(interaction);
+    } else if (interaction.isAutocomplete()) {
+        const { commandName } = interaction;
+        // Get the command value
+        const focusedValue = interaction.options.getFocused().toLowerCase();
+
+        if (commandName === 'help') {
+            // Fetch & map a list of commands
+            const rawCommandMap = commands.mapValues(command => ({ name: command.info.name, value: command.info.name.toLowerCase() }));
+            // Create an array from the values of commands which include the focused value
+            const commandList = Array.from(rawCommandMap.filter((value) => value.name.toLowerCase().includes(focusedValue)).values()).slice(0, 15);
+            // Respond with the commands which match the focused value
+            await interaction.respond(commandList);
+        }
+
+        if (commandName === 'exchange') {
+            // Create an array from the first 15 items which match the focused value
+            const currencyList = currencySymbols.filter((value) => value.name.toLowerCase().includes(focusedValue)).slice(0, 15);
+            // Respond with the commands which match the focused value
+            await interaction.respond(
+                currencyList.map((choice) => ({ name: choice.name, value: choice.value }))
+            );
+        }
     }
 };

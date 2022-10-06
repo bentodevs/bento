@@ -3,8 +3,8 @@ import {
 } from 'discord.js';
 import { urban } from '../../modules/functions/misc';
 import { Command } from '../../modules/interfaces/cmd';
-import { DEFAULT_COLOR } from '../../modules/structures/constants';
-import emojis from '../../modules/structures/emotes';
+import { DEFAULT_COLOR } from '../../data/constants';
+import emojis from '../../data/emotes';
 import { UrbanDictionaryDefinitionElement } from '../../types';
 
 const command: Command = {

@@ -1,6 +1,6 @@
 import { Client, Guild, WebhookClient } from 'discord.js';
 import settings from '../database/models/settings';
-import { OPS_JOINLEAVE_ID, OPS_JOINLEAVE_SECRET } from '../modules/structures/constants.js';
+import { OPS_JOINLEAVE_ID, OPS_JOINLEAVE_SECRET } from '../data/constants.js';
 
 export default async (bot: Client, guild: Guild) => {
     // If there are no guild settings, then create them for the guild

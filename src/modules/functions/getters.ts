@@ -1,6 +1,6 @@
 import { Client, EmbedBuilder, Interaction } from 'discord.js';
 import logger from '../../logger';
-import { DEFAULT_COLOR } from '../structures/constants';
+import { DEFAULT_COLOR } from '../../data/constants';
 
 /**
  * Gets a guild member from the cache/fetches it from the Discord API

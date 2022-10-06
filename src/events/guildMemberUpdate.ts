@@ -4,7 +4,7 @@ import {
 } from 'discord.js';
 import settings from '../database/models/settings.js';
 import logger from '../logger';
-import { DEFAULT_COLOR } from '../modules/structures/constants.js';
+import { DEFAULT_COLOR } from '../data/constants.js';
 
 export default async (bot: Client, oldMember: GuildMember, newMember: GuildMember) => {
     // Fetch full user if partial

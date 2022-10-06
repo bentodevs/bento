@@ -1,7 +1,7 @@
 import { EmbedBuilder, GuildMember, PermissionFlagsBits } from 'discord.js';
 import { getMeme } from '../../modules/functions/misc.js';
 import { Command } from '../../modules/interfaces/cmd.js';
-import { DEFAULT_COLOR } from '../../modules/structures/constants.js';
+import { DEFAULT_COLOR } from '../../data/constants.js';
 
 const command: Command = {
     info: {

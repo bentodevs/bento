@@ -1,4 +1,4 @@
-import { DISCORD_EPOCH } from '../modules/structures/constants.js';
+import { DISCORD_EPOCH } from '../data/constants.js';
 
 export default class MiscUtils {
     static snowflakeToTimestamp(id) {

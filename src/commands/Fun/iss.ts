@@ -4,7 +4,7 @@ import {
 } from 'discord.js';
 import fetch, { Response } from 'node-fetch';
 import { Command } from '../../modules/interfaces/cmd';
-import { DEFAULT_COLOR } from '../../modules/structures/constants';
+import { DEFAULT_COLOR } from '../../data/constants';
 
 const command: Command = {
     info: {

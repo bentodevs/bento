@@ -1,10 +1,10 @@
 import { stripIndents } from 'common-tags';
 import { parseISO, format } from 'date-fns';
 import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
-import { getDiscordStatus } from '../../modules/functions/misc.js';
-import { Command } from '../../modules/interfaces/cmd.js';
-import emojis from '../../modules/structures/emotes.js';
-import { StringUtils } from '../../utils/StringUtils.js';
+import { getDiscordStatus } from '../../modules/functions/misc';
+import { Command } from '../../modules/interfaces/cmd';
+import emojis from '../../data/emotes';
+import { StringUtils } from '../../utils/StringUtils';
 
 const command: Command = {
     info: {

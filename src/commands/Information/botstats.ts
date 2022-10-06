@@ -7,8 +7,8 @@ import mongoose from 'mongoose';
 import os from 'os';
 import { commands } from '../../bot';
 import { Command } from '../../modules/interfaces/cmd';
-import { DEFAULT_COLOR, SUPPORT_SERVER, VERSION } from '../../modules/structures/constants';
-import emojis from '../../modules/structures/emotes';
+import { DEFAULT_COLOR, SUPPORT_SERVER, VERSION } from '../../data/constants';
+import emojis from '../../data/emotes';
 
 const command: Command = {
     info: {

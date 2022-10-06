@@ -5,8 +5,8 @@ import {
 import { formatDistance } from 'date-fns';
 import { Command } from '../../modules/interfaces/cmd';
 import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
-import { DEFAULT_COLOR } from '../../modules/structures/constants';
-import emojis from '../../modules/structures/emotes';
+import { DEFAULT_COLOR } from '../../data/constants';
+import emojis from '../../data/emotes';
 
 const command: Command = {
     info: {

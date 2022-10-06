@@ -1,4 +1,4 @@
-import emojis from "../modules/structures/emotes";
+import emojis from "../data/emotes";
 import { InteractionResponseUtilsOptions } from "../types";
 
 export class InteractionResponseUtils {

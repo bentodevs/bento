@@ -3,9 +3,10 @@ import {
     ApplicationCommandOptionType,
     ChatInputCommandInteraction, Collection, EmbedBuilder, GuildMember, PermissionFlagsBits, Role, Snowflake,
 } from 'discord.js';
+import { paginator } from '../../modules/functions/paginator';
 import { Command } from '../../modules/interfaces/cmd';
-import { DEFAULT_COLOR } from '../../modules/structures/constants';
-import emojis from '../../modules/structures/emotes';
+import { DEFAULT_COLOR } from '../../data/constants';
+import emojis from '../../data/emotes';
 import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
 import { StringUtils } from '../../utils/StringUtils';
 
@@ -96,8 +97,10 @@ const command: Command = {
                 pages.push(sorted.slice(i, i + 10));
             }
 
+            paginator(interaction, pages, 60000);
+
             // If the page option is there set it as the page
-            if (interaction.options.get('page')?.value) page = interaction.options.getNumber('page', true) - 1;
+            if (interaction.options.getNumber('page')) page = interaction.options.getNumber('page', true) - 1;
             // Return if the page wasn't found
             if (!pages[page]) return InteractionResponseUtils.error(interaction, "You didn't specify a valid page!", true);
 

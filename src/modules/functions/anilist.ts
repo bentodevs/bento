@@ -50,7 +50,7 @@ export const getMedia = (title: string, type: MediaType): Promise<object> => new
         if (json.errors) return reject(new Error('Not Found!'));
 
         return resolve(json.data.Media);
-    }).catch((err) => {
+    }).catch((err: Error) => {
         reject(err);
     });
 });

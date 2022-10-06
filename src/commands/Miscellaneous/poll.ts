@@ -3,8 +3,8 @@ import {
 } from 'discord.js';
 import logger from '../../logger';
 import { Command } from '../../modules/interfaces/cmd';
-import { DEFAULT_COLOR } from '../../modules/structures/constants';
-import emojis from '../../modules/structures/emotes';
+import { DEFAULT_COLOR } from '../../data/constants';
+import emojis from '../../data/emotes';
 import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
 
 const command: Command = {
@@ -35,7 +35,7 @@ const command: Command = {
             type: ApplicationCommandOptionType.Channel,
             description: 'Specify the channel you want to host the poll in.',
             required: true,
-            channelType: [ChannelType.GuildNews, ChannelType.GuildText]
+            channelTypes: [ChannelType.GuildAnnouncement, ChannelType.GuildText]
         }, {
             name: 'question',
             type: ApplicationCommandOptionType.String,
@@ -109,8 +109,6 @@ const command: Command = {
         if (!channel.permissionsFor((interaction.guild?.members.me as GuildMember)).has(PermissionFlagsBits.ViewChannel) ||
             !channel.permissionsFor((interaction.guild?.members.me as GuildMember)).has(PermissionFlagsBits.EmbedLinks) ||
         !channel.permissionsFor((interaction.guild?.members.me as GuildMember)).has(PermissionFlagsBits.AddReactions)) return InteractionResponseUtils.error(interaction, "I don't have permissions to send messages in that channel!", true);
-
-        console.log(channel.permissionsFor((interaction.guild?.members.me as GuildMember)).has('ViewChannel'));
 
         const question = interaction.options.getString('question', true);
         const choices = interaction.options.data.filter((a) => a.name.startsWith('option')).map((a) => a.value);

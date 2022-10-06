@@ -12,6 +12,7 @@ export const VERSION = '1.0.0';
 export const DOMAIN = 'bento-bot.com';
 export const WEBSITE = `https://${DOMAIN}`;
 export const DASHBOARD = `https://dashboard.${DOMAIN}`;
+export const API_URL = `https://api.${DOMAIN}`;
 
 export const SUPPORT_SERVER = 'https://discord.gg/DwxCdXp276';
 export const DEFAULT_COLOR = '#a4c5ea';

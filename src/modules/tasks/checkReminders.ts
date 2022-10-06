@@ -3,7 +3,7 @@ import {
 } from 'discord.js';
 import reminders from '../../database/models/reminders';
 import logger from '../../logger';
-import { DEFAULT_COLOR } from '../structures/constants';
+import { DEFAULT_COLOR } from '../../data/constants';
 
 /**
  * Initialize the checkReminders task

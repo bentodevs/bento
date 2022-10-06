@@ -4,7 +4,7 @@ import {
 import flip from 'flip';
 import { shuffle } from '../../modules/functions/misc';
 import { Command } from '../../modules/interfaces/cmd';
-import { DEFAULT_COLOR } from '../../modules/structures/constants';
+import { DEFAULT_COLOR } from '../../data/constants';
 import { StringUtils } from '../../utils/StringUtils';
 
 const command: Command = {

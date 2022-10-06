@@ -6,11 +6,11 @@ import path from 'path';
 import logger from '../../logger';
 import { fetchEmote } from '../../modules/functions/misc';
 import { Command } from '../../modules/interfaces/cmd';
-import { ID_REGEX_EXACT } from '../../modules/structures/constants';
-import emojis from '../../modules/structures/emotes';
+import { ID_REGEX_EXACT } from '../../data/constants';
+import emojis from '../../data/emotes';
 import CDNUtils from '../../utils/CDNUtils';
 import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
-import { EmojiUtils, URL_REGEX } from '../../utils/TextUtils';
+import { EmojiUtils } from '../../utils/TextUtils';
 
 const command: Command = {
     info: {
