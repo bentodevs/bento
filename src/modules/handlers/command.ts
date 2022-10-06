@@ -1,7 +1,5 @@
-// Import Dependencies
-import { ApplicationCommandType, Client } from 'discord.js';
+import { ApplicationCommandType, Client, REST, Routes } from 'discord.js';
 import { readdirSync } from 'fs';
-// eslint-disable-next-line import/no-cycle
 import { commands } from '../../bot';
 import logger from '../../logger';
 
@@ -51,7 +49,8 @@ export const init = (): Promise<void> => new Promise<void>((resolve) => {
  */
 export const registerGlobal = (bot: Client): Promise<boolean> => new Promise((resolve, reject) => {
     const arr: any[] = [];
-    const cmds = Array.from(commands.values());// .filter(c => !c.opts.guildOnly);
+    const cmds = Array.from(commands.values());
+    const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
     for (const data of cmds) {
         if (data.slash?.types?.chat) {
@@ -80,10 +79,18 @@ export const registerGlobal = (bot: Client): Promise<boolean> => new Promise((re
         }
     }
 
-    // Set the guild commands
-    bot.application?.commands.set(arr).then(() => {
+    logger.debug(`Started refreshing ${arr.length} global application commands.`);
+
+    rest.put(
+        Routes.applicationCommands(bot.user?.id || '686647951694758033'),
+        { body: arr },
+    ).then(() => {
+        logger.debug('Successfully refreshed global application commands.');
         resolve(true);
-    }).catch((err: any) => {
+    }).catch((err) => {
+        logger.error('Failed to refesh global application commands.');
+        logger.error(err);
         reject(err);
     });
+
 });
