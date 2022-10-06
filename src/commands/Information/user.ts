@@ -98,7 +98,7 @@ const command: Command = {
                 const userBoosted = member?.premiumSinceTimestamp ? `<t:${Math.trunc(member.premiumSinceTimestamp / 1000)}>` : null;
                 const timeSinceBoost = member?.premiumSinceTimestamp ? `<t:${Math.trunc(member.premiumSinceTimestamp / 1000)}:R>` : null;
                 // Get the user's roles & format them
-                const roles = member?.roles.cache.filter((role) => role.name !== '@everyone').sort((b, a) => a.position - b.position).map((role) => role.toString()).join(', ') ?? [];
+                const roles = member?.roles.cache.filter((role) => role.name !== '@everyone').sort((b, a) => a.position - b.position).map((role) => role.toString()) ?? [];
 
                 // Define vars
                 let statusEmote = '';
@@ -139,7 +139,7 @@ const command: Command = {
                 // If the user is a booster add it to the description
                 if (member?.premiumSinceTimestamp) description += `\n**Boosting:** ${userBoosted} (${timeSinceBoost})`;
                 // If the user has roles add them to the description
-                if (roles.length) description += `\n\n**Roles (${roles.length}):** ${roles}`;
+                if (roles.length) description += `\n\n**Roles (${roles.length}):** ${roles.join(', ')}`;
                 // Check if the user has any activities
                 if (member?.presence?.activities.length ?? 0 >= 1) {
                     // Add the presence header to the description
