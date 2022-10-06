@@ -8,7 +8,7 @@ const logLevels = {
         error: 10,
         warn: 20,
         info: 30,
-        debug: 30,
+        debug: 90,
         all: 100,
     },
 };
@@ -20,7 +20,7 @@ const logger = winston.createLogger({
     ),
     transports: [new winston.transports.Console()],
     levels: logLevels.levels,
-    level: 'debug',
+    level: 'info',
 });
 
 export default logger;
