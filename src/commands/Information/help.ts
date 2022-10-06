@@ -4,8 +4,9 @@ import {
     ChatInputCommandInteraction, EmbedBuilder, EmbedField, PermissionFlagsBits,
 } from 'discord.js';
 import { commands } from '../../bot';
+import logger from '../../logger';
 import { Command } from '../../modules/interfaces/cmd';
-import { DEFAULT_COLOR, OWNERS, WEBSITE } from '../../modules/structures/constants';
+import { DEFAULT_COLOR, OWNERS, WEBSITE } from '../../data/constants';
 import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
 import { StringUtils } from '../../utils/StringUtils';
 
@@ -37,30 +38,48 @@ const command: Command = {
             message: false,
         },
         opts: [{
-            name: 'command_category',
-            type: ApplicationCommandOptionType.String,
-            description: 'The command or category you want to view the information of.',
-            required: false,
+            name: 'all',
+            type: ApplicationCommandOptionType.Subcommand,
+            description: 'View help information for all commands and categories.',
+            options: []
+        }, {
+            name: 'category',
+            type: ApplicationCommandOptionType.Subcommand,
+            description: 'View information about a category.',
+            options: [{
+                name: 'category',
+                type: ApplicationCommandOptionType.String,
+                description: 'The category you wish to view commands and information for.',
+                required: true,
+                choices: [
+                    { name: 'Developer', value: 'developer' },
+                    { name: 'Fun', value: 'fun' },
+                    { name: 'Information', value: 'information' },
+                    { name: 'Miscellaneous', value: 'miscellaneous' },
+                    { name: 'Moderation', value: 'moderation' },
+                    { name: 'Utility', value: 'utility' }
+                ]
+            }]
+        }, {
+            name: 'command',
+            type: ApplicationCommandOptionType.Subcommand,
+            description: 'View information about a command.',
+            options: [{
+                name: 'command',
+                type: ApplicationCommandOptionType.String,
+                description: 'The command you wish to view information for.',
+                autocomplete: true,
+                required: true
+            }]
         }],
         defaultPermission: true,
         dmPermission: true,
     },
 
     run: async (bot, interaction: ChatInputCommandInteraction) => {
-        // Get all the command categories
-        const getCategories = commands.map((c) => c.info.category.toLowerCase());
-        const categories = getCategories.filter((item, index) => getCategories.indexOf(item) >= index);
+        const subCommand = interaction.options.getSubcommand();
 
-        const find = interaction.options.getString('command_category') ?? '';
-
-        // Get the command or category
-        const foundCommand = commands.get(find);
-        const category = categories[categories.indexOf(find)];
-
-        // If the command or category is dev only return an error
-        if ((foundCommand?.info.category.toLowerCase() === 'dev' || category === 'dev') && !OWNERS.includes(interaction.user.id)) return InteractionResponseUtils.error(interaction, "You didn't specify a valid command or category!", true);
-
-        if (!interaction.options?.get('command_category')?.value || interaction.options?.get('command_category')?.value === 'all') {
+        if (subCommand === 'all') {
             // Grab all the commands
             let commandsArray: Array<Command> = Array.from(commands.values());
 
@@ -72,11 +91,8 @@ const command: Command = {
 
             // If the user isn't a dev remove all the dev only commands
             if (!OWNERS.includes(interaction.user.id ?? interaction.user.id)) commandsArray = commandsArray.filter((c) => !c.opts.devOnly || !c.opts.disabled);
-            // If the command was run in dms remove all the guild only commands
-            if (!interaction.guild && find !== 'all') commandsArray = commandsArray.filter((c) => !c.opts.guildOnly);
 
             // Sort the commands
-            // eslint-disable-next-line no-nested-ternary
             const sorted = commandsArray.sort((a, b) => (a.info.category > b.info.category ? 1 : a.info.name > b.info.name && a.info.category === b.info.category ? 1 : 0));
 
             // Loop through the commands
@@ -112,49 +128,53 @@ const command: Command = {
             embed.addFields(fields);
 
             // Send the embed to the user
-            (interaction.user?.send({ embeds: [embed] }) ?? interaction.user.send({ embeds: [embed] }))
-                .then(() => InteractionResponseUtils.confirmation(interaction, "I've sent you a DM with a list of my commands!", true))
-                .catch(() => InteractionResponseUtils.error(interaction, "Something went wrong, you most likely have your DM's disabled!", true));
-        } else if (foundCommand) {
-            // Define the description var
-            let desc = '';
-
-            // Build the embed description
-            if (foundCommand.info.description) desc += `${foundCommand.info.description}\n`;
-            if (foundCommand.info.usage) desc += `\n**Usage:** \`/${foundCommand.info.usage}\``;
-            if (foundCommand.info.examples.length >= 1) desc += `\n**${foundCommand.info.examples.length > 1 ? 'Examples' : 'Example'}:** \`/${foundCommand.info.examples.join('`, `/')}\``;
-            if (foundCommand.info.category) desc += `\n**Category:** ${foundCommand.info.category}`;
-
-            if (foundCommand.opts.premium) desc += `\n**Premium:** This command requires you to have [premium](${WEBSITE}).`;
-
-            // Add additional info and options to the description
-            if (foundCommand.info.information) desc += `\n\n**Info:**\n${stripIndents(foundCommand.info.information)}`;
-
-            // Build the embed
-            const embed = new EmbedBuilder()
-                .setColor(DEFAULT_COLOR)
-                .setTitle(`Command: /${foundCommand.info.name}${foundCommand.opts.guildOnly ? ' [Guild-only command]' : ''}`)
-                .setDescription(desc)
-                .setFooter({ text: 'Do not include <> or [] — They indicate <required> and [optional] arguments.' });
-
-            // Send the embed
-            interaction.reply({ embeds: [embed] });
-        } else if (category) {
+            if (!interaction.inGuild()) {
+                interaction.user?.send({ embeds: [embed] })
+                    .then(() => InteractionResponseUtils.confirmation(interaction, "I've sent you a DM with a list of my commands!", true))
+                    .catch(() => InteractionResponseUtils.error(interaction, "Something went wrong, you most likely have your DM's disabled!", true));
+            } else {
+                await interaction.reply({ embeds: [embed] }).catch((err) => logger.error(err));
+            }
+        } else if (subCommand === 'category') {
+            const category = interaction.options.getString('category', true);
             // Get all the commands for the specified category
             const commandsList = commands.filter((c: Command) => c.info.category.toLowerCase() === category).map((c: Command) => `\`/${c.info.name}\``);
 
             // Build the Embed
             const embed = new EmbedBuilder()
                 .setColor(DEFAULT_COLOR)
-                .setTitle(`Category: ${category}`)
+                .setTitle(`Category: ${StringUtils.toTitleCase(category)}`)
                 .addFields([{ name: '**Commands**', value: commandsList.join(', ') }])
                 .setFooter({ text: 'For more detailed information about a command use /help <command>' });
 
             // Send the embed
             interaction.reply({ embeds: [embed] });
-        } else {
-            // Send an error
-            InteractionResponseUtils.error(interaction, "You didn't specify a valid command or category!", true);
+        } else if (subCommand === 'command') {
+            const command = commands.get(interaction.options.getString('command', true)) as Command;
+
+            // Define the description var
+            let desc = '';
+
+            // Build the embed description
+            if (command.info.description) desc += `${command.info.description}\n`;
+            if (command.info.usage) desc += `\n**Usage:** \`/${command.info.usage}\``;
+            if (command.info.examples.length >= 1) desc += `\n**${command.info.examples.length > 1 ? 'Examples' : 'Example'}:** \`/${command.info.examples.join('`, `/')}\``;
+            if (command.info.category) desc += `\n**Category:** ${command.info.category}`;
+
+            if (command.opts.premium) desc += `\n**Premium:** This command requires you to have [premium](${WEBSITE}).`;
+
+            // Add additional info and options to the description
+            if (command.info.information) desc += `\n\n**Info:**\n${stripIndents(command.info.information)}`;
+
+            // Build the embed
+            const embed = new EmbedBuilder()
+                .setColor(DEFAULT_COLOR)
+                .setTitle(`Command: /${command.info.name}${command.opts.guildOnly ? ' [Guild-only command]' : ''}`)
+                .setDescription(desc)
+                .setFooter({ text: 'Do not include <> or [] — They indicate <required> and [optional] arguments.' });
+
+            // Send the embed
+            interaction.reply({ embeds: [embed] });
         }
     },
 };
