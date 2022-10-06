@@ -9,7 +9,6 @@ import logger from '../../logger';
  *
  * @returns {Promise<Number>} The amount of events loaded
  */
-// eslint-disable-next-line import/prefer-default-export
 export const init = (bot: Client): Promise<number> => new Promise((resolve) => {
     // Get all the event files
     const files = readdirSync('./events').filter((file) => file.endsWith('.js'));
@@ -18,7 +17,6 @@ export const init = (bot: Client): Promise<number> => new Promise((resolve) => {
     for (const data of files) {
         // Get the event name and the event file
         const eventName = data.split('.')[0];
-        // eslint-disable-next-line import/no-dynamic-require, global-require
         import(`../../events/${data}`).then((module) => {
             if (eventName === 'ready') {
                 // Only fire the ready event once
