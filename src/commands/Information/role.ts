@@ -3,7 +3,6 @@ import {
     ApplicationCommandOptionType,
     ChatInputCommandInteraction, Collection, EmbedBuilder, GuildMember, PermissionFlagsBits, Role, Snowflake,
 } from 'discord.js';
-import { paginator } from '../../modules/functions/paginator';
 import { Command } from '../../modules/interfaces/cmd';
 import { DEFAULT_COLOR } from '../../data/constants';
 import emojis from '../../data/emotes';
@@ -96,8 +95,6 @@ const command: Command = {
             for (let i = 0; i < sorted.length; i += 10) {
                 pages.push(sorted.slice(i, i + 10));
             }
-
-            paginator(interaction, pages, 60000);
 
             // If the page option is there set it as the page
             if (interaction.options.getNumber('page')) page = interaction.options.getNumber('page', true) - 1;
