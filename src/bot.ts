@@ -8,7 +8,7 @@ import { getMongooseURL, init as dbInit } from './database/mongo';
 // Import handlers
 import { init as commandInit } from './modules/handlers/command';
 import { init as eventInit } from './modules/handlers/event';
-import { INTENTS } from './modules/structures/constants';
+import { INTENTS } from './data/constants';
 import logger from './logger';
 import { Command } from './modules/interfaces/cmd';
 
@@ -46,8 +46,7 @@ export const db = dbInit(mongooseUrl)
 const init = async () => {
     if (process.env.NODE_ENV === 'development') {
         // Log the dev environment
-        logger.info('== RUNNING IN DEVELOPMENT MODE ==');
-        logger.info(' ');
+        logger.debug('== RUNNING IN DEVELOPMENT MODE ==');
     }
 
     // Send the command message and load all the commands
@@ -62,19 +61,19 @@ const init = async () => {
     }
 
     // Send the event message and load the events
-    logger.info('Loading events');
+    logger.debug('Loading events');
     await eventInit(bot);
 
     // Update the event message
-    logger.info('Loaded events');
+    logger.debug('Loaded events');
 
     // Send the login message
-    logger.info('Logging into the Discord API...');
+    logger.info('Authenticating against Discord API...');
 
     // Login to the Discord API and update the login message
     bot.login(process.env.BOT_TOKEN)
         .then(() => {
-            logger.info('Logged into Discord');
+            logger.info('Authenticated against Discord API');
         }).catch((err) => {
             logger.error('Failed to log into Discord');
 
