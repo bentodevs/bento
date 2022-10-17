@@ -50,6 +50,7 @@ const command: Command = {
 
     run: async (bot, interaction: ChatInputCommandInteraction) => {
         const { options } = interaction;
+        await interaction.deferReply();
 
         const amount = options.getNumber('amount', true);
         const fromCurrency = options.getString('from', true);
@@ -67,7 +68,7 @@ const command: Command = {
                     .setFooter({ text: `Current exchange rate: 1 → ${result.info.rate}` })
                     .setTimestamp();
 
-                interaction.reply({ embeds: [embed] });
+                interaction.followUp({ embeds: [embed] });
             })
             .catch((err) => {
                 InteractionResponseUtils.error(interaction, `Oops! Something went wrong: ${err.message}`, true);
