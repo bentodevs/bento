@@ -11,6 +11,7 @@ import { init as eventInit } from './modules/handlers/event';
 import { INTENTS } from './data/constants';
 import logger from './logger';
 import { Command } from './modules/interfaces/cmd';
+import { LDClient } from './LDClient';
 
 // Load env variables
 dotenv.config();
@@ -35,6 +36,16 @@ export const commands = new Collection<string, Command>();
 export const tasks = new Collection<string, any>();
 export const cooldowns = new Collection<string, any>();
 // export const pokedex = new Pokedex();
+
+// Start LD Client
+LDClient.waitForInitialization()
+    .then(() => {
+        logger.info(`Started LaunchDarkly Client`);
+    })
+    .catch((err) => {
+        Sentry.captureException(err);
+        logger.error('Failed to start LaunchDarkly Client', err);
+    });
 
 // Initialize Mongo connection
 const mongooseUrl = getMongooseURL(process.env.MONGODB_USERNAME, process.env.MONGODB_PASSWORD, process.env.MONGODB_HOST, process.env.MONGODB_PORT, process.env.MONGODB_DATABASE);

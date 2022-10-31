@@ -2,6 +2,7 @@ declare global {
     namespace NodeJS {
         interface ProcessEnv {
             DISCORD_TOKEN: string,
+            LAUNCHDARKLY_TOKEN: string,
             WEATHER_TOKEN: string,
             STEAM_TOKEN: string,
             RIOT_TOKEN: string,
