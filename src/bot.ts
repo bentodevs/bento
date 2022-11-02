@@ -14,7 +14,9 @@ import { Command } from './modules/interfaces/cmd';
 import { LDClient } from './LDClient';
 
 // Load env variables
-dotenv.config();
+if (process.env.NODE_ENV !== 'production') {
+    dotenv.config();
+}
 
 // Create the bot client
 const bot = new Client({
