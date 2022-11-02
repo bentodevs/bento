@@ -5,6 +5,7 @@
 - MongoDB
 - Node.JS v16.0 or higher
 - NPM
+- (Optional) 1Password Connect for Secrets Management
 
 ### Run Scripts
 Script | Description
