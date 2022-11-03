@@ -128,10 +128,12 @@ const command: Command = {
             embed.addFields(fields);
 
             // Send the embed to the user
-            if (!interaction.inGuild()) {
+            if (interaction.inGuild()) {
                 interaction.user?.send({ embeds: [embed] })
                     .then(() => InteractionResponseUtils.confirmation(interaction, "I've sent you a DM with a list of my commands!", true))
-                    .catch(() => InteractionResponseUtils.error(interaction, "Something went wrong, you most likely have your DM's disabled!", true));
+                    .catch(() => {
+                        InteractionResponseUtils.error(interaction, "Something went wrong, you most likely have your DM's disabled!", true);
+                    });
             } else {
                 await interaction.reply({ embeds: [embed] }).catch((err) => logger.error(err));
             }
