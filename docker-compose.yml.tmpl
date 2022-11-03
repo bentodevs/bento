@@ -1,0 +1,41 @@
+version: '3'
+networks:
+  bento:
+    driver: bridge
+
+services:
+  database:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=op://7cuohqnzod4gyrhs2fqv7yvmrm/ljqcmsinp2wra5vlhsf54sfwoe/username
+      - MONGO_INITDB_ROOT_PASSWORD=op://7cuohqnzod4gyrhs2fqv7yvmrm/ljqcmsinp2wra5vlhsf54sfwoe/credential
+      - MONGO_INITDB_DATABASE=bento
+    networks:
+      - bento
+    ports:
+      - 27017:27017
+    volumes:
+      - ./scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - /opt/bento/mongo:/data/db
+  bot:
+    build:
+     context: .
+     dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+      - DISCORD_TOKEN=op://7cuohqnzod4gyrhs2fqv7yvmrm/evhs3cjch6e57tt6s47photlie/credential
+      - LAUNCHDARKLY_TOKEN=op://7cuohqnzod4gyrhs2fqv7yvmrm/fgfprnu5smduhkoyh2pdgw26gy/credential
+      - WEATHER_TOKEN=op://7cuohqnzod4gyrhs2fqv7yvmrm/qai63llny2qrzphcitpvqsetnu/credential
+      - RIOT_TOKEN=op://7cuohqnzod4gyrhs2fqv7yvmrm/zrpo445blvjlk7uftopzjfdqya/credential
+      - TRACKER_NETWORK_TOKEN=op://7cuohqnzod4gyrhs2fqv7yvmrm/pqs6nvbfx2svwfmpgtj6fmatri/credential
+      - OMDB_TOKEN=op://7cuohqnzod4gyrhs2fqv7yvmrm/oa6lo4t6m5pjs2duye46fuzggu/credential
+      - LASTFM_TOKEN=op://7cuohqnzod4gyrhs2fqv7yvmrm/jb5z5hrkwb4rg6oijjmv4t4ynu/credential
+      - BENTO_TOKEN=op://7cuohqnzod4gyrhs2fqv7yvmrm/rt2vxqyptnf4yh2yvzijjnq75e/cedential
+      - OPS_JOINLEAVE_WEBHOOK_ID=1004877046985523262
+      - OPS_JOINLEAVE_WEBHOOK_SECRET=op://7cuohqnzod4gyrhs2fqv7yvmrm/htzcmpqeurlfjkhxksbo5l4fnm/credential
+      - WEBPROXY_HOST=op://7cuohqnzod4gyrhs2fqv7yvmrm/odtg2zjrb3hu5fbzybedircyka/address
+      - MONGODB_URI=op://7cuohqnzod4gyrhs2fqv7yvmrm/6y2urzwnvu64lsacbre4d4tob4/uri
+    networks:
+      - bento
+    depends_on:
+      - database

@@ -1,0 +1,11 @@
+db.createUser({
+    user: 'op://7cuohqnzod4gyrhs2fqv7yvmrm/ljqcmsinp2wra5vlhsf54sfwoe/username',
+    pwd: 'op://7cuohqnzod4gyrhs2fqv7yvmrm/ljqcmsinp2wra5vlhsf54sfwoe/credential',
+    roles: [
+        {
+            role: 'readWrite',
+            db: 'bento'
+        }
+    ]
+});
+db.createCollection('bento');
