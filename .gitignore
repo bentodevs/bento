@@ -138,3 +138,8 @@ dist
 # TS files
 dist/
 tsconfig.tsbuildinfo
+
+# Docker Files
+docker-compose.yml
+docker-compose.dev.yml
+scripts/init-mongo.js

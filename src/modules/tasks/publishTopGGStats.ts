@@ -1,4 +1,4 @@
-import Sentry from '@sentry/node';
+import * as Sentry from '@sentry/node';
 import { Client } from 'discord.js';
 import fetch from 'node-fetch';
 import logger from '../../logger';
@@ -33,7 +33,7 @@ export default async function init(bot: Client): Promise<NodeJS.Timer> {
             body: JSON.stringify(reqBody),
         }).then((res) => {
             if (res.status === 200) logger.debug('Posted guild count statistics to Top.GG successfully');
-        }).catch((err) => {
+        }).catch((err: Error) => {
             logger.error(err);
             Sentry.captureException(err);
         });
