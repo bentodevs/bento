@@ -3,7 +3,9 @@ import mongoose from 'mongoose';
 import { ISettings } from '../modules/interfaces/db';
 import settings from './models/settings';
 
-export const init = async (dbUri: string) => await mongoose.connect(dbUri);
+export const init = async (dbUri: string) => await mongoose.connect(dbUri, {
+    connectTimeoutMS: 10000,
+});
 
 /**
  * Returns the settings of the specified Guild (or creates them if they don't exist)

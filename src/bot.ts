@@ -1,20 +1,23 @@
 import dotenv from 'dotenv';
 import { Client, Collection, Partials } from 'discord.js';
 import mongoose from 'mongoose';
-// import Pokedex from 'pokedex-promise-v2';
-import Sentry from '@sentry/node';
-import { getMongooseURL, init as dbInit } from './database/mongo';
+import * as Sentry from '@sentry/node';
+import { RewriteFrames } from '@sentry/integrations';
+import * as Tracing from '@sentry/tracing';
+import { init as dbInit } from './database/mongo';
 
 // Import handlers
 import { init as commandInit } from './modules/handlers/command';
 import { init as eventInit } from './modules/handlers/event';
-import { INTENTS } from './data/constants';
+import { INTENTS, SENTRY_DSN } from './data/constants';
 import logger from './logger';
 import { Command } from './modules/interfaces/cmd';
 import { LDClient } from './LDClient';
 
 // Load env variables
-dotenv.config();
+if (process.env.NODE_ENV !== 'production') {
+    dotenv.config();
+}
 
 // Create the bot client
 const bot = new Client({
@@ -48,13 +51,28 @@ LDClient.waitForInitialization()
     });
 
 // Initialize Mongo connection
-const mongooseUrl = getMongooseURL(process.env.MONGODB_USERNAME, process.env.MONGODB_PASSWORD, process.env.MONGODB_HOST, process.env.MONGODB_PORT, process.env.MONGODB_DATABASE);
-export const db = dbInit(mongooseUrl)
+export const db = dbInit(process.env.MONGODB_URI)
     .then(() => logger.debug('Successfully started DB'))
-    .catch((err) => logger.error('Failed to connect to Mongo:', err));
+    .catch((err) => {
+        Sentry.captureException(err);
+        logger.error('Failed to connect to Mongo:', err);
+    });
 
 // Init function
 const init = async () => {
+    Sentry.init({
+        dsn: SENTRY_DSN,
+        tracesSampleRate: 1.0,
+        integrations: [
+            new Tracing.Integrations.Mongo({
+                useMongoose: true
+            }),
+            new RewriteFrames({
+                root: global.__dirname,
+            })
+        ]
+    });
+
     if (process.env.NODE_ENV === 'development') {
         // Log the dev environment
         logger.debug('== RUNNING IN DEVELOPMENT MODE ==');
@@ -66,6 +84,7 @@ const init = async () => {
 
     // Update the command message
     if (commands.filter((a) => a.slash.types.chat).size > 100) {
+        Sentry.captureException('Too many application commands commands');
         logger.error('Failed to load commands: Interaction command count exceeds 100.');
     } else {
         logger.info('Loaded commands.');
@@ -87,8 +106,7 @@ const init = async () => {
             logger.info('Authenticated against Discord API');
         }).catch((err) => {
             logger.error('Failed to log into Discord');
-
-            Sentry.captureException(err.stack);
+            Sentry.captureException(err);
         });
 };
 
@@ -104,6 +122,7 @@ process.on('SIGINT', async () => {
             // Exit the process after closing the mongo connection
             process.exit(1);
         }).catch((err) => {
+            Sentry.captureException(err);
             logger.error(err.stack);
         });
     } else {
