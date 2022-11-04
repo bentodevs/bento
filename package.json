@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@types/common-tags": "^1.8.1",
-    "@types/eslint": "8.4.9",
+    "@types/eslint": "8.4.10",
     "@types/node": "^18.6.3",
     "@typescript-eslint/eslint-plugin": "5.42.0",
     "@typescript-eslint/parser": "5.42.0",
