@@ -1,9 +1,9 @@
 import {
     ApplicationCommandOptionType, EmbedBuilder, GuildMember, PermissionFlagsBits,
 } from 'discord.js';
-import fetch, { Response } from 'node-fetch';
 import { Command } from '../../modules/interfaces/cmd';
 import { DEFAULT_COLOR } from '../../data/constants';
+import { request } from 'undici';
 
 const command: Command = {
     info: {
@@ -54,21 +54,25 @@ const command: Command = {
             .setColor((interaction?.member as GuildMember).displayHexColor ?? DEFAULT_COLOR);
 
         if (animal === 'cat') {
-            fetch('https://aws.random.cat/meow')
-                .then((res: Response) => res.json())
-                .then((data: { file: string }) => embed.setImage(data.file));
+            const { body } = await request('https://aws.random.cat/meow');
+            const data: { file: string } = await body.json();
+
+            embed.setImage(data.file);
         } else if (animal === 'dog') {
-            fetch('https://random.dog/woof.json')
-                .then((res: Response) => res.json())
-                .then((data: { fileSizeBytes: number, url: string }) => embed.setImage(data.url));
+            const { body } = await request('https://random.dog/woof.json');
+            const data: { url: string } = await body.json();
+
+            embed.setImage(data.url);
         } else if (animal === 'fox') {
-            fetch('https://randomfox.ca/floof/')
-                .then((res: Response) => res.json())
-                .then((data: { image: string, link: string }) => embed.setImage(data.image));
+            const { body } = await request('https://randomfox.ca/floof/');
+            const data: { image: string } = await body.json();
+
+            embed.setImage(data.image);
         } else if (animal === 'shibe') {
-            fetch('http://shibe.online/api/shibes')
-                .then((res: Response) => res.json())
-                .then((data: string[]) => embed.setImage(data[0]));
+            const { body } = await request('http://shibe.online/api/shibes?count=1&urls=true&httpsUrls=true');
+            const data: string[] = await body.json();
+
+            embed.setImage(data[0]);
         }
 
         // Send the embed
