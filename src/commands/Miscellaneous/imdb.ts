@@ -1,10 +1,10 @@
 import {
     ApplicationCommandOptionType, ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionFlagsBits,
 } from 'discord.js';
-import fetch from 'node-fetch';
 import { Command } from '../../modules/interfaces/cmd';
 import { DEFAULT_COLOR } from '../../data/constants';
 import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
+import { request } from 'undici';
 
 const command: Command = {
     info: {
@@ -48,8 +48,8 @@ const command: Command = {
     run: async (bot, interaction: ChatInputCommandInteraction) => {
         // Get the query, fetch the URL and convert the data to JSON
         const query = interaction.options.getString('query', true);
-        const req = await fetch(`https://www.omdbapi.com/?apiKey=${process.env.OMDB_TOKEN}&${interaction.options.getBoolean('id', true) ? 'i' : 't'}=${query}`);
-        const json = await req.json();
+        const req = await request(`https://www.omdbapi.com/?apiKey=${process.env.OMDB_TOKEN}&${interaction.options.getBoolean('id', true) ? 'i' : 't'}=${query}`);
+        const json = await req.body.json();
 
         // If the response isn't "True" return an error
         if (json.Response !== 'True') return InteractionResponseUtils.error(interaction, 'A film/show could not be found with that name! Make sure your search is accurate and try again!', true);
