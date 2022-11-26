@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/node';
 import { Client } from 'discord.js';
-import fetch from 'node-fetch';
+import { request } from 'undici';
 import logger from '../../logger';
 
 /**
@@ -27,12 +27,12 @@ export default async function init(bot: Client): Promise<NodeJS.Timer> {
             Authorization: process.env.TOPGG_TOKEN,
         };
 
-        fetch(url, {
+        request(url, {
             method: 'POST',
-            headers: JSON.stringify(reqHeaders),
+            headers: reqHeaders,
             body: JSON.stringify(reqBody),
         }).then((res) => {
-            if (res.status === 200) logger.debug('Posted guild count statistics to Top.GG successfully');
+            if (res.statusCode === 200) logger.debug('Posted guild count statistics to Top.GG successfully');
         }).catch((err: Error) => {
             logger.error(err);
             Sentry.captureException(err);
