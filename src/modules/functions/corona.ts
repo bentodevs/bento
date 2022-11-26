@@ -1,4 +1,4 @@
-import fetch, { Response } from 'node-fetch';
+import { request } from 'undici';
 import logger from '../../logger';
 
 const endpoint = 'https://disease.sh';
@@ -13,12 +13,12 @@ export const getGlobalStats = (): Promise<object> => new Promise((resolve, rejec
     const URL = `${endpoint}/v3/covid-19/all`;
 
     // Fetch the API
-    fetch(URL, {
+    request(URL, {
         headers: {
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res: Response) => res.json()).then((json: any) => {
+    }).then((res) => res.body.json()).then((json: any) => {
         resolve(json);
     }).catch((err) => {
         logger.error(err);
@@ -47,12 +47,12 @@ export const getAllCountryData = (sort: string): Promise<Array<any>> => new Prom
     const URL = `${endpoint}/v3/covid-19/countries/?sort=${sort}`;
 
     // Fetch the API
-    fetch(URL, {
+    request(URL, {
         headers: {
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res: Response) => res.json()).then((json: any) => {
+    }).then((res) => res.body.json()).then((json: any) => {
         resolve(json);
     }).catch((err) => {
         logger.error(err);
@@ -72,15 +72,15 @@ export const getDataByCountry = (country: string): Promise<object | undefined> =
     const URL = `${endpoint}/v3/covid-19/countries/${country}`;
 
     // Fetch the API
-    fetch(URL, {
+    request(URL, {
         headers: {
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res: Response) => {
-        if (!res || res.status !== 200) resolve(undefined);
+    }).then((res) => {
+        if (!res || res.statusCode !== 200) resolve(undefined);
 
-        res.json().then((json: any) => {
+        res.body.json().then((json: any) => {
             resolve(json);
         });
     }).catch((err) => {
@@ -104,15 +104,15 @@ export const getDataByContinent = (continent: string): Promise<object | undefine
     const URL = `${endpoint}/v3/covid-19/continents/${continent}`;
 
     // Fetch the API
-    fetch(URL, {
+    request(URL, {
         headers: {
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res: Response) => {
-        if (!res || res.status !== 200) resolve(undefined);
+    }).then((res) => {
+        if (!res || res.statusCode !== 200) resolve(undefined);
 
-        res.json().then((json: any) => {
+        res.body.json().then((json: any) => {
             resolve(json);
         });
     }).catch((err) => {
@@ -136,15 +136,15 @@ export const getDataByState = (state: string): Promise<object | undefined> => ne
     const URL = `${endpoint}/v3/covid-19/states/${state}`;
 
     // Fetch the API
-    fetch(URL, {
+    request(URL, {
         headers: {
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res: Response) => {
-        if (!res || res.status !== 200) resolve(undefined);
+    }).then((res) => {
+        if (!res || res.statusCode !== 200) resolve(undefined);
 
-        res.json().then((json: any) => {
+        res.body.json().then((json: any) => {
             resolve(json);
         });
     }).catch((err) => {
@@ -173,15 +173,15 @@ export const getVaccineData = (days: number, full: boolean, type: string, data: 
     const URL = `${endpoint}/v3/covid-19/vaccine/coverage${type ? `/${type}/${data}` : ''}?lastdays=${days}&fullData=${full ? 'true' : 'false'}`;
 
     // Fetch the API
-    fetch(URL, {
+    request(URL, {
         headers: {
             'content-type': 'application/json',
             accept: 'application/json',
         },
-    }).then((res: Response) => {
-        if (!res || res.status !== 200) resolve(undefined);
+    }).then((res) => {
+        if (!res || res.statusCode !== 200) resolve(undefined);
 
-        res.json().then((json: any) => {
+        res.body.json().then((json: any) => {
             resolve(json);
         });
     }).catch((err) => {

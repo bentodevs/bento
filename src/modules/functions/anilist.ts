@@ -1,4 +1,4 @@
-import fetch, { Response } from 'node-fetch';
+import { request } from "undici";
 
 const endpoint = 'https://graphql.anilist.co';
 type MediaType = 'ANIME' | 'MANGA'
@@ -42,11 +42,11 @@ export const getMedia = (title: string, type: MediaType): Promise<object> => new
     };
 
     // Fetch the data
-    fetch(endpoint, {
+    request(endpoint, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ query, variables }),
-    }).then((res: Response) => res.json()).then((json: any) => {
+    }).then((res) => res.body.json()).then((json: any) => {
         if (json.errors) return reject(new Error('Not Found!'));
 
         return resolve(json.data.Media);
@@ -90,11 +90,11 @@ export const getCharacter = (name: string): Promise<object> => new Promise((reso
         search: name,
     };
 
-    fetch(endpoint, {
+    request(endpoint, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ query, variables }),
-    }).then((res: Response) => res.json()).then((json: any) => {
+    }).then((res) => res.body.json()).then((json: any) => {
         if (json.errors) return reject(new Error('Not Found!'));
 
         resolve(json.data.Character);
@@ -153,11 +153,11 @@ export const getProfile = (username: string): Promise<object> => new Promise((re
         search: username,
     };
 
-    fetch(endpoint, {
+    request(endpoint, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ query, variables }),
-    }).then((res: Response) => res.json()).then((json: any) => {
+    }).then((res) => res.body.json()).then((json: any) => {
         if (json.errors) return reject(new Error('Not Found!'));
 
         resolve(json.data.User);
