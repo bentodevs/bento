@@ -2,7 +2,7 @@ import { stripIndents } from 'common-tags';
 import {
     EmbedBuilder, EmbedField, GuildMember, PermissionFlagsBits,
 } from 'discord.js';
-import fetch, { Response } from 'node-fetch';
+import { request } from 'undici';
 import { Command } from '../../modules/interfaces/cmd';
 import { DEFAULT_COLOR } from '../../data/constants';
 
@@ -36,9 +36,9 @@ const command: Command = {
 
     run: async (bot, interaction) => {
         // Fetches the ISS location data from the API
-        const iss: IssNow = await fetch('http://api.open-notify.org/iss-now.json').then((res: Response) => res.json());
+        const iss: IssNow = await request('http://api.open-notify.org/iss-now.json').then((res) => res.body.json());
         // Fetches the ISS personnel data from the API
-        const issPeople: Astros = await fetch('http://api.open-notify.org/astros.json').then((res: Response) => res.json());
+        const issPeople: Astros = await request('http://api.open-notify.org/astros.json').then((res) => res.body.json());
 
         // Sort the people in the ISS by vehicle
         const humans: any = issPeople.people.reduce((a, b) => {
@@ -50,9 +50,9 @@ const command: Command = {
 
         // Build the embed
         const embed = new EmbedBuilder()
-            .setAuthor({ name: 'ISS Info', iconURL: 'https://bento-bot.com/images/bot-assets/ISS_emblem.png' })
+            .setAuthor({ name: 'ISS Info', iconURL: 'https://bento-bot.com/bot-assets/ISS_emblem.png' })
             .setColor((interaction.member as GuildMember)?.displayHexColor || DEFAULT_COLOR)
-            .setThumbnail('https://bento-bot.com/images/bot-assets/ISS_emblem.png')
+            .setThumbnail('https://bento-bot.com/bot-assets/ISS_emblem.png')
             .setDescription(stripIndents`**Current Location:** \`${iss.iss_position.latitude}\`, \`${iss.iss_position.longitude}\`
             **Current Astronauts:** \`${issPeople.number}\``)
             .setFooter({ text: 'Last updated' })

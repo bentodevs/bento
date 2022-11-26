@@ -1,7 +1,6 @@
 import {
     ApplicationCommandOptionType, ChatInputCommandInteraction, PermissionFlagsBits,
 } from 'discord.js';
-import fetch from 'node-fetch';
 import path from 'path';
 import logger from '../../logger';
 import { fetchEmote } from '../../modules/functions/misc';
@@ -9,8 +8,8 @@ import { Command } from '../../modules/interfaces/cmd';
 import { ID_REGEX_EXACT } from '../../data/constants';
 import emojis from '../../data/emotes';
 import CDNUtils from '../../utils/CDNUtils';
-import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
-import { EmojiUtils } from '../../utils/TextUtils';
+import { EmojiUtils, URL_REGEX } from '../../utils/TextUtils';
+import { request } from 'undici';
 
 const command: Command = {
     info: {
@@ -100,22 +99,22 @@ const command: Command = {
 
             if (ID_REGEX_EXACT.test(rawEmoji)) {
                 // cachedEmoji = bot.emojis.cache.find((rawEmoji as Snowflake));
-                logger.debug(cachedEmoji);
+                console.log(cachedEmoji);
             }
 
             const emoji = cachedEmoji || EmojiUtils.extractEmoji(rawEmoji);
 
             // If the emote doesn't match our Regex, then throw an error
-            if (!emoji) return InteractionResponseUtils.error(interaction, "You didn't provide a valid emote!", true);
+            if (!emoji) return interaction.editReply({ content: `${emojis.error} You didn't provide a valid emote!` });
 
             const url = CDNUtils.emojiUrl(emoji.id, emoji.animated || false);
-            const res = await fetch(url);
+            const res = await request(url);
 
             // If the emoji file size is too big, return an error
-            if (res.headers.get('content-length') > 256 * 1024) return InteractionResponseUtils.error(interaction, 'The emoji is too large! It must be `256KB` or less.', true);
+            if (parseFloat(res.headers['content-length'] as string) > 256 * 1024) return interaction.editReply({ content: 'The emoji is too large! It must be `256KB` or less.' });
 
             // Convert the emoji to a buffer and grab the emote name
-            const buffer = Buffer.from(await res.arrayBuffer());
+            const buffer = Buffer.from(await res.body.arrayBuffer());
 
             // Create the emoji
             interaction.guild?.emojis.create({
@@ -132,8 +131,8 @@ const command: Command = {
             const rawEmoji = interaction.options.getAttachment('emoji', true);
             const newName = interaction.options.getString('name');
 
-            if (!rawEmoji.contentType?.startsWith('image')) return InteractionResponseUtils.error(interaction, "You didn't provide a valid image!", true);
-            if (rawEmoji.size > 256 * 1024) return InteractionResponseUtils.error(interaction, 'The image is too large! It must be `256KB` or less.', true);
+            if (!rawEmoji.contentType?.startsWith('image')) return interaction.editReply({ content: "You didn't provide a valid image!" });
+            if (rawEmoji.size > 256 * 1024) return interaction.editReply({ content: 'The image is too large! It must be `256KB` or less.'});
             // Create the emoji
             fetchEmote(rawEmoji.proxyURL)
                 .then((emote) => {
@@ -151,11 +150,10 @@ const command: Command = {
                     interaction.editReply(`${emojis.error} Failed to create the emote: \`${err.message}\``);
                 });
         } else if (subCmd === 'url') {
-            logger.debug(interaction.deferred);
             const rawEmoji = interaction.options.getString('emoji', true);
             const newName = interaction.options.getString('name');
 
-            // if (!URL_REGEX.test(rawEmoji)) return interaction.editReply(`${emojis.error} You didn't provide a valid URL!`);
+            if (!URL_REGEX.test(rawEmoji)) return interaction.editReply(`${emojis.error} You didn't provide a valid URL!`);
 
             fetchEmote(rawEmoji).then((emote) => {
                 interaction.guild?.emojis.create({
@@ -165,9 +163,11 @@ const command: Command = {
                 }).then((e) => {
                     interaction.editReply(`${emojis.confirmation} Successfully created the emote: \`:${e.name}:\` ${e}`);
                 }).catch((err) => {
+                    logger.error('Failed to create emote:', err);
                     interaction.editReply(`${emojis.error} Failed to create the emote: \`${err.message}\``);
                 });
             }).catch((err) => {
+                logger.error('Failed to fetch emote:', err);
                 interaction.editReply(`${emojis.error} Failed to create the emote: \`${err.message}\``);
             });
         }
