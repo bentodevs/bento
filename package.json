@@ -43,7 +43,7 @@
     "iso-639-1": "^2.1.13",
     "launchdarkly-node-server-sdk": "^6.4.3",
     "mongoose": "^6.4.6",
-    "node-fetch": "^2.6.7",
+    "node-fetch": "^3.0.0",
     "pokedex-promise-v2": "^4.0.0",
     "winston": "^3.6.0",
     "xml-js": "^1.6.11"
