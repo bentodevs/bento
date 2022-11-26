@@ -1,9 +1,10 @@
 import { stripIndents } from 'common-tags';
 import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, PermissionFlagsBits } from 'discord.js';
-import fetch, { Response } from 'node-fetch';
 import { Command } from '../../modules/interfaces/cmd';
 import { DEFAULT_COLOR } from '../../data/constants';
 import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
+import { request } from 'undici';
+import logger from '../../logger';
 
 const command: Command = {
     info: {
@@ -44,26 +45,30 @@ const command: Command = {
         const rawQuery = interaction.options.get('query')?.value;
         const searchTerm = (rawQuery as string).split(' ').join('+');
 
-        // Fetch the data & convert json
-        fetch(`https://api.duckduckgo.com/?q=${searchTerm}&format=json&t=Bento_Bot_Discord`)
-            .then((res: Response) => res.json())
-            .then((data: any) => {
-                if (!data.Type) return InteractionResponseUtils.error(interaction, "I couldn't find any instant answers for that!", true);
+        try {
+            // Fetch the data & convert json
+            const { body } = await request(`https://api.duckduckgo.com/?q=${searchTerm}&format=json&t=Bento_Bot_Discord`);
+            const data = await body.json();
 
-                const description: string = data.RelatedTopics
-                    .slice(0, 5)
-                    .filter((a: any) => a.FirstURL)
-                    .map((b: any) => `**${b.Text}**\n[${b.FirstURL}](${b.FirstURL})\n`);
+            if (!data.Type) return InteractionResponseUtils.error(interaction, "I couldn't find any instant answers for that!", true);
 
-                const embed = new EmbedBuilder()
-                    .setAuthor({ name: `DuckDuckGo results for: ${rawQuery}` })
-                    .setThumbnail(data.Image ?? '')
-                    .setDescription(stripIndents`${description}`)
-                    .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR);
+            const description: string = data.RelatedTopics
+                .slice(0, 5)
+                .filter((a: any) => a.FirstURL)
+                .map((b: any) => `**${b.Text}**\n[${b.FirstURL}](${b.FirstURL})\n`);
 
-                interaction.reply({ embeds: [embed] });
-            })
-            .catch((err) => InteractionResponseUtils.error(interaction, `Oops! I ran into an error: ${err.message}`, true));
+            const embed = new EmbedBuilder()
+                .setAuthor({ name: `DuckDuckGo results for: ${rawQuery}` })
+                .setDescription(stripIndents`${description}`)
+                .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR);
+
+            if (data.Image) embed.setThumbnail(`https://duckduckgo.com${data.Image}`);
+
+            interaction.reply({ embeds: [embed] });
+        } catch (err) {
+            logger.error("Failed to fetch duckduckgo data:", err);
+            InteractionResponseUtils.error(interaction, "I couldn't find any instant answers for that!", true);
+        }
     },
 };
 
