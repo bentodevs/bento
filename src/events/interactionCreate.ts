@@ -3,7 +3,7 @@ import { stripIndents } from 'common-tags';
 import {
     Client, Interaction, InteractionType, ChatInputCommandInteraction,
 } from 'discord.js';
-import Sentry from '@sentry/node';
+import * as Sentry from '@sentry/node';
 import { getSettings } from '../database/mongo';
 import { checkBlacklist } from '../modules/functions/moderation';
 import { checkSelf } from '../modules/functions/permissions';
@@ -13,7 +13,7 @@ import logger from '../logger';
 import { OWNERS, SUPPORT_SERVER } from '../data/constants';
 import emojis from '../data/emotes';
 import { InteractionResponseUtils } from '../utils/InteractionResponseUtils';
-import currencySymbols from '../data/functionalData/currencySymbols';
+import { findCurrency } from '../modules/functions/autocomplete';
 
 export default async (bot: Client, interaction: Interaction) => {
     if (interaction.type === InteractionType.ApplicationCommand) {
@@ -103,12 +103,7 @@ export default async (bot: Client, interaction: Interaction) => {
         }
 
         if (commandName === 'exchange') {
-            // Create an array from the first 15 items which match the focused value
-            const currencyList = currencySymbols.filter((value) => value.name.toLowerCase().includes(focusedValue)).slice(0, 15);
-            // Respond with the commands which match the focused value
-            await interaction.respond(
-                currencyList.map((choice) => ({ name: choice.name, value: choice.value }))
-            );
+            await interaction.respond(findCurrency(focusedValue));
         }
     }
 };
