@@ -41,7 +41,7 @@ const command: Command = {
         const issPeople: Astros = await request('http://api.open-notify.org/astros.json').then((res) => res.body.json());
 
         // Sort the people in the ISS by vehicle
-        const humans: any = issPeople.people.reduce((a, b) => {
+        const humans: AstronautsByCraft = issPeople.people.reduce((a, b) => {
             // eslint-disable-next-line no-param-reassign
             a[b.craft] = a[b.craft] || [];
             a[b.craft].push(b.name);
@@ -63,13 +63,13 @@ const command: Command = {
         // Add the humans to the embed
         for (const [craft, ppl] of Object.entries(humans)) {
             // For each person in the craft, add the number and name
-            for (let i = 0; i < (ppl as Astro[]).length; i += 1) {
-                (ppl as Astro)[i] = `${i + 1}. ${(ppl as Astro)[i]}`;
+            for (let i = 0; i < (ppl as unknown as Astro[]).length; i += 1) {
+                (ppl as unknown as Astro)[i] = `${i + 1}. ${(ppl as unknown as Astro)[i]}`;
             }
 
             fields.push({
                 name: craft,
-                value: (ppl as Astro[]).join('\n'),
+                value: (ppl as string[]).join('\n'),
                 inline: true,
             });
         }
@@ -84,5 +84,8 @@ const command: Command = {
 type IssNow = { message: string, timestamp: number, iss_position: { longitude: string, latitude: string } };
 type Astros = { number: number, people: Array<Astro>, message: string };
 type Astro = { name: string, craft: string };
+type AstronautsByCraft = {
+    [key: string]: string[]
+}
 
 export default command;
