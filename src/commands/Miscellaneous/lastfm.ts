@@ -3,7 +3,7 @@ import {
     ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionFlagsBits,
 } from 'discord.js';
 import users from '../../database/models/users';
-import { getLastFMUser, getLastFMUserHistory } from '../../modules/functions/misc';
+import { getLastFMUser, getLastFMUserHistory } from '../../modules/functions/lastfm';
 import { Command } from '../../modules/interfaces/cmd';
 import { DEFAULT_COLOR } from '../../data/constants';
 import emojis from '../../data/emotes';
