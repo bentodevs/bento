@@ -48,7 +48,7 @@ export const init = (): Promise<void> => new Promise<void>((resolve) => {
  * @returns {Promise.<Boolean>} Returns true if the commands registered successfully
  */
 export const registerGlobal = (bot: Client): Promise<boolean> => new Promise((resolve, reject) => {
-    const arr: any[] = [];
+    const arr: InteractionRegistration[] = [];
     const cmds = Array.from(commands.values());
     const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
@@ -94,3 +94,13 @@ export const registerGlobal = (bot: Client): Promise<boolean> => new Promise((re
     });
 
 });
+
+type InteractionRegistration = {
+    name: string;
+    type: ApplicationCommandType;
+    description?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    options?: any[];
+    defaultPermission?: boolean;
+    dmPermission?: boolean;
+}
