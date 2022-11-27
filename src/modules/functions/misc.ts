@@ -4,7 +4,7 @@ import logger from '../../logger';
 import { cooldowns } from '../../bot';
 import { OWNERS } from '../../data/constants';
 import {
-    DadJoke, DiscordStatus, UrbanDictionary, UrbanDictionaryDefinitionElement, Weather,
+    DadJoke, DiscordStatus, RedditPost, UrbanDictionary, UrbanDictionaryDefinitionElement, Weather,
 } from '../../types';
 import { StringUtils } from '../../utils/StringUtils';
 import { ProxyAgent, request, setGlobalDispatcher } from 'undici';
@@ -36,6 +36,7 @@ export const urban = (query: string): Promise<UrbanDictionaryDefinitionElement> 
         headers: {
             'content-type': 'application/json',
             accept: 'application/json',
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
         },
     }).then((res) => res.body.json()).then((json: UrbanDictionary) => {
         // If something went wrong return null
@@ -62,7 +63,7 @@ export const urban = (query: string): Promise<UrbanDictionaryDefinitionElement> 
 /**
  * Gets a random meme from reddit
  *
- * @returns {Promise.<Object>} Reddit Post
+ * @returns {Promise.<RedditPost>} Reddit Post
  *
  * @example
  *
@@ -72,7 +73,7 @@ export const urban = (query: string): Promise<UrbanDictionaryDefinitionElement> 
  *      console.error(err);
  * })
  */
-export const getMeme = (): Promise<object> => new Promise((resolve, reject) => {
+export const getMeme = (): Promise<RedditPost> => new Promise((resolve, reject) => {
     // Define all the subreddits
     const subs = [
         'memes',
@@ -93,6 +94,7 @@ export const getMeme = (): Promise<object> => new Promise((resolve, reject) => {
         headers: {
             'content-type': 'application/json',
             accept: 'application/json',
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
         },
     }).then((res) => res.body.json()).then((json: any) => {
         // Filter out all the bad posts
@@ -137,6 +139,7 @@ export const getWeather = (query: string): Promise<Weather | undefined> => new P
         headers: {
             'content-type': 'application/json',
             accept: 'application/json',
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
         },
     }).then((res) => res.body.json()).then((json: any) => {
         if (json.error) {
@@ -178,6 +181,7 @@ export const getDadjoke = (): Promise<DadJoke> => new Promise((resolve, reject) 
         headers: {
             'content-type': 'application/json',
             accept: 'application/json',
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
         },
     }).then((res) => res.body.json()).then((json: any) => resolve(json)).catch((err) => {
         // Log and reject the error
@@ -301,7 +305,11 @@ export const fetchSteamUserByID = (user: string): Promise<object> => new Promise
     // Define the baseURL for fetching a user's profile
     const baseURL = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${process.env.STEAM_TOKEN}&steamids=${user}`;
 
-    request(baseURL)
+    request(baseURL, {
+        headers: {
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
+        },
+    })
         .then((res) => res.body.json())
         .then((json: any) => ({
             steamID: json.response.players[0].steamid,
@@ -339,7 +347,11 @@ export const fetchSteamUserByName = (user: string): Promise<object> => new Promi
     // Define the baseURL for fetching a user's profile
     const baseURL = `https://steamcommunity.com/id/${user}?xml=1`;
 
-    request(baseURL)
+    request(baseURL, {
+        headers: {
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
+        },
+    })
         .then((res) => res.body.text())
         .then((res: any) => JSON.parse(xml2json(res)))
         .then((json) => ({
@@ -412,6 +424,7 @@ export const fetchWaifuApi = (type: string): Promise<string> => new Promise((res
         headers: {
             'content-type': 'application/json',
             accept: 'application/json',
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
         },
     }).then((res) => res.body.json()).then((json: any) => {
         // Resolve the URL
@@ -449,6 +462,7 @@ export const getMinecraftStatus = (ip: string, port: string): Promise<object> =>
     request(URL, {
         headers: {
             'content-type': 'application/json',
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
         },
     }).then((res) => res.body.json()).then((json: any) => {
         // Return the status
@@ -487,6 +501,7 @@ export const getDiscordStatus = (): Promise<DiscordStatus> => new Promise((resol
         headers: {
             'content-type': 'application/json',
             accept: 'application/json',
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
         },
     }).then((res) => res.body.json()).then((json: any) => {
         resolve(json);
@@ -508,7 +523,11 @@ export const fetchEmote = (url: string): Promise<Buffer> => new Promise((resolve
     setGlobalDispatcher(new ProxyAgent(`http://${process.env.WEBPROXY_HOST}/`));
 
     // Fetch the URL
-    request(url).then(async (res) => {
+    request(url, {
+        headers: {
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
+        },
+    }).then(async (res) => {
         // If the url didn't contain an image return an error
         if (!res.headers['content-type']?.startsWith('image')) return reject(new Error("The URL or File you specified isn't an image!"));
         // If the size of the file is too big return an error
@@ -519,57 +538,6 @@ export const fetchEmote = (url: string): Promise<Buffer> => new Promise((resolve
         // Log the error and reject it
         console.log('Failed to fetch emote', err);
         reject(new Error('Something went wrong while fetching the image!'));
-    });
-});
-
-/**
- * Fetch a user's LastFM Profile
- *
- * @param {Sring} user The user to fetch
- *
- * @returns {Promise.<Object>} Last.fm user
- */
-export const getLastFMUser = (user: string): Promise<object> => new Promise((resolve, reject) => {
-    // Define the LastFM API URL
-    const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${user}&api_key=${process.env.LASTFM_TOKEN}&format=json`;
-
-    // Fetch the URL
-    request(URL)
-        .then((res) => res.body.json())
-        .then((d: any) => {
-            if (d?.error === 6) {
-                // If the user isn't found, throw an error
-                reject(new Error('User not found'));
-            } else if (d?.error) {
-                // If there is an unknown error, then throw and log to console
-                logger.error(d.error.message);
-                reject(new Error('An unknown error occurred!'));
-            } else {
-                // Resolve the User
-                resolve(d);
-            }
-        })
-        .catch((err) => new Error(err));
-});
-
-/**
- * Fetch a user's LastFM listening history
- *
- * @param {Sring} user The user to fetch
- *
- * @returns {Promise.<Object>} Last.fm user play history
- */
-export const getLastFMUserHistory = (user: string): Promise<object> => new Promise((resolve, reject) => {
-    const URL = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${user}&api_key=${process.env.LASTFM_TOKEN}&format=json`;
-    request(URL).then((res) => res.body.json()).then((data: any) => {
-        if (data?.error === 6) {
-            reject(new Error('User not found'));
-        } else if (data?.error) {
-            logger.error(data.error.message);
-            reject(new Error('An unknown error occurred!'));
-        } else {
-            resolve(data);
-        }
     });
 });
 

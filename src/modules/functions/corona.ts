@@ -17,6 +17,7 @@ export const getGlobalStats = (): Promise<object> => new Promise((resolve, rejec
         headers: {
             'content-type': 'application/json',
             accept: 'application/json',
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
         },
     }).then((res) => res.body.json()).then((json: any) => {
         resolve(json);
@@ -51,6 +52,7 @@ export const getAllCountryData = (sort: string): Promise<Array<any>> => new Prom
         headers: {
             'content-type': 'application/json',
             accept: 'application/json',
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
         },
     }).then((res) => res.body.json()).then((json: any) => {
         resolve(json);
@@ -76,6 +78,7 @@ export const getDataByCountry = (country: string): Promise<object | undefined> =
         headers: {
             'content-type': 'application/json',
             accept: 'application/json',
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
         },
     }).then((res) => {
         if (!res || res.statusCode !== 200) resolve(undefined);
@@ -108,6 +111,7 @@ export const getDataByContinent = (continent: string): Promise<object | undefine
         headers: {
             'content-type': 'application/json',
             accept: 'application/json',
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
         },
     }).then((res) => {
         if (!res || res.statusCode !== 200) resolve(undefined);
@@ -140,6 +144,7 @@ export const getDataByState = (state: string): Promise<object | undefined> => ne
         headers: {
             'content-type': 'application/json',
             accept: 'application/json',
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
         },
     }).then((res) => {
         if (!res || res.statusCode !== 200) resolve(undefined);
@@ -177,6 +182,7 @@ export const getVaccineData = (days: number, full: boolean, type: string, data: 
         headers: {
             'content-type': 'application/json',
             accept: 'application/json',
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
         },
     }).then((res) => {
         if (!res || res.statusCode !== 200) resolve(undefined);

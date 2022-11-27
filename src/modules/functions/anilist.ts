@@ -44,7 +44,10 @@ export const getMedia = (title: string, type: MediaType): Promise<object> => new
     // Fetch the data
     request(endpoint, {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: {
+            'content-type': 'application/json',
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
+        },
         body: JSON.stringify({ query, variables }),
     }).then((res) => res.body.json()).then((json: any) => {
         if (json.errors) return reject(new Error('Not Found!'));
@@ -92,7 +95,10 @@ export const getCharacter = (name: string): Promise<object> => new Promise((reso
 
     request(endpoint, {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: {
+            'content-type': 'application/json',
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
+        },
         body: JSON.stringify({ query, variables }),
     }).then((res) => res.body.json()).then((json: any) => {
         if (json.errors) return reject(new Error('Not Found!'));
@@ -155,7 +161,10 @@ export const getProfile = (username: string): Promise<object> => new Promise((re
 
     request(endpoint, {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: {
+            'content-type': 'application/json',
+            'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
+        },
         body: JSON.stringify({ query, variables }),
     }).then((res) => res.body.json()).then((json: any) => {
         if (json.errors) return reject(new Error('Not Found!'));
