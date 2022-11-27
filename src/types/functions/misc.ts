@@ -142,3 +142,23 @@ export interface WeatherLocation {
     localtime_epoch: number
     localtime: string
 }
+
+export interface DuckDuckGoResponse {
+    Type: string
+    RelatedTopics: DuckDuckGoRelatedTopic[]
+    Image: string
+}
+
+export interface DuckDuckGoRelatedTopic {
+    FirstURL: string
+    Text: string
+}
+
+export interface RedditPost {
+    data: {
+        title: string
+        url: string
+        permalink: string
+        subreddit_name_prefixed: string
+    }
+}

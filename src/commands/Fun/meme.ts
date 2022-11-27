@@ -37,7 +37,7 @@ const command: Command = {
         await interaction.deferReply();
 
         // Get a random meme
-        getMeme().then((meme: any) => {
+        getMeme().then((meme) => {
             // Build the embed
             const embed = new EmbedBuilder()
                 .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)

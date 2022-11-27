@@ -5,6 +5,7 @@ import { DEFAULT_COLOR } from '../../data/constants';
 import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
 import { request } from 'undici';
 import logger from '../../logger';
+import { DuckDuckGoRelatedTopic, DuckDuckGoResponse } from '../../types';
 
 const command: Command = {
     info: {
@@ -48,14 +49,14 @@ const command: Command = {
         try {
             // Fetch the data & convert json
             const { body } = await request(`https://api.duckduckgo.com/?q=${searchTerm}&format=json&t=Bento_Bot_Discord`);
-            const data = await body.json();
+            const data: DuckDuckGoResponse = await body.json();
 
             if (!data.Type) return InteractionResponseUtils.error(interaction, "I couldn't find any instant answers for that!", true);
 
-            const description: string = data.RelatedTopics
+            const description: string[] = data.RelatedTopics
                 .slice(0, 5)
-                .filter((a: any) => a.FirstURL)
-                .map((b: any) => `**${b.Text}**\n[${b.FirstURL}](${b.FirstURL})\n`);
+                .filter((a: DuckDuckGoRelatedTopic) => a.FirstURL)
+                .map((b: DuckDuckGoRelatedTopic) => `**${b.Text}**\n[${b.FirstURL}](${b.FirstURL})\n`);
 
             const embed = new EmbedBuilder()
                 .setAuthor({ name: `DuckDuckGo results for: ${rawQuery}` })
