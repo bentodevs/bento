@@ -1,0 +1,27 @@
+{
+    "COMMAND_FAILED_GENERIC": "Oops! Something went wrong. Please try again.",
+    "COMMAND_FAILED_MISSING_PERMISSIONS": "I'm missing the following permissions:\n{{permissions}}",
+    "COMMAND_FAILED_REPORT": "If this issue persists, please report it in our Discord:\n{{discord_link}}",
+
+    "COMMAND_FAILED_CMD_POLL": "Oops! Something went wrong while creating the poll. Check I have the correct permissions and try again.",
+    "COMMAND_FAILED_CMD_ANIME": "Oops! Something went wrong while trying to get the anime info.\n{{error}}",
+    "COMMAND_FAILED_CMD_CHARACTER": "Oops! Something went wrong while trying to get info about that character.\n{{error}}",
+    "COMMAND_FAILED_CMD_MANGA": "Oops! Something went wrong while trying to get info about that manga.\n{{error}}",
+    "COMMAND_FAILED_CMD_PROFILE": "",
+
+    "USER_DMS_DISABLED": "Oops! I couldn't send you a DM. Please check they are enabled, then try again.",
+
+    "COMMAND_HELP_CMD_8BALL": "Ask the magic 8ball a question.",
+    "COMMAND_INFO_CMD_8BALL": "A list of possible answers can be found [here](https://en.wikipedia.org/wiki/Magic_8-Ball#Possible_answers).",
+    "COMMAND_OPTS_CMD_8BALL_LABEL_QUESTION": "question",
+    "COMMAND_OPTS_CMD_8BALL_DESC_QUESTION": "The question you want to ask the magic 8ball.",
+
+    "COMMAND_HELP_CMD_ANIMAL": "Ask the magic 8ball a question.",
+    "COMMAND_INFO_CMD_ANIMAL": "A list of possible answers can be found [here](https://en.wikipedia.org/wiki/Magic_8-Ball#Possible_answers).",
+    "COMMAND_OPTS_CMD_ANIMAL_LABEL_TYPE": "type",
+    "COMMAND_OPTS_CMD_ANIMAL_DESC_QUESTION": "The type of animal you want to get an image of.",
+    "COMMAND_OPTS_CMD_ANIMAL_LABEL_TYPE_OPT1": "Cat",
+    "COMMAND_OPTS_CMD_ANIMAL_LABEL_TYPE_OPT2": "Dog",
+    "COMMAND_OPTS_CMD_ANIMAL_LABEL_TYPE_OPT3": "Fox",
+    "COMMAND_OPTS_CMD_ANIMAL_LABEL_TYPE_OPT4": "Shibe"
+}
