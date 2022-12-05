@@ -1,4 +1,4 @@
-import translate from '@vitalets/google-translate-api';
+import { translate } from '@vitalets/google-translate-api';
 import ISO from 'iso-639-1';
 import {
     ApplicationCommandOptionType,
@@ -41,18 +41,18 @@ const command: Command = {
             required: true,
         }, {
             name: 'destination_language',
-            type: ApplicationCommandOptionType.String,
             description: 'The language you want to translate the text too.',
-            required: false,
+            type: ApplicationCommandOptionType.String,
+            autocomplete: true,
+            required: false
         }],
         defaultPermission: true,
         dmPermission: true,
     },
 
     run: async (bot, interaction: ChatInputCommandInteraction) => {
-        const destinationLang = interaction.options.getString('destination_language');
         // Get the language and the text to translate
-        const language = translate.languages[destinationLang?.toLowerCase() ?? ''] || Object.values(translate.languages).find((a) => (typeof (a) === 'string' ? a.toLowerCase() === destinationLang?.toLowerCase() : ''));
+        const language = interaction.options.getString('destination_language') || "en";
         const toTranslate = interaction.options.getString('text', true);
 
         // Translate the text
@@ -62,14 +62,14 @@ const command: Command = {
 
         // Build the embed
         const embed = new EmbedBuilder()
-            .setAuthor({ name: `Translated From: ${ISO.getName(result.from.language.iso)}` })
+            .setAuthor({ name: `Translated From: ${ISO.getName(result.raw.ld_result.srclangs[0])}` })
             .setThumbnail('https://i.imgur.com/Lg3ZDtn.png')
             .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)
             .addFields([{
-                name: `Original (${ISO.getName(result.from.language.iso)})`,
+                name: `Original (${ISO.getName(result.raw.ld_result.srclangs[0])})`,
                 value: toTranslate,
             }, {
-                name: `Translated (${translate.languages[language] ? ISO.getName(language) : language ?? 'English'})`,
+                name: `Translated (${ISO.getName(language)})`,
                 value: result.text,
             }]);
 
