@@ -13,7 +13,7 @@ import logger from '../logger';
 import { OWNERS, SUPPORT_SERVER } from '../data/constants';
 import emojis from '../data/emotes';
 import { InteractionResponseUtils } from '../utils/InteractionResponseUtils';
-import { findCurrency } from '../modules/functions/autocomplete';
+import { findCurrency, findLanguage } from '../modules/functions/autocomplete';
 
 export default async (bot: Client, interaction: Interaction) => {
     if (interaction.type === InteractionType.ApplicationCommand) {
@@ -104,6 +104,10 @@ export default async (bot: Client, interaction: Interaction) => {
 
         if (commandName === 'exchange') {
             await interaction.respond(findCurrency(focusedValue));
+        }
+
+        if (commandName === 'translate') {
+            await interaction.respond(findLanguage(focusedValue));
         }
     }
 };
