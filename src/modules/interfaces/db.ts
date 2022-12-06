@@ -16,9 +16,7 @@ export interface ISettings {
         leaveMessage: string | null,
         userMessage: string | null,
     },
-    roles: {
-        auto: Array<Snowflake>,
-    },
+    roles: Array<Snowflake>,
     moderation: {
         minimumAge: string | null,
         allowBots: boolean,
