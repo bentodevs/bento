@@ -7,7 +7,6 @@ const settingsSchema = new Schema<ISettings>({
         timezone: { type: String, default: 'Europe/London' },
         disabled_categories: [{ type: String }],
         disabled_commands: [{ type: String }],
-        disabled_message: { type: Boolean, default: false },
     },
     welcome: {
         channel: { type: String || null, default: '' },
