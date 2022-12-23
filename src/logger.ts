@@ -1,6 +1,13 @@
+import dotenv from 'dotenv';
 import winston from 'winston';
+import LokiTransport from 'winston-loki';
 
 const logFormat = winston.format.printf(({ level, message, timestamp }) => `${timestamp} ${level.toUpperCase()}: ${message}`);
+
+// Load env variables
+if (process.env.NODE_ENV !== 'production') {
+    dotenv.config();
+}
 
 const logLevels = {
     levels: {
@@ -18,9 +25,19 @@ const logger = winston.createLogger({
         winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         logFormat,
     ),
-    transports: [new winston.transports.Console()],
+    transports: [
+        new winston.transports.Console(),
+        new LokiTransport({
+            host: process.env.LOKI_URL,
+            basicAuth: process.env.LOKI_AUTH,
+            labels: {
+                src: `bento-app-${process.env.NODE_ENV}`,
+            },
+            batching: false
+        })
+    ],
     levels: logLevels.levels,
-    level: 'info',
+    level: 'debug',
 });
 
 export default logger;
