@@ -68,7 +68,7 @@ const command: Command = {
         // Build the embed
         const embed = new EmbedBuilder()
             .setAuthor({ name: json.Title, iconURL: (json.Poster ?? 'https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png') })
-            .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)
+            .setColor(DEFAULT_COLOR)
             .setThumbnail((json.Poster ?? 'https://icons.iconarchive.com/icons/flat-icons.com/flat/512/Flat-TV-icon.png'))
             .setDescription(msg)
             .setTimestamp()

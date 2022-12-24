@@ -92,7 +92,7 @@ const command: Command = {
             .setAuthor({ name: `${types[(channel as GuildBasedChannel)?.type].type}: ${channel?.name}`, iconURL: types[(channel as GuildBasedChannel)?.type].icon })
             .setDescription(desc)
             .setFooter({ text: `ID: ${channel?.id}` })
-            .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR);
+            .setColor(DEFAULT_COLOR);
 
         // Send the embed
         interaction.reply({ embeds: [embed] });

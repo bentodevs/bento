@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { stripIndents } from 'common-tags';
 import {
-    ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionFlagsBits,
+    ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits,
 } from 'discord.js';
 import users from '../../database/models/users';
 import { getLastFMUser, getLastFMUserHistory } from '../../modules/functions/lastfm';
@@ -93,7 +94,7 @@ const command: Command = {
                 const embed = new EmbedBuilder()
                     .setAuthor({ name: `${latestTrack.name} by ${latestTrack.artist?.['#text']}`, iconURL: latestTrack.image[1]['#text'], url: latestTrack.url })
                     .setThumbnail(latestTrack.image[3]['#text'])
-                    .setColor((interaction?.member as GuildMember).displayHexColor ?? DEFAULT_COLOR)
+                    .setColor(DEFAULT_COLOR)
                     .setDescription(stripIndents`**Track Name:** ${latestTrack.name}
                 **Artist(s):** ${latestTrack.artist?.['#text']}
                 **Album:** ${latestTrack.album?.['#text']}`);

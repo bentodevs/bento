@@ -231,7 +231,7 @@ const command: Command = {
 
             // Build the embed
             const embed = new EmbedBuilder()
-                .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)
+                .setColor(DEFAULT_COLOR)
                 .setAuthor({ name: `Banner for ${target.tag}`, iconURL: target.displayAvatarURL() })
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 .setImage(usr.bannerURL({ size: 2048 })!);
