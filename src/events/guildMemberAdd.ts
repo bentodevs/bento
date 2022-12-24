@@ -74,16 +74,18 @@ export default async (bot: Client, member: GuildMember) => {
             .replace('{formattedCount}', (member.guild.memberCount + getOrdinalSuffix(member.guild.memberCount)))
             .replace('{count}', member.guild.memberCount.toString());
 
-        member.send(msg).catch(() => { });
+        member.send(msg).catch(() => {
+            logger.debug('Failed to send Welcome message to user');
+        });
     }
 
     // Check if there are any roles to auto-assign
-    if (sets.roles.auto?.length) {
+    if (sets.roles?.length) {
         // Define the roles array
         const roles: Role[] = [];
 
         // Loop through the roles
-        for (const data of sets.roles.auto) {
+        for (const data of sets.roles) {
             // Grab the role
             const role = member.guild.roles.cache.get(data);
 
@@ -100,6 +102,6 @@ export default async (bot: Client, member: GuildMember) => {
         }
 
         // Add the roles to the user
-        member.roles.add(roles, 'Auto Role');
+        member.roles.add(roles, '[BentoBot] Task: Auto-assign configured roles');
     }
 };
