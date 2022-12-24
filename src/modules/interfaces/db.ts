@@ -3,12 +3,13 @@ import { PunishmentType, Reminder } from '../../types/dbTypes';
 
 export interface ISettings {
     _id: Snowflake,
+    isPremium: boolean,
     general: {
-        premium: boolean,
+        sendCmdCatDisabledMsgs: boolean;
+        sendPermissionDMs: boolean;
         timezone: string,
-        disabled_categories: Array<string>,
-        disabled_commands: Array<string>,
-        disabled_message: boolean,
+        disabledCategories: Array<string>,
+        disabledCommands: Array<string>,
     },
     welcome: {
         channel: Snowflake | null,

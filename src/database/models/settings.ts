@@ -5,8 +5,8 @@ const settingsSchema = new Schema<ISettings>({
     _id: { type: String },
     general: {
         timezone: { type: String, default: 'Europe/London' },
-        disabled_categories: [{ type: String }],
-        disabled_commands: [{ type: String }],
+        disabledCategories: [{ type: String }],
+        disabledCommands: [{ type: String }],
     },
     welcome: {
         channel: { type: String || null, default: '' },
