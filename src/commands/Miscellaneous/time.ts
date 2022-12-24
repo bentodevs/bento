@@ -88,7 +88,7 @@ export default {
         // Build the embed
         const embed = new EmbedBuilder()
             .setAuthor({ name: `Time information for ${weather.location.name} (${weather.location.country})` })
-            .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)
+            .setColor(DEFAULT_COLOR)
             .setDescription(stripIndents`${clock} **Local Time:** ${dt.toLocaleTimeString('en-US', { timeZone: weather.location.tz_id })}
             🗺️ **Timezone:** \`${weather.location.tz_id}\``)
             .setFooter({ text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user?.displayAvatarURL() });

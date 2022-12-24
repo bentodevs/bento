@@ -40,7 +40,7 @@ const command: Command = {
         getMeme().then((meme) => {
             // Build the embed
             const embed = new EmbedBuilder()
-                .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)
+                .setColor(DEFAULT_COLOR)
                 .setImage(meme.data.url)
                 .setDescription(`[${meme.data.title}](https://www.reddit.com/${meme.data.permalink})`)
                 .setFooter({ text: meme.data.subreddit_name_prefixed, iconURL: bot.user?.displayAvatarURL() });

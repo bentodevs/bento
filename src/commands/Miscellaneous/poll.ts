@@ -144,7 +144,7 @@ const command: Command = {
             .setDescription(msg)
             .setFooter({ text: `Started by: ${interaction.user.tag}` })
             .setTimestamp()
-            .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR);
+            .setColor(DEFAULT_COLOR);
 
         // Send the embed
         await channel.send({ embeds: [embed] }).then((msg) => {

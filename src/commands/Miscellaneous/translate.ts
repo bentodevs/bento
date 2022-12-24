@@ -64,7 +64,7 @@ const command: Command = {
         const embed = new EmbedBuilder()
             .setAuthor({ name: `Translated From: ${ISO.getName(result.raw.ld_result.srclangs[0])}` })
             .setThumbnail('https://i.imgur.com/Lg3ZDtn.png')
-            .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)
+            .setColor(DEFAULT_COLOR)
             .addFields([{
                 name: `Original (${ISO.getName(result.raw.ld_result.srclangs[0])})`,
                 value: toTranslate,

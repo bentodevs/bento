@@ -151,7 +151,7 @@ const command: Command = {
             // Build the embed
             const embed = new EmbedBuilder()
                 .setAuthor({ name: `Giveaways hosted in ${interaction.guild?.name}`, iconURL: interaction.guild?.iconURL() ?? '' })
-                .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)
+                .setColor(DEFAULT_COLOR)
                 .setDescription(description.join('\n'))
                 .setFooter({ text: `${g.length} Total Giveaways | Page ${page + 1} of ${pages.length}` });
 

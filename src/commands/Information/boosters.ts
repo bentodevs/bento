@@ -72,7 +72,7 @@ const command: Command = {
         // Build the embed
         const embed = new EmbedBuilder()
             .setAuthor({ name: `Nitro Boosters of ${interaction.guild?.name}`, iconURL: interaction.guild?.iconURL() ?? '' })
-            .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)
+            .setColor(DEFAULT_COLOR)
             .setDescription(formatted.join('\n'))
             .setFooter({ text: `${sorted.size} total boosters | Page ${page + 1} of ${pages.length}` });
 
