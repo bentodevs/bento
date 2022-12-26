@@ -1,6 +1,6 @@
 import { stripIndents } from 'common-tags';
 import {
-    EmbedBuilder, EmbedField, GuildMember, PermissionFlagsBits,
+    EmbedBuilder, EmbedField, PermissionFlagsBits,
 } from 'discord.js';
 import { request } from 'undici';
 import { Command } from '../../modules/interfaces/cmd';
@@ -51,7 +51,7 @@ const command: Command = {
         // Build the embed
         const embed = new EmbedBuilder()
             .setAuthor({ name: 'ISS Info', iconURL: 'https://bento-bot.com/bot-assets/ISS_emblem.png' })
-            .setColor((interaction.member as GuildMember)?.displayHexColor || DEFAULT_COLOR)
+            .setColor(DEFAULT_COLOR)
             .setThumbnail('https://bento-bot.com/bot-assets/ISS_emblem.png')
             .setDescription(stripIndents`**Current Location:** \`${iss.iss_position.latitude}\`, \`${iss.iss_position.longitude}\`
             **Current Astronauts:** \`${issPeople.number}\``)

@@ -26,7 +26,7 @@ export const punishmentLog = (
 
     // Create new embed
     const embed = new EmbedBuilder()
-        .setColor((interaction.member as GuildMember).displayHexColor ?? DEFAULT_COLOR)
+        .setColor(DEFAULT_COLOR)
         .setThumbnail(member.displayAvatarURL())
         .setFooter({ text: `User ID: ${member.id}` })
         .setTimestamp();

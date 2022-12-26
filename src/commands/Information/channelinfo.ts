@@ -3,7 +3,7 @@ import {
 } from 'date-fns';
 import {
     ApplicationCommandOptionType,
-    BaseGuildTextChannel, BaseGuildVoiceChannel, CategoryChannel, ChatInputCommandInteraction, EmbedBuilder, GuildBasedChannel, GuildMember, PermissionFlagsBits,
+    BaseGuildTextChannel, BaseGuildVoiceChannel, CategoryChannel, ChatInputCommandInteraction, EmbedBuilder, GuildBasedChannel, PermissionFlagsBits,
 } from 'discord.js';
 import { Command } from '../../modules/interfaces/cmd';
 import { DEFAULT_COLOR } from '../../data/constants';

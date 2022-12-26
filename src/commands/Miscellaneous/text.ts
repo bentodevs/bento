@@ -1,5 +1,5 @@
 import {
-    ApplicationCommandOptionType, ChatInputCommandInteraction, codeBlock, EmbedBuilder, GuildMember, PermissionFlagsBits,
+    ApplicationCommandOptionType, ChatInputCommandInteraction, codeBlock, EmbedBuilder, PermissionFlagsBits,
 } from 'discord.js';
 import flip from 'flip';
 import { shuffle } from '../../modules/functions/misc';

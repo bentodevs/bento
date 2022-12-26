@@ -1,7 +1,7 @@
 import { stripIndents } from 'common-tags';
 import { formatDuration, intervalToDuration } from 'date-fns';
 import {
-    ApplicationCommandOptionType, ChatInputCommandInteraction, EmbedBuilder, GuildMember, Message, NewsChannel, PermissionFlagsBits, TextChannel, User,
+    ApplicationCommandOptionType, ChatInputCommandInteraction, EmbedBuilder, Message, NewsChannel, PermissionFlagsBits, TextChannel, User,
 } from 'discord.js';
 import giveaways from '../../database/models/giveaways';
 import logger from '../../logger';

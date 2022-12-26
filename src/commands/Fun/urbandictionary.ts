@@ -1,5 +1,5 @@
 import {
-    ApplicationCommandOptionType, ChatInputCommandInteraction, EmbedBuilder, GuildMember,
+    ApplicationCommandOptionType, ChatInputCommandInteraction, EmbedBuilder
 } from 'discord.js';
 import { urban } from '../../modules/functions/misc';
 import { Command } from '../../modules/interfaces/cmd';

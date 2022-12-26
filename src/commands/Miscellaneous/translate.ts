@@ -2,7 +2,7 @@ import { translate } from '@vitalets/google-translate-api';
 import ISO from 'iso-639-1';
 import {
     ApplicationCommandOptionType,
-    ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionFlagsBits,
+    ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits,
 } from 'discord.js';
 import { Command } from '../../modules/interfaces/cmd';
 import { DEFAULT_COLOR } from '../../data/constants';

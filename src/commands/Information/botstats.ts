@@ -1,7 +1,7 @@
 import { stripIndents } from 'common-tags';
 import { formatDistance } from 'date-fns';
 import {
-    version, PermissionFlagsBits, CommandInteraction, GuildMember, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, OAuth2Scopes,
+    version, PermissionFlagsBits, CommandInteraction, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, OAuth2Scopes,
 } from 'discord.js';
 import mongoose from 'mongoose';
 import os from 'os';
@@ -38,14 +38,14 @@ const command: Command = {
         dmPermission: true,
     },
 
-    run: async (bot, message: CommandInteraction) => {
+    run: async (bot, interaction: CommandInteraction) => {
         // Get and format the bot uptime
         const uptime = formatDistance(0, (bot.uptime ?? 0));
 
         // Build the embed
         const embed = new EmbedBuilder()
             .setAuthor({ name: `Bento v${VERSION}`, iconURL: bot.user?.displayAvatarURL() })
-            .setColor((message.member as GuildMember)?.displayHexColor || DEFAULT_COLOR)
+            .setColor(DEFAULT_COLOR)
             .setDescription(stripIndents`Developed By: ${emojis.waitrose} \`Behn#0001\`
             Uptime: **${uptime}**
             Database State: ${mongoose.connection.readyState === 1 ? `${emojis.online} Healthy` : `${emojis.dnd} Unhealthy`}
@@ -109,7 +109,7 @@ const command: Command = {
         });
 
         // Send the embed
-        message.reply({ embeds: [embed], components: [comps], ephemeral: true });
+        interaction.reply({ embeds: [embed], components: [comps], ephemeral: true });
     },
 };
 

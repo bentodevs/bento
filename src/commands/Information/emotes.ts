@@ -1,6 +1,6 @@
 import {
     ApplicationCommandOptionType,
-    ChatInputCommandInteraction, Collection, EmbedBuilder, GuildEmoji, GuildMember, PermissionFlagsBits, Snowflake,
+    ChatInputCommandInteraction, Collection, EmbedBuilder, GuildEmoji, PermissionFlagsBits, Snowflake,
 } from 'discord.js';
 import { Command } from '../../modules/interfaces/cmd';
 import { DEFAULT_COLOR } from '../../data/constants';
