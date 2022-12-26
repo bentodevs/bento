@@ -1,6 +1,6 @@
 import { stripIndents } from 'common-tags';
 import { parseISO, format } from 'date-fns';
-import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import { getDiscordStatus } from '../../modules/functions/misc';
 import { Command } from '../../modules/interfaces/cmd';
 import emojis from '../../data/emotes';
@@ -97,14 +97,23 @@ const command: Command = {
         // Build the embed
         const embed = new EmbedBuilder()
             .setAuthor({ name: `Current Status: ${status.status.description}` })
-            .setColor(status.incidents.length ? 'DarkRed' : 'Green')
+            .setColor(status.incidents.length ? Colors.DarkRed : Colors.Green)
             .setThumbnail('https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png')
             .setDescription(`${description}${incidents ? `\n\n${incidents}` : ''}`)
             .setFooter({ text: 'Fetched from https://discordstatus.com' })
             .setTimestamp();
 
+        const messageComponents = new ActionRowBuilder<ButtonBuilder>({
+            components: [
+                new ButtonBuilder()
+                    .setLabel('Status Page')
+                    .setStyle(ButtonStyle.Link)
+                    .setURL('https://discordstatus.com'),
+            ]
+        });
+
         // Send the embed
-        interaction.editReply({ embeds: [embed] });
+        interaction.editReply({ embeds: [embed], components: [messageComponents] });
     },
 };
 
