@@ -1,5 +1,5 @@
 import {
-    ApplicationCommandOptionType, EmbedBuilder, GuildMember, PermissionFlagsBits,
+    ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits,
 } from 'discord.js';
 import { Command } from '../../modules/interfaces/cmd';
 import { DEFAULT_COLOR } from '../../data/constants';
@@ -51,7 +51,7 @@ const command: Command = {
         const animal = interaction.options.get('type')?.value;
 
         const embed = new EmbedBuilder()
-            .setColor((interaction?.member as GuildMember).displayHexColor ?? DEFAULT_COLOR);
+            .setColor(DEFAULT_COLOR);
 
         if (animal === 'cat') {
             const { body } = await request('https://aws.random.cat/meow');

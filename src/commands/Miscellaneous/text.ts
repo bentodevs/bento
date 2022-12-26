@@ -1,5 +1,5 @@
 import {
-    ApplicationCommandOptionType, ChatInputCommandInteraction, codeBlock, EmbedBuilder, GuildMember, PermissionFlagsBits,
+    ApplicationCommandOptionType, ChatInputCommandInteraction, codeBlock, EmbedBuilder, PermissionFlagsBits,
 } from 'discord.js';
 import flip from 'flip';
 import { shuffle } from '../../modules/functions/misc';
@@ -119,7 +119,7 @@ const command: Command = {
 
             const embed = new EmbedBuilder()
                 .setAuthor({ name: `Base64 ${op === 'encode' ? 'encoded' : 'decoded'} text`, iconURL: 'https://cdn.discordapp.com/emojis/774154612139622410.gif?v=1' })
-                .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)
+                .setColor(DEFAULT_COLOR)
                 .setDescription(codeBlock(output));
 
             interaction.reply({ embeds: [embed], ephemeral: true });
@@ -132,7 +132,7 @@ const command: Command = {
 
             const embed = new EmbedBuilder()
                 .setAuthor({ name: `Binary ${op === 'encode' ? 'encoded' : 'decoded'} text`, iconURL: 'https://cdn.discordapp.com/emojis/774154612139622410.gif?v=1' })
-                .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)
+                .setColor(DEFAULT_COLOR)
                 .setDescription(codeBlock(output));
 
             interaction.reply({ embeds: [embed], ephemeral: true });

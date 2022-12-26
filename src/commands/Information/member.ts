@@ -103,7 +103,7 @@ const command: Command = {
             // Create the embed
             const embed = new EmbedBuilder()
                 .setAuthor({ name: `Member Stats for ${interaction.guild?.name}`, iconURL: interaction.guild?.iconURL() ?? '' })
-                .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)
+                .setColor(DEFAULT_COLOR)
                 .setFooter({ text: `ID: ${interaction.guild?.id}` })
                 .setTimestamp()
                 .setDescription(stripIndents`🧑‍🤝‍🧑 **${interaction.guild?.memberCount.toLocaleString()}** members | **${membersOnline?.toLocaleString()}** ${emojis.online} Online
@@ -145,7 +145,7 @@ const command: Command = {
                 const embed = new EmbedBuilder()
                     .setAuthor({ name: `Members of ${interaction.guild?.name}`, iconURL: interaction.guild?.iconURL() ?? '' })
                     .setFooter({ text: `${interaction.guild?.memberCount} total members | Page ${page + 1} of ${pages.length}` })
-                    .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)
+                    .setColor(DEFAULT_COLOR)
                     .setDescription(description.join('\n'));
 
                 // Send the members embed

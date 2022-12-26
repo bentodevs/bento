@@ -2,10 +2,11 @@ import { intervalToDuration, formatDuration } from 'date-fns';
 import {
     Client, GuildMember, GuildTextBasedChannel, Role,
 } from 'discord.js';
-import settings from '../database/models/settings.js';
-import { getSettings } from '../database/mongo.js';
+import * as Sentry from '@sentry/node';
+import settings from '../database/models/settings';
+import { getSettings } from '../database/mongo';
 import logger from '../logger';
-import { getOrdinalSuffix } from '../modules/functions/misc.js';
+import { getOrdinalSuffix } from '../modules/functions/misc';
 
 export default async (bot: Client, member: GuildMember) => {
     // If the member is a partial fetch it
@@ -74,8 +75,9 @@ export default async (bot: Client, member: GuildMember) => {
             .replace('{formattedCount}', (member.guild.memberCount + getOrdinalSuffix(member.guild.memberCount)))
             .replace('{count}', member.guild.memberCount.toString());
 
-        member.send(msg).catch(() => {
-            logger.debug('Failed to send Welcome message to user');
+        member.send(msg).catch((err) => {
+            logger.error('Failed to send Welcome message to user', err);
+            Sentry.captureException(err);
         });
     }
 

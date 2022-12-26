@@ -70,7 +70,7 @@ const command: Command = {
                 .setAuthor({ name: `Role: ${role?.name}`, iconURL: `https://dummyimage.com/64x64/${role.hexColor?.replace('#', '')}/${role.hexColor.replace('#', '')}` })
                 .setThumbnail(`https://dummyimage.com/256x256/${role.hexColor.replace('#', '')}/${role.hexColor.replace('#', '')}`)
                 .setFooter({ text: `ID: ${role?.id}` })
-                .setColor((role as Role).hexColor ?? DEFAULT_COLOR)
+                .setColor((role as Role)?.hexColor ?? DEFAULT_COLOR)
                 .setDescription(stripIndents`**Position:** ${role.position + 1}/${interaction.guild?.roles.cache.size}
             **Color:** ${!role.color ? 'Default' : role.hexColor}
             **${role.members.size} member(s)** | ${emojis.online} **${membersOnline}** online
@@ -108,7 +108,7 @@ const command: Command = {
             const embed = new EmbedBuilder()
                 .setAuthor({ name: `Roles of ${interaction.guild?.name}`, iconURL: interaction.guild?.iconURL() ?? '' })
                 .setFooter({ text: `${sorted.length} total roles | Page ${page + 1} of ${pages.length}` })
-                .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)
+                .setColor(DEFAULT_COLOR)
                 .setDescription(description.join('\n'));
 
             // Send the embed

@@ -1,9 +1,8 @@
-import { Client, Collection } from 'discord.js';
+import { Client } from 'discord.js';
 import { readdirSync } from 'fs';
 import { tasks } from '../../bot';
 import logger from '../../logger';
 
-// eslint-disable-next-line import/prefer-default-export
 export const init = (bot: Client) => new Promise((resolve) => {
     // Get the task files
     const files = readdirSync('./modules/tasks').filter((file) => file.endsWith('.js'));

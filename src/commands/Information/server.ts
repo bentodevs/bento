@@ -117,7 +117,7 @@ const command: Command = {
 
             const embed = new EmbedBuilder()
                 .setAuthor({ name: `${guild?.name} Banner`, iconURL: guild?.iconURL() ?? '' })
-                .setColor((interaction.member as GuildMember)?.displayColor ?? DEFAULT_COLOR)
+                .setColor(DEFAULT_COLOR)
                 .setImage(banner);
 
             interaction.reply({ embeds: [embed] });
@@ -128,7 +128,7 @@ const command: Command = {
 
             const embed = new EmbedBuilder()
                 .setAuthor({ name: `${guild?.name} Icon`, iconURL: icon })
-                .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)
+                .setColor(DEFAULT_COLOR)
                 .setImage(icon);
 
             interaction.reply({ embeds: [embed] });

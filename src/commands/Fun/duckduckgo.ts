@@ -1,5 +1,5 @@
 import { stripIndents } from 'common-tags';
-import { ApplicationCommandOptionType, EmbedBuilder, GuildMember, PermissionFlagsBits } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import { Command } from '../../modules/interfaces/cmd';
 import { DEFAULT_COLOR } from '../../data/constants';
 import { InteractionResponseUtils } from '../../utils/InteractionResponseUtils';
@@ -61,7 +61,7 @@ const command: Command = {
             const embed = new EmbedBuilder()
                 .setAuthor({ name: `DuckDuckGo results for: ${rawQuery}` })
                 .setDescription(stripIndents`${description}`)
-                .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR);
+                .setColor(DEFAULT_COLOR);
 
             if (data.Image) embed.setThumbnail(`https://duckduckgo.com${data.Image}`);
 

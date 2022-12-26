@@ -1,7 +1,7 @@
 import { stripIndents } from 'common-tags';
 import {
     ApplicationCommandOptionType,
-    ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionFlagsBits,
+    ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits,
 } from 'discord.js';
 import { getWeather } from '../../modules/functions/misc';
 import { DEFAULT_COLOR } from '../../data/constants';
@@ -88,7 +88,7 @@ export default {
         // Build the embed
         const embed = new EmbedBuilder()
             .setAuthor({ name: `Time information for ${weather.location.name} (${weather.location.country})` })
-            .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)
+            .setColor(DEFAULT_COLOR)
             .setDescription(stripIndents`${clock} **Local Time:** ${dt.toLocaleTimeString('en-US', { timeZone: weather.location.tz_id })}
             🗺️ **Timezone:** \`${weather.location.tz_id}\``)
             .setFooter({ text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user?.displayAvatarURL() });

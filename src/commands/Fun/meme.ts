@@ -1,4 +1,4 @@
-import { EmbedBuilder, GuildMember, PermissionFlagsBits } from 'discord.js';
+import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import { getMeme } from '../../modules/functions/misc.js';
 import { Command } from '../../modules/interfaces/cmd.js';
 import { DEFAULT_COLOR } from '../../data/constants.js';
@@ -40,7 +40,7 @@ const command: Command = {
         getMeme().then((meme) => {
             // Build the embed
             const embed = new EmbedBuilder()
-                .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)
+                .setColor(DEFAULT_COLOR)
                 .setImage(meme.data.url)
                 .setDescription(`[${meme.data.title}](https://www.reddit.com/${meme.data.permalink})`)
                 .setFooter({ text: meme.data.subreddit_name_prefixed, iconURL: bot.user?.displayAvatarURL() });

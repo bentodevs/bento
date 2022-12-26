@@ -1,6 +1,6 @@
 import {
     ApplicationCommandOptionType,
-    ChatInputCommandInteraction, Collection, EmbedBuilder, GuildEmoji, GuildMember, PermissionFlagsBits, Snowflake,
+    ChatInputCommandInteraction, Collection, EmbedBuilder, GuildEmoji, PermissionFlagsBits, Snowflake,
 } from 'discord.js';
 import { Command } from '../../modules/interfaces/cmd';
 import { DEFAULT_COLOR } from '../../data/constants';
@@ -71,7 +71,7 @@ const command: Command = {
         const embed = new EmbedBuilder()
             .setAuthor({ name: `Emotes of ${interaction.guild?.name}`, iconURL: interaction.guild?.iconURL() ?? '' })
             .setFooter({ text: `${emotes.size} total emotes | Page ${page + 1} of ${pages.length}` })
-            .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)
+            .setColor(DEFAULT_COLOR)
             .setDescription(description.join('\n'));
 
         // Send the embed

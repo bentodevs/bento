@@ -1,7 +1,7 @@
 import { stripIndents } from 'common-tags';
 import { formatDuration, intervalToDuration } from 'date-fns';
 import {
-    ApplicationCommandOptionType, ChatInputCommandInteraction, EmbedBuilder, GuildMember, Message, NewsChannel, PermissionFlagsBits, TextChannel, User,
+    ApplicationCommandOptionType, ChatInputCommandInteraction, EmbedBuilder, Message, NewsChannel, PermissionFlagsBits, TextChannel, User,
 } from 'discord.js';
 import giveaways from '../../database/models/giveaways';
 import logger from '../../logger';
@@ -151,7 +151,7 @@ const command: Command = {
             // Build the embed
             const embed = new EmbedBuilder()
                 .setAuthor({ name: `Giveaways hosted in ${interaction.guild?.name}`, iconURL: interaction.guild?.iconURL() ?? '' })
-                .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR)
+                .setColor(DEFAULT_COLOR)
                 .setDescription(description.join('\n'))
                 .setFooter({ text: `${g.length} Total Giveaways | Page ${page + 1} of ${pages.length}` });
 

@@ -1,5 +1,5 @@
 import {
-    ApplicationCommandOptionType, ChatInputCommandInteraction, EmbedBuilder, GuildMember,
+    ApplicationCommandOptionType, ChatInputCommandInteraction, EmbedBuilder
 } from 'discord.js';
 import { urban } from '../../modules/functions/misc';
 import { Command } from '../../modules/interfaces/cmd';
@@ -56,7 +56,7 @@ const command: Command = {
                     .setAuthor({ name: `Urban Dictionary: ${word}`, iconURL: 'https://i.imgur.com/kwkO5eD.jpg', url: permalink })
                     .setThumbnail('https://i.imgur.com/kwkO5eD.jpg')
                     .setDescription(`${definition.length >= 2000 ? `Definition is too large to display in a single message. [Click here](${permalink}) to view it on the site.` : definition}\n\n${example}\n\n👍 ${thumbs_up} 👎 ${thumbs_down} | [See all results](https://www.urbandictionary.com/define.php?term=${interaction.options.getString('query', true).split(' ').join('_')})`)
-                    .setColor((interaction.member as GuildMember)?.displayHexColor ?? DEFAULT_COLOR);
+                    .setColor(DEFAULT_COLOR);
 
                 interaction.editReply({ embeds: [embed] });
             })
