@@ -1,7 +1,7 @@
 import { stripIndents } from 'common-tags';
 import {
     ApplicationCommandOptionType,
-    ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionFlagsBits,
+    ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits,
 } from 'discord.js';
 import { getWeather } from '../../modules/functions/misc';
 import { DEFAULT_COLOR } from '../../data/constants';
