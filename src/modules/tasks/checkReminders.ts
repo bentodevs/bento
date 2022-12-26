@@ -1,6 +1,7 @@
 import {
     ButtonStyle, Client, ActionRowBuilder, ButtonBuilder, EmbedBuilder,
 } from 'discord.js';
+import * as Sentry from '@sentry/node';
 import reminders from '../../database/models/reminders';
 import logger from '../../logger';
 import { DEFAULT_COLOR } from '../../data/constants';
@@ -26,7 +27,10 @@ export default async function init(bot: Client): Promise<NodeJS.Timer> {
         for (const data of users) {
             // Try to fetch the user
             // eslint-disable-next-line @typescript-eslint/no-empty-function
-            const user = bot.users.cache.get(data.id) || await bot.users.fetch(data.id).catch(() => { });
+            const user = bot.users.cache.get(data.id) || await bot.users.fetch(data.id).catch((err) => {
+                Sentry.captureException(err);
+                logger.error(`Failed to fetch User: ${data.id}`, err);
+            });
 
             if (user) {
                 // Loop through the reminders
