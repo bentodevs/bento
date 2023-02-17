@@ -13,7 +13,7 @@ import logger from '../logger';
 import { OWNERS, SUPPORT_SERVER } from '../data/constants';
 import emojis from '../data/emotes';
 import { InteractionResponseUtils } from '../utils/InteractionResponseUtils';
-import { findCurrency, findLanguage } from '../modules/functions/autocomplete';
+import { findCategory, findCommand, findCurrency, findLanguage } from '../modules/functions/autocomplete';
 
 export default async (bot: Client, interaction: Interaction) => {
     if (interaction.type === InteractionType.ApplicationCommand) {
@@ -37,7 +37,7 @@ export default async (bot: Client, interaction: Interaction) => {
         // If the command is disabled return an error
         if (cmd.opts.disabled && !OWNERS.includes(interaction.user.id)) {
             // If disabled messages are enabled send one
-            if (settings?.general?.disabled_message) {
+            if (settings?.general?.sendCmdCatDisabledMsgs) {
                 await InteractionResponseUtils.error(interaction, 'This command is currently disabled!', true);
             }
 
@@ -47,9 +47,9 @@ export default async (bot: Client, interaction: Interaction) => {
         // If a guildOnly command is run in dms return an error
         if (cmd.opts.guildOnly && !interaction.guildId) return InteractionResponseUtils.error(interaction, 'This command is unavailable via private messages. Please run this command in a guild.', true);
         // If the command or category is disabled return an error
-        if (interaction.inGuild() && (settings.general.disabled_commands?.includes(cmd.info.name) || settings.general.disabled_categories?.includes(cmd.info.category)) && !OWNERS.includes(interaction.user.id)) {
+        if (interaction.inGuild() && (settings.general.disabledCommands?.includes(cmd.info.name) || settings.general.disabledCategories?.includes(cmd.info.category)) && !OWNERS.includes(interaction.user.id)) {
             // If disabled messages are enabled send one
-            if (settings.general.disabled_message) {
+            if (settings.general.sendCmdCatDisabledMsgs) {
                 await InteractionResponseUtils.error(interaction, 'This command (or the category the command is in) is currently disabled!', true);
             }
 
@@ -108,6 +108,16 @@ export default async (bot: Client, interaction: Interaction) => {
 
         if (commandName === 'translate') {
             await interaction.respond(findLanguage(focusedValue));
+        }
+
+        if (commandName === 'toggle') {
+            if (interaction.options.getSubcommand() === 'category') {
+                await interaction.respond(findCategory(focusedValue));
+            }
+
+            if (interaction.options.getSubcommand() === 'command') {
+                await interaction.respond(findCommand(focusedValue));
+            }
         }
     }
 };
