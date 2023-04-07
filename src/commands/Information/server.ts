@@ -66,8 +66,8 @@ const command: Command = {
             await guild?.members.fetch();
 
             // Get all the member stats
-            const members = guild?.memberCount.toLocaleString() ?? 0;
-            const bots = guild?.members.cache.filter((m) => m.user.bot).size.toLocaleString() ?? 0;
+            let members = guild?.memberCount.toLocaleString() ?? 0;
+            let bots = guild?.members.cache.filter((m) => m.user.bot).size.toLocaleString() ?? 0;
             const online = await interaction.guild?.members.fetch()
                 .then((guildMembers: Collection<Snowflake, GuildMember>) => Array.from(guildMembers.values()).filter((m: GuildMember) => m.presence?.status && m.presence?.status !== 'offline').length.toLocaleString() ?? 0);
 
@@ -93,6 +93,9 @@ const command: Command = {
                 HIGH: '(╯°□°）╯︵ ┻━┻ [High]',
                 VERY_HIGH: '┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻ [Phone]',
             };
+
+            if (typeof members === 'string') members = parseInt(members, 10);
+            if (typeof bots === 'string') bots = parseInt(bots, 10);
 
             // Build embed
             const embed = new EmbedBuilder()
