@@ -35,9 +35,8 @@ const bot = new Client({
 });
 
 export const commands = new Collection<string, Command>();
-export const tasks = new Collection<string, any>();
-export const cooldowns = new Collection<string, any>();
-// export const pokedex = new Pokedex();
+export const tasks = new Collection<string, NodeJS.Timer>();
+export const cooldowns = new Collection<string, { count: number }>();
 
 // Initialize Mongo connection
 export const db = dbInit(process.env.MONGODB_URI)
