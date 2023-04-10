@@ -568,14 +568,19 @@ export const getReactCooldown = (user: User, guild: string) => {
         // Grab the users data
         const usr = cooldowns.get(`${guild}-${user.id}-reaction`);
 
-        // If the user is on count 10 return true
-        if (usr.count >= 10) return true;
+        if (usr?.count) {
+            // If the user is on count 10 return true
+            if (usr.count >= 10) return true;
 
-        // Update the users count
-        cooldowns.set(`${guild}-${user.id}-reaction`, { count: usr.count + 1 });
+            // Update the users count
+            cooldowns.set(`${guild}-${user.id}-reaction`, { count: usr.count + 1 });
 
-        // Return false
-        return false;
+            // Return false
+            return false;
+        }
+
+        // If the user doesn't have a count set it to 1
+        cooldowns.set(`${guild}-${user.id}-reaction`, { count: 1 });
     }
     // Set the users data
     cooldowns.set(`${guild}-${user.id}-reaction`, { count: 1 });
