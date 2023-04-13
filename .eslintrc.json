@@ -10,7 +10,9 @@
         "@typescript-eslint"
     ],
     "ignorePatterns": [
-        "dist/**/*"
+        "dist/**/*",
+        "node_modules/**/*",
+        "src/**/*.js"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
