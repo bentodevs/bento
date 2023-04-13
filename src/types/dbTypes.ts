@@ -1,5 +1,3 @@
-import { Snowflake } from 'discord.js';
-
 export type Reminder = {
     id: number;
     text: string;

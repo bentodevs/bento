@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { xml2json } from 'xml-js';
 import { User } from 'discord.js';
 import logger from '../../logger';

@@ -1,5 +1,5 @@
 import {
-    AuditLogEvent, Client, Guild, GuildAuditLogs, GuildTextBasedChannel,
+    AuditLogEvent, Client, Guild, GuildTextBasedChannel,
 } from 'discord.js';
 import punishments from '../database/models/punishments.js';
 import settings from '../database/models/settings.js';
@@ -16,6 +16,7 @@ export default async (bot: Client, guild: Guild) => {
         const entry = await guild.fetchAuditLogs({ type: AuditLogEvent.MemberBanRemove }).then((a) => a.entries.first());
 
         // If the executor is us, then return
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         if (entry?.executor!.id === bot?.user!.id) return logger.debug(`Not logging ${entry.actionType} as it was performed by the Client.`);
         if (!entry?.executor || !entry?.target) return logger.debug(`Not logging ${entry?.actionType} as it does not contain an executor and/or target.`);
 

@@ -1,4 +1,3 @@
-import { Snowflake } from 'discord.js';
 import { model, Schema } from 'mongoose';
 import { IReactRoles } from '../../modules/interfaces/db';
 
