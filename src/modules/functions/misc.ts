@@ -529,10 +529,14 @@ export const fetchEmote = (url: string): Promise<Buffer> => new Promise((resolve
             'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
         },
     }).then(async (res) => {
+        let contentType = res.headers['content-type'];
+        if (typeof contentType === 'object') contentType = contentType[0];
+        let contentLength = res.headers['content-length'];
+        if (typeof contentLength === 'object') contentLength = contentLength[0];
         // If the url didn't contain an image return an error
-        if (!res.headers['content-type']?.startsWith('image')) return reject(new Error("The URL or File you specified isn't an image!"));
+        if (!contentType?.startsWith('image')) return reject(new Error("The URL or File you specified isn't an image!"));
         // If the size of the file is too big return an error
-        if (res.headers['content-length'] && (parseFloat(res.headers['content-length'] ?? '0') > 256 * 1024)) return reject(new Error('The emoji is too big! It must be 256KB or less.'));
+        if (contentLength && (parseFloat(contentLength ?? '0') > 256 * 1024)) return reject(new Error('The emoji is too big! It must be 256KB or less.'));
         // Convert the image to a buffer and resolve it
         resolve(Buffer.from(await res.body.arrayBuffer()));
     }).catch((err) => {
