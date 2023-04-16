@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { xml2json } from 'xml-js';
 import { User } from 'discord.js';
 import logger from '../../logger';
@@ -528,10 +529,14 @@ export const fetchEmote = (url: string): Promise<Buffer> => new Promise((resolve
             'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
         },
     }).then(async (res) => {
+        let contentType = res.headers['content-type'];
+        if (typeof contentType === 'object') contentType = contentType[0];
+        let contentLength = res.headers['content-length'];
+        if (typeof contentLength === 'object') contentLength = contentLength[0];
         // If the url didn't contain an image return an error
-        if (!res.headers['content-type']?.startsWith('image')) return reject(new Error("The URL or File you specified isn't an image!"));
+        if (!contentType?.startsWith('image')) return reject(new Error("The URL or File you specified isn't an image!"));
         // If the size of the file is too big return an error
-        if (res.headers['content-length'] && (parseFloat(res.headers['content-length'] ?? '0') > 256 * 1024)) return reject(new Error('The emoji is too big! It must be 256KB or less.'));
+        if (contentLength && (parseFloat(contentLength ?? '0') > 256 * 1024)) return reject(new Error('The emoji is too big! It must be 256KB or less.'));
         // Convert the image to a buffer and resolve it
         resolve(Buffer.from(await res.body.arrayBuffer()));
     }).catch((err) => {
@@ -568,14 +573,19 @@ export const getReactCooldown = (user: User, guild: string) => {
         // Grab the users data
         const usr = cooldowns.get(`${guild}-${user.id}-reaction`);
 
-        // If the user is on count 10 return true
-        if (usr.count >= 10) return true;
+        if (usr?.count) {
+            // If the user is on count 10 return true
+            if (usr.count >= 10) return true;
 
-        // Update the users count
-        cooldowns.set(`${guild}-${user.id}-reaction`, { count: usr.count + 1 });
+            // Update the users count
+            cooldowns.set(`${guild}-${user.id}-reaction`, { count: usr.count + 1 });
 
-        // Return false
-        return false;
+            // Return false
+            return false;
+        }
+
+        // If the user doesn't have a count set it to 1
+        cooldowns.set(`${guild}-${user.id}-reaction`, { count: 1 });
     }
     // Set the users data
     cooldowns.set(`${guild}-${user.id}-reaction`, { count: 1 });

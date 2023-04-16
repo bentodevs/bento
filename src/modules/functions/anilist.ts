@@ -49,6 +49,7 @@ export const getMedia = (title: string, type: MediaType): Promise<object> => new
             'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
         },
         body: JSON.stringify({ query, variables }),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }).then((res) => res.body.json()).then((json: any) => {
         if (json.errors) return reject(new Error('Not Found!'));
 
@@ -100,6 +101,7 @@ export const getCharacter = (name: string): Promise<object> => new Promise((reso
             'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
         },
         body: JSON.stringify({ query, variables }),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }).then((res) => res.body.json()).then((json: any) => {
         if (json.errors) return reject(new Error('Not Found!'));
 
@@ -166,6 +168,7 @@ export const getProfile = (username: string): Promise<object> => new Promise((re
             'user-agent': 'BentoBot (https://github.com/BentoDevs/bento)',
         },
         body: JSON.stringify({ query, variables }),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }).then((res) => res.body.json()).then((json: any) => {
         if (json.errors) return reject(new Error('Not Found!'));
 

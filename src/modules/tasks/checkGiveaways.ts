@@ -1,5 +1,5 @@
 import { stripIndents } from 'common-tags';
-import { Client, EmbedBuilder, GuildTextBasedChannel } from 'discord.js';
+import { Client, EmbedBuilder, GuildTextBasedChannel, User } from 'discord.js';
 import giveaways from '../../database/models/giveaways';
 import logger from '../../logger';
 import { getUser } from '../functions/getters';
@@ -27,7 +27,7 @@ export default async function init(bot: Client) {
             if (Date.now() >= data.timestamps.end) {
                 // Get the winners and define the array
                 const winners = drawGiveawayWinners(data.entries, data.winners);
-                const arr: any = [];
+                const arr: Array<User | string> = [];
 
                 // Loop through the winners
                 for (const i of winners) {

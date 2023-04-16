@@ -1,5 +1,4 @@
 name: Create Sentry Release
-
 on:
   release:
   workflow_dispatch:

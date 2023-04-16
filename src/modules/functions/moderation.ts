@@ -9,6 +9,7 @@ import { DEFAULT_COLOR, OWNERS } from '../../data/constants';
 
 export const punishmentLog = (
     bot: Client,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     interaction: any,
     _member: User | GuildMember,
     punishmentId: number,

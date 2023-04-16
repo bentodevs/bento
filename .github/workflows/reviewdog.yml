@@ -27,7 +27,6 @@ jobs:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           reporter: github-check # Change reporter.
-          eslint_flags: 'src/'
   reviewdog-pr:
     permissions:
       checks: write
@@ -49,4 +48,3 @@ jobs:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           reporter: github-pr-review # Change reporter.
-          eslint_flags: 'src/'
