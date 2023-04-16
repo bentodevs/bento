@@ -20,13 +20,14 @@ const logLevels = {
     },
 };
 
-const logger = winston.createLogger({
-    format: winston.format.combine(
-        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-        logFormat,
-    ),
-    transports: [
-        new winston.transports.Console(),
+const transports: winston.transport[] = [];
+
+transports.push(
+    new winston.transports.Console()
+);
+
+if (process.env.LOKI_URL && process.env.LOKI_AUTH) {
+    transports.push(
         new LokiTransport({
             host: process.env.LOKI_URL,
             basicAuth: process.env.LOKI_AUTH,
@@ -35,7 +36,15 @@ const logger = winston.createLogger({
             },
             batching: false
         })
-    ],
+    );
+}
+
+const logger = winston.createLogger({
+    format: winston.format.combine(
+        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+        logFormat,
+    ),
+    transports,
     levels: logLevels.levels,
     level: 'debug',
 });
