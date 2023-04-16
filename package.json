@@ -41,7 +41,7 @@
     "flip": "^1.0.0",
     "https-proxy-agent": "^5.0.1",
     "iso-639-1": "^2.1.13",
-    "mongoose": "^6.4.6",
+    "mongoose": "^7.0.0",
     "pokedex-promise-v2": "^4.0.0",
     "undici": "^5.12.0",
     "winston": "^3.6.0",
