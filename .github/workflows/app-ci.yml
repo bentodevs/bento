@@ -9,6 +9,47 @@ on:
       - main
 
 jobs:
+  reviewdog-github-check:
+    permissions:
+      checks: write
+      contents: read
+      pull-requests: write
+    name: reviewdog (github-check)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install cairo
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+      - name: Run reviewdog
+        uses: reviewdog/action-eslint@v1
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          reporter: github-check # Change reporter.
+  reviewdog-pr:
+    permissions:
+      checks: write
+      contents: read
+      pull-requests: write
+    if: github.event_name == 'pull_request'
+    name: reviewdog on Pull Request
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install cairo
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+      - name: Run reviewdog
+        uses: reviewdog/action-eslint@v1
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          reporter: github-pr-review # Change reporter.
   build-and-push-image:
     runs-on: ubuntu-latest
     permissions:
